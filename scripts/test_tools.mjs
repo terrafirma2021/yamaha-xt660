@@ -3,13 +3,30 @@ import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {resolve,dirname} from 'node:path';
 import {webcrypto} from 'node:crypto';
-import {sha256,baseAddress,inspect,wordSum,differences,readCell,editCell,parseHex,bootReadPreview,READ_LENGTHS,decodeBootFrame,decodeApplicationFrame} from '../site/assets/tools-core.mjs';
+import {sha256,baseAddress,inspect,wordSum,differences,readCell,editCell,parseHex,bootReadPreview,READ_LENGTHS,decodeBootFrame,decodeApplicationFrame,verifyStartupChecksum,correctStartupChecksum} from '../site/assets/tools-core.mjs';
 import {SerialCapture} from '../site/assets/tools-serial.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),json=p=>JSON.parse(readFileSync(resolve(root,p),'utf8'));
 const registry=json('firmware/registry.json'),decodes=json('analysis/firmware/decode_catalog.json');let cells=0,edits=0;
+const catalogue=json('analysis/firmware/catalog.json');
 for(const image of registry.images){
   const bytes=new Uint8Array(readFileSync(resolve(root,image.file))),base=baseAddress(bytes);
+  const identity=catalogue.images.find(i=>i.id===image.id),original=bytes.slice(),corrected=bytes.slice();
+  assert.equal(verifyStartupChecksum(bytes,identity).status,identity.startup_checksum==='AA55'?'pass':'fail');
+  assert.ok([0xFFFF,0xFF7F].includes((bytes[0xF7FC-base]<<8)|bytes[0xF7FD-base]));
+  correctStartupChecksum(corrected,identity);assert.equal(wordSum(corrected,base),0xAA55);
+  assert.ok(differences(bytes,corrected,base).every(d=>d.address===0xF7FC||d.address===0xF7FD));
+  const stable=corrected.slice();correctStartupChecksum(corrected,identity);assert.deepEqual(corrected,stable);
+  assert.equal(verifyStartupChecksum(bytes,null).status,'unverified');assert.throws(()=>correctStartupChecksum(bytes,null));assert.deepEqual(bytes,original);
+  const broken=bytes.slice();broken[(identity.code_family==='early'?0xA497:0x972B)-base]^=1;const brokenBefore=broken.slice();assert.throws(()=>correctStartupChecksum(broken,identity));assert.deepEqual(broken,brokenBefore);
+  const serial=identity.code_family==='early'?0x506E:0x4863;
+  assert.deepEqual([...bytes.slice(serial-base,serial-base+5)],[0xCC,0,0x40,0x5C,0xD0]);
+  const poll=identity.code_family==='early'?0x53C8:0x4C06;
+  assert.deepEqual([...bytes.slice(poll-base,poll-base+3)],[0x16,0xF8,0xA0]);
+  if(identity.boot_status==='populated'){
+    assert.deepEqual([...bytes.slice(0xF86E-base,0xF873-base)],[0xCC,0,0x68,0x5C,0xC8]);
+    assert.deepEqual([...bytes.slice(0xF93B-base,0xF93E-base)],[0x87,0x5A,0xD3]);
+  }
   assert.equal(base,image.base_address);assert.equal(await sha256(bytes),image.sha256);assert.equal(inspect(bytes).full_backup_verified,false);
   const maps=json(decodes.images.find(i=>i.id===image.id).maps_path);
   for(const m of maps){
@@ -19,10 +36,21 @@ for(const image of registry.images){
       const before=readCell(bytes,base,m,index),after=before===0?1:0,change=editCell(draft,base,m,index,after),diff=differences(bytes,draft,base);
       assert.ok(diff.length>0&&diff.length<=m.element_bytes);assert.ok(diff.every(d=>d.address>=change.address&&d.address<change.address+m.element_bytes));
       assert.equal(readCell(bytes,base,m,index),before);assert.equal(readCell(draft,base,m,index),after);editCell(draft,base,m,index,before);assert.deepEqual(draft,bytes);edits++;
+      const checked=stable.slice();editCell(checked,base,m,index,after);correctStartupChecksum(checked,identity);
+      assert.equal(wordSum(checked,base),0xAA55);assert.equal(readCell(checked,base,m,index),after);
+      assert.ok(differences(bytes,checked,base).every(d=>(d.address>=change.address&&d.address<change.address+m.element_bytes)||d.address===0xF7FC||d.address===0xF7FD));
+      editCell(checked,base,m,index,before);correctStartupChecksum(checked,identity);assert.deepEqual(checked,stable);assert.deepEqual(bytes,original);
     }
     for(const bad of [-1,.5,NaN,Infinity,m.element_bytes===2?65536:256])assert.throws(()=>editCell(draft,base,m,0,bad));
     assert.throws(()=>editCell(draft,base,m,-1,0));assert.throws(()=>readCell(draft,base,m,m.rows*m.columns));assert.throws(()=>editCell(draft,base,{...m,data_address:'0xF800'},0,0));
   }
+}
+// Review compensation padding against decoded instruction boundaries and static targets.
+for(const stem of ['analysis','analysis/firmware/families/late']){
+  for(const line of readFileSync(resolve(root,stem,'disassembly.tsv'),'utf8').trim().split(/\r?\n/).slice(1)){
+    const [address,code]=line.split('\t'),a=parseInt(address,16);assert.ok(a>=0xF7FE||a+code.length/2<=0xF7FC);
+  }
+  for(const line of readFileSync(resolve(root,stem,'references.tsv'),'utf8').trim().split(/\r?\n/).slice(1))assert.ok(![0xF7FC,0xF7FD].includes(parseInt(line.split('\t')[1],16)));
 }
 assert.throws(()=>baseAddress(new Uint8Array(65535)));assert.throws(()=>differences(new Uint8Array(2),new Uint8Array(3),0));
 const owner=new Uint8Array(readFileSync(resolve(root,registry.images[0].file)));assert.equal(wordSum(owner,0),0xAAD5);
@@ -49,4 +77,4 @@ let m=mock(),states=[],c=new SerialCapture({limit:5,onState:s=>states.push(s)});
 m=mock();c=new SerialCapture();await c.connect(m.port,9600);m.push([8,9]);await tick();await c.disconnect();assert.equal(c.count,2);assert.equal(m.port.closed,1);
 m=mock();await c.connect(m.port,15625);assert.equal(c.count,0);m.fail();await c.task;assert.match(c.error,/USB unplugged/);assert.equal(m.port.closed,1);
 await assert.rejects(()=>c.connect(mock().port,0));await assert.rejects(()=>c.connect({open:async()=>{throw Error('Port busy')}},15625));assert.equal(c.port,null);assert.equal(c.busy,false);
-console.log(`Tools verified: ${registry.images.length} BIN identities, ${cells} source cells, ${edits} edit/undo boundaries; checksum fixtures, boot-byte anchors, malformed frames and receive-only serial lifecycle.`);
+console.log(`Tools verified: ${registry.images.length} BIN identities, ${cells} source cells, ${edits} edit/undo/checksum boundaries; compensation bounds, both UART profiles, boot-byte anchors, malformed frames and receive-only serial lifecycle.`);

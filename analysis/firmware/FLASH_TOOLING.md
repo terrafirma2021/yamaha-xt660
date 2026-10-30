@@ -1,6 +1,6 @@
 # ECU tools: readout, backup, flashing and map editing
 
-The browser workbench provides **local BIN inspection, unchanged-copy export, byte comparison, raw-map draft editing and receive-only serial capture**. It does not yet perform ECU memory readout or flashing. A captured serial stream is not a firmware backup. The tool does not transmit serial bytes, modify originals, repair checksums automatically or claim complete physical scaling.
+The browser workbench provides **BIN inspection, unchanged-copy export, byte comparison, raw-map draft editing, automatic startup-checksum correction and receive-only serial capture**. It does not yet perform ECU memory readout or flashing. A captured serial stream is not a firmware backup. The tool does not transmit serial bytes, modify originals or claim complete physical scaling.
 
 ## What the existing tools actually establish
 
@@ -54,14 +54,31 @@ Before enabling a live driver:
 4. Identify persistent-storage coverage separately. A 64 KiB file with an FF boot placeholder is not a complete recoverable ECU backup.
 5. Validate erase boundaries, protection, RAM execution, watchdog behavior, interruption recovery and byte-for-byte post-write readback on recoverable bench hardware.
 
-The nominal boot divisor is 0068 (about 9,615 baud at a 16 MHz bus), whereas the application divisor is 0040 and the supplied tool requests 15,625 baud for the legacy meter link. Neither establishes a cable's pin route. Existing decompiler warnings around overlapping instructions and flash return flags must be resolved against disassembly before trusting a live error/retry state machine.
+### Application and boot connection paths
+
+| Evidence | Early family | Late family | Meaning |
+|---|---|---|---|
+| Application SCI1 divisor | 506E–5072: `CC0040 5CD0` | 4863–4867: same bytes | Divisor 64 at SCI1 D0–D1 |
+| Application polls boot service | 53C8: `16F8A0` | 4C06: same bytes | Boot dispatcher can run from the application loop |
+| Populated boot initializes SCI0 | F86E–F872: `CC0068 5CC8` | Identical populated boot | Divisor 104 at SCI0 C8–C9 |
+| Successful boot session | F93B–F93D: `87 5AD3` | Identical populated boot | Clears SCI1 control; boot traffic continues on SCI0 |
+
+These instruction anchors are checked against every applicable registered BIN. The four FF boot placeholders supply no boot evidence. The application loop also conditionally disables SCI0: early 53BB–53C0 and late 4BF9–4BFE inspect boot state bit 0020:04. Application protocol handling can set that bit (early CE70, late C4E0). Thus session timing and state matter; opening a serial port alone is not ECU identification or entry into programming mode.
+
+The [MC9S12T64 specification, SCI section](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf#page=424) gives baud = bus clock / (16 × divisor). Its table on PDF page 437 explicitly lists divisor 104 at a 16 MHz bus as 9,615 actual baud for a **9,600-baud target**, with 0.16% error. Divisor 64 yields 15,625 at that bus rate, matching `Communication.cs`'s `ConnectMeter` request (`Baud15625`, lines 1585/1592). Consequently **15,625 for meter/diagnostics and nominal 9,600 for boot** is the supported working interpretation; the latter still depends on the assumed oscillator and actual adapter/ECU validation. Users should not have to enter these rates manually once each connection profile is validated.
+
+The present workbench enables only the 15,625-baud receive profile. There is no evidence here of a command that simply switches the dashboard wire to a flashing baud. SCI0 and SCI1 are separate MCU interfaces: conditional 80-pin-package PS0/RxD0 and PS1/TxD0 (67/68), versus PS2/RxD1 and PS3/TxD1 (69/70). Physical routing through the ECU PCB/transceiver to a connector remains unresolved. Existing decompiler warnings around overlapping instructions and flash return flags must also be resolved before trusting live retries.
 
 ## Workbench behavior and tests
 
 The repository BIN picker opens any of the nine registered images directly, without a local upload. The site packages unchanged copies of those public repository files and checks each downloaded file's size and SHA-256 against the catalogue before enabling inspection or editing. Original and modified variants remain separate choices. Identity and change reports record whether the source was a repository BIN or a local file; neither source is a live ECU readout.
 
-Only exact registered SHA-256 inputs enable editing. The layout belongs to the loaded BIN, not the globally selected bike. The original buffer is immutable; editing is limited to declared map cell bodies with checked addresses, big-endian widths and integer bounds. Unknown files can be inspected and compared but do not inherit map layouts. A draft and its JSON change report are separate downloads. Draft checksums are reported, not repaired; see [the qualified original checksum correction](../semantics/CHECKSUM.md).
+Only exact registered SHA-256 inputs enable editing. The layout belongs to the loaded BIN, not the globally selected bike. The original buffer is immutable; editing is limited to declared map cell bodies with checked addresses, big-endian widths and integer bounds. Unknown files can be inspected and compared but do not inherit map layouts or automatic checksum correction. A draft and its JSON change report are separate downloads.
 
-Receive capture has a 2 MiB bound, timestamped USB chunks, disconnect handling and explicit save. It has no writer API. USB chunks do not imply packet boundaries. A new connection replaces the previous in-memory capture. The inspector requires explicitly delimited application or boot frames and refuses bad lengths/checksums.
+All nine registered images share the recovered startup rule: sum big-endian words over CPU 1800–F7FF modulo 65536, expecting AA55. The early caller/routine are 5358/A489; the late equivalents are 4B65/971D. Runtime checks match their caller and summation/compare instruction bytes plus the 5AA5 trailer marker before enabling correction. The untouched source is checked separately from the editable copy. The copy is corrected on open, after edits, undo and discard, and checked again before export; export is stopped if its supported startup checksum does not pass.
+
+Correction uses the existing project's **analyst-selected compensation word at F7FC**, not a newly identified manufacturer checksum field. Each source has FFFF there except the existing corrected image's FF7F. Tests check no overlap with decoded instructions, static targets or map edits; correction is confined to that word, preserving the F7FE marker and boot bytes. The calculation is `new_word = (old_word + AA55 - current_sum) mod 65536`. Undo/discard restores calibration values while keeping the copy's startup checksum corrected; save-untouched retains the exact original, even when its checksum fails. Change reports include source/draft results and compensation changes. This verifies the startup check only; it does not establish hardware compatibility or repair the alternate full-ROM check. See [the original correction analysis](../semantics/CHECKSUM.md).
+
+Receive capture has a 2 MiB bound, timestamped RX hex chunks, disconnect handling and explicit save. The terminal switch hides/shows the display without stopping capture; disconnect stops capture. The meter profile automatically requests 15,625 baud, 8N1, no flow control. It has no writer API. USB chunks do not imply packet boundaries. A new connection replaces the previous in-memory capture. The inspector requires explicitly delimited application or boot frames and refuses bad lengths/checksums. Saving edits and flashing are separate actions; Flash ECU remains disabled.
 
 Run `node scripts/test_tools.mjs` for byte-level editing, checksum, framing and mocked serial lifecycle tests. These are software tests, not ECU or adapter validation.

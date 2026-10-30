@@ -14,7 +14,7 @@ The [dataset guide](dataset/README.md) explains the 21 preserved sources, 110 ap
 
 ## Browser tools
 
-The [Tools workbench](https://terrafirma2021.github.io/yamaha-xt660/tools/) identifies local BINs, saves untouched copies, compares reads and edits raw map cells in a separate draft for exact registered images. It also provides receive-only COM-port capture, frame inspection and an offline boot-read request preview. Files remain in the browser. **Live ECU dumping and flashing are not implemented**; drafts are not checksum-repaired or flash-ready. See [protocol and tool evidence](analysis/firmware/FLASH_TOOLING.md) for the recovered boot handlers, Yamaha tool comparison and hardware validation still required.
+The [Tools workbench](https://terrafirma2021.github.io/yamaha-xt660/tools/) opens all nine repository BINs or local files, saves untouched copies, compares reads and edits raw map cells in a separate draft for exact registered images. Supported drafts receive automatic startup-checksum correction after edits and verification before saving. It also provides receive-only COM capture at the meter tool's fixed 15,625 baud, a raw-terminal switch, frame inspection and an offline boot-read preview. **Live ECU dumping and flashing are not implemented**; a passing startup checksum does not establish flash readiness. See [protocol and tool evidence](analysis/firmware/FLASH_TOOLING.md) for the correction method, two UART paths and hardware validation still required.
 
 ## Original application study
 
