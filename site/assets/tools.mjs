@@ -1,5 +1,4 @@
 import {hex,sha256,inspect,baseAddress,differences,readCell,editCell,verifyStartupChecksum,correctStartupChecksum} from './tools-core.mjs';
-import {SerialCapture} from './tools-serial.mjs';
 const $=id=>document.getElementById(id),root=new URL('../',import.meta.url);
 const error=e=>{$('tool-error').textContent=e.message||String(e);$('tool-error').hidden=false};
 const guarded=fn=>async event=>{try{$('tool-error').hidden=true;await fn(event)}catch(e){error(e)}};
@@ -81,11 +80,3 @@ $('edit-undo').addEventListener('click',guarded(()=>{const change=undo.pop();if(
 $('edit-reset').addEventListener('click',guarded(()=>{draft=original.slice();undo=[];updateChecksum();renderGrid();controls()}));
 $('draft-save').addEventListener('click',guarded(()=>{const verified=updateChecksum();controls();if(verified?.status!=='pass')throw Error('Save stopped: startup checksum is not verified');save(filename.replace(/\.bin$/i,'')+'.draft.bin',draft)}));
 $('draft-report').addEventListener('click',guarded(async()=>jsonSave(filename+'.changes.json',await report())));
-let terminalTail='';
-const capture=new SerialCapture({onChunk:(item,count)=>{terminalTail=(terminalTail+`${item.elapsed_ms} ms  RX  ${item.bytes}\n`).slice(-12000);if($('terminal-toggle').checked)$('serial-log').textContent=terminalTail;$('serial-status').textContent=`Receiving: ${count.toLocaleString()} bytes · no transmitted data`;$('serial-save').disabled=false},onState:state=>{$('serial-status').textContent=state;$('serial-stop').disabled=!capture.port;$('serial-connect').disabled=!!capture.port}});
-$('terminal-toggle').addEventListener('change',()=>{$('serial-terminal').hidden=!$('terminal-toggle').checked;if($('terminal-toggle').checked)$('serial-log').textContent=terminalTail});
-if(!('serial' in navigator)){$('serial-connect').disabled=true;$('serial-status').textContent='Web Serial is unavailable in this browser. Use a supported desktop Chromium browser over HTTPS; local BIN tools still work.'}
-$('serial-connect').addEventListener('click',guarded(async()=>{$('serial-connect').disabled=true;try{const port=await navigator.serial.requestPort();terminalTail='';$('serial-log').textContent='';await capture.connect(port,15625);$('serial-save').disabled=capture.count===0}finally{$('serial-connect').disabled=!!capture.port}}));
-$('serial-stop').addEventListener('click',guarded(()=>capture.disconnect()));
-$('serial-save').addEventListener('click',guarded(()=>jsonSave('xt660-rx-capture.json',capture.report())));
-window.addEventListener('pagehide',()=>{capture.disconnect().catch(()=>{})});
