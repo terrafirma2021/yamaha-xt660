@@ -38,6 +38,7 @@ jobs:
           python3 scripts/build_pages.py
           python3 scripts/verify_pages.py
           python3 scripts/verify_decoded_pages.py
+          python3 scripts/verify_site_routes.py
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:

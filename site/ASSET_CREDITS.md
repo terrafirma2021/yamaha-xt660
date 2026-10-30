@@ -35,3 +35,17 @@ The map preview uses actual stored values from this repository's map catalogue. 
 Input: `site/assets/xt660x-2005.jpg`. Output: `site/assets/xt660x-2005-cutout.png`. Method: built-in image-generation tool, transparent background enabled.
 
 Prompt: Remove only the white studio background, including gaps between spokes and frame components. Preserve the blue 2005 XT660X, its geometry, wheels, mirrors, engine, exhaust, decals, colours and photographic details; retain the full motorcycle and original composition. No new objects, text, background or baked checkerboard. Intended for both light and dark website backgrounds.
+
+
+## XT660R and XT660Z transparent artwork (2026-10-30)
+
+The original source photographs above remain unchanged. The website uses new transparent PNG derivatives, made with the built-in image generation tool (background-extraction edit, transparent background enabled). They are presentation artwork, not evidence of exact motorcycle equipment.
+
+- XT660R input: `site/assets/xt660r-2004.jpg`; output: `site/assets/xt660r-2004-cutout.png`.
+- XT660Z input: `site/assets/xt660z-2008.jpg`; output: `site/assets/xt660z-2008-cutout.png`.
+
+Final prompts:
+
+> Use case: background-extraction. Edit target: the attached/local photograph of a blue 2004 Yamaha XT660R motorcycle. Remove ONLY the white studio background and floor. Return a clean photographic cutout with actual transparent alpha, including empty spaces between spokes, behind the engine and handlebars. Preserve the motorcycle exactly: same geometry, parts, markings, colors, camera angle, and full-bike framing. Do not invent parts or stylize or add text. Avoid a white edge halo. No background, no floor shadow, no checkerboard rendered into the image. This is a website model-reference asset displayed over either a light or dark background.
+
+> Use case: background-extraction. Edit target: the attached/local photograph of a white and grey 2008 Yamaha XT660Z Tenere motorcycle with red stripes. Remove ONLY the white studio background and floor. Return a clean photographic cutout with actual transparent alpha, including empty spaces between spokes, behind the engine and handlebars, and natural transparency of the clear windshield. Preserve the motorcycle exactly: same geometry, parts, markings, colors, camera angle, and full-bike framing. Do not invent parts or stylize or add text. Avoid a white edge halo. No background, no floor shadow, no checkerboard rendered into the image. This is a website model-reference asset displayed over either a light or dark background.

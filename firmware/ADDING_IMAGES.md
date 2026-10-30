@@ -1,6 +1,6 @@
 # Add another firmware image
 
-The [firmware library](https://terrafirma2021.github.io/xt660x-2005/firmware/) is generated from [registry.json](registry.json). Each image has an immutable file, SHA-256, explicit CPU address base, provenance, claimed years and separate analysis status. The repository name and existing research links stay stable.
+The [firmware library](https://terrafirma2021.github.io/yamaha-xt660/firmware/) is generated from [registry.json](registry.json). Each image has an immutable file, SHA-256, explicit CPU address base, provenance, claimed years and separate analysis status. The project lives in yamaha-xt660. Legacy website links are forwarded from xt660x-2005. Add a BIN association only with explicit evidence; catalogue-only profiles stay disabled. Firmware titles use ECU codes and variants are separate metadata.
 
 From the repository root:
 

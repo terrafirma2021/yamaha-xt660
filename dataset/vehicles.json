@@ -26,15 +26,15 @@
       "tagline": "Same family. A different path.",
       "source": "launch-rx",
       "photo": {
-        "file": "assets/xt660r-2004.jpg",
+        "file": "assets/xt660r-2004-cutout.png",
         "year": "2004",
-        "caption": "2004 XT660R model reference. Selected year, colour and equipment may differ.",
+        "caption": "2004 XT660R reference artwork. Selected year, colour and equipment may differ.",
         "source": "https://www.2ri.de/Bikes/Yamaha/2004/XT660R",
-        "width": 1024,
-        "height": 768,
-        "sha256": "4de75637b420e2ec8fbf637d82bbf1b49d667c3402f909d5bb2459d69e519079"
+        "width": 1448,
+        "height": 1086,
+        "sha256": "6d8343fab8ee7d36a8fe326b9c608123ad103f7b34ec36496c6e1fd08d094bcd"
       },
-      "default_profile": "fowlers-xt660r-2004-5vk3-010-united-kingdom"
+      "default_profile": "xt660r-2004-early"
     },
     {
       "id": "xt660z",
@@ -43,13 +43,13 @@
       "tagline": "A separate platform. Its own evidence.",
       "source": "z-name",
       "photo": {
-        "file": "assets/xt660z-2008.jpg",
+        "file": "assets/xt660z-2008-cutout.png",
         "year": "2008",
-        "caption": "2008 XT660Z Ténéré model reference. Selected year, colour and ABS equipment may differ.",
+        "caption": "2008 XT660Z Ténéré reference artwork. Selected year, colour and ABS equipment may differ.",
         "source": "https://www.2ri.de/Bikes/Yamaha/2008/XT660Z-Tenere",
-        "width": 1024,
-        "height": 768,
-        "sha256": "c78a6b0f142aa615e05b2d0a69b3999c5eda60b2cd2a34c211483fd73f3e8d87"
+        "width": 1448,
+        "height": 1086,
+        "sha256": "b3fcf3bbf7abaf632dbf99a82550b3e11d8d0c0f0c58cb7dc935472955b981e5"
       },
       "default_profile": "fowlers-xt660z-2009-11d2-010-united-kingdom"
     },
@@ -68,7 +68,8 @@
         "height": 600,
         "sha256": "9adfac17fc99ab45f750d54099fcc26931994b8843164cd4e08882b7502f17f4"
       },
-      "default_profile": "fowlers-tdm900-2002-5ps1-050-united-kingdom"
+      "default_profile": "fowlers-tdm900-2002-5ps1-050-united-kingdom",
+      "reference_only": true
     }
   ],
   "profiles": [
@@ -77,7 +78,7 @@
       "model": "xt660x",
       "year": "2005",
       "market": "XT660X 2005 · market unconfirmed",
-      "ecu": "Early XT660 ECU · part number unconfirmed",
+      "ecu": "5VK-8591A-00",
       "firmware_ids": [
         "xt660x-2005-owner",
         "xt660x-2005-checksum-fixed",
@@ -89,9 +90,11 @@
         "launch-rx",
         "rx-2004"
       ],
-      "notes": "2005 XT660X is owner-reported. The companion shares all 71 map bodies and stored axes; it differs at the known application patch. Physical ECU label and chip marking remain unconfirmed.",
+      "notes": "2005 Yamaha XT660X. ECU reference: 5VK-8591A-00 (5VK8591A00), as supplied by the owner. Market specification remains unconfirmed.",
       "association": "owner-reported",
-      "display_status": "Firmware study"
+      "display_status": "Firmware study",
+      "label_evidence": "5VK-8591A-00 / 5VK8591A00 reference supplied by the owner on 2026-10-30; this ECU reference also appears in the 2005 XT660X parts catalogue. The photo is a reference, not proof of which physical ECU produced this BIN.",
+      "route": "bikes/xt660x/2005/"
     },
     {
       "id": "xt660x-2004-early",
@@ -109,7 +112,8 @@
         "r-2004-parts"
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660x/2004/early/"
     },
     {
       "id": "xt660x-2005-early",
@@ -127,7 +131,8 @@
         "r-2004-parts"
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660x/2005/early/"
     },
     {
       "id": "xt660x-2006-early",
@@ -145,7 +150,8 @@
         "r-2004-parts"
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660x/2006/early/"
     },
     {
       "id": "xt660x-2007",
@@ -177,7 +183,8 @@
         "rx-2007"
       ],
       "notes": "The filename says XT660, not R or X. Both model entries are candidates for the same image, not two independently identified ECUs. Its edit log prevents a stock claim.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660x/2008/5vk-1x/"
     },
     {
       "id": "xt660r-2004-early",
@@ -195,7 +202,8 @@
         "r-2004-parts"
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2004/early/"
     },
     {
       "id": "xt660r-2005-early",
@@ -213,7 +221,8 @@
         "r-2004-parts"
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2005/early/"
     },
     {
       "id": "xt660r-2006-early",
@@ -231,7 +240,8 @@
         "r-2004-parts"
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2006/early/"
     },
     {
       "id": "xt660r-2007",
@@ -264,7 +274,8 @@
         "rx-2007"
       ],
       "notes": "The filename says XT660, not R or X. Both model entries are candidates for the same image, not two independently identified ECUs. Its edit log prevents a stock claim.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2008/5vk-1x/"
     },
     {
       "id": "xt660r-2008-brazil",
@@ -282,7 +293,8 @@
         "r-br-2008"
       ],
       "notes": "Part number is corroborated for this model/market. The extensionless files do not state a year; their link to this motorcycle is still by filename only.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2008/brazil/"
     },
     {
       "id": "xt660r-2012-brazil",
@@ -300,7 +312,8 @@
         "r-br-2014"
       ],
       "notes": "2014 OEM catalogue confirms the ECU reference. Other years in this group remain the supplied 2012–2016 filename claim. The local bench-pin image is unverified and does not define the full harness.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2012/brazil/"
     },
     {
       "id": "xt660r-2013-brazil",
@@ -318,7 +331,8 @@
         "r-br-2014"
       ],
       "notes": "2014 OEM catalogue confirms the ECU reference. Other years in this group remain the supplied 2012–2016 filename claim. The local bench-pin image is unverified and does not define the full harness.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2013/brazil/"
     },
     {
       "id": "xt660r-2014-brazil",
@@ -336,7 +350,8 @@
         "r-br-2014"
       ],
       "notes": "2014 OEM catalogue confirms the ECU reference. Other years in this group remain the supplied 2012–2016 filename claim. The local bench-pin image is unverified and does not define the full harness.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2014/brazil/"
     },
     {
       "id": "xt660r-2015-brazil",
@@ -354,7 +369,8 @@
         "r-br-2014"
       ],
       "notes": "2014 OEM catalogue confirms the ECU reference. Other years in this group remain the supplied 2012–2016 filename claim. The local bench-pin image is unverified and does not define the full harness.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2015/brazil/"
     },
     {
       "id": "xt660r-2016-brazil",
@@ -372,12 +388,13 @@
         "r-br-2014"
       ],
       "notes": "2014 OEM catalogue confirms the ECU reference. Other years in this group remain the supplied 2012–2016 filename claim. The local bench-pin image is unverified and does not define the full harness.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/2016/brazil/"
     },
     {
       "id": "xt660r-5vkl",
       "model": "xt660r",
-      "year": "Year unconfirmed · 5VKL",
+      "year": "Year not established",
       "market": "Europe / Chile / Venezuela / Israel / South Africa / Mexico",
       "ecu": "5VK-8591A-11",
       "firmware_ids": [
@@ -389,7 +406,8 @@
         "r-5vkl"
       ],
       "notes": "The June 2013 publication identifies 5VKL and the part number. It does not identify the local dump model year. Firmware-to-ECU association is filename-based.",
-      "association": "candidate"
+      "association": "candidate",
+      "route": "bikes/xt660r/5vkl/"
     },
     {
       "id": "xt660z-2008",

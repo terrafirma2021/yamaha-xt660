@@ -1,6 +1,6 @@
 # Yamaha ECU dataset and applicability
 
-The [website](https://terrafirma2021.github.io/xt660x-2005/) now selects **model → year → market → ECU → firmware**. Selection persists across maps, wiring, MCU pins, research and image records, and is encoded in shareable URLs. The existing repository address is retained to preserve links. The project name is **Yamaha ECU Research**, covering XT660R/X/Z and a separate TDM900 comparison profile. XT600 is not an alias for XT660; Ténéré is XT660Z.
+The [website](https://terrafirma2021.github.io/yamaha-xt660/) now selects **model → year → market → ECU → firmware**. Selection persists across maps, wiring, MCU pins, research and image records, and is encoded in shareable URLs. The project lives in **yamaha-xt660**; the old repository and website point here. **Yamaha XT660 ECU Research** covers XT660R/X/Z. TDM900 material is retained only as reference research. Profiles without a BIN remain in the source dataset but are disabled in the selector; catalogue fitment is not proof of BIN identity. XT600 is not an alias for XT660; Ténéré is XT660Z.
 
 ## One record for each claim
 

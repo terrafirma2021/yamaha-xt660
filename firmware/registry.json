@@ -4,7 +4,7 @@
   "images": [
     {
       "id": "xt660x-2005-owner",
-      "label": "XT660X 2005 \u00b7 original supplied BIN",
+      "label": "5VK-8591A-00",
       "file": "firmware/XT660X 2005.bin",
       "sha256": "5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280",
       "base_address": 0,
@@ -15,11 +15,14 @@
       "analysis_status": "Application analysed; boot absent",
       "map_catalog": "primary",
       "reviewed_application_changes": [],
-      "notes": "Owner-confirmed immobilizer patch at 4E7D. Original bytes preserved."
+      "notes": "Owner-confirmed immobilizer patch at 4E7D. Original bytes preserved.",
+      "variant": "Original",
+      "part_number_alias": "5VK8591A00",
+      "label_evidence": "5VK-8591A-00 / 5VK8591A00 reference supplied by the owner on 2026-10-30; this ECU reference also appears in the 2005 XT660X parts catalogue. The photo is a reference, not proof of which physical ECU produced this BIN."
     },
     {
       "id": "xt660-2004-2006-companion",
-      "label": "XT660 2004\u201306 \u00b7 companion",
+      "label": "5VK-8591A-01",
       "file": "firmware/images/xt660-2004-2006-companion.bin",
       "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
       "base_address": 6144,
@@ -32,11 +35,13 @@
       "reviewed_application_changes": [
         "4E7D"
       ],
-      "notes": "Application differs from owner dump only at the known patch. Stored calibration cells and axes are identical. Authentication behavior differs; no claim of live ECU interchangeability."
+      "notes": "Application differs from owner dump only at the known patch. Stored calibration cells and axes are identical. Authentication behavior differs; no claim of live ECU interchangeability.",
+      "variant": "Companion",
+      "part_number_alias": "5VK8591A01"
     },
     {
       "id": "xt660x-2005-checksum-fixed",
-      "label": "XT660X 2005 \u00b7 checksum-corrected copy",
+      "label": "5VK-8591A-00",
       "file": "firmware/XT660X 2005 startup-checksum-fixed.bin",
       "sha256": "972ac93e76cb632470092d88c2a57e910daae69c02d6cdef52f1cad72f6909e7",
       "base_address": 0,
@@ -49,11 +54,14 @@
       "reviewed_application_changes": [
         "F7FD"
       ],
-      "notes": "Derived from owner dump by changing trailer byte F7FD. Software checksum passes; not hardware or flash validated."
+      "notes": "Derived from owner dump by changing trailer byte F7FD. Software checksum passes; not hardware or flash validated.",
+      "variant": "Checksum corrected",
+      "part_number_alias": "5VK8591A00",
+      "label_evidence": "5VK-8591A-00 / 5VK8591A00 reference supplied by the owner on 2026-10-30; this ECU reference also appears in the 2005 XT660X parts catalogue. The photo is a reference, not proof of which physical ECU produced this BIN."
     },
     {
       "id": "xt660-5vk-1x-2008",
-      "label": "5VK-8591A-1X \u00b7 2008-labelled image",
+      "label": "5VK-8591A-1X",
       "file": "firmware/images/xt660-5vk-1x-2008.bin",
       "sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
       "base_address": 6144,
@@ -64,11 +72,13 @@
       "analysis_status": "Application code decoded; 77 per-image maps extracted; physical scaling incomplete",
       "map_catalog": null,
       "reviewed_application_changes": [],
-      "notes": "Associated TunerPro log records six edits dated 06/04/2023 (date convention unconfirmed); factory-stock status is not established."
+      "notes": "Associated TunerPro log records six edits dated 06/04/2023 (date convention unconfirmed); factory-stock status is not established.",
+      "variant": "2008 file",
+      "part_number_alias": "5VK8591A1X"
     },
     {
       "id": "xt660-2c1-10",
-      "label": "2C1-8591A-10 \u00b7 supplied image",
+      "label": "2C1-8591A-10",
       "file": "firmware/images/xt660-2c1-10.bin",
       "sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
       "base_address": 6144,
@@ -79,11 +89,13 @@
       "analysis_status": "Application code decoded; 77 per-image maps extracted; physical scaling incomplete",
       "map_catalog": null,
       "reviewed_application_changes": [],
-      "notes": "Filename claims this ECU and year range; a 2014 Brazil parts catalogue corroborates the ECU reference, not this dump or every claimed year."
+      "notes": "Filename claims this ECU and year range; a 2014 Brazil parts catalogue corroborates the ECU reference, not this dump or every claimed year.",
+      "variant": "Original",
+      "part_number_alias": "2C18591A10"
     },
     {
       "id": "xt660-2c1-10-immo-off",
-      "label": "2C1-8591A-10 \u00b7 labelled immobilizer-off",
+      "label": "2C1-8591A-10",
       "file": "firmware/images/xt660-2c1-10-immo-off.bin",
       "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
       "base_address": 6144,
@@ -94,11 +106,13 @@
       "analysis_status": "Application code decoded; 77 per-image maps extracted; physical scaling incomplete",
       "map_catalog": null,
       "reviewed_application_changes": [],
-      "notes": "Two byte differences from its supplied partner; modification label is provenance, not a tested behavior claim."
+      "notes": "Two byte differences from its supplied partner; modification label is provenance, not a tested behavior claim.",
+      "variant": "Immobilizer-off label",
+      "part_number_alias": "2C18591A10"
     },
     {
       "id": "xt660-2c1-00",
-      "label": "2C1-8591A-00 \u00b7 supplied image",
+      "label": "2C1-8591A-00",
       "file": "firmware/images/xt660-2c1-00.bin",
       "sha256": "305ac6084de00f1da1bf17767795c935095b2eb3574c898e683a6196d545d15e",
       "base_address": 0,
@@ -109,11 +123,13 @@
       "analysis_status": "Application code decoded; 71 per-image maps extracted; physical scaling incomplete",
       "map_catalog": null,
       "reviewed_application_changes": [],
-      "notes": "Extensionless 64 KB source. ECU reference occurs in the 2008 Brazil parts catalogue; the dump year is unknown. Boot region is FF-filled."
+      "notes": "Extensionless 64 KB source. ECU reference occurs in the 2008 Brazil parts catalogue; the dump year is unknown. Boot region is FF-filled.",
+      "variant": "Original",
+      "part_number_alias": "2C18591A00"
     },
     {
       "id": "xt660-2c1-00-immo-off",
-      "label": "2C1-8591A-00 \u00b7 labelled immobilizer-off",
+      "label": "2C1-8591A-00",
       "file": "firmware/images/xt660-2c1-00-immo-off.bin",
       "sha256": "98d450f5bcb2052a5a5f3e88a36d5336cedffd4ff6eca5c02cc44f3893785316",
       "base_address": 0,
@@ -124,11 +140,13 @@
       "analysis_status": "Application code decoded; 71 per-image maps extracted; physical scaling incomplete",
       "map_catalog": null,
       "reviewed_application_changes": [],
-      "notes": "Extensionless 64 KB source; differs from its partner only at 0x4E7D. Boot region is FF-filled."
+      "notes": "Extensionless 64 KB source; differs from its partner only at 0x4E7D. Boot region is FF-filled.",
+      "variant": "Immobilizer-off label",
+      "part_number_alias": "2C18591A00"
     },
     {
       "id": "xt660-5vk-11",
-      "label": "5VK-8591A-11 \u00b7 supplied image",
+      "label": "5VK-8591A-11",
       "file": "firmware/images/xt660-5vk-11.bin",
       "sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
       "base_address": 6144,
@@ -139,7 +157,9 @@
       "analysis_status": "Application code decoded; 77 per-image maps extracted; physical scaling incomplete",
       "map_catalog": null,
       "reviewed_application_changes": [],
-      "notes": "Four bytes differ from the 2008-labelled 5VK-1X file. ECU reference is documented for XT660R model code 5VKL; exact dump year and stock status are unknown."
+      "notes": "Four bytes differ from the 2008-labelled 5VK-1X file. ECU reference is documented for XT660R model code 5VKL; exact dump year and stock status are unknown.",
+      "variant": "Original",
+      "part_number_alias": "5VK8591A11"
     }
   ]
 }
