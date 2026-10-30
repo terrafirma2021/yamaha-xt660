@@ -4,6 +4,21 @@ The subsequent [CPS/reference pass](CRANK_REFERENCE.md) links synchronization to
 
 The ordinary spark planner and its normal compare dispatch are now modeled independently in [spark_models.py](../../scripts/spark_models.py) and compared with the original instruction translation in [74,832 cases](spark_schedule_validation.json). This establishes the event-relative time equation, including planner overflow behavior and minimum-charge intervention. Physical TDC phase remains separate.
 
+The [speed-source and planner replay](../firmware/speed_source_validation.json) now also executes the fire planner from **all nine supplied BINs**, including the later application. It covers all 256 final timing codes per image with varied periods, time corrections and minimum leads. Both code families match the same independent integer planner. This verifies a shared scheduling equation; the different XDF slopes are not adopted as independent physical evidence.
+
+| Planner quantity | Early application | Later application |
+|---|---|---|
+| Entry | `54F0` | `4D49` |
+| Final timing code at caller | `A82` | `A8C` |
+| Three-pitch snapshot | `A36` | `A40` |
+| Quarter of that snapshot | `A32` | `A3C` |
+| Single-pitch snapshot | `A30` | `A3A` |
+| Additive time correction | `A8B` | `A93` |
+| ROM time subtraction | `4F9E = 150` | `474E = 150` |
+| Selected event / advance / residual | `DE3 / DE5 / DE7` | `E67 / E69 / E6B` |
+
+For both families, increasing the **final timing code** by one increases the proportional advance by approximately `three_pitch_ticks / 256` timer ticks before rounding, limits and event selection. Increasing a stored base-map cell by one is not automatically the same change at this final code: map selection and downstream corrections still apply. The nominal twelve-pitch profile gives `90/256 = 0.3515625` relative crank degrees per final-code step. A physical BTDC origin is a separate term in the equation below.
+
 ## Firing-time equation
 
 The snapshot at `0x53F4` sets `A30 = one normalized pitch`, `A36 = three normalized pitches`, and `A32 = floor(A36/4)`. The planner at `0x54F0` computes:

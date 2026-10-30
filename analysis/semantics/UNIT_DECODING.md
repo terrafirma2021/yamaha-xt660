@@ -10,6 +10,8 @@ The [wider Denso/Yamaha comparison](WIDER_SCALING_RESEARCH.md) tests external de
 
 At `0x5057–0x5059`, the application writes `5` to timer control register `0x004D`. In the [NXP MC9S12T64 manual](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf), ECT TSCR2 prescaler setting `101` divides the bus clock by 32. The supplied application does not establish the inherited oscillator/PLL setup; the boot region is absent.
 
+The subsequent [matching-companion review](LOCAL_XDF_REVIEW.md) recovers a populated boot with `SYNR=7`, `REFDV=1` and PLL selection. Its bus clock is four times the oscillator frequency. The original image still lacks those bytes; the companion resolves the clock-ratio setup without encoding an absolute oscillator frequency.
+
 The scheduler at `0x679C` advances every 2,500 timer ticks. Every fourth update flags the task that dispatches the actuator tests. Fan diagnostic `0xBB45` starts an activation every 250 such tasks and holds its output for 100 task samples. Therefore:
 
 ```
@@ -36,6 +38,8 @@ The recovered reciprocal calculation uses 37,500 and a Q8 fraction, then shifts 
 speed_code = min(0xFE00, 8 * floor(37500 * 256 / P))
 nominal rpm coordinate = speed_code * 100 / 512
 ```
+
+The [stock speed-source trace](RPM_AND_CUTS.md#stock-speed-history-path-checked-across-all-nine-bins) now resolves the other reciprocal's input: a rolling sum of 22 captured intervals, divided by four. At constant speed, ten short intervals and one double gap per pattern give 24 normalized pitches in that history, so the result is the same six-pitch period used above. All nine BINs select this history source for both ordinary map speed coordinates. The same scale applies at steady speed, with a different response during transients. This software relationship is tested independently of any assumed oscillator frequency.
 
 For example, code 4096 is nominally 800 rpm and a code step of 512 is 100 rpm. Reciprocal truncation introduces a downward error of less than 1.5625 rpm before saturation under this profile. Saturated or stale/fault speed values must not be treated as fresh measurements. Existing tests exhaust periods 1200–65535; the equation is not a claim about pathological smaller periods.
 

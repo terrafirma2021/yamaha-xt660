@@ -1,0 +1,541 @@
+{
+  "result": "passed",
+  "images": [
+    {
+      "id": "xt660x-2005-owner",
+      "firmware_sha256": "5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280",
+      "family": "early",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-2004-2006-companion",
+      "firmware_sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "family": "early",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660x-2005-checksum-fixed",
+      "firmware_sha256": "972ac93e76cb632470092d88c2a57e910daae69c02d6cdef52f1cad72f6909e7",
+      "family": "early",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-5vk-1x-2008",
+      "firmware_sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
+      "family": "late",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-2c1-10",
+      "firmware_sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+      "family": "late",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-2c1-10-immo-off",
+      "firmware_sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "family": "late",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-2c1-00",
+      "firmware_sha256": "305ac6084de00f1da1bf17767795c935095b2eb3574c898e683a6196d545d15e",
+      "family": "early",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-2c1-00-immo-off",
+      "firmware_sha256": "98d450f5bcb2052a5a5f3e88a36d5336cedffd4ff6eca5c02cc44f3893785316",
+      "family": "early",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    },
+    {
+      "id": "xt660-5vk-11",
+      "firmware_sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "family": "late",
+      "stock_source_selector": 1,
+      "telemetry_divisor": 190,
+      "spark_offset_ticks": 150,
+      "checks": {
+        "history_updates": 2604,
+        "steady_source_equivalence": 7,
+        "source_and_payload_cases": 311,
+        "spark_planner_cases": 256
+      },
+      "executed_instructions": 258,
+      "steady_examples": [
+        {
+          "pitch_ticks": 256,
+          "history_ticks": 6144,
+          "reciprocal_period_ticks": 1536,
+          "speed_code": 50000
+        },
+        {
+          "pitch_ticks": 513,
+          "history_ticks": 12312,
+          "reciprocal_period_ticks": 3078,
+          "speed_code": 24944
+        },
+        {
+          "pitch_ticks": 800,
+          "history_ticks": 19200,
+          "reciprocal_period_ticks": 4800,
+          "speed_code": 16000
+        },
+        {
+          "pitch_ticks": 1600,
+          "history_ticks": 38400,
+          "reciprocal_period_ticks": 9600,
+          "speed_code": 8000
+        },
+        {
+          "pitch_ticks": 2400,
+          "history_ticks": 57600,
+          "reciprocal_period_ticks": 14400,
+          "speed_code": 5328
+        },
+        {
+          "pitch_ticks": 5000,
+          "history_ticks": 120000,
+          "reciprocal_period_ticks": 30000,
+          "speed_code": 2560
+        },
+        {
+          "pitch_ticks": 10000,
+          "history_ticks": 240000,
+          "reciprocal_period_ticks": 60000,
+          "speed_code": 1280
+        }
+      ]
+    }
+  ],
+  "cases": 28602,
+  "test_script_sha256": "711736c4eaf176eab614270464ab1373ca513da27c60502f045d299dad56c365",
+  "interpreter_sha256": "7ab5b7b12c5707c14d91b489238c5dc0502f9ebc1987dba8842d6e4ecd0119e1",
+  "spark_model_sha256": "6e7be348cf7da4051ac3873f3f3ba30846caddb72e5576a6ee71f8337dbb4c90",
+  "scope": "Instruction-byte-checked p-code execution of the history update, reciprocal/source selection, telemetry and ordinary spark planner in all nine supplied BINs. Synthetic inputs; not whole-ECU execution, an oscillator measurement or a physical crank/TDC reference."
+}
