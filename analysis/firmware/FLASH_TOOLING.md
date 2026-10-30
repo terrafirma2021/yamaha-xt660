@@ -58,6 +58,8 @@ The nominal boot divisor is 0068 (about 9,615 baud at a 16 MHz bus), whereas the
 
 ## Workbench behavior and tests
 
+The repository BIN picker opens any of the nine registered images directly, without a local upload. The site packages unchanged copies of those public repository files and checks each downloaded file's size and SHA-256 against the catalogue before enabling inspection or editing. Original and modified variants remain separate choices. Identity and change reports record whether the source was a repository BIN or a local file; neither source is a live ECU readout.
+
 Only exact registered SHA-256 inputs enable editing. The layout belongs to the loaded BIN, not the globally selected bike. The original buffer is immutable; editing is limited to declared map cell bodies with checked addresses, big-endian widths and integer bounds. Unknown files can be inspected and compared but do not inherit map layouts. A draft and its JSON change report are separate downloads. Draft checksums are reported, not repaired; see [the qualified original checksum correction](../semantics/CHECKSUM.md).
 
 Receive capture has a 2 MiB bound, timestamped USB chunks, disconnect handling and explicit save. It has no writer API. USB chunks do not imply packet boundaries. A new connection replaces the previous in-memory capture. The inspector requires explicitly delimited application or boot frames and refuses bad lengths/checksums.

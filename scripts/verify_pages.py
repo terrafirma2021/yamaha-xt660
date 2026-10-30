@@ -3,6 +3,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 import json
+import hashlib
 import subprocess
 import re
 from sensor_profiles import sensor_code
@@ -85,7 +86,6 @@ for m in json.loads((ROOT/'analysis/maps.json').read_text()):
         cell_inks.add(foreground)
         cell_count+=1
 assert len(cell_inks)==1,'Heatmap numbers must use consistent ink across values'
-assert not list(SITE.rglob('*.bin'))
 for route in ('index.html','maps/index.html','pins/index.html','wiring/index.html','dataset/index.html','research/index.html','coverage/index.html','firmware/index.html'):
     assert (SITE/route).is_file()
 tracked=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').strip('\0').split('\0')
@@ -94,8 +94,12 @@ assert {f['path'] for f in coverage['files']}==set(tracked)
 assert coverage['rendered_documents']==sum(p.endswith('.md') for p in tracked)
 assert len(list((SITE/'docs').rglob('*.html')))==coverage['rendered_documents']
 library=json.loads((SITE/'firmware/catalog.json').read_text(encoding='utf-8'))
+assert {p.relative_to(SITE).as_posix() for p in SITE.rglob('*.bin')}=={'tools/bins/'+i['id']+'.bin' for i in library['images']}
 for item in library['images']:
     assert (SITE/'firmware'/item['id']/'index.html').is_file()
+    packaged=(SITE/'tools/bins'/f"{item['id']}.bin").read_bytes()
+    assert packaged==(ROOT/item['file']).read_bytes(),item['id']
+    assert len(packaged)==item['size'] and hashlib.sha256(packaged).hexdigest()==item['sha256'],item['id']
 assert 'image-select' in (SITE/'maps/index.html').read_text(encoding='utf-8')
 for route,scope in [('maps/index.html','primary'),('pins/index.html','hardware'),('research/index.html','primary')]:
     assert f'data-study="{scope}"' in (SITE/route).read_text(encoding='utf-8'),route
@@ -103,4 +107,4 @@ for m in json.loads((ROOT/'analysis/maps.json').read_text()):
     assert 'data-study="primary"' in (SITE/'docs/map_details'/f'{m["id"]}.html').read_text(encoding='utf-8'),m['id']
 assert json.loads((SITE/'vehicles/catalog.json').read_text(encoding='utf-8'))==json.loads((ROOT/'dataset/vehicles.json').read_text(encoding='utf-8'))
 assert json.loads((SITE/'vehicles/parts.json').read_text(encoding='utf-8'))==json.loads((ROOT/'dataset/parts_catalogue.json').read_text(encoding='utf-8'))
-print(f'Verified six site sections, 71 maps, {coverage["rendered_documents"]} documents, {cell_count} grid cells matched to firmware, 71 colour previews, {curve_count} curves, complete tracked-file index, theme assets and {count} local links; no firmware binary in site.')
+print(f'Verified six site sections, 71 maps, {coverage["rendered_documents"]} documents, {cell_count} grid cells matched to firmware, 71 colour previews, {curve_count} curves, complete tracked-file index, theme assets and {count} local links; {len(library["images"])} repository BINs packaged byte-for-byte.')

@@ -1,8 +1,10 @@
-"""Build a browser-local workbench; no BINs or live transmit code are deployed."""
+"""Build a browser-local workbench with the registered repository BINs."""
 import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-def build(shell,write):
+def build(shell,write,catalog):
+    for image in catalog['images']:
+        write('tools/bins/'+image['id']+'.bin',(ROOT/image['file']).read_bytes())
     report=json.loads((ROOT/'analysis/firmware/decode_catalog.json').read_text(encoding='utf-8'))
     for image in report['images']:
         maps=json.loads((ROOT/image['maps_path']).read_text(encoding='utf-8'))
@@ -11,7 +13,7 @@ def build(shell,write):
     body='''<div class="page-heading"><div class="kicker">XT660 / WORKBENCH</div><h1>Back up. Inspect. Develop.</h1><p>Local BIN tools and serial receive capture. Files stay in your browser; nothing is uploaded.</p></div>
 <nav class="tool-links" aria-label="Workbench sections"><a href="#backup">BIN &amp; backup</a><a href="#tune">Map editor</a><a href="#connect">COM capture</a><a href="#protocol">Protocol</a></nav>
 <p id="tool-error" class="notice" role="alert" hidden></p>
-<section id="backup" class="tool-panel"><h2>Open a BIN</h2><p>Identify an existing file, keep an untouched copy and compare two reads. A local file is not proof of a complete ECU backup: boot and persistent storage need separate coverage.</p><label class="file-label">BIN file<input id="bin-file" type="file" accept=".bin,application/octet-stream"></label><p id="bin-status" role="status">No file opened.</p><dl id="bin-facts" class="firmware-facts"></dl>
+<section id="backup" class="tool-panel"><h2>Open a BIN</h2><p>Choose a BIN already in the repository or open your own file. Each registered BIN loads its own maps. Originals stay unchanged; edits are exported as a separate draft.</p><label>Repository BIN<select id="repo-bin" disabled><option>Loading repository BINs…</option></select></label><button id="repo-open" disabled>Open repository BIN</button><p class="tool-note">Original and modified variants are listed separately. The downloaded bytes are checked against the catalogue’s SHA-256 before opening.</p><label class="file-label">Or open a local BIN<input id="bin-file" type="file" accept=".bin,application/octet-stream"></label><p id="bin-status" role="status">No BIN opened.</p><dl id="bin-facts" class="firmware-facts"></dl>
 <div class="tool-actions"><button id="backup-save" disabled>Save untouched BIN</button><button id="backup-report" disabled>Save identity report</button></div>
 <label class="file-label">Compare another read<input id="compare-file" type="file" disabled></label><p id="compare-status" role="status"></p></section>
 <section id="tune" class="tool-panel"><h2>Raw-map editor</h2><p>Editing is available only for an exact registered BIN hash. Values are raw integers; physical scaling is unfinished. The loaded file determines the map layout, independently of the bike selector.</p>

@@ -38,7 +38,10 @@ doc_targets = {p.resolve(): (Path('docs') / p.relative_to(ROOT / 'analysis').wit
 def write(path, text):
     target = DEST / path
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(text, encoding='utf-8', newline='\n')
+    if isinstance(text, bytes):
+        target.write_bytes(text)
+    else:
+        target.write_text(text, encoding='utf-8', newline='\n')
 
 def rel(target, current):
     return Path(os.path.relpath(target, Path(current).parent)).as_posix()
@@ -67,7 +70,7 @@ write('assets/map-grid.css', (ROOT/'site/assets/map-grid.css').read_text(encodin
 
 build_library(firmware_catalog,shell,write,REPO)
 build_decoded_maps(shell,write,REPO)
-build_tools(shell,write)
+build_tools(shell,write,firmware_catalog)
 write('firmware/catalog.json',json.dumps(firmware_catalog,indent=2)+'\n')
 build_vehicle_pages(shell,write,REPO)
 home = build_vehicle_home()
