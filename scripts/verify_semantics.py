@@ -56,6 +56,18 @@ assert pressure['result']=='passed' and pressure['firmware_sha256']==catalog['fi
 assert pressure['test_sha256']==digest(ROOT/'scripts/test_pressure_state.py')
 assert pressure['model_sha256']==digest(ROOT/'scripts/pressure_state.py')
 assert pressure['library_sha256']==full['compiled_library_sha256']
+firmware_entries = json.loads((ROOT/'analysis/firmware/catalog.json').read_text())['images']
+firmware_hashes = {entry['id']: entry['sha256'] for entry in firmware_entries}
+for report_name, script_name in [('pressure_source_validation.json', 'test_pressure_sources.py'),
+                                  ('fuel_transfer_validation.json', 'test_fuel_transfer.py')]:
+    replay_report = json.loads((ROOT/'analysis/firmware'/report_name).read_text())
+    assert replay_report['result'] == 'passed'
+    assert {item['id']: item['firmware_sha256'] for item in replay_report['images']} == firmware_hashes
+    assert replay_report['test_script_sha256'] == digest(ROOT/'scripts'/script_name)
+    assert replay_report['replay_script_sha256'] == digest(ROOT/'scripts/test_speed_sources.py')
+    assert replay_report['interpreter_sha256'] == digest(ROOT/'scripts/test_full_lift.py')
+    if 'model_script_sha256' in replay_report:
+        assert replay_report['model_script_sha256'] == digest(ROOT/'scripts/map_models.py')
 assert json.loads((OUT/'external_scaling_audit.json').read_text(encoding='utf-8'))==external_scaling_audit()
 for report_name,test_name,model_name in [
     ('spark_schedule_validation.json','test_spark_schedule.py','spark_models.py'),

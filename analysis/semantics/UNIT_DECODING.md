@@ -4,7 +4,7 @@ This pass supplies executable arithmetic, converted cell values and nominal spee
 
 There are three separate claims: **instruction-proven arithmetic**, **physical conversions conditional on named hardware assumptions**, and **unresolved hypotheses**. The catalogue preserves those distinctions and enables no tuning export. A conversion into milliseconds does not describe all corrections or establish an operating limit.
 
-The [wider Denso/Yamaha comparison](WIDER_SCALING_RESEARCH.md) tests external definitions against this image instead of transferring their labels. The [pressure-estimate source and tracking trace](PRESSURE_ESTIMATE.md) narrows the input path used by six curves, without claiming an absolute kPa scale.
+The [wider Denso/Yamaha comparison](WIDER_SCALING_RESEARCH.md) tests external definitions against this image instead of transferring their labels. The [pressure sampling and load trace](PRESSURE_ESTIMATE.md) now checks the stock sample selection, complete estimator eligibility, filtering and signed load normalization in both firmware families, across all nine BINs. The remaining absolute kPa conversion requires the sensor/circuit transfer and reference; the map-load coordinate is not the diagnostic pressure byte.
 
 ## Clock and diagnostic timing
 

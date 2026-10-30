@@ -1,0 +1,307 @@
+{
+  "result": "passed",
+  "cases": 23904,
+  "images": [
+    {
+      "id": "xt660x-2005-owner",
+      "firmware_sha256": "5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280",
+      "family": "early",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 426,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-2004-2006-companion",
+      "firmware_sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "family": "early",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 426,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660x-2005-checksum-fixed",
+      "firmware_sha256": "972ac93e76cb632470092d88c2a57e910daae69c02d6cdef52f1cad72f6909e7",
+      "family": "early",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 426,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-5vk-1x-2008",
+      "firmware_sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
+      "family": "late",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 423,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-2c1-10",
+      "firmware_sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+      "family": "late",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 423,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-2c1-10-immo-off",
+      "firmware_sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "family": "late",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 423,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-2c1-00",
+      "firmware_sha256": "305ac6084de00f1da1bf17767795c935095b2eb3574c898e683a6196d545d15e",
+      "family": "early",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 426,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-2c1-00-immo-off",
+      "firmware_sha256": "98d450f5bcb2052a5a5f3e88a36d5336cedffd4ff6eca5c02cc44f3893785316",
+      "family": "early",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 426,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    },
+    {
+      "id": "xt660-5vk-11",
+      "firmware_sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "family": "late",
+      "checks": {
+        "adc_result_storage": 1056,
+        "window_gate_boundaries": 128,
+        "window_tracking_all_gain_bytes": 256,
+        "estimate_priority_and_limits": 521,
+        "phase_and_fault_sample_selection": 128,
+        "linked_lookup_filters_both_load_outputs": 567
+      },
+      "accepted_tracking_cases": 310,
+      "executed_instructions": 423,
+      "stock": {
+        "window_first_index": 14,
+        "window_sample_count": 5,
+        "max_window_spread": 384,
+        "window_gain": 255,
+        "eligibility_bounds": [
+          734,
+          11008,
+          4096,
+          23040,
+          27520,
+          65280
+        ],
+        "load_sample_count": 1,
+        "load_sample_index": 6,
+        "load_filter_gain": 64,
+        "gain_table_hex": "720050000040efe4dad1c9c1bab3ada6a19c97938f8c8884807d7a"
+      }
+    }
+  ],
+  "test_script_sha256": "a343110ec98159888e99ab6472e688f5f78dc4de7858a020f8563fa36195fe84",
+  "replay_script_sha256": "711736c4eaf176eab614270464ab1373ca513da27c60502f045d299dad56c365",
+  "interpreter_sha256": "7ab5b7b12c5707c14d91b489238c5dc0502f9ebc1987dba8842d6e4ecd0119e1",
+  "scope": "Byte-checked selected-path CPU12 replay, synthetic RAM/peripherals, stock one-sample load configuration. ADC-result storage, complete five-sample eligibility/tracking, selected pressure priority, phase/fault load selection, RAM curve lookup, filtering and signed rescale in both families. Not analog pressure calibration, whole-ECU scheduling or on-engine validation."
+}

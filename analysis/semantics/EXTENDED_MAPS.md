@@ -20,7 +20,7 @@ For speed code `v = RAM[0x0900]`, let `u = clamp(v − 4096, 0, 55296)`. The Q8 
 
 The spacing therefore changes from 1024 to 2048 to 4096 speed-code units. A uniform RPM axis would misrepresent these tables. The index is bounded at `22 × 256`, establishing 23 cells in each curve. All 65,536 possible input codes have been tested against the translated helper.
 
-The first family writes gain `0x098D`. Its source delta compares the high bytes of throttle path `0x08E8` and filtered path `0x08EA`, with mode-dependent offsets and deadband logic at `0x793D–0x7A2C`. The second writes gain `0x098E` and uses the high-byte difference between `0x0C8C` and filtered `0x08F0` at `0x7878`. The second input's physical meaning still needs its upstream path resolved.
+The first family writes gain `0x098D`. Its source delta compares the high bytes of throttle path `0x08E8` and filtered path `0x08EA`, with mode-dependent offsets and deadband logic at `0x793D–0x7A2C`. The second writes gain `0x098E` and uses the high-byte difference between `0x0C8C` and filtered `0x08F0` at `0x7878`. The subsequent [pressure/load trace](PRESSURE_ESTIMATE.md) resolves `C8C` as the normalized, unfiltered selected pressure sample. Converting this delta to a physical pressure rate still requires the absolute sensor transfer and full filter/sample-cadence treatment.
 
 Selection uses encoded delta bytes `0x0985`/`0x0989`, variant `0x0D87`, flag `0x0896:0x10`, and mode code `0x0898`. **Bit 7 of these encoded bytes is not the original delta sign:** a negative magnitude is encoded as `0x80 − magnitude`, and a positive magnitude as `0x80 + magnitude`. Per-map records state the actual bit conditions to avoid reversing the two groups. A magnitude at or below its deadband is zeroed.
 
@@ -49,7 +49,7 @@ Its rounded result is multiplied by 32 into `0x0A98`; a second contribution is a
 
 ## A curve copied into RAM
 
-The 27 bytes at `0x1854–0x186E` are copied to `0x0DBA` by `0x6244–0x6258`. They contain a six-byte uniform-axis header and 21 byte cells. Routine `0x95FD` then passes the **RAM** pointer to `0xC1F2`, with pressure-derived input `0x08F2`, producing `0x0C92`. The header is minimum `0x7200`, span `0x5000`, factor `0x0040`. An alternate structurally recovered path at `0xEA1B` uses the RAM table through `0xF3B7` and writes `0x0C93`; its reachability is not asserted.
+The 27 bytes at `0x1854–0x186E` are copied to `0x0DBA` by `0x6244–0x6258`. They contain a six-byte uniform-axis header and 21 byte cells. Routine `0x95FD` then passes the **RAM** pointer to `0xC1F2`, with pressure-derived input `0x08F2`, producing `0x0C92`. The header is minimum `0x7200`, span `0x5000`, factor `0x0040`. The sampled-load continuation at `0xEA1B` uses the RAM table through `0xF3B7` and writes `0x0C93`. The subsequent [cross-family replay](PRESSURE_ESTIMATE.md) checks both consumers: `C92` normalizes the filtered sample into `C90`, while `C93` normalizes the unfiltered sample into `C8C`. This supersedes the earlier description of the second path as merely unreferenced.
 
 The copy and normal lookup were exercised together. Mutable RAM-table consumers are a remaining search target; a ROM-only pointer scan cannot prove complete map coverage.
 

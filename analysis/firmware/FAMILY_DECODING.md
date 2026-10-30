@@ -45,6 +45,8 @@ Flow roots include the entry/interrupt dispatch, indirect ADC entries, unique or
 
 ## Artifacts and verification
 
+The subsequent [pressure/load pass](../semantics/PRESSURE_ESTIMATE.md) and [normal fuel-transfer pass](../semantics/MAP_CONSUMERS.md#fuel-transfer-checked-in-both-firmware-families) add instruction replay across all nine BINs. They verify family-specific sampling/fallback behaviour, the estimator's complete acceptance gates, both load-normalization paths, normal fuel gains and primary request construction. In particular, the later family does not retain the early alternate pressure-estimator selector, second normal coolant lane, or early reduction at the blend-to-limit stage. These are code differences, not interchangeable labels.
+
 - [Later structured pseudocode](families/late/decompiled.c), [disassembly](families/late/disassembly.tsv), [function index](families/late/functions.tsv), [references](families/late/references.tsv), and [compressed instruction p-code](families/late/full/instructions.jsonl.gz).
 - [Early structured pseudocode](../decompiled.c) and [complete early instruction translation](../full/README.md).
 - [Family verification](family_verification.json), [per-image catalogue](decode_catalog.json), and [lookup execution results](lookup_validation.json).

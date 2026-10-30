@@ -112,7 +112,7 @@ def extend(maps, axes, image):
     # Output is immediate consumer, not an asserted engineering-unit conversion.
     traced={
       0x18b6:('u8 0x08F4 coolant','u8 0x0CAE compared with 1-second-task counter 0x0CAF','Coolant-dependent delay before feedback eligibility'),
-      0x1854:('u16 0x08F2 pressure-derived estimate','u8 0x0C92; alternate unreferenced path writes 0x0C93','Pressure/load-processing gain copied to RAM 0x0DBA'),
+      0x1854:('u16 0x08F2 pressure-derived estimate','u8 0x0C92 for filtered load; 0x0C93 for the unfiltered sampled-load path','Pressure/load-processing gain copied to RAM 0x0DBA; see PRESSURE_ESTIMATE.md for the traced sampling and filter chain'),
       0x1996:('u8 0x08F4 coolant','u16 0x0934; initialization also writes high byte to 0x0A08','Startup fuel base quantity'),
       0x32ef:('u8 0x08F4 coolant','u16 Q8 state 0x0994; decays by twice ROM 0x3313 per fuel update','First post-start enrichment state; maximum of both states feeds normal fuel gain'),
       0x3301:('u8 0x08F4 coolant','u16 Q8 state 0x0996; decays by twice ROM 0x3314 per fuel update','Second post-start enrichment state; maximum of both states feeds normal fuel gain'),

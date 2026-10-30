@@ -6,6 +6,8 @@ This pass follows stored maps through their consumers, rather than assigning uni
 
 **A resolved numeric contribution is not necessarily a resolved physical unit.** Some tables contain gains, thresholds, event codes or logical gates. Others only have a meaningful pulse duration when combined with additional tables. Milliseconds, seconds and RPM remain conditional on the clock/crank profiles in [UNIT_DECODING.md](UNIT_DECODING.md). Absolute BTDC and the conflicting temperature scale remain open.
 
+Unless explicitly identified as later-family code in the comparison below, addresses and formulas in this guide refer to the early firmware family.
+
 ## Corrections to earlier labels
 
 | Map | Corrected interpretation | Evidence |
@@ -23,6 +25,8 @@ This pass follows stored maps through their consumers, rather than assigning uni
 The relative-throttle quantity is `08E6`, a filtered version of `max(ADC10 - learned_closed,0)`. At `0x8F82`, it is capped at 255 into `08EC`. The two threshold curves therefore use ten-bit ADC-count increments above learned closed. They do **not** measure a rate of throttle movement. Angle conversion is still conditional on sensor geometry.
 
 ## Exact normal fuel gain
+
+The addresses and two-lane description in this section apply to the **early family**. The later family comparison and independent replay are recorded below; these addresses must not be reused for a later BIN.
 
 The two coolant curves `0x3315` / `0x3327` feed separate gain lanes through bytes `097B` / `097C`. The following notation separates the arithmetic from interpretation:
 
@@ -66,7 +70,45 @@ The pressure-indexed curve `0x323C` and [Fuel correction gain vs speed and load]
 
 Both are 128-centered reference multipliers, but their product is capped at 255 before use. Editing one can therefore have no further effect after the combined value saturates. [Throttle-path fuel multiplier vs pressure estimate](../map_details/curve_32e0.md) supplies the other lane's pressure factor `0978`. Its reference value is also 128. This does not make the processed-load axis a directly measured kPa axis.
 
-### Post-start states
+## Fuel transfer checked in both firmware families
+
+[test_fuel_transfer.py](../../scripts/test_fuel_transfer.py) now checks the normal correction block followed by the primary injector-request block against all nine BINs. The [6,912 passing cases](../firmware/fuel_transfer_validation.json) include the independently specified unity reference, rounding, wrapping, saturation, blend endpoints, stock limits and synthetic gate/limit settings. Every executed instruction is checked against that image's bytes. Base quantities in this fixture are the already-normalized lookup results; it does not bypass their earlier normalization when interpreting a raw map cell.
+
+| Stage | Early family | Later family |
+|---|---|---|
+| Normal gain block tested | `8220–82F0` | `77F8–785F` |
+| Post-start state | `0992` | `0990` |
+| Coolant result(s) | `097B`, `097C` | `097B` |
+| Centered byte / transient word / adaptive word | `0980` / `0982` / `097E` | `097E` / `0980` / `097C` |
+| Load / throttle gains for primary injection | `0960` / `0964` | `0968` / `096A` |
+| Normalized base quantities | `CE4` / `CE8` | `CFE` / `D00` |
+| Additive trim byte / blend byte | `095C` / `0998` | `0964` / `0996` |
+| Request construction tested | `8323–842B` | `7885–79A0` |
+| Final primary request word | `092A` | `0948` |
+
+The later normal block has **one coolant/pre-gain lane**, followed by separate load and throttle pressure multipliers. The same `pre`, IAT and transient arithmetic above applies with the later addresses. With post-start and coolant contributions zero, centered byte 128, centered transient/adaptive words 32768, IAT/response/pressure cells 128, both final gains are **256 in Q8: unity**. This is checked in every BIN, independently of timer frequency.
+
+For both families, let `A` and `B` be the normalized load/throttle quantities, `o` the additive byte, and `w` the blend byte:
+
+```text
+a = Q8(clamp(A + 4*(o-128), 0, 65535), gain_load)
+b = Q8(clamp(B + 4*(o-128), 0, 65535), gain_throttle)
+blend = floor(b*w/256) + floor(a*(255-w)/256)
+```
+
+The complementary weights total **255, not 256**, and the two products truncate separately. Even with unity gains this is not an exact floating-point blend: two equal quantities of 1000 produce 995 or 996 depending on the blend byte. That small integer effect must be retained when calculating the output of an edit.
+
+The subsequent paths differ:
+
+- Early code applies its nonzero `0AD4` reduction before the request limits. The existing early model retains the word wrapping and shifted factor exactly.
+- Later `7921–7936` proceeds straight from the blend to limits `19B4/19B6`; the early `0AD4` reduction is absent from this block.
+- When load-mode bit `CA8:01` / `CCA:01` is clear, both apply the configured global byte times four as a rounded Q8 factor. Stock byte 32 means **½** at this stage, not an unconditional halving of every operating mode.
+- With the mode bit set, the early normal path skips that global factor. The later path can instead apply byte `AD7/128`, gated by `ROM[4124] == 128` and either `ACF:04` or `AD0:20`. **All four supplied later BINs contain 255 at `4124`**, so this extra factor is inactive in their stock normal path. The arithmetic fixture also exercises the enabled gate synthetically; it does not assign a hardware meaning to those flags.
+- Finally the compensation word is added with saturation. It is `095E` in early code and `0966` in later code. Adding compensation before these factors would give the wrong result.
+
+This establishes the ordinary integer correction-to-request transfer for both families. It does not establish injector flow in fuel-mass units, AFR, all forced modes, a physical timer measurement or engine behaviour. See the [pressure sampling and load derivation](PRESSURE_ESTIMATE.md) for the separate coordinates that select these maps. Reproduce with `python3 scripts/test_fuel_transfer.py --check`.
+
+## Post-start states
 
 [Post-start enrichment — fast-decay state](../map_details/curve_32ef.md) / [Post-start enrichment — slow-decay state](../map_details/curve_3301.md) initialize Q8 words `0994` / `0996`. On each execution of this fuel-update block:
 

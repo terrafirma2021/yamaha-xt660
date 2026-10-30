@@ -155,13 +155,13 @@ Converted values: 600, 800, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1800, 2000
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | row_axis | u16 0x0900 selected speed | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
-| column_axis | u16 0x0C90 load code | Processed load coordinate | Finish the pressure-to-load transfer across modes; C90 is not a direct kPa axis. |
+| column_axis | u16 0x0C90 load code | Processed load coordinate | Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate. |
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Finish the pressure-to-load transfer across modes; C90 is not a direct kPa axis.
+- Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.
 - Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 

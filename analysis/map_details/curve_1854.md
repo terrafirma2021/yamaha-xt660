@@ -8,13 +8,13 @@ Descriptive alias based on recovered dataflow; it does not establish physical ax
 Naming evidence: [recovered derivation](../../analysis/semantics/MAP_CONSUMERS.md).
 <!-- /map-name -->
 
-Pressure/load-processing gain copied to RAM 0x0DBA
+Pressure/load-processing gain copied to RAM 0x0DBA; see PRESSURE_ESTIMATE.md for the traced sampling and filter chain
 
 Cells: **0x185A–186E**, 1 rows × 21 columns, 8-bit unsigned big-endian values.
 
 Inputs: u16 0x08F2 pressure-derived estimate.
 
-Output: u8 0x0C92; alternate unreferenced path writes 0x0C93.
+Output: u8 0x0C92 for filtered load; 0x0C93 for the unfiltered sampled-load path.
 
 Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
 
@@ -100,11 +100,11 @@ Consumer instruction addresses: `0x9609`, `0x965E`.
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
-| uniform_input | u16 0x08F2 pressure-derived estimate | Pressure-derived estimate | Confirm the pressure estimator, analog transfer and reference before assigning kPa to 08F2. |
+| uniform_input | u16 0x08F2 pressure-derived estimate | Pressure-derived estimate | Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa. |
 
 ### What remains for this map
 
-- Confirm the pressure estimator, analog transfer and reference before assigning kPa to 08F2.
+- Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.
 - Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 

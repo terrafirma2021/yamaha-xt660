@@ -2,7 +2,7 @@
   "schema_version": 1,
   "firmware_sha256": "5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280",
   "script_sha256": "41516b411b9305100efc4f3245f6363fa82df109cfb9464ec0f8338a85e8dac5",
-  "maps_sha256": "06a9f0d3c7dad1b0100762d37ccd0977af407e105320bda90dfdc71e2a80f107",
+  "maps_sha256": "4a50a68c627db8bafae5d56213435ddeae5fb99ad43aa637616b54c71f02d474",
   "sensor_model_sha256": "528590c2b84127a90eb512f9ff0eeb2a28be405f12e37771767674f5fb141d31",
   "scope": "Static declarations and byte comparisons; not live ECU calibration or a TunerPro rendering test.",
   "inventory": [
