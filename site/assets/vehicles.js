@@ -16,7 +16,7 @@
     const parts=new Map(partsCatalogue.records.map(r=>[r.id,r]));
     const visibleModels=data.models.filter(m=>!m.reference_only);
     const available=p=>!!p?.firmware_ids.length&&!models.get(p.model)?.reference_only;
-    const sections={overview:'',wiring:'wiring/',research:'research/',pins:'pins/',maps:'maps/'};
+    const sections={overview:'',wiring:'wiring/',research:'research/',pins:'pins/',maps:'maps/',flashing:'flashing/',tune:'tune/'};
     const section=panel.dataset.section||Object.keys(sections).find(k=>route===sections[k]||route===sections[k]+'index.html');
     function modelDefault(id){return data.profiles.find(p=>p.id===models.get(id)?.default_profile&&available(p))||data.profiles.find(p=>p.model===id&&available(p));}
     function yearDefault(year){

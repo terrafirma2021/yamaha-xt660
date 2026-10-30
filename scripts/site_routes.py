@@ -6,7 +6,8 @@ from html import escape, unescape
 from urllib.parse import urlsplit, urlunsplit
 
 SECTIONS={'overview':'index.html','wiring':'wiring/index.html','research':'research/index.html',
-          'pins':'pins/index.html','maps':'maps/index.html'}
+          'pins':'pins/index.html','maps':'maps/index.html',
+          'flashing':'flashing/index.html','tune':'tune/index.html'}
 
 def routes(data):
     models={m['id'] for m in data['models'] if not m.get('reference_only')}

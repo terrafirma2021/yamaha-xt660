@@ -1,5 +1,7 @@
 # ECU tools: readout, backup, flashing and map editing
 
+The website now has separate **Flashing** and **Tune** pages. [Connector references](FLASH_CONNECTIONS.md) cover the early 26-position photograph, later 34-position drawing and USB KKL breakout. Flashing keeps file inspection read-only; Tune owns edits and automatic checksum correction. The split does not enable hardware operations.
+
 The browser workbench provides **BIN inspection, unchanged-copy export, byte comparison, feature controls, raw-map draft editing, automatic startup-checksum correction**. [Feature controls and their evidence](FEATURE_PATCHES.md) cover immobilizer, PAIR commands and overrun fuel cut for both registered application families, plus O2 feedback and new O2 fault suppression in the late application. The early O2 row is read-only because feedback is not configured in those BINs. It does not yet perform ECU memory readout or flashing. A captured serial stream is not a firmware backup. The tool does not transmit serial bytes, modify originals or claim complete physical scaling.
 
 ## What the existing tools actually establish

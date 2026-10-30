@@ -37,6 +37,10 @@ Input: `site/assets/xt660x-2005.jpg`. Output: `site/assets/xt660x-2005-cutout.pn
 Prompt: Remove only the white studio background, including gaps between spokes and frame components. Preserve the blue 2005 XT660X, its geometry, wheels, mirrors, engine, exhaust, decals, colours and photographic details; retain the full motorcycle and original composition. No new objects, text, background or baked checkerboard. Intended for both light and dark website backgrounds.
 
 
+## Flashing connector source photograph
+
+`site/assets/references/xt660-early-flashing-photo.png` is the unchanged, annotated XT660 / MT03 connector photograph supplied in the owner's extracted Yamaha ECU Tools folder (`334550210_908575740348949_6886937403634831296_n.png`). Original photographer and publication are not identified. It is retained as hardware research evidence, not presented as Yamaha-authored artwork. The working diagrams are SVG redraws with source and orientation qualifications; see [the connection review](../analysis/firmware/FLASH_CONNECTIONS.md). The later reference remains `dataset/sources/xt 660 r/XT660_PinOut.JPG`.
+
 ## XT660R and XT660Z transparent artwork (2026-10-30)
 
 The original source photographs above remain unchanged. The website uses new transparent PNG derivatives, made with the built-in image generation tool (background-extraction edit, transparent background enabled). They are presentation artwork, not evidence of exact motorcycle equipment.

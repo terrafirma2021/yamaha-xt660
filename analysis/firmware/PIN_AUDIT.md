@@ -22,6 +22,8 @@ All 80 package position labels are compared with the reviewed manufacturer drawi
 
 ## Connector differences and the flashing sketch
 
+The later review also recovered an independent **26-position ECU-face photograph** in the supplied XT tools folder. It marks upper positions 3 / 7 / 12 for power / ground / K-line and corroborates the horizontally reflected early manual reference. The new [flashing connector review](FLASH_CONNECTIONS.md) records both sources, their different housing widths and the remaining fitment/view limits. This does not transfer numbering from the later sketch to the early connector.
+
 The [2004 Yamaha 5VK1-AE1 manual, PDF 462](https://scootertuub.nl/motoren/Yamaha/Yamaha%20XT%20660%20R%20X%202004%20Service%20Manual%20%20.pdf#page=462) draws **26 positions**: two rows of 13, with 23 wire labels and three crosses. The [2007 R/X supplement, PDF 81](https://www.motomatrix.co.uk/yamaha-pdf/XT660X-R2007_Suppl_manual.pdf#page=81) draws **34 positions**: two rows of 17, with 25 wire labels and nine crosses. Crosses do not prove whether physical metal contacts exist.
 
 The later drawing adds **P, oxygen-sensor heater control**, and **Gy/G, oxygen-sensor signal**. Their paths were visually followed through the full circuit drawing. The sensor has separate R/W heater supply and Gy signal return. The signal function correlates with late ADC2/O2 feedback and fault 24; the heater's MCU command remains unresolved.

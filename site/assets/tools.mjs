@@ -7,7 +7,9 @@ const $=id=>document.getElementById(id),root=new URL('../',import.meta.url);
 const error=e=>{$('tool-error').textContent=e.message||String(e);$('tool-error').hidden=false};
 const guarded=fn=>async event=>{try{$('tool-error').hidden=true;await fn(event)}catch(e){error(e)}};
 let original=null,draft=null,identity=null,maps=[],base=0,filename='',hash='',selected=null,cell=0,undo=[],redo=[],generation=0,loading=false,origin='',repositoryImages=[];
-let matchMethod='none',speedOffsetChoice=0;
+let matchMethod='none',speedOffsetChoice=0,unsavedEdits=false;
+window.addEventListener('beforeunload',event=>{if(unsavedEdits){event.preventDefault();event.returnValue='';}});
+document.addEventListener('vehiclechange',event=>{if(!original&&!loading&&repositoryImages.some(i=>i.id===event.detail.firmware))$('repo-bin').value=event.detail.firmware;});
 const referenceCache=new Map();
 async function referenceBin(image){
   if(!referenceCache.has(image.id))referenceCache.set(image.id,(async()=>{
@@ -51,14 +53,14 @@ const catalogPromise=fetch(new URL('firmware/catalog.json',root)).then(r=>{if(!r
 catalogPromise.then(catalog=>{
   repositoryImages=catalog.images;
   $('repo-bin').replaceChildren(...repositoryImages.map(i=>new Option(i.label+' · '+i.variant,i.id)));
-  const requested=new URL(location.href).searchParams.get('firmware');
+  const requested=new URL(location.href).searchParams.get('firmware')||$('vehicle-context')?.dataset.firmware||$('image-select')?.value;
   if(repositoryImages.some(i=>i.id===requested))$('repo-bin').value=requested;
   $('repo-bin').disabled=false;controls();
 }).catch(error);
 function save(name,data,type='application/octet-stream'){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function jsonSave(name,value){save(name,JSON.stringify(value,null,2)+'\n','application/json')}
 function facts(values){const dl=$('bin-facts');dl.replaceChildren();for(const [key,value] of Object.entries(values)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=key;dd.textContent=String(value);dl.append(dt,dd)}}
-function controls(){const checked=!!identity&&!!draft&&verifyStartupChecksum(draft,identity).status==='pass';$('repo-open').disabled=!repositoryImages.length||loading;for(const id of ['backup-save','backup-report','compare-file'])$(id).disabled=!original||loading;for(const id of ['draft-save','draft-report'])$(id).disabled=!checked||loading;for(const id of ['edit-reset','edit-undo'])$(id).disabled=!undo.length||loading;$('tune-map').disabled=!maps.length||loading;$('edit-redo').disabled=!redo.length||loading;renderFeatures();renderSpeed();workspace.render()}
+function controls(){const checked=!!identity&&!!draft&&verifyStartupChecksum(draft,identity).status==='pass';$('repo-open').disabled=!repositoryImages.length||loading;for(const id of ['draft-save','draft-report'])$(id).disabled=!checked||loading;for(const id of ['edit-reset','edit-undo'])$(id).disabled=!undo.length||loading;$('tune-map').disabled=!maps.length||loading;$('edit-redo').disabled=!redo.length||loading;renderFeatures();renderSpeed();workspace.render()}
 function renderSpeed(){
   const s=speedState(draft,identity),ready=s.editable&&!loading;
   $('speed-output-row').dataset.available=String(ready);
@@ -114,7 +116,7 @@ function updateChecksum(){
 }
 async function report(){updateChecksum();const a=original.slice(),b=draft.slice(),changed=differences(a,b,base),snapshot={schema_version:1,source_name:filename,source_sha256:hash,registered_firmware:identity?.id||null,identity_match:matchMethod,speed_output:{...speedState(b,identity),unit:"pulses per reply",hardware_verified:false},features:featureStates(b,identity).map(f=>({id:f.id,state:f.state,legacy_threshold_patch:f.legacyPatch,hardware_verified:false})),source:inspect(a),origin,draft:inspect(b),changed_bytes:changed,source_checksum:verifyStartupChecksum(a,identity),draft_checksum:verifyStartupChecksum(b,identity),checksum_repaired:changed.some(c=>c.address===0xF7FC||c.address===0xF7FD),checksum_method:'Analyst-selected trailer compensation at 0xF7FC; startup range only',flash_ready:false};return {...snapshot,draft_sha256:await sha256(b)}}
 async function openBin(name,readBytes,source,expected=null){
-  const token=++generation;loading=true;matchMethod='none';speedOffsetChoice=0;$('feature-status').textContent='Opening BIN…';original=draft=identity=selected=null;maps=[];undo=[];redo=[];$('bin-status').textContent='Opening '+name+'…';$('tune-grid').replaceChildren();$('bin-facts').replaceChildren();$('tune-map').replaceChildren(new Option('Open a registered BIN first',''));$('compare-file').value='';$('compare-status').textContent='';$('tune-status').textContent='';$('edit-status').textContent='';$('checksum-status').textContent='No BIN checked.';$('checksum-status').dataset.status='unverified';$('checksum-detail').textContent='';$('cell-info').textContent='Select a cell to edit.';controls();
+  const token=++generation;loading=true;unsavedEdits=false;matchMethod='none';speedOffsetChoice=0;$('feature-status').textContent='Opening BIN…';original=draft=identity=selected=null;maps=[];undo=[];redo=[];$('bin-status').textContent='Opening '+name+'…';$('tune-grid').replaceChildren();$('bin-facts').replaceChildren();$('tune-map').replaceChildren(new Option('Open a registered BIN first',''));$('tune-status').textContent='';$('edit-status').textContent='';$('checksum-status').textContent='No BIN checked.';$('checksum-status').dataset.status='unverified';$('checksum-detail').textContent='';$('cell-info').textContent='Select a cell to edit.';controls();
   try{
     const bytes=new Uint8Array(await readBytes());
     if(![65536,59392].includes(bytes.length))throw Error('This tool accepts the two known BIN sizes: 65,536 or 59,392 bytes');
@@ -156,10 +158,7 @@ $('repo-open').addEventListener('click',guarded(async()=>{
     return response.arrayBuffer();
   },'Repository BIN; this tool did not dump the ECU',image);
 }));
-$('backup-save').addEventListener('click',guarded(()=>save(filename.replace(/\.bin$/i,'')+'-untouched.bin',original)));
-$('backup-report').addEventListener('click',guarded(async()=>jsonSave(filename+'.identity.json',{source_name:filename,sha256:hash,registered_firmware:identity?.id||null,identity_match:matchMethod,speed_output:{...speedState(original,identity),unit:"pulses per reply",hardware_verified:false},features:featureStates(original,identity).map(f=>({id:f.id,state:f.state,legacy_threshold_patch:f.legacyPatch})),...inspect(original),checksum:verifyStartupChecksum(original,identity),origin})));
-$('compare-file').addEventListener('change',guarded(async()=>{const file=$('compare-file').files[0];if(!file||!original)return;const token=generation;if(file.size!==original.length)throw Error('Comparison sizes differ; no padding or address shift is applied');const bytes=new Uint8Array(await file.arrayBuffer());if(token!==generation)return;const changes=differences(original,bytes,base);$('compare-status').textContent=changes.length?`${changes.length.toLocaleString()} changed bytes. First CPU address: ${hex(changes[0].address)}.`:'Byte-for-byte identical. This confirms file equality, not complete ECU coverage.'}));
-function record(change){undo.push(change);redo=[]}
+function record(change){undo.push(change);redo=[];unsavedEdits=true}
 const workspace=createWorkspace({
   getState:()=>({original,draft,identity,maps,base,selected,loading}),
   onSelect:id=>{$('tune-map').value=id;selectMap()},
@@ -177,12 +176,13 @@ function selectMap(){selected=maps.find(m=>m.id===$('tune-map').value)||null;con
 function renderGrid(){workspace.render();if(!draft)return;const n=differences(original,draft,base).length;$('edit-status').textContent=`${n} changed bytes including checksum compensation. Startup checksum is verified again before saving.`}
 $('tune-map').addEventListener('change',guarded(selectMap));
 function replay(change,forward){
+  unsavedEdits=true;
   if(change.changes){for(const c of change.changes)draft[c.address-base]=forward?c.after:c.before}
   else{const m=maps.find(m=>m.id===change.map);editCell(draft,base,m,change.index,forward?change.after:change.before)}
   updateChecksum();controls();renderGrid();
 }
 $('edit-undo').addEventListener('click',guarded(()=>{const c=undo.pop();if(c){redo.push(c);replay(c,false)}}));
 $('edit-redo').addEventListener('click',guarded(()=>{const c=redo.pop();if(c){undo.push(c);replay(c,true)}}));
-$('edit-reset').addEventListener('click',guarded(()=>{draft=original.slice();undo=[];redo=[];$('feature-status').textContent='Edits discarded; original feature states restored.';updateChecksum();controls();renderGrid()}));
-$('draft-save').addEventListener('click',guarded(()=>{const verified=updateChecksum();controls();if(verified?.status!=='pass')throw Error('Save stopped: startup checksum is not verified');save(filename.replace(/\.bin$/i,'')+'.draft.bin',draft)}));
+$('edit-reset').addEventListener('click',guarded(()=>{draft=original.slice();undo=[];redo=[];unsavedEdits=false;$('feature-status').textContent='Edits discarded; original feature states restored.';updateChecksum();controls();renderGrid()}));
+$('draft-save').addEventListener('click',guarded(()=>{const verified=updateChecksum();controls();if(verified?.status!=='pass')throw Error('Save stopped: startup checksum is not verified');save(filename.replace(/\.bin$/i,'')+'.draft.bin',draft);unsavedEdits=false}));
 $('draft-report').addEventListener('click',guarded(async()=>jsonSave(filename+'.changes.json',await report())));
