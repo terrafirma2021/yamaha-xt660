@@ -21,9 +21,9 @@ export function featureDefinitions(identity){
   else if(identity?.code_family==='early')Object.assign(o2,{detail:'Not configured in this BIN; no O2 enable/disable patch is offered for this application.',readonly:true,
     guards:[[0x18D3,9],...Array.from({length:100},(_,i)=>[0x35B0+i,0]),...Array.from({length:100},(_,i)=>[0x363C+i,0])]});
   const interlocks=f ? [
-    {id:'sidestand',name:'Sidestand ECU cut-off',detail:'Disabling allows the ECU to run with the stand down and suppresses new fault 19. The external starter-relay interlock still applies.',bytes:[{address:f.stand[0],on:0x1C,off:0x1D},{address:f.stand[1],on:0,off:0x80}],guards:[[f.stand[0]+1,8],[f.stand[0]+2,0x8C],[f.stand[0]+3,0x80]]},
+    {id:'sidestand',name:'Sidestand cut-off',detail:'Disabling allows the ECU to run with the stand down and suppresses new fault 19. The external starter-relay interlock still applies.',bytes:[{address:f.stand[0],on:0x1C,off:0x1D},{address:f.stand[1],on:0,off:0x80}],guards:[[f.stand[0]+1,8],[f.stand[0]+2,0x8C],[f.stand[0]+3,0x80]]},
     {id:'lean-angle',name:'Lean-angle cut-off',detail:'Disabling removes ECU tip-over detection and the sensor fault-41 path: the engine may keep running after a fall. Existing latches or stored faults can still inhibit starting.',bytes:[{address:f.lean,on:0,off:0x80}],guards:[]}
-  ] : ['sidestand','lean-angle'].map((id,i)=>({id,name:['Sidestand ECU cut-off','Lean-angle cut-off'][i],detail:''}));
+  ] : ['sidestand','lean-angle'].map((id,i)=>({id,name:['Sidestand cut-off','Lean-angle cut-off'][i],detail:''}));
   return [...available,o2,...interlocks];
 }
 export function featureStates(bytes,identity){
