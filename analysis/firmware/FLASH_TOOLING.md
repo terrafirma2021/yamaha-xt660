@@ -4,6 +4,8 @@ The browser workbench provides **BIN inspection, unchanged-copy export, byte com
 
 ## What the existing tools actually establish
 
+The [per-ECU pin audit](PIN_AUDIT.md) compares the flashing sketch with both Yamaha connector drawings. The early manual has 26 positions; the later manual and 2C1-8591A-10 sketch have 34. Sketch terminals 3 / 7 / 12 correlate with later manual R / B/W / Y/L after horizontal reflection, but the sources do not establish connector view or manufacturer numbering. Those labels do not transfer to the early connector. SCI0 boot and SCI1 application evidence is checked separately for each BIN; physical transceiver routing remains unconfirmed.
+
 ### YamahaFlasher: direct XT boot evidence
 
 The installed `YamahaFlasher.exe` extracted from Yamaha ECU V1 is a native x86 Visual Basic 6 program, 729,088 bytes, SHA-256 `706666bf83a737d2a4bc1965c662469fdb2e2d50c6ee01252d9d39065cb9b08c`. It was inspected without launching it or booting the VM. This executable provides **direct evidence for the recovered XT boot protocol**. Its form's default 16-byte session record exactly matches CPU FF10–FF1F in the populated companion boot. This is separate from the newer Yamaha service-tool library discussed below.

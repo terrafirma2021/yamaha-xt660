@@ -158,6 +158,7 @@ def build():
     report=dict(schema_version=2,firmware_sha256=hashlib.sha256(image).hexdigest(),
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         template_sha256=hashlib.sha256((ROOT/'scripts/pin_overview_template.html').read_bytes()).hexdigest(),
+        family_ui_sha256=hashlib.sha256((ROOT/'scripts/pin_family_ui.js').read_bytes()).hexdigest(),
         target='Supplied XT660X 2005 image; variant 9',
         package_assumption='MC9S12T64 80-pin LQFP, top view, conditional on physical chip identification. CPU/register evidence fits this family; chip marking has not been supplied.',
         connector_policy='All 26 manual connector positions are inventoried separately using upper/lower drawing coordinates. OEM cavity numbers and view-side convention are not printed; function links are not measured board continuity.',
@@ -233,6 +234,7 @@ def render(report):
     svgt='\n'.join(svg);(OUT/'mcu_pin_overview.svg').write_text(svgt,encoding='utf-8',newline='\n')
     template=(ROOT/'scripts/pin_overview_template.html').read_text(encoding='utf-8')
     page=template.replace('@@SVG@@',svgt).replace('@@CONNECTOR@@',connector_svg(report['ecu_connector'])).replace('@@DATA@@',json.dumps(report).replace('</','<\\/'))
+    page=page.replace('@@FAMILY_UI@@',(ROOT/'scripts/pin_family_ui.js').read_text(encoding='utf-8'))
     (OUT/'MCU_PIN_OVERVIEW.html').write_text(page,encoding='utf-8',newline='\n')
 
 if __name__=='__main__':build()

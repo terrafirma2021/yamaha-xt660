@@ -101,8 +101,11 @@ for item in library['images']:
     assert packaged==(ROOT/item['file']).read_bytes(),item['id']
     assert len(packaged)==item['size'] and hashlib.sha256(packaged).hexdigest()==item['sha256'],item['id']
 assert 'image-select' in (SITE/'maps/index.html').read_text(encoding='utf-8')
-for route,scope in [('maps/index.html','primary'),('pins/index.html','hardware'),('research/index.html','primary')]:
+for route,scope in [('maps/index.html','primary'),('pins/index.html','pins'),('research/index.html','primary')]:
     assert f'data-study="{scope}"' in (SITE/route).read_text(encoding='utf-8'),route
+pin_audit=json.loads((SITE/'pins/pin_audit.json').read_text(encoding='utf-8'))
+assert {i['id'] for i in pin_audit['images']}=={i['id'] for i in library['images']}
+assert pin_audit==json.loads((ROOT/'analysis/firmware/pin_audit.json').read_text(encoding='utf-8'))
 for m in json.loads((ROOT/'analysis/maps.json').read_text()):
     assert 'data-study="primary"' in (SITE/'docs/map_details'/f'{m["id"]}.html').read_text(encoding='utf-8'),m['id']
 assert json.loads((SITE/'vehicles/catalog.json').read_text(encoding='utf-8'))==json.loads((ROOT/'dataset/vehicles.json').read_text(encoding='utf-8'))

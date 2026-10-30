@@ -16,7 +16,7 @@
     },
     {
       "script": "scripts/verify_pin_overview.py",
-      "sha256": "a64916bfdd7869a9917f34d7f40358a3a26948fed98a005769cbb73793a9f27c",
+      "sha256": "dcdce78858c2b98e1a169b4ef897f329942a6170e8d13115224b83d6f85e01cd",
       "result": "passed"
     },
     {
@@ -5362,7 +5362,7 @@
   "input_sha256": {
     "analysis/maps.json": "06a9f0d3c7dad1b0100762d37ccd0977af407e105320bda90dfdc71e2a80f107",
     "analysis/semantics/physical_units.json": "c4600cb194cbffcbe7a3790d8ab779c9e2a2ad7bfde6a5ed0a3de8395121ada1",
-    "analysis/semantics/mcu_pin_overview.json": "8b46f9e61d6c9f681ca07169ecb9493a1989c7bf0d2a4348acf9282febfdab8f",
+    "analysis/semantics/mcu_pin_overview.json": "8cd9536c122b0bc93794495fc29f1df9c6928068c8c2a263ae4e534dc0f81480",
     "analysis/semantics/package_datasheet_review.json": "1f5f1d8a7c7b2d2acaf66dc4da1385a65e1f1a3fc9c426c7c4e555353414ce4a",
     "analysis/semantics/code_pin_review.json": "e888703265b48fa9e3ca1cb1ee4506f9445278d5dbfd9979bcd11ee4e6b46072",
     "scripts/map_review.py": "7b7fe02f539d388cfd44056063ad2d5aaf4da8a19cc1b8cc6e4ac7c34a4c5140",

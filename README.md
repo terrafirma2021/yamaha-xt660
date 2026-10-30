@@ -30,7 +30,7 @@ All 71 map pages put their visual map directly below the title. The 52 one-dimen
 
 The website uses a Yamaha motorsport design, locally served typography and a model-first research workspace. The 2005 XT660X photograph is only used as an X model reference; it is not presented as an R, Z or TDM. The same visual system carries through the map catalogue, pin explorer and research library. [Imagery, font credits and project independence](site/ASSET_CREDITS.md) are recorded separately from the technical evidence.
 
-The [verification ledger](analysis/semantics/VERIFICATION_LEDGER.md) tracks every map, MCU package position and drawn connector position. **Verified is final for a stated claim and evidence scope.** It distinguishes byte-exact extraction, code/register/pin cross-checks, datasheet/manual corroboration, software fixtures and physical sign-off. All 80 reference package assignments and all 35 firmware-linked register-to-pin chains have been reviewed; fitted MCU identity, external continuity and physical-unit gaps remain open. Pages deployment rejects stale ledger data or failed provenance checks.
+The [verification ledger](analysis/semantics/VERIFICATION_LEDGER.md) tracks every map, MCU package position and drawn connector position. **Verified is final for a stated claim and evidence scope.** It distinguishes byte-exact extraction, code/register/pin cross-checks, datasheet/manual corroboration, software fixtures and physical sign-off. For the original-image study, all 80 reference package assignments and all 35 firmware-linked register-to-pin chains have been reviewed; fitted MCU identity, external continuity and physical-unit gaps remain open. Pages deployment rejects stale ledger data or failed provenance checks.
 
 **Start with the [control-system breakdown](analysis/semantics/README.md)** for coolant/fan, sensor and output identities, RPM/cut logic, spark, fuel, serial diagnostics, startup, checksums, immobilizer behavior, and future XDF/tool definitions. The [full decompilation guide](analysis/full/README.md) and [function index](analysis/full/FUNCTION_INDEX.md) provide the underlying code.
 
@@ -58,7 +58,9 @@ The [temperature profile](analysis/semantics/TEMPERATURE_PROFILE.md) supplies co
 
 ## Focused control analysis
 
-The [MCU pin overview](analysis/semantics/MCU_PIN_OVERVIEW.md) covers all 80 positions in the conditional MC9S12T64 package reference, with 35 entries linked to firmware instructions. The [ECU connector inventory](analysis/semantics/ECU_CONNECTOR.md) accounts for all 26 positions drawn in the XT manual: 23 wire-labelled and three crosses. The inventory now has 15 corroborated function links, one starter candidate, two unresolved interlock alternatives and five power/return networks. The [route audit](analysis/semantics/CONNECTOR_ROUTE_AUDIT.md) adds 10,344 instruction cases, strengthens supply/serial evidence and withdraws an overconfident B/Y-to-PB0 / L/B-to-PB4 assignment. The [interactive reference](analysis/semantics/MCU_PIN_OVERVIEW.html) connects both diagrams. Upper/lower drawing coordinates are established; OEM cavity numbers, connector face convention, exact MCU package identity and board continuity remain distinct gaps.
+The [per-ECU pin audit](analysis/firmware/PIN_AUDIT.md) checks all nine registered BINs, with separate early/later assignments and 26-/34-position manual references. All 24 profile/BIN pin pages now use the selected image’s evidence. PAIR uses PP1 in early code and PP0 in later code; the later O2 signal/heater circuits and the flashing-sketch orientation comparison are recorded explicitly. Instruction checks, datasheet checks and physical board confirmation are separate states.
+
+The original-image [MCU pin overview](analysis/semantics/MCU_PIN_OVERVIEW.md) covers all 80 positions in the conditional MC9S12T64 package reference, with 35 entries linked to firmware instructions. The [ECU connector inventory](analysis/semantics/ECU_CONNECTOR.md) accounts for all 26 positions drawn in the XT manual: 23 wire-labelled and three crosses. The inventory now has 15 corroborated function links, one starter candidate, two unresolved interlock alternatives and five power/return networks. The [route audit](analysis/semantics/CONNECTOR_ROUTE_AUDIT.md) adds 10,344 instruction cases, strengthens supply/serial evidence and withdraws an overconfident B/Y-to-PB0 / L/B-to-PB4 assignment. The [interactive reference](analysis/semantics/MCU_PIN_OVERVIEW.html) connects both diagrams. Upper/lower drawing coordinates are established; OEM cavity numbers, connector face convention, exact MCU package identity and board continuity remain distinct gaps.
 
 The [CPS/reference trace](analysis/semantics/CRANK_REFERENCE.md) now follows capture synchronization through normal spark dispatch. Synthetic crank patterns produce one firing transition per pattern on both halves of the longer cycle counter, supporting wasted-spark operation. The code also aligns cycle phase from pressure changes. [561 new checks](analysis/semantics/crank_reference_validation.json) cover these paths; the physical gap-edge-to-TDC angle is still unconfirmed.
 
@@ -104,7 +106,7 @@ The supplied firmware remains unchanged and already contains the owner’s immob
 
 Tools used: Ghidra 12.1.4, JDK 21, Python 3 standard library, and Clang for C validation. The included `XT660-CPU12:BE:16:default` processor is a corrected flat CPU12 model. See [processor setup and corrections](ghidra/README.md) before opening the Ghidra archive.
 
-The [Pages workflow](.github/workflows/pages.yml) generates the website from the current analysis: a home page, searchable catalogue of all maps, the pin explorer and rendered research documents. Raw firmware is not included in the website artifact. To prepare the same site locally, install `python -m pip install -r site/requirements.txt`, then run `python scripts/build_pin_overview.py`, `python scripts/verify_pin_overview.py`, `python scripts/build_pages.py` and `python scripts/verify_pages.py`. The site is written to ignored directory `_site/`; serve it with `python -m http.server --directory _site 8000`.
+The [Pages workflow](.github/workflows/pages.yml) generates the website from the current analysis: a home page, searchable catalogue of all maps, the pin explorer and rendered research documents. Raw firmware is not included in the website artifact. To prepare the same site locally, install `python -m pip install -r site/requirements.txt`, then run `python scripts/build_pin_overview.py`, `python scripts/pin_families.py`, `python scripts/test_pin_families.py`, `python scripts/verify_pin_overview.py`, `python scripts/build_pages.py` and `python scripts/verify_pages.py`. The site is written to ignored directory `_site/`; serve it with `python -m http.server --directory _site 8000`.
 
 ```powershell
 .\scripts\run_analysis.ps1 -GhidraHome 'C:\tools\ghidra_12.1.4_PUBLIC' -JavaHome 'C:\tools\jdk-21'
@@ -121,6 +123,8 @@ python scripts/map_names.py
 python scripts/verify_map_names.py
 python scripts/fix_startup_checksum.py
 python scripts/build_pin_overview.py
+python scripts/pin_families.py --check
+python scripts/test_pin_families.py
 python scripts/verify_pin_overview.py
 python scripts/verify_analysis.py
 ```

@@ -82,11 +82,13 @@ pin_page = pin_page.replace('href="MCU_PIN_OVERVIEW.md"', 'href="../docs/semanti
 pin_page = pin_page.replace('href="ECU_CONNECTOR.md"', 'href="../docs/semantics/ECU_CONNECTOR.html"')
 pin_page = pin_page.replace('</head>', '<link rel="stylesheet" href="../assets/nav.css">'+theme_head('pins/index.html')+'</head>')
 pin_page = pin_page.replace('<body>', '<body>'+nav('pins/index.html', 'MCU pins')+vehicle_context('pins/index.html',rel), 1)
-pin_page = pin_page.replace('<main>', '<main data-study="hardware">', 1)
+pin_page = pin_page.replace('<main>', '<main data-study="pins">', 1)
+pin_page = pin_page.replace('href="../firmware/PIN_AUDIT.md"', 'href="../docs/firmware/PIN_AUDIT.html"')
 pin_page = pin_page.replace('</body>', '<footer class="independent-note">Independent XT660X project. Not affiliated with Yamaha Motor. <a href="../docs/repository/site/ASSET_CREDITS.html">Credits &amp; independence</a></footer></body>')
 write('pins/index.html', pin_page)
 for name in ('mcu_pin_overview.json','mcu_pin_overview.svg','ecu_connector.svg'):
     shutil.copyfile(SOURCE/name, DEST/'pins'/name)
+shutil.copyfile(ROOT/'analysis/firmware/pin_audit.json', DEST/'pins/pin_audit.json')
 
 cards=[]
 for m in maps:
