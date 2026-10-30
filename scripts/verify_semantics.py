@@ -68,6 +68,13 @@ for report_name, script_name in [('pressure_source_validation.json', 'test_press
     assert replay_report['interpreter_sha256'] == digest(ROOT/'scripts/test_full_lift.py')
     if 'model_script_sha256' in replay_report:
         assert replay_report['model_script_sha256'] == digest(ROOT/'scripts/map_models.py')
+pin_report = json.loads((ROOT/'analysis/firmware/pin_configuration_validation.json').read_text())
+assert pin_report['result'] == 'passed'
+assert {item['id']: item['sha256'] for item in pin_report['images']} == firmware_hashes
+assert pin_report['source_sha256'] == digest(ROOT/'scripts/test_pin_configuration.py')
+assert pin_report['configuration_source_sha256'] == digest(ROOT/'scripts/pin_configuration.py')
+for dependency, expected_hash in pin_report['dependencies'].items():
+    assert digest(ROOT/dependency) == expected_hash
 for report_name, script_name in [('alternate_path_validation.json', 'test_alternate_paths.py'),
                                   ('fuel_mode_validation.json', 'test_fuel_modes.py')]:
     replay_report = json.loads((ROOT/'analysis/firmware'/report_name).read_text())

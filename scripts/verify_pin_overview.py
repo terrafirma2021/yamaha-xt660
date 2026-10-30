@@ -11,6 +11,7 @@ assert report['firmware_sha256']==hashlib.sha256(image).hexdigest()
 assert report['generator_sha256']==hashlib.sha256((ROOT/'scripts/build_pin_overview.py').read_bytes()).hexdigest()
 assert report['template_sha256']==hashlib.sha256((ROOT/'scripts/pin_overview_template.html').read_bytes()).hexdigest()
 assert report['family_ui_sha256']==hashlib.sha256((ROOT/'scripts/pin_family_ui.js').read_bytes()).hexdigest()
+assert report['configuration_source_sha256']==hashlib.sha256((ROOT/'scripts/pin_configuration.py').read_bytes()).hexdigest()
 pins=report['pins'];assert [p['pin'] for p in pins]==list(range(1,81))
 connector=report['ecu_connector']
 assert connector['generator_sha256']==hashlib.sha256((ROOT/'scripts/ecu_connector.py').read_bytes()).hexdigest()

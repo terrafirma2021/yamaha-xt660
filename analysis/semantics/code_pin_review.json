@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "review_date": "2026-10-29",
+  "review_date": "2026-10-30",
   "source_url": "https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf",
   "source_sha256": "a63f2fa9d946528a5f1f793901c719899c77e43dbba46e96050767475ae294f0",
   "package_pdf_page": 60,
-  "scope": "Manual cross-check of code operands, input/output setup and datasheet register-to-package mapping for all 35 firmware-linked entries. Conditional on the MC9S12T64 reference model and register block based at zero. Missing boot prevents verification of all inherited mode/multiplex settings. Not a hardware continuity or full functional coverage certificate.",
+  "scope": "Instruction/datasheet cross-check for 53 firmware-linked positions in the early application, including configuration-only findings. Conditional on the MC9S12T64 model and register block at zero. Per-BIN later-family and boot reviews are in analysis/firmware/pin_audit.json. This is not a board-continuity or complete functional-coverage certificate.",
   "pins": [
     {
       "pin": 1,
@@ -77,6 +77,72 @@
           "address": "505d",
           "bytes": "5b40",
           "instruction": "STAB 0x0040"
+        }
+      ]
+    },
+    {
+      "pin": 3,
+      "signal": "PT4/IOC4",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRT 0x00E2 bit 4; PTT 0x00E0; TIOS / TCTL1 / TCTL2",
+      "register_pdf_pages": [
+        90,
+        100,
+        257,
+        385
+      ],
+      "chain": "DDRT 0x00E2 bit 4; PTT 0x00E0; TIOS / TCTL1 / TCTL2",
+      "review_note": "DDRT=0xD9 sets PT4 as output. TIOS bit 4 is set, but OM4:OL4=00 disconnects the compare action; the latch starts high. No dedicated pin-bit consumer or TC4 access was found in the decoded application. This is a configured output, not an established spare input or an identified harness circuit.",
+      "instructions": [
+        {
+          "address": "503b",
+          "bytes": "c6fe",
+          "instruction": "LDAB #0xfe"
+        },
+        {
+          "address": "503d",
+          "bytes": "5be0",
+          "instruction": "STAB 0x00e0"
+        },
+        {
+          "address": "503f",
+          "bytes": "c6d9",
+          "instruction": "LDAB #0xd9"
+        },
+        {
+          "address": "5041",
+          "bytes": "5be2",
+          "instruction": "STAB 0x00e2"
+        },
+        {
+          "address": "505b",
+          "bytes": "c6d8",
+          "instruction": "LDAB #0xd8"
+        },
+        {
+          "address": "505d",
+          "bytes": "5b40",
+          "instruction": "STAB 0x0040"
+        },
+        {
+          "address": "505f",
+          "bytes": "c6f0",
+          "instruction": "LDAB #0xf0"
+        },
+        {
+          "address": "5061",
+          "bytes": "5b48",
+          "instruction": "STAB 0x0048"
+        },
+        {
+          "address": "5063",
+          "bytes": "c680",
+          "instruction": "LDAB #0x80"
+        },
+        {
+          "address": "5065",
+          "bytes": "5b49",
+          "instruction": "STAB 0x0049"
         }
       ]
     },
@@ -322,6 +388,76 @@
       ]
     },
     {
+      "pin": 17,
+      "signal": "PP5/PWM5",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRP 0x00F2 bit 5; PTP 0x00F0",
+      "register_pdf_pages": [
+        101,
+        264,
+        265
+      ],
+      "chain": "DDRP 0x00F2 bit 5; PTP 0x00F0",
+      "review_note": "DDRP=0xFF enables output and the startup latch sets PP5 high. No dedicated runtime write to this bit was found in the decoded application. The PWM alias does not establish PWM operation or identify the attached device.",
+      "instructions": [
+        {
+          "address": "5033",
+          "bytes": "c6e0",
+          "instruction": "LDAB #0xe0"
+        },
+        {
+          "address": "5035",
+          "bytes": "5bf0",
+          "instruction": "STAB 0x00f0"
+        },
+        {
+          "address": "5037",
+          "bytes": "c6ff",
+          "instruction": "LDAB #0xff"
+        },
+        {
+          "address": "5039",
+          "bytes": "5bf2",
+          "instruction": "STAB 0x00f2"
+        }
+      ]
+    },
+    {
+      "pin": 18,
+      "signal": "PP6/PWM6",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRP 0x00F2 bit 6; PTP 0x00F0",
+      "register_pdf_pages": [
+        101,
+        264,
+        265
+      ],
+      "chain": "DDRP 0x00F2 bit 6; PTP 0x00F0",
+      "review_note": "DDRP=0xFF enables output and the startup latch sets PP6 high. No dedicated runtime write to this bit was found in the decoded application. The PWM alias does not establish PWM operation or identify the attached device.",
+      "instructions": [
+        {
+          "address": "5033",
+          "bytes": "c6e0",
+          "instruction": "LDAB #0xe0"
+        },
+        {
+          "address": "5035",
+          "bytes": "5bf0",
+          "instruction": "STAB 0x00f0"
+        },
+        {
+          "address": "5037",
+          "bytes": "c6ff",
+          "instruction": "LDAB #0xff"
+        },
+        {
+          "address": "5039",
+          "bytes": "5bf2",
+          "instruction": "STAB 0x00f2"
+        }
+      ]
+    },
+    {
       "pin": 19,
       "signal": "PP7/PWM7",
       "role": "Memory-test status/enable output",
@@ -426,6 +562,130 @@
       ]
     },
     {
+      "pin": 22,
+      "signal": "PB2",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRB 0x0003 bit 2; PORTB 0x0001",
+      "register_pdf_pages": [
+        74,
+        75,
+        86,
+        149,
+        150
+      ],
+      "chain": "DDRB 0x0003 bit 2; PORTB 0x0001",
+      "review_note": "DDRB=0xEC configures PB2 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.",
+      "instructions": [
+        {
+          "address": "5020",
+          "bytes": "f618d3",
+          "instruction": "LDAB 0x18d3"
+        },
+        {
+          "address": "5023",
+          "bytes": "c109",
+          "instruction": "CMPB #0x9"
+        },
+        {
+          "address": "5025",
+          "bytes": "2604",
+          "instruction": "BNE 0x502b"
+        },
+        {
+          "address": "5027",
+          "bytes": "86ff",
+          "instruction": "LDAA #0xff"
+        },
+        {
+          "address": "5029",
+          "bytes": "2002",
+          "instruction": "BRA 0x502d"
+        },
+        {
+          "address": "502b",
+          "bytes": "86fd",
+          "instruction": "LDAA #0xfd"
+        },
+        {
+          "address": "502d",
+          "bytes": "5a01",
+          "instruction": "STAA 0x0001"
+        },
+        {
+          "address": "502f",
+          "bytes": "86ec",
+          "instruction": "LDAA #0xec"
+        },
+        {
+          "address": "5031",
+          "bytes": "5a03",
+          "instruction": "STAA 0x0003"
+        }
+      ]
+    },
+    {
+      "pin": 23,
+      "signal": "PB3",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRB 0x0003 bit 3; PORTB 0x0001",
+      "register_pdf_pages": [
+        74,
+        75,
+        86,
+        149,
+        150
+      ],
+      "chain": "DDRB 0x0003 bit 3; PORTB 0x0001",
+      "review_note": "DDRB=0xEC configures PB3 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.",
+      "instructions": [
+        {
+          "address": "5020",
+          "bytes": "f618d3",
+          "instruction": "LDAB 0x18d3"
+        },
+        {
+          "address": "5023",
+          "bytes": "c109",
+          "instruction": "CMPB #0x9"
+        },
+        {
+          "address": "5025",
+          "bytes": "2604",
+          "instruction": "BNE 0x502b"
+        },
+        {
+          "address": "5027",
+          "bytes": "86ff",
+          "instruction": "LDAA #0xff"
+        },
+        {
+          "address": "5029",
+          "bytes": "2002",
+          "instruction": "BRA 0x502d"
+        },
+        {
+          "address": "502b",
+          "bytes": "86fd",
+          "instruction": "LDAA #0xfd"
+        },
+        {
+          "address": "502d",
+          "bytes": "5a01",
+          "instruction": "STAA 0x0001"
+        },
+        {
+          "address": "502f",
+          "bytes": "86ec",
+          "instruction": "LDAA #0xec"
+        },
+        {
+          "address": "5031",
+          "bytes": "5a03",
+          "instruction": "STAA 0x0003"
+        }
+      ]
+    },
+    {
       "pin": 24,
       "signal": "PB4",
       "role": "Neutral input",
@@ -450,6 +710,130 @@
           "address": "65a0",
           "bytes": "1e08961006",
           "instruction": "BRSET 0x896,0x10,0x65ab"
+        },
+        {
+          "address": "502f",
+          "bytes": "86ec",
+          "instruction": "LDAA #0xec"
+        },
+        {
+          "address": "5031",
+          "bytes": "5a03",
+          "instruction": "STAA 0x0003"
+        }
+      ]
+    },
+    {
+      "pin": 25,
+      "signal": "PB5",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRB 0x0003 bit 5; PORTB 0x0001",
+      "register_pdf_pages": [
+        74,
+        75,
+        86,
+        149,
+        150
+      ],
+      "chain": "DDRB 0x0003 bit 5; PORTB 0x0001",
+      "review_note": "DDRB=0xEC configures PB5 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.",
+      "instructions": [
+        {
+          "address": "5020",
+          "bytes": "f618d3",
+          "instruction": "LDAB 0x18d3"
+        },
+        {
+          "address": "5023",
+          "bytes": "c109",
+          "instruction": "CMPB #0x9"
+        },
+        {
+          "address": "5025",
+          "bytes": "2604",
+          "instruction": "BNE 0x502b"
+        },
+        {
+          "address": "5027",
+          "bytes": "86ff",
+          "instruction": "LDAA #0xff"
+        },
+        {
+          "address": "5029",
+          "bytes": "2002",
+          "instruction": "BRA 0x502d"
+        },
+        {
+          "address": "502b",
+          "bytes": "86fd",
+          "instruction": "LDAA #0xfd"
+        },
+        {
+          "address": "502d",
+          "bytes": "5a01",
+          "instruction": "STAA 0x0001"
+        },
+        {
+          "address": "502f",
+          "bytes": "86ec",
+          "instruction": "LDAA #0xec"
+        },
+        {
+          "address": "5031",
+          "bytes": "5a03",
+          "instruction": "STAA 0x0003"
+        }
+      ]
+    },
+    {
+      "pin": 26,
+      "signal": "PB6",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRB 0x0003 bit 6; PORTB 0x0001",
+      "register_pdf_pages": [
+        74,
+        75,
+        86,
+        149,
+        150
+      ],
+      "chain": "DDRB 0x0003 bit 6; PORTB 0x0001",
+      "review_note": "DDRB=0xEC configures PB6 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.",
+      "instructions": [
+        {
+          "address": "5020",
+          "bytes": "f618d3",
+          "instruction": "LDAB 0x18d3"
+        },
+        {
+          "address": "5023",
+          "bytes": "c109",
+          "instruction": "CMPB #0x9"
+        },
+        {
+          "address": "5025",
+          "bytes": "2604",
+          "instruction": "BNE 0x502b"
+        },
+        {
+          "address": "5027",
+          "bytes": "86ff",
+          "instruction": "LDAA #0xff"
+        },
+        {
+          "address": "5029",
+          "bytes": "2002",
+          "instruction": "BRA 0x502d"
+        },
+        {
+          "address": "502b",
+          "bytes": "86fd",
+          "instruction": "LDAA #0xfd"
+        },
+        {
+          "address": "502d",
+          "bytes": "5a01",
+          "instruction": "STAA 0x0001"
         },
         {
           "address": "502f",
@@ -498,6 +882,33 @@
           "address": "5031",
           "bytes": "5a03",
           "instruction": "STAA 0x0003"
+        }
+      ]
+    },
+    {
+      "pin": 36,
+      "signal": "PK7/ROMONE/ECS",
+      "role": "Port-K output direction configured",
+      "overview_register": "DDRK 0x0033 bit 7; PORTK 0x0032",
+      "register_pdf_pages": [
+        75,
+        88,
+        129,
+        159,
+        160
+      ],
+      "chain": "DDRK 0x0033 bit 7; PORTK 0x0032",
+      "review_note": "DDRK=0x80 selects PK7 output when the GPIO function is available. No decoded PORTK read/write establishes an application purpose or output latch value. ROMONE is a reset-time alternate function; ECS depends on the MCU operating mode.",
+      "instructions": [
+        {
+          "address": "504f",
+          "bytes": "c680",
+          "instruction": "LDAB #0x80"
+        },
+        {
+          "address": "5051",
+          "bytes": "5b33",
+          "instruction": "STAB 0x0033"
         }
       ]
     },
@@ -555,6 +966,114 @@
           "bytes": "4c0808",
           "instruction": "BSET 0x0008,0x8"
         },
+        {
+          "address": "504b",
+          "bytes": "c69f",
+          "instruction": "LDAB #0x9f"
+        },
+        {
+          "address": "504d",
+          "bytes": "5b09",
+          "instruction": "STAB 0x0009"
+        }
+      ]
+    },
+    {
+      "pin": 41,
+      "signal": "PE4/ECLK",
+      "role": "Port-E output direction configured",
+      "overview_register": "DDRE 0x0009 bit 4; PEAR 0x000A",
+      "register_pdf_pages": [
+        75,
+        86,
+        152,
+        153,
+        154
+      ],
+      "chain": "DDRE 0x0009 bit 4; PEAR 0x000A",
+      "review_note": "DDRE=0x9F requests PE4 as output. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: NECLK selects GPIO versus E-clock. GPIO direction alone does not establish a reusable external connection.",
+      "instructions": [
+        {
+          "address": "504b",
+          "bytes": "c69f",
+          "instruction": "LDAB #0x9f"
+        },
+        {
+          "address": "504d",
+          "bytes": "5b09",
+          "instruction": "STAB 0x0009"
+        }
+      ]
+    },
+    {
+      "pin": 42,
+      "signal": "PE5/MODA/IPIPE0",
+      "role": "Port-E input direction configured",
+      "overview_register": "DDRE 0x0009 bit 5; PEAR 0x000A",
+      "register_pdf_pages": [
+        75,
+        86,
+        152,
+        153,
+        154
+      ],
+      "chain": "DDRE 0x0009 bit 5; PEAR 0x000A",
+      "review_note": "DDRE=0x9F requests PE5 as input. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: MODA is sampled at reset; PIPOE can select instruction-pipe output. GPIO direction alone does not establish a reusable external connection.",
+      "instructions": [
+        {
+          "address": "504b",
+          "bytes": "c69f",
+          "instruction": "LDAB #0x9f"
+        },
+        {
+          "address": "504d",
+          "bytes": "5b09",
+          "instruction": "STAB 0x0009"
+        }
+      ]
+    },
+    {
+      "pin": 43,
+      "signal": "PE6/MODB/IPIPE1",
+      "role": "Port-E input direction configured",
+      "overview_register": "DDRE 0x0009 bit 6; PEAR 0x000A",
+      "register_pdf_pages": [
+        75,
+        86,
+        152,
+        153,
+        154
+      ],
+      "chain": "DDRE 0x0009 bit 6; PEAR 0x000A",
+      "review_note": "DDRE=0x9F requests PE6 as input. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: MODB is sampled at reset; PIPOE can select instruction-pipe output. GPIO direction alone does not establish a reusable external connection.",
+      "instructions": [
+        {
+          "address": "504b",
+          "bytes": "c69f",
+          "instruction": "LDAB #0x9f"
+        },
+        {
+          "address": "504d",
+          "bytes": "5b09",
+          "instruction": "STAB 0x0009"
+        }
+      ]
+    },
+    {
+      "pin": 44,
+      "signal": "PE7/NOACC/XCLKS",
+      "role": "Port-E output direction configured",
+      "overview_register": "DDRE 0x0009 bit 7; PEAR 0x000A",
+      "register_pdf_pages": [
+        75,
+        86,
+        152,
+        153,
+        154
+      ],
+      "chain": "DDRE 0x0009 bit 7; PEAR 0x000A",
+      "review_note": "DDRE=0x9F requests PE7 as output. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: XCLKS is sampled at reset; NOACCE can select CPU no-access output. GPIO direction alone does not establish a reusable external connection.",
+      "instructions": [
         {
           "address": "504b",
           "bytes": "c69f",
@@ -667,6 +1186,42 @@
       ]
     },
     {
+      "pin": 48,
+      "signal": "PA3",
+      "role": "GPIO output initialized high",
+      "overview_register": "DDRA 0x0002 bit 3; PORTA 0x0000",
+      "register_pdf_pages": [
+        74,
+        86,
+        147,
+        148
+      ],
+      "chain": "DDRA 0x0002 bit 3; PORTA 0x0000",
+      "review_note": "DDRA=0x1F makes PA3 an output, with startup latch high. Whole-port snapshots are present, but no dedicated runtime role for this bit was found. The board destination remains unknown.",
+      "instructions": [
+        {
+          "address": "5018",
+          "bytes": "86f8",
+          "instruction": "LDAA #0xf8"
+        },
+        {
+          "address": "501a",
+          "bytes": "5a00",
+          "instruction": "STAA 0x0000"
+        },
+        {
+          "address": "501c",
+          "bytes": "861f",
+          "instruction": "LDAA #0x1f"
+        },
+        {
+          "address": "501e",
+          "bytes": "5a02",
+          "instruction": "STAA 0x0002"
+        }
+      ]
+    },
+    {
       "pin": 49,
       "signal": "PA4",
       "role": "Periodic service/watchdog candidate",
@@ -701,6 +1256,579 @@
           "address": "501e",
           "bytes": "5a02",
           "instruction": "STAA 0x0002"
+        }
+      ]
+    },
+    {
+      "pin": 52,
+      "signal": "PA5",
+      "role": "Service-test selector input 0",
+      "overview_register": "DDRA 0x0002; PORTA 0x0000 mask 0xE0",
+      "register_pdf_pages": [
+        74,
+        86,
+        147,
+        148
+      ],
+      "chain": "DDRA 0x0002; PORTA 0x0000 mask 0xE0",
+      "review_note": "PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800\u20130x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed.",
+      "instructions": [
+        {
+          "address": "5018",
+          "bytes": "86f8",
+          "instruction": "LDAA #0xf8"
+        },
+        {
+          "address": "501a",
+          "bytes": "5a00",
+          "instruction": "STAA 0x0000"
+        },
+        {
+          "address": "501c",
+          "bytes": "861f",
+          "instruction": "LDAA #0x1f"
+        },
+        {
+          "address": "501e",
+          "bytes": "5a02",
+          "instruction": "STAA 0x0002"
+        },
+        {
+          "address": "a2b9",
+          "bytes": "9600",
+          "instruction": "LDAA 0x0000"
+        },
+        {
+          "address": "a2bb",
+          "bytes": "84e0",
+          "instruction": "ANDA #0xe0"
+        },
+        {
+          "address": "a2bd",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2bf",
+          "bytes": "270a",
+          "instruction": "BEQ 0xa2cb"
+        },
+        {
+          "address": "a2c1",
+          "bytes": "8100",
+          "instruction": "CMPA #0x0"
+        },
+        {
+          "address": "a2c3",
+          "bytes": "2721",
+          "instruction": "BEQ 0xa2e6"
+        },
+        {
+          "address": "a2c5",
+          "bytes": "8140",
+          "instruction": "CMPA #0x40"
+        },
+        {
+          "address": "a2c7",
+          "bytes": "2732",
+          "instruction": "BEQ 0xa2fb"
+        },
+        {
+          "address": "a2cb",
+          "bytes": "b608b1",
+          "instruction": "LDAA 0x8b1"
+        },
+        {
+          "address": "a2ce",
+          "bytes": "8480",
+          "instruction": "ANDA #0x80"
+        },
+        {
+          "address": "a2d0",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2d2",
+          "bytes": "263b",
+          "instruction": "BNE 0xa30f"
+        },
+        {
+          "address": "a2d4",
+          "bytes": "9600",
+          "instruction": "LDAA 0x0000"
+        },
+        {
+          "address": "a2d6",
+          "bytes": "84e0",
+          "instruction": "ANDA #0xe0"
+        },
+        {
+          "address": "a2d8",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2da",
+          "bytes": "2633",
+          "instruction": "BNE 0xa30f"
+        },
+        {
+          "address": "a2de",
+          "bytes": "ccffff",
+          "instruction": "LDD #0xffff"
+        },
+        {
+          "address": "a2e1",
+          "bytes": "16a489",
+          "instruction": "JSR 0xa489"
+        },
+        {
+          "address": "a2f7",
+          "bytes": "1410",
+          "instruction": "SEI"
+        },
+        {
+          "address": "a2f9",
+          "bytes": "20fc",
+          "instruction": "BRA 0xa2f7"
+        },
+        {
+          "address": "a30c",
+          "bytes": "06a505",
+          "instruction": "JMP 0xa505"
+        },
+        {
+          "address": "a505",
+          "bytes": "1410",
+          "instruction": "SEI"
+        },
+        {
+          "address": "a50a",
+          "bytes": "cc5555",
+          "instruction": "LDD #0x5555"
+        },
+        {
+          "address": "a50d",
+          "bytes": "ce0800",
+          "instruction": "LDX #0x800"
+        },
+        {
+          "address": "a510",
+          "bytes": "6c00",
+          "instruction": "STD 0,IX"
+        },
+        {
+          "address": "a51e",
+          "bytes": "ac00",
+          "instruction": "CPD 0,IX"
+        },
+        {
+          "address": "a52b",
+          "bytes": "41",
+          "instruction": "COMA"
+        },
+        {
+          "address": "a52d",
+          "bytes": "8c5555",
+          "instruction": "CPD #0x5555"
+        },
+        {
+          "address": "a54b",
+          "bytes": "d600",
+          "instruction": "LDAB 0x0000"
+        },
+        {
+          "address": "a54d",
+          "bytes": "c4e0",
+          "instruction": "ANDB #0xe0"
+        },
+        {
+          "address": "a54f",
+          "bytes": "c140",
+          "instruction": "CMPB #0x40"
+        }
+      ]
+    },
+    {
+      "pin": 53,
+      "signal": "PA6",
+      "role": "Service-test selector input 1",
+      "overview_register": "DDRA 0x0002; PORTA 0x0000 mask 0xE0",
+      "register_pdf_pages": [
+        74,
+        86,
+        147,
+        148
+      ],
+      "chain": "DDRA 0x0002; PORTA 0x0000 mask 0xE0",
+      "review_note": "PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800\u20130x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed.",
+      "instructions": [
+        {
+          "address": "5018",
+          "bytes": "86f8",
+          "instruction": "LDAA #0xf8"
+        },
+        {
+          "address": "501a",
+          "bytes": "5a00",
+          "instruction": "STAA 0x0000"
+        },
+        {
+          "address": "501c",
+          "bytes": "861f",
+          "instruction": "LDAA #0x1f"
+        },
+        {
+          "address": "501e",
+          "bytes": "5a02",
+          "instruction": "STAA 0x0002"
+        },
+        {
+          "address": "a2b9",
+          "bytes": "9600",
+          "instruction": "LDAA 0x0000"
+        },
+        {
+          "address": "a2bb",
+          "bytes": "84e0",
+          "instruction": "ANDA #0xe0"
+        },
+        {
+          "address": "a2bd",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2bf",
+          "bytes": "270a",
+          "instruction": "BEQ 0xa2cb"
+        },
+        {
+          "address": "a2c1",
+          "bytes": "8100",
+          "instruction": "CMPA #0x0"
+        },
+        {
+          "address": "a2c3",
+          "bytes": "2721",
+          "instruction": "BEQ 0xa2e6"
+        },
+        {
+          "address": "a2c5",
+          "bytes": "8140",
+          "instruction": "CMPA #0x40"
+        },
+        {
+          "address": "a2c7",
+          "bytes": "2732",
+          "instruction": "BEQ 0xa2fb"
+        },
+        {
+          "address": "a2cb",
+          "bytes": "b608b1",
+          "instruction": "LDAA 0x8b1"
+        },
+        {
+          "address": "a2ce",
+          "bytes": "8480",
+          "instruction": "ANDA #0x80"
+        },
+        {
+          "address": "a2d0",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2d2",
+          "bytes": "263b",
+          "instruction": "BNE 0xa30f"
+        },
+        {
+          "address": "a2d4",
+          "bytes": "9600",
+          "instruction": "LDAA 0x0000"
+        },
+        {
+          "address": "a2d6",
+          "bytes": "84e0",
+          "instruction": "ANDA #0xe0"
+        },
+        {
+          "address": "a2d8",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2da",
+          "bytes": "2633",
+          "instruction": "BNE 0xa30f"
+        },
+        {
+          "address": "a2de",
+          "bytes": "ccffff",
+          "instruction": "LDD #0xffff"
+        },
+        {
+          "address": "a2e1",
+          "bytes": "16a489",
+          "instruction": "JSR 0xa489"
+        },
+        {
+          "address": "a2f7",
+          "bytes": "1410",
+          "instruction": "SEI"
+        },
+        {
+          "address": "a2f9",
+          "bytes": "20fc",
+          "instruction": "BRA 0xa2f7"
+        },
+        {
+          "address": "a30c",
+          "bytes": "06a505",
+          "instruction": "JMP 0xa505"
+        },
+        {
+          "address": "a505",
+          "bytes": "1410",
+          "instruction": "SEI"
+        },
+        {
+          "address": "a50a",
+          "bytes": "cc5555",
+          "instruction": "LDD #0x5555"
+        },
+        {
+          "address": "a50d",
+          "bytes": "ce0800",
+          "instruction": "LDX #0x800"
+        },
+        {
+          "address": "a510",
+          "bytes": "6c00",
+          "instruction": "STD 0,IX"
+        },
+        {
+          "address": "a51e",
+          "bytes": "ac00",
+          "instruction": "CPD 0,IX"
+        },
+        {
+          "address": "a52b",
+          "bytes": "41",
+          "instruction": "COMA"
+        },
+        {
+          "address": "a52d",
+          "bytes": "8c5555",
+          "instruction": "CPD #0x5555"
+        },
+        {
+          "address": "a54b",
+          "bytes": "d600",
+          "instruction": "LDAB 0x0000"
+        },
+        {
+          "address": "a54d",
+          "bytes": "c4e0",
+          "instruction": "ANDB #0xe0"
+        },
+        {
+          "address": "a54f",
+          "bytes": "c140",
+          "instruction": "CMPB #0x40"
+        }
+      ]
+    },
+    {
+      "pin": 54,
+      "signal": "PA7",
+      "role": "Service-test selector input 2",
+      "overview_register": "DDRA 0x0002; PORTA 0x0000 mask 0xE0",
+      "register_pdf_pages": [
+        74,
+        86,
+        147,
+        148
+      ],
+      "chain": "DDRA 0x0002; PORTA 0x0000 mask 0xE0",
+      "review_note": "PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800\u20130x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed.",
+      "instructions": [
+        {
+          "address": "5018",
+          "bytes": "86f8",
+          "instruction": "LDAA #0xf8"
+        },
+        {
+          "address": "501a",
+          "bytes": "5a00",
+          "instruction": "STAA 0x0000"
+        },
+        {
+          "address": "501c",
+          "bytes": "861f",
+          "instruction": "LDAA #0x1f"
+        },
+        {
+          "address": "501e",
+          "bytes": "5a02",
+          "instruction": "STAA 0x0002"
+        },
+        {
+          "address": "a2b9",
+          "bytes": "9600",
+          "instruction": "LDAA 0x0000"
+        },
+        {
+          "address": "a2bb",
+          "bytes": "84e0",
+          "instruction": "ANDA #0xe0"
+        },
+        {
+          "address": "a2bd",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2bf",
+          "bytes": "270a",
+          "instruction": "BEQ 0xa2cb"
+        },
+        {
+          "address": "a2c1",
+          "bytes": "8100",
+          "instruction": "CMPA #0x0"
+        },
+        {
+          "address": "a2c3",
+          "bytes": "2721",
+          "instruction": "BEQ 0xa2e6"
+        },
+        {
+          "address": "a2c5",
+          "bytes": "8140",
+          "instruction": "CMPA #0x40"
+        },
+        {
+          "address": "a2c7",
+          "bytes": "2732",
+          "instruction": "BEQ 0xa2fb"
+        },
+        {
+          "address": "a2cb",
+          "bytes": "b608b1",
+          "instruction": "LDAA 0x8b1"
+        },
+        {
+          "address": "a2ce",
+          "bytes": "8480",
+          "instruction": "ANDA #0x80"
+        },
+        {
+          "address": "a2d0",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2d2",
+          "bytes": "263b",
+          "instruction": "BNE 0xa30f"
+        },
+        {
+          "address": "a2d4",
+          "bytes": "9600",
+          "instruction": "LDAA 0x0000"
+        },
+        {
+          "address": "a2d6",
+          "bytes": "84e0",
+          "instruction": "ANDA #0xe0"
+        },
+        {
+          "address": "a2d8",
+          "bytes": "8180",
+          "instruction": "CMPA #0x80"
+        },
+        {
+          "address": "a2da",
+          "bytes": "2633",
+          "instruction": "BNE 0xa30f"
+        },
+        {
+          "address": "a2de",
+          "bytes": "ccffff",
+          "instruction": "LDD #0xffff"
+        },
+        {
+          "address": "a2e1",
+          "bytes": "16a489",
+          "instruction": "JSR 0xa489"
+        },
+        {
+          "address": "a2f7",
+          "bytes": "1410",
+          "instruction": "SEI"
+        },
+        {
+          "address": "a2f9",
+          "bytes": "20fc",
+          "instruction": "BRA 0xa2f7"
+        },
+        {
+          "address": "a30c",
+          "bytes": "06a505",
+          "instruction": "JMP 0xa505"
+        },
+        {
+          "address": "a505",
+          "bytes": "1410",
+          "instruction": "SEI"
+        },
+        {
+          "address": "a50a",
+          "bytes": "cc5555",
+          "instruction": "LDD #0x5555"
+        },
+        {
+          "address": "a50d",
+          "bytes": "ce0800",
+          "instruction": "LDX #0x800"
+        },
+        {
+          "address": "a510",
+          "bytes": "6c00",
+          "instruction": "STD 0,IX"
+        },
+        {
+          "address": "a51e",
+          "bytes": "ac00",
+          "instruction": "CPD 0,IX"
+        },
+        {
+          "address": "a52b",
+          "bytes": "41",
+          "instruction": "COMA"
+        },
+        {
+          "address": "a52d",
+          "bytes": "8c5555",
+          "instruction": "CPD #0x5555"
+        },
+        {
+          "address": "a54b",
+          "bytes": "d600",
+          "instruction": "LDAB 0x0000"
+        },
+        {
+          "address": "a54d",
+          "bytes": "c4e0",
+          "instruction": "ANDB #0xe0"
+        },
+        {
+          "address": "a54f",
+          "bytes": "c140",
+          "instruction": "CMPB #0x40"
         }
       ]
     },
@@ -1333,6 +2461,120 @@
           "address": "507d",
           "bytes": "5ada",
           "instruction": "STAA 0x00da"
+        }
+      ]
+    },
+    {
+      "pin": 74,
+      "signal": "PS7/SS",
+      "role": "GPIO output initialized high; SPI SS not selected",
+      "overview_register": "DDRS 0x00EA bit 7; PTS 0x00E8; SPICR1/2 0x00D8/0x00D9",
+      "register_pdf_pages": [
+        73,
+        99,
+        100,
+        261,
+        463,
+        464
+      ],
+      "chain": "DDRS 0x00EA bit 7; PTS 0x00E8; SPICR1/2 0x00D8/0x00D9",
+      "review_note": "DDRS=0xEA and PTS=0xFF initialize PS7 as a high output. SPI runs as master (SPICR1=0x50/0x54); SPICR2 has no decoded write and its reset MODFEN=0 leaves SS outside SPI control. The storage transaction strobe is PP3 instead. No dedicated PS7 toggle was found. This conclusion assumes the documented reset state; a nonstandard boot handoff can change it.",
+      "instructions": [
+        {
+          "address": "5043",
+          "bytes": "c6ff",
+          "instruction": "LDAB #0xff"
+        },
+        {
+          "address": "5045",
+          "bytes": "5be8",
+          "instruction": "STAB 0x00e8"
+        },
+        {
+          "address": "5047",
+          "bytes": "c6ea",
+          "instruction": "LDAB #0xea"
+        },
+        {
+          "address": "5049",
+          "bytes": "5bea",
+          "instruction": "STAB 0x00ea"
+        },
+        {
+          "address": "5077",
+          "bytes": "8650",
+          "instruction": "LDAA #0x50"
+        },
+        {
+          "address": "5079",
+          "bytes": "5ad8",
+          "instruction": "STAA 0x00d8"
+        }
+      ]
+    },
+    {
+      "pin": 79,
+      "signal": "PT0/IOC0",
+      "role": "GPIO output initialized low",
+      "overview_register": "DDRT 0x00E2 bit 0; PTT 0x00E0; TIOS / TCTL1 / TCTL2",
+      "register_pdf_pages": [
+        90,
+        100,
+        257,
+        385
+      ],
+      "chain": "DDRT 0x00E2 bit 0; PTT 0x00E0; TIOS / TCTL1 / TCTL2",
+      "review_note": "DDRT=0xD9 sets PT0 as output. TIOS bit 0 is clear and the output latch starts low. No dedicated pin-bit consumer or TC0 access was found in the decoded application. This is a configured output, not an established spare input or an identified harness circuit.",
+      "instructions": [
+        {
+          "address": "503b",
+          "bytes": "c6fe",
+          "instruction": "LDAB #0xfe"
+        },
+        {
+          "address": "503d",
+          "bytes": "5be0",
+          "instruction": "STAB 0x00e0"
+        },
+        {
+          "address": "503f",
+          "bytes": "c6d9",
+          "instruction": "LDAB #0xd9"
+        },
+        {
+          "address": "5041",
+          "bytes": "5be2",
+          "instruction": "STAB 0x00e2"
+        },
+        {
+          "address": "505b",
+          "bytes": "c6d8",
+          "instruction": "LDAB #0xd8"
+        },
+        {
+          "address": "505d",
+          "bytes": "5b40",
+          "instruction": "STAB 0x0040"
+        },
+        {
+          "address": "505f",
+          "bytes": "c6f0",
+          "instruction": "LDAB #0xf0"
+        },
+        {
+          "address": "5061",
+          "bytes": "5b48",
+          "instruction": "STAB 0x0048"
+        },
+        {
+          "address": "5063",
+          "bytes": "c680",
+          "instruction": "LDAB #0x80"
+        },
+        {
+          "address": "5065",
+          "bytes": "5b49",
+          "instruction": "STAB 0x0049"
         }
       ]
     },

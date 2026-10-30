@@ -25,7 +25,10 @@ assert sum(s['wire'] is None for s in late['connector']['slots'])==9
 assert late['pins'][5]['diagnostic']==49 and 'Auxiliary' in late['pins'][5]['role']
 assert late['pins'][12]['diagnostic']==54
 assert late['pins'][65]['ram']==['0x08E4']
-assert late['pins'][45]['status']=='Unassigned'
+assert late['pins'][45]['status']=='Configured'
+assert late['pins'][24]['status']=='Decoded' and late['pins'][24]['evidence_kind']=='runtime'
+assert early['pins'][24]['status']=='Configured'
+assert late['pins'][17]['evidence_instructions'] and late['pins'][17].get('evidence_kind','runtime')=='runtime'
 for f in (early,late):
     for w in ('B/Y','L/B'):
         assert wire(f,w)['association']=='Unresolved alternatives'
@@ -40,7 +43,15 @@ for image in report['images']:
     assert checks[68]['code_verified']==checks[67]['code_verified']
     assert all(checks[n]['code_verified'] for n in (1,2,5,20,24,59,60,61,62,63,64,65,69,70,80))
     assert all(not c['physical_package_verified'] and not c['board_continuity_verified'] for c in checks.values())
-    assert image['verified_code_pins']==(38 if image['family']=='late' else 37 if image['boot_status']=='populated' else 35)
+    assert image['verified_code_pins']==(56 if image['boot_status']=='populated' else 53)
+    assert image['verified_code_pins']==image['runtime_code_pins']+image['configuration_code_pins']
+    assert image['runtime_code_pins']==(42 if image['family']=='late' else 40 if image['boot_status']=='populated' else 38)
+    assert checks[38]['code_verified']==(image['boot_status']=='populated')
+    assert checks[38]['evidence_kind']=='configuration'
+    for n in (3,17,22,23,36,41,42,43,44,48,74,79):
+        assert checks[n]['code_verified'] and checks[n]['evidence_kind']=='configuration'
+    for n in (52,53,54):
+        assert checks[n]['code_verified'] and checks[n]['evidence_kind']=='runtime'
 
 for r in report['flash_comparison']['correlations']:
     s=next(s for s in late['connector']['slots'] if s['position']==r['manual_position'])

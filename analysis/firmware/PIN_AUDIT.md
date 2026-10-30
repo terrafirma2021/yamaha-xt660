@@ -6,15 +6,17 @@ Three different checks are shown separately: instruction bytes in the selected B
 
 | Registered image | Application | Positions with code anchors checked | Boot |
 |---|---|---:|---|
-| XT660X 2005 / 5VK-8591A-00 | Early | 35 | FF placeholder |
-| XT660X 2005 / checksum-corrected copy | Early | 35 | FF placeholder |
-| 2004–2006 companion / 5VK-8591A-01 | Early | 37 | Populated |
-| 2C1-8591A-00 | Early | 35 | FF placeholder |
-| 2C1-8591A-00 / immobilizer-off | Early | 35 | FF placeholder |
-| 2008 / 5VK-8591A-1X | Later | 38 | Populated |
-| 2C1-8591A-10 | Later | 38 | Populated |
-| 2C1-8591A-10 / immobilizer-off | Later | 38 | Populated |
-| 5VK-8591A-11 | Later | 38 | Populated |
+| XT660X 2005 / 5VK-8591A-00 | Early | 53 | FF placeholder |
+| XT660X 2005 / checksum-corrected copy | Early | 53 | FF placeholder |
+| 2004–2006 companion / 5VK-8591A-01 | Early | 56 | Populated |
+| 2C1-8591A-00 | Early | 53 | FF placeholder |
+| 2C1-8591A-00 / immobilizer-off | Early | 53 | FF placeholder |
+| 2008 / 5VK-8591A-1X | Later | 56 | Populated |
+| 2C1-8591A-10 | Later | 56 | Populated |
+| 2C1-8591A-10 / immobilizer-off | Later | 56 | Populated |
+| 5VK-8591A-11 | Later | 56 | Populated |
+
+The [additional pin review](../semantics/PIN_CONFIGURATION_REVIEW.md) separates runtime use from configuration-only evidence. It adds the PA5/PA6/PA7 service-test selector, the later PB5 gate, idle output configurations and boot IRQ disable. Replays cover 13,866 cases across all nine BINs.
 
 All 80 package position labels are compared with the reviewed manufacturer drawing. The code counts are not counts of physically verified ECU terminals. Source filenames, owner labels and parts-catalogue associations retain their existing evidence limits.
 
@@ -46,7 +48,9 @@ The site uses U01… and L01… solely as left-to-right research coordinates in 
 | ADC7 | Skipped in ordinary scan | Sampled, stored at 08E4; external purpose unresolved | 61B6 dispatch, 616C scan selection, handler 6B29 |
 | PE2/PE3 | Banked analog acquisition cycles | Initialized low; secondary dispatch tables point to RTS | 48A0/48A2/48A4 and 4B0E/4B10/4B12; 61C6/61CE point to 61F4 |
 | PB6/PB7 | Early roles not portable | Paired PORTB output; destination unresolved | AF8D…AFCE; DDRB EC at 4824/4826 |
-| PA1 | Early injector-readback candidate | No function assignment transferred | No corresponding later route established |
+| PA1 | Early injector-path readback/control bit | Output initialized low; device unassigned | PORTA F8 / DDRA 1F at 4818…481E |
+| PB5 | Output initialized high | Active conditional auxiliary output; device unassigned | A90B…A95E; set A956 / clear A95B |
+| PA5/PA6/PA7 | Guarded service-test selector inputs | Same selector logic at later addresses | 951A…9570 → checksum 971D, RAM test 9799, halt 9558 |
 
 The later ADC dispatch is checked directly at 61B6 in every later BIN: TPS, MAP, O2, intake temperature, supply monitor, lean angle, coolant, additional analog input. Diagnostic selectors are independently compared with the copied ROM list at 46C2 and their handler paths. GPIO direction writes, timer selection, and SCI/SPI setup are included in the evidence.
 
@@ -68,6 +72,6 @@ The flashing-tool protocol establishes the boot command stream and 9,600 baud. I
 
 ## Reproduce
 
-Run `python scripts/build_pin_overview.py`, `python scripts/pin_families.py`, then `python scripts/test_pin_families.py`. CI also runs `python scripts/pin_families.py --check` to reject a stale report. [pin_audit.json](pin_audit.json) contains both family records, the exact-byte checks for each SHA-256, all 26/34 connector positions, source links and the flashing-sketch comparison.
+Run `python scripts/build_pin_overview.py`, `python scripts/pin_families.py`, then `python scripts/test_pin_families.py` and `python scripts/test_pin_configuration.py --check`. CI also runs `python scripts/pin_families.py --check` to reject a stale report. [pin_audit.json](pin_audit.json) contains both family records, the exact-byte checks for each SHA-256, all 26/34 connector positions, source links and the flashing-sketch comparison.
 
 The package transcription is independently recorded in [package_datasheet_review.json](../semantics/package_datasheet_review.json), against [NXP MC9S12T64, Figure 11, PDF 60](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf#page=60). These checks preserve unresolved physical claims rather than automatically promoting them when software evidence passes.

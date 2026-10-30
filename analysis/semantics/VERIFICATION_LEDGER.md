@@ -19,9 +19,10 @@ These are evidence gates, not an automatic promotion ladder. A Yamaha map meanin
 - [x] All 71 map extracts and 32 stored axes match the supplied bytes.
 - [x] All 90 input-axis uses have explicit coordinate and remaining physical-scale requirements; every map has specific open items.
 - [x] All 80 displayed package assignments visually compared with NXP Figure 11; transcription locked for future change detection.
-- [x] All 35 firmware-linked pin entries reviewed from code operands and setup through the datasheet register/channel to the package pin.
+- [x] All 53 firmware-linked early pin entries reviewed from code operands and setup through the datasheet register/channel to the package pin; configuration-only entries are explicitly marked.
 - [x] Existing software reports match the checked source/image provenance.
-- [x] All 26 drawn connector positions have an inventory entry; 101 MCU instruction anchors match the image.
+- [x] All 26 drawn connector positions have an inventory entry; 290 MCU instruction anchors match the image.
+- [x] [Both firmware families](PIN_CONFIGURATION_REVIEW.md): per-BIN configuration/use evidence and boot applicability reviewed, with 13,866 instruction replay cases.
 - [ ] Complete engineering-unit interpretation and tuning sign-off for all maps.
 - [ ] Exact fitted MCU/package and ECU revision confirmed.
 - [ ] Connector face/OEM numbering and physical routes confirmed.
@@ -130,7 +131,7 @@ All rows match the reviewed reference pinout. Application status is a separate c
 |---|---|---|---|---|---|
 | 1 | PT2/IOC2 | Verified | Vehicle-speed pulses | Corroborated | 2 |
 | 2 | PT3/IOC3 | Verified | Ignition-coil driver command | Corroborated | 3 |
-| 3 | PT4/IOC4 | Verified | Application role not established | Unassigned | 0 |
+| 3 | PT4/IOC4 | Verified | GPIO output initialized high | Configured | 10 |
 | 4 | PT5/IOC5 | Verified | Ignition monitoring capture | Candidate | 3 |
 | 5 | PT6/IOC6 | Verified | Primary fuel-injector command | Corroborated | 3 |
 | 6 | PT7/IOC7 | Verified | Secondary injector code path | Decoded | 3 |
@@ -144,16 +145,16 @@ All rows match the reviewed reference pinout. Application status is a separate c
 | 14 | PP2/PWM2 | Verified | Radiator-fan relay command | Corroborated | 3 |
 | 15 | PP3/PWM3 | Verified | Storage transaction select/strobe | Decoded | 3 |
 | 16 | PP4/PWM4 | Verified | Headlight-relay command | Corroborated | 3 |
-| 17 | PP5/PWM5 | Verified | Application role not established | Unassigned | 0 |
-| 18 | PP6/PWM6 | Verified | Application role not established | Unassigned | 0 |
+| 17 | PP5/PWM5 | Verified | GPIO output initialized high | Configured | 4 |
+| 18 | PP6/PWM6 | Verified | GPIO output initialized high | Configured | 4 |
 | 19 | PP7/PWM7 | Verified | Memory-test status/enable output | Decoded | 4 |
 | 20 | PB0 | Verified | Sidestand / start-interlock input | Corroborated | 3 |
 | 21 | PB1 | Verified | Starter-request input candidate | Candidate | 4 |
-| 22 | PB2 | Verified | Application role not established | Unassigned | 0 |
-| 23 | PB3 | Verified | Application role not established | Unassigned | 0 |
+| 22 | PB2 | Verified | GPIO output initialized high | Configured | 9 |
+| 23 | PB3 | Verified | GPIO output initialized high | Configured | 9 |
 | 24 | PB4 | Verified | Neutral input | Corroborated | 3 |
-| 25 | PB5 | Verified | Application role not established | Unassigned | 0 |
-| 26 | PB6 | Verified | Application role not established | Unassigned | 0 |
+| 25 | PB5 | Verified | GPIO output initialized high | Configured | 9 |
+| 26 | PB6 | Verified | GPIO output initialized high | Configured | 9 |
 | 27 | PB7 | Verified | Timed digital output | Unassigned | 3 |
 | 28 | RESET | Verified | RESET | Datasheet | 0 |
 | 29 | EXTAL | Verified | EXTAL | Datasheet | 0 |
@@ -163,25 +164,25 @@ All rows match the reviewed reference pinout. Application status is a separate c
 | 33 | VDDPLL | Verified | VDDPLL | Datasheet | 0 |
 | 34 | VDDR | Verified | VDDR | Datasheet | 0 |
 | 35 | VSSR | Verified | VSSR | Datasheet | 0 |
-| 36 | PK7/ROMONE/ECS | Verified | PK7/ROMONE/ECS | Datasheet | 0 |
+| 36 | PK7/ROMONE/ECS | Verified | Port-K output direction configured | Configured | 2 |
 | 37 | PE0/XIRQ | Verified | PE0/XIRQ | Datasheet | 0 |
 | 38 | PE1/IRQ | Verified | PE1/IRQ | Datasheet | 0 |
 | 39 | PE2/RW | Verified | Analog-bank selection bit 0 | Decoded | 5 |
 | 40 | PE3/LSTRB/TAGLO | Verified | Analog-bank selection bit 1 | Decoded | 5 |
-| 41 | PE4/ECLK | Verified | PE4/ECLK | Datasheet | 0 |
-| 42 | PE5/MODA/IPIPE0 | Verified | PE5/MODA/IPIPE0 | Datasheet | 0 |
-| 43 | PE6/MODB/IPIPE1 | Verified | PE6/MODB/IPIPE1 | Datasheet | 0 |
-| 44 | PE7/NOACC/XCLKS | Verified | PE7/NOACC/XCLKS | Datasheet | 0 |
+| 41 | PE4/ECLK | Verified | Port-E output direction configured | Configured | 2 |
+| 42 | PE5/MODA/IPIPE0 | Verified | Port-E input direction configured | Configured | 2 |
+| 43 | PE6/MODB/IPIPE1 | Verified | Port-E input direction configured | Configured | 2 |
+| 44 | PE7/NOACC/XCLKS | Verified | Port-E output direction configured | Configured | 2 |
 | 45 | PA0 | Verified | Injector-path readback / control bit | Unassigned | 2 |
 | 46 | PA1 | Verified | Injector-path readback / control bit | Unassigned | 2 |
 | 47 | PA2 | Verified | Fuel-injection system relay command | Corroborated | 4 |
-| 48 | PA3 | Verified | Application role not established | Unassigned | 0 |
+| 48 | PA3 | Verified | GPIO output initialized high | Configured | 4 |
 | 49 | PA4 | Verified | Periodic service/watchdog candidate | Candidate | 3 |
 | 50 | VDD2 | Verified | VDD2 | Datasheet | 0 |
 | 51 | VSS2 | Verified | VSS2 | Datasheet | 0 |
-| 52 | PA5 | Verified | Application role not established | Unassigned | 0 |
-| 53 | PA6 | Verified | Application role not established | Unassigned | 0 |
-| 54 | PA7 | Verified | Application role not established | Unassigned | 0 |
+| 52 | PA5 | Verified | Service-test selector input 0 | Decoded | 35 |
+| 53 | PA6 | Verified | Service-test selector input 1 | Decoded | 35 |
+| 54 | PA7 | Verified | Service-test selector input 2 | Decoded | 35 |
 | 55 | VDDA | Verified | VDDA | Datasheet | 0 |
 | 56 | VRH | Verified | VRH | Datasheet | 0 |
 | 57 | VRL | Verified | VRL | Datasheet | 0 |
@@ -201,12 +202,12 @@ All rows match the reviewed reference pinout. Application status is a separate c
 | 71 | PS4/MISO | Verified | SPI data input | Decoded | 2 |
 | 72 | PS5/MOSI | Verified | SPI data output | Decoded | 2 |
 | 73 | PS6/SCK | Verified | SPI clock | Decoded | 2 |
-| 74 | PS7/SS | Verified | Application role not established | Unassigned | 0 |
+| 74 | PS7/SS | Verified | GPIO output initialized high; SPI SS not selected | Configured | 6 |
 | 75 | VREGEN | Verified | VREGEN | Datasheet | 0 |
 | 76 | VSSX | Verified | VSSX | Datasheet | 0 |
 | 77 | VDDX | Verified | VDDX | Datasheet | 0 |
 | 78 | TEST | Verified | TEST | Datasheet | 0 |
-| 79 | PT0/IOC0 | Verified | Application role not established | Unassigned | 0 |
+| 79 | PT0/IOC0 | Verified | GPIO output initialized low | Configured | 10 |
 | 80 | PT1/IOC1 | Verified | Crank-position sensor (CPS) | Corroborated | 3 |
 
 ## Code to CPU pin: every claimed software connection
@@ -217,6 +218,7 @@ This review joins both sides: byte-backed instructions and the NXP register/pack
 |---|---|---|---|---|
 | 1 / PT2/IOC2 | PTIT bit 2; input-capture channel 2 | 100, 90, 91 | `0xF3FB`, `0x505B`, `0x505D` | Input capture; the speed ISR tests the pin level. Sensor pulses per revolution remain unknown. |
 | 2 / PT3/IOC3 | TC3; TCTL2 OM3/OL3; timer channel 3 | 90, 91 | `0xEF50`, `0xEF52`, `0xEF54`, `0xEF66`, `0x505B`, `0x505D` | Output compare. Digital compare action does not establish external coil inversion or absolute TDC. |
+| 3 / PT4/IOC4 | DDRT 0x00E2 bit 4; PTT 0x00E0; TIOS / TCTL1 / TCTL2 | 90, 100, 257, 385 | `0x503B`, `0x503D`, `0x503F`, `0x5041`, `0x505B`, `0x505D`, `0x505F`, `0x5061`, `0x5063`, `0x5065` | DDRT=0xD9 sets PT4 as output. TIOS bit 4 is set, but OM4:OL4=00 disconnects the compare action; the latch starts high. No dedicated pin-bit consumer or TC4 access was found in the decoded application. This is a configured output, not an established spare input or an identified harness circuit. |
 | 4 / PT5/IOC5 | TFLG1 bit 5 (C5F); capture channel 5 | 90 | `0xDDAB`, `0xDDAD`, `0x505B`, `0x505D` | Input capture; code checks capture flag, not a direct TC5 timestamp read. |
 | 5 / PT6/IOC6 | TC6; timer channel 6 | 90, 91 | `0xB9B8`, `0xC56B`, `0xC56D`, `0x505B`, `0x505D` | Output compare; normal stock injector path. |
 | 6 / PT7/IOC7 | TC7; timer channel 7 | 90, 91 | `0xBA3F`, `0x505B`, `0x505D` | Output compare; second normal path is gated by variant. Presence is not proof of TDM hardware. |
@@ -225,17 +227,32 @@ This review joins both sides: byte-backed instructions and the NXP register/pack
 | 14 / PP2/PWM2 | PTP bit 2 | 101 | `0x71C5`, `0x5037`, `0x5039` | DDRP=FF configures output. PWM in the package alias does not prove PWM operation; these anchors use GPIO. |
 | 15 / PP3/PWM3 | PTP bit 3 | 101 | `0x57B4`, `0x5037`, `0x5039` | DDRP=FF configures output. PWM in the package alias does not prove PWM operation; these anchors use GPIO. |
 | 16 / PP4/PWM4 | PTP bit 4 | 101 | `0x9DC5`, `0x5037`, `0x5039` | DDRP=FF configures output. PWM in the package alias does not prove PWM operation; these anchors use GPIO. |
+| 17 / PP5/PWM5 | DDRP 0x00F2 bit 5; PTP 0x00F0 | 101, 264, 265 | `0x5033`, `0x5035`, `0x5037`, `0x5039` | DDRP=0xFF enables output and the startup latch sets PP5 high. No dedicated runtime write to this bit was found in the decoded application. The PWM alias does not establish PWM operation or identify the attached device. |
+| 18 / PP6/PWM6 | DDRP 0x00F2 bit 6; PTP 0x00F0 | 101, 264, 265 | `0x5033`, `0x5035`, `0x5037`, `0x5039` | DDRP=0xFF enables output and the startup latch sets PP6 high. No dedicated runtime write to this bit was found in the decoded application. The PWM alias does not establish PWM operation or identify the attached device. |
 | 19 / PP7/PWM7 | PTP bit 7 | 101 | `0xA489`, `0x5037`, `0x5039` | DDRP=FF configures output. PWM in the package alias does not prove PWM operation; these anchors use GPIO. |
 | 20 / PB0 | PORTB bit 0 -> filtered RAM 0896 bit 0 | 86 | `0x8B45`, `0x8B57`, `0x6583`, `0x502F`, `0x5031` | Input; B/Y versus L/B external route unresolved. |
 | 21 / PB1 | PORTB bit 1 -> filtered RAM 0896 bit 1 | 86 | `0x8B45`, `0x8B57`, `0xCBF6`, `0x502F`, `0x5031` | Input; starter interpretation supported, L/W association remains candidate. |
+| 22 / PB2 | DDRB 0x0003 bit 2; PORTB 0x0001 | 74, 75, 86, 149, 150 | `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031` | DDRB=0xEC configures PB2 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family. |
+| 23 / PB3 | DDRB 0x0003 bit 3; PORTB 0x0001 | 74, 75, 86, 149, 150 | `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031` | DDRB=0xEC configures PB3 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family. |
 | 24 / PB4 | PORTB bit 4 -> filtered RAM 0896 bit 4 | 86 | `0x8B45`, `0x8B57`, `0x65A0`, `0x502F`, `0x5031` | Input; neutral diagnostic in variant 9, external route unresolved. |
+| 25 / PB5 | DDRB 0x0003 bit 5; PORTB 0x0001 | 74, 75, 86, 149, 150 | `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031` | DDRB=0xEC configures PB5 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family. |
+| 26 / PB6 | DDRB 0x0003 bit 6; PORTB 0x0001 | 74, 75, 86, 149, 150 | `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031` | DDRB=0xEC configures PB6 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family. |
 | 27 / PB7 | PORTB bit 7 | 86 | `0xCB8B`, `0xCB8F`, `0xCBAD`, `0x502F`, `0x5031` | Configured output. Reading PORTB does not by itself prove external feedback sensing. |
+| 36 / PK7/ROMONE/ECS | DDRK 0x0033 bit 7; PORTK 0x0032 | 75, 88, 129, 159, 160 | `0x504F`, `0x5051` | DDRK=0x80 selects PK7 output when the GPIO function is available. No decoded PORTK read/write establishes an application purpose or output latch value. ROMONE is a reset-time alternate function; ECS depends on the MCU operating mode. |
 | 39 / PE2/RW | PORTE bit 2 | 86 | `0x56E7`, `0x56F0`, `0x504B`, `0x504D` | Configured output; bank-selection software. External analog multiplexer circuit remains untraced. |
 | 40 / PE3/LSTRB/TAGLO | PORTE bit 3 | 86 | `0x56FB`, `0x5704`, `0x504B`, `0x504D` | Configured output; bank-selection software. External analog multiplexer circuit remains untraced. |
+| 41 / PE4/ECLK | DDRE 0x0009 bit 4; PEAR 0x000A | 75, 86, 152, 153, 154 | `0x504B`, `0x504D` | DDRE=0x9F requests PE4 as output. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: NECLK selects GPIO versus E-clock. GPIO direction alone does not establish a reusable external connection. |
+| 42 / PE5/MODA/IPIPE0 | DDRE 0x0009 bit 5; PEAR 0x000A | 75, 86, 152, 153, 154 | `0x504B`, `0x504D` | DDRE=0x9F requests PE5 as input. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: MODA is sampled at reset; PIPOE can select instruction-pipe output. GPIO direction alone does not establish a reusable external connection. |
+| 43 / PE6/MODB/IPIPE1 | DDRE 0x0009 bit 6; PEAR 0x000A | 75, 86, 152, 153, 154 | `0x504B`, `0x504D` | DDRE=0x9F requests PE6 as input. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: MODB is sampled at reset; PIPOE can select instruction-pipe output. GPIO direction alone does not establish a reusable external connection. |
+| 44 / PE7/NOACC/XCLKS | DDRE 0x0009 bit 7; PEAR 0x000A | 75, 86, 152, 153, 154 | `0x504B`, `0x504D` | DDRE=0x9F requests PE7 as output. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: XCLKS is sampled at reset; NOACCE can select CPU no-access output. GPIO direction alone does not establish a reusable external connection. |
 | 45 / PA0 | PORTA bit 0 | 86 | `0xC57A`, `0xC57C`, `0x501C`, `0x501E` | Configured output, also read by injector monitor. Do not assume an input or physical readback without port-mode/circuit evidence. |
 | 46 / PA1 | PORTA bit 1 | 86 | `0xC731`, `0xC733`, `0x501C`, `0x501E` | Configured output, also read by injector monitor. Do not assume an input or physical readback without port-mode/circuit evidence. |
 | 47 / PA2 | PORTA bit 2 | 86 | `0xACD9`, `0xACE6`, `0x501C`, `0x501E` | Configured output; prime sets, stop clears. External driver polarity remains separate. |
+| 48 / PA3 | DDRA 0x0002 bit 3; PORTA 0x0000 | 74, 86, 147, 148 | `0x5018`, `0x501A`, `0x501C`, `0x501E` | DDRA=0x1F makes PA3 an output, with startup latch high. Whole-port snapshots are present, but no dedicated runtime role for this bit was found. The board destination remains unknown. |
 | 49 / PA4 | PORTA bit 4 | 86 | `0x5FAC`, `0x5FB0`, `0x5FB5`, `0x501C`, `0x501E` | Configured output; toggled next to COP service. External watchdog role remains candidate. |
+| 52 / PA5 | DDRA 0x0002; PORTA 0x0000 mask 0xE0 | 74, 86, 147, 148 | `0x5018`, `0x501A`, `0x501C`, `0x501E`, `0xA2B9`, `0xA2BB`, `0xA2BD`, `0xA2BF`, `0xA2C1`, `0xA2C3`, `0xA2C5`, `0xA2C7`, `0xA2CB`, `0xA2CE`, `0xA2D0`, `0xA2D2`, `0xA2D4`, `0xA2D6`, `0xA2D8`, `0xA2DA`, `0xA2DE`, `0xA2E1`, `0xA2F7`, `0xA2F9`, `0xA30C`, `0xA505`, `0xA50A`, `0xA50D`, `0xA510`, `0xA51E`, `0xA52B`, `0xA52D`, `0xA54B`, `0xA54D`, `0xA54F` | PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800–0x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed. |
+| 53 / PA6 | DDRA 0x0002; PORTA 0x0000 mask 0xE0 | 74, 86, 147, 148 | `0x5018`, `0x501A`, `0x501C`, `0x501E`, `0xA2B9`, `0xA2BB`, `0xA2BD`, `0xA2BF`, `0xA2C1`, `0xA2C3`, `0xA2C5`, `0xA2C7`, `0xA2CB`, `0xA2CE`, `0xA2D0`, `0xA2D2`, `0xA2D4`, `0xA2D6`, `0xA2D8`, `0xA2DA`, `0xA2DE`, `0xA2E1`, `0xA2F7`, `0xA2F9`, `0xA30C`, `0xA505`, `0xA50A`, `0xA50D`, `0xA510`, `0xA51E`, `0xA52B`, `0xA52D`, `0xA54B`, `0xA54D`, `0xA54F` | PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800–0x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed. |
+| 54 / PA7 | DDRA 0x0002; PORTA 0x0000 mask 0xE0 | 74, 86, 147, 148 | `0x5018`, `0x501A`, `0x501C`, `0x501E`, `0xA2B9`, `0xA2BB`, `0xA2BD`, `0xA2BF`, `0xA2C1`, `0xA2C3`, `0xA2C5`, `0xA2C7`, `0xA2CB`, `0xA2CE`, `0xA2D0`, `0xA2D2`, `0xA2D4`, `0xA2D6`, `0xA2D8`, `0xA2DA`, `0xA2DE`, `0xA2E1`, `0xA2F7`, `0xA2F9`, `0xA30C`, `0xA505`, `0xA50A`, `0xA50D`, `0xA510`, `0xA51E`, `0xA52B`, `0xA52D`, `0xA54B`, `0xA54D`, `0xA54F` | PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800–0x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed. |
 | 59 / PAD0/AN0 | ATDCTL5 channel selector 0; result slot ATDDR3 at 0096 | 94, 95 | `0x68CF`, `0x68D6`, `0x68D9`, `0x68DB`, `0x68DD`, `0x68DE`, `0x68E2`, `0x68E7`, `0x692E` | Dispatch table 6968 indexes selected input channel. Result-slot number 3 is not input channel 3; alternate startup/bank paths require separate interpretation. |
 | 60 / PAD1/AN1 | ATDCTL5 channel selector 1; result slot ATDDR3 at 0096 | 94, 95 | `0x68CF`, `0x68D6`, `0x68D9`, `0x68DB`, `0x68DD`, `0x68DE`, `0x68E2`, `0x68E7`, `0x692E` | Dispatch table 6968 indexes selected input channel. Result-slot number 3 is not input channel 3; alternate startup/bank paths require separate interpretation. |
 | 61 / PAD2/AN2 | ATDCTL5 channel selector 2; result slot ATDDR3 at 0096 | 94, 95 | `0x68CF`, `0x68D6`, `0x68D9`, `0x68DB`, `0x68DD`, `0x68DE`, `0x68E2`, `0x68E7`, `0x692E` | Dispatch table 6968 indexes selected input channel. Result-slot number 3 is not input channel 3; alternate startup/bank paths require separate interpretation. |
@@ -249,6 +266,8 @@ This review joins both sides: byte-backed instructions and the NXP register/pack
 | 71 / PS4/MISO | SPI SPICR1/SPI data; MISO | 99 | `0x5077`, `0x5079`, `0x57CA` | SPICR1=50 enables master SPI; MISO is input. Slave device identity remains separate. |
 | 72 / PS5/MOSI | SPI SPICR1/SPI data; MOSI | 99 | `0x5077`, `0x5079`, `0x57C2` | SPICR1=50 enables master SPI; MOSI is output. Slave device identity remains separate. |
 | 73 / PS6/SCK | SPI SPICR1/SPI data; SCK | 99 | `0x5077`, `0x5079`, `0x507B`, `0x507D` | SPICR1=50 enables master SPI; SCK is master clock. Physical frequency requires bus clock. |
+| 74 / PS7/SS | DDRS 0x00EA bit 7; PTS 0x00E8; SPICR1/2 0x00D8/0x00D9 | 73, 99, 100, 261, 463, 464 | `0x5043`, `0x5045`, `0x5047`, `0x5049`, `0x5077`, `0x5079` | DDRS=0xEA and PTS=0xFF initialize PS7 as a high output. SPI runs as master (SPICR1=0x50/0x54); SPICR2 has no decoded write and its reset MODFEN=0 leaves SS outside SPI control. The storage transaction strobe is PP3 instead. No dedicated PS7 toggle was found. This conclusion assumes the documented reset state; a nonstandard boot handoff can change it. |
+| 79 / PT0/IOC0 | DDRT 0x00E2 bit 0; PTT 0x00E0; TIOS / TCTL1 / TCTL2 | 90, 100, 257, 385 | `0x503B`, `0x503D`, `0x503F`, `0x5041`, `0x505B`, `0x505D`, `0x505F`, `0x5061`, `0x5063`, `0x5065` | DDRT=0xD9 sets PT0 as output. TIOS bit 0 is clear and the output latch starts low. No dedicated pin-bit consumer or TC0 access was found in the decoded application. This is a configured output, not an established spare input or an identified harness circuit. |
 | 80 / PT1/IOC1 | TC1 and PTIT bit 1; capture channel 1 | 90, 91, 100 | `0xD8D3`, `0x505B`, `0x505D` | Input capture; CPS reference angle and hardware edge conditioning remain unconfirmed. |
 
 ## Every drawn connector position
@@ -291,6 +310,7 @@ These are previously recorded fixture results whose provenance is checked during
 | Report | Recorded cases | Recorded result | What the result does not establish |
 |---|---|---|---|
 | [validation.json](../full/validation.json) | 344357 | Passed | Independent Python evaluator of exported raw p-code; confirms C translation consistency, not silicon equivalence. |
+| [pin_configuration_validation.json](../firmware/pin_configuration_validation.json) | 13866 | Passed | Instruction execution only; no ECU is connected and no BIN is modified. Service-selector tests stop before destructive test/halt targets. |
 | [connector_path_validation.json](connector_path_validation.json) | 10344 | Passed | Synthetic software fixtures; no connector continuity, voltage measurement, transceiver test or complete ECU boot. Counter values are routine invocations or preseeded timer states, not independently measured milliseconds. Wire assignments require separate manual/board evidence. |
 | [control_validation.json](control_validation.json) | 212090 | Passed | Independent formulas/decision tables versus instruction translation. No peripheral timing, physical units or connector identity certified. |
 | [crank_reference_validation.json](crank_reference_validation.json) | 561 | Passed | Synthetic CPS input, manually emulated ECT output and ISR stopped after spark dispatch. Normal gates, selected periods, fixed final spark/dwell inputs. Does not establish rotor-to-TDC angle, board polarity, actual hardware tooth count or every special mode. |

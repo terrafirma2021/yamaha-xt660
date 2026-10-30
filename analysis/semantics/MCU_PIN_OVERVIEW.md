@@ -6,7 +6,9 @@
 
 The [ECU connector inventory](ECU_CONNECTOR.md) accounts for all 26 drawn positions: 15 function-correlated circuits, one candidate starter association, two unresolved interlock alternatives, five power/return networks and three crosses. The [route audit](CONNECTOR_ROUTE_AUDIT.md) explains the evidence and corrections. These are function associations through board circuitry, not direct-wire claims.
 
-The overview covers all 80 package positions. Corroborated means firmware dataflow plus Yamaha diagnostic identity; Decoded means a software role is established; Candidate means a physical role is tentative. Datasheet entries identify package functions only. Unassigned does not mean unused.
+The overview covers all 80 package positions. Corroborated means firmware dataflow plus Yamaha diagnostic identity; Decoded means a software role is established; Configured means register setup is established without an identified device; Candidate means a physical role is tentative. Datasheet entries identify package functions only. Unassigned does not mean unused.
+
+The [extended pin review](PIN_CONFIGURATION_REVIEW.md) covers both application families, the service-test inputs, the later PB5 output, startup-only GPIO settings and the remaining special-function positions. The live explorer counts runtime-use evidence separately from configuration evidence.
 
 ## Sensors and switch inputs
 
@@ -90,6 +92,14 @@ Useful runtime RAM: `0x0A82`, `0x0A96`, `0x0AA4`.
 XT manual wire reference: O (orange), coil control at ECU; R/B coil supply. This is a harness reference, not a measured MCU-to-connector continuity result.
 
 ECU drawing position: **U13**, upper row position 13, wire O (function corroborated). See [connector orientation and paths](ECU_CONNECTOR.md).
+
+### Pin 3 - PT4/IOC4 - GPIO output initialized high
+
+DDRT=0xD9 sets PT4 as output. TIOS bit 4 is set, but OM4:OL4=00 disconnects the compare action; the latch starts high. No dedicated pin-bit consumer or TC4 access was found in the decoded application. This is a configured output, not an established spare input or an identified harness circuit.
+
+Status: **Configured**. Register/channel: `DDRT 0x00E2 bit 4; PTT 0x00E0; TIOS / TCTL1 / TCTL2`.
+
+Instruction anchors: `0x503B`, `0x503D`, `0x503F`, `0x5041`, `0x505B`, `0x505D`, `0x505F`, `0x5061`, `0x5063`, `0x5065`.
 
 ### Pin 4 - PT5/IOC5 - Ignition monitoring capture
 
@@ -175,6 +185,22 @@ XT manual wire reference: Y/B at L10 in the manual drawing (function corroborate
 
 ECU drawing position: **L10**, lower row position 10, wire Y/B (function corroborated). See [connector orientation and paths](ECU_CONNECTOR.md).
 
+### Pin 17 - PP5/PWM5 - GPIO output initialized high
+
+DDRP=0xFF enables output and the startup latch sets PP5 high. No dedicated runtime write to this bit was found in the decoded application. The PWM alias does not establish PWM operation or identify the attached device.
+
+Status: **Configured**. Register/channel: `DDRP 0x00F2 bit 5; PTP 0x00F0`.
+
+Instruction anchors: `0x5033`, `0x5035`, `0x5037`, `0x5039`.
+
+### Pin 18 - PP6/PWM6 - GPIO output initialized high
+
+DDRP=0xFF enables output and the startup latch sets PP6 high. No dedicated runtime write to this bit was found in the decoded application. The PWM alias does not establish PWM operation or identify the attached device.
+
+Status: **Configured**. Register/channel: `DDRP 0x00F2 bit 6; PTP 0x00F0`.
+
+Instruction anchors: `0x5033`, `0x5035`, `0x5037`, `0x5039`.
+
 ### Pin 19 - PP7/PWM7 - Memory-test status/enable output
 
 PP7 is cleared around ROM/RAM checks and set on successful paths. The destination circuit and any output-enable effect are unknown.
@@ -211,6 +237,22 @@ XT manual wire reference: L/W at U01 in the manual drawing (candidate associatio
 
 ECU drawing position: **U01**, upper row position 1, wire L/W (candidate association). See [connector orientation and paths](ECU_CONNECTOR.md).
 
+### Pin 22 - PB2 - GPIO output initialized high
+
+DDRB=0xEC configures PB2 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.
+
+Status: **Configured**. Register/channel: `DDRB 0x0003 bit 2; PORTB 0x0001`.
+
+Instruction anchors: `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031`.
+
+### Pin 23 - PB3 - GPIO output initialized high
+
+DDRB=0xEC configures PB3 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.
+
+Status: **Configured**. Register/channel: `DDRB 0x0003 bit 3; PORTB 0x0001`.
+
+Instruction anchors: `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031`.
+
 ### Pin 24 - PB4 - Neutral input
 
 PB4 is filtered into 0x0896 bit4. For stock variant 9 diagnostic 21 reports that bit; other variants substitute a fixed diagnostic response.
@@ -225,6 +267,22 @@ XT manual wire reference: B/Y at L01 in the manual drawing (unresolved alternati
 
 ECU drawing position: **L01**, lower row position 1, wire B/Y (unresolved alternatives); **L02**, lower row position 2, wire L/B (unresolved alternatives). See [connector orientation and paths](ECU_CONNECTOR.md).
 
+### Pin 25 - PB5 - GPIO output initialized high
+
+DDRB=0xEC configures PB5 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.
+
+Status: **Configured**. Register/channel: `DDRB 0x0003 bit 5; PORTB 0x0001`.
+
+Instruction anchors: `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031`.
+
+### Pin 26 - PB6 - GPIO output initialized high
+
+DDRB=0xEC configures PB6 as an output. Its startup latch is high. Whole-port reads also enter the debounce snapshot; that does not make this bit a switch input. No dedicated runtime consumer of this bit was established in this family.
+
+Status: **Configured**. Register/channel: `DDRB 0x0003 bit 6; PORTB 0x0001`.
+
+Instruction anchors: `0x5020`, `0x5023`, `0x5025`, `0x5027`, `0x5029`, `0x502B`, `0x502D`, `0x502F`, `0x5031`.
+
 ### Pin 27 - PB7 - Timed digital output
 
 PB7 is toggled using counters. External purpose has not been established; do not label it tachometer solely from waveform-like code.
@@ -232,6 +290,14 @@ PB7 is toggled using counters. External purpose has not been established; do not
 Status: **Unassigned**. Register/channel: `PORTB 0x0001 bit7`.
 
 Instruction anchors: `0xCB8B`, `0xCB8F`, `0xCBAD`.
+
+### Pin 36 - PK7/ROMONE/ECS - Port-K output direction configured
+
+DDRK=0x80 selects PK7 output when the GPIO function is available. No decoded PORTK read/write establishes an application purpose or output latch value. ROMONE is a reset-time alternate function; ECS depends on the MCU operating mode.
+
+Status: **Configured**. Register/channel: `DDRK 0x0033 bit 7; PORTK 0x0032`.
+
+Instruction anchors: `0x504F`, `0x5051`.
 
 ### Pin 39 - PE2/RW - Analog-bank selection bit 0
 
@@ -248,6 +314,38 @@ Firmware cycles PE2/PE3 through four states during ADC acquisition. ADC6/7 start
 Status: **Decoded**. Register/channel: `PORTE 0x0008 bit3`.
 
 Instruction anchors: `0x56D0`, `0x56E7`, `0x56FB`, `0x5755`, `0x5784`.
+
+### Pin 41 - PE4/ECLK - Port-E output direction configured
+
+DDRE=0x9F requests PE4 as output. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: NECLK selects GPIO versus E-clock. GPIO direction alone does not establish a reusable external connection.
+
+Status: **Configured**. Register/channel: `DDRE 0x0009 bit 4; PEAR 0x000A`.
+
+Instruction anchors: `0x504B`, `0x504D`.
+
+### Pin 42 - PE5/MODA/IPIPE0 - Port-E input direction configured
+
+DDRE=0x9F requests PE5 as input. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: MODA is sampled at reset; PIPOE can select instruction-pipe output. GPIO direction alone does not establish a reusable external connection.
+
+Status: **Configured**. Register/channel: `DDRE 0x0009 bit 5; PEAR 0x000A`.
+
+Instruction anchors: `0x504B`, `0x504D`.
+
+### Pin 43 - PE6/MODB/IPIPE1 - Port-E input direction configured
+
+DDRE=0x9F requests PE6 as input. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: MODB is sampled at reset; PIPOE can select instruction-pipe output. GPIO direction alone does not establish a reusable external connection.
+
+Status: **Configured**. Register/channel: `DDRE 0x0009 bit 6; PEAR 0x000A`.
+
+Instruction anchors: `0x504B`, `0x504D`.
+
+### Pin 44 - PE7/NOACC/XCLKS - Port-E output direction configured
+
+DDRE=0x9F requests PE7 as output. No dedicated runtime consumer of this bit or decoded PEAR write was found. The effective pin function depends on the reset mode and PEAR: XCLKS is sampled at reset; NOACCE can select CPU no-access output. GPIO direction alone does not establish a reusable external connection.
+
+Status: **Configured**. Register/channel: `DDRE 0x0009 bit 7; PEAR 0x000A`.
+
+Instruction anchors: `0x504B`, `0x504D`.
 
 ### Pin 45 - PA0 - Injector-path readback / control bit
 
@@ -277,6 +375,14 @@ XT manual wire reference: L/R at L08 in the manual drawing (function corroborate
 
 ECU drawing position: **L08**, lower row position 8, wire L/R (function corroborated). See [connector orientation and paths](ECU_CONNECTOR.md).
 
+### Pin 48 - PA3 - GPIO output initialized high
+
+DDRA=0x1F makes PA3 an output, with startup latch high. Whole-port snapshots are present, but no dedicated runtime role for this bit was found. The board destination remains unknown.
+
+Status: **Configured**. Register/channel: `DDRA 0x0002 bit 3; PORTA 0x0000`.
+
+Instruction anchors: `0x5018`, `0x501A`, `0x501C`, `0x501E`.
+
 ### Pin 49 - PA4 - Periodic service/watchdog candidate
 
 PA4 is toggled by a recurring service helper. An external watchdog-service role is plausible, not board-proven.
@@ -284,6 +390,30 @@ PA4 is toggled by a recurring service helper. An external watchdog-service role 
 Status: **Candidate**. Register/channel: `PORTA 0x0000 bit4`.
 
 Instruction anchors: `0x5FAC`, `0x5FB0`, `0x5FB5`.
+
+### Pin 52 - PA5 - Service-test selector input 0
+
+PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800–0x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed.
+
+Status: **Decoded**. Register/channel: `DDRA 0x0002; PORTA 0x0000 mask 0xE0`.
+
+Instruction anchors: `0x5018`, `0x501A`, `0x501C`, `0x501E`, `0xA2B9`, `0xA2BB`, `0xA2BD`, `0xA2BF`, `0xA2C1`, `0xA2C3`, `0xA2C5`, `0xA2C7`, `0xA2CB`, `0xA2CE`, `0xA2D0`, `0xA2D2`, `0xA2D4`, `0xA2D6`, `0xA2D8`, `0xA2DA`, `0xA2DE`, `0xA2E1`, `0xA2F7`, `0xA2F9`, `0xA30C`, `0xA505`, `0xA50A`, `0xA50D`, `0xA510`, `0xA51E`, `0xA52B`, `0xA52D`, `0xA54B`, `0xA54D`, `0xA54F`.
+
+### Pin 53 - PA6 - Service-test selector input 1
+
+PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800–0x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed.
+
+Status: **Decoded**. Register/channel: `DDRA 0x0002; PORTA 0x0000 mask 0xE0`.
+
+Instruction anchors: `0x5018`, `0x501A`, `0x501C`, `0x501E`, `0xA2B9`, `0xA2BB`, `0xA2BD`, `0xA2BF`, `0xA2C1`, `0xA2C3`, `0xA2C5`, `0xA2C7`, `0xA2CB`, `0xA2CE`, `0xA2D0`, `0xA2D2`, `0xA2D4`, `0xA2D6`, `0xA2D8`, `0xA2DA`, `0xA2DE`, `0xA2E1`, `0xA2F7`, `0xA2F9`, `0xA30C`, `0xA505`, `0xA50A`, `0xA50D`, `0xA510`, `0xA51E`, `0xA52B`, `0xA52D`, `0xA54B`, `0xA54D`, `0xA54F`.
+
+### Pin 54 - PA7 - Service-test selector input 2
+
+PA5/PA6/PA7 are inputs (DDRA=0x1F) read together as PORTA & 0xE0. With 0x08B1 bit 0x80 set and a repeated matching read: 0x80 invokes the full-range checksum test; 0x00 enters an interrupt-masked infinite loop; 0x40 enters a destructive RAM-pattern test (0x5555 / 0xAAAA over 0x0800–0x0FFE). Other patterns do not enter these tests. These are application service/test selections, not the MCU hardware mode pins. External straps or test-point routing are unconfirmed.
+
+Status: **Decoded**. Register/channel: `DDRA 0x0002; PORTA 0x0000 mask 0xE0`.
+
+Instruction anchors: `0x5018`, `0x501A`, `0x501C`, `0x501E`, `0xA2B9`, `0xA2BB`, `0xA2BD`, `0xA2BF`, `0xA2C1`, `0xA2C3`, `0xA2C5`, `0xA2C7`, `0xA2CB`, `0xA2CE`, `0xA2D0`, `0xA2D2`, `0xA2D4`, `0xA2D6`, `0xA2D8`, `0xA2DA`, `0xA2DE`, `0xA2E1`, `0xA2F7`, `0xA2F9`, `0xA30C`, `0xA505`, `0xA50A`, `0xA50D`, `0xA510`, `0xA51E`, `0xA52B`, `0xA52D`, `0xA54B`, `0xA54D`, `0xA54F`.
 
 ### Pin 59 - PAD0/AN0 - Throttle position (TPS)
 
@@ -437,6 +567,22 @@ Status: **Decoded**. Register/channel: `SPI 0x00D8-0x00DD`.
 
 Instruction anchors: `0x5077`, `0x57B4`.
 
+### Pin 74 - PS7/SS - GPIO output initialized high; SPI SS not selected
+
+DDRS=0xEA and PTS=0xFF initialize PS7 as a high output. SPI runs as master (SPICR1=0x50/0x54); SPICR2 has no decoded write and its reset MODFEN=0 leaves SS outside SPI control. The storage transaction strobe is PP3 instead. No dedicated PS7 toggle was found. This conclusion assumes the documented reset state; a nonstandard boot handoff can change it.
+
+Status: **Configured**. Register/channel: `DDRS 0x00EA bit 7; PTS 0x00E8; SPICR1/2 0x00D8/0x00D9`.
+
+Instruction anchors: `0x5043`, `0x5045`, `0x5047`, `0x5049`, `0x5077`, `0x5079`.
+
+### Pin 79 - PT0/IOC0 - GPIO output initialized low
+
+DDRT=0xD9 sets PT0 as output. TIOS bit 0 is clear and the output latch starts low. No dedicated pin-bit consumer or TC0 access was found in the decoded application. This is a configured output, not an established spare input or an identified harness circuit.
+
+Status: **Configured**. Register/channel: `DDRT 0x00E2 bit 0; PTT 0x00E0; TIOS / TCTL1 / TCTL2`.
+
+Instruction anchors: `0x503B`, `0x503D`, `0x503F`, `0x5041`, `0x505B`, `0x505D`, `0x505F`, `0x5061`, `0x5063`, `0x5065`.
+
 ### Pin 80 - PT1/IOC1 - Crank-position sensor (CPS)
 
 Conditioned crank pulses feed gap synchronization, engine speed and spark/injection timing. Normal firmware cadence supports wasted spark; mechanical TDC offset remains unconfirmed.
@@ -457,7 +603,7 @@ ECU drawing position: **U06**, upper row position 6, wire Gy (function corrobora
 |---:|---|---|---|
 | 1 | PT2/IOC2 | Vehicle-speed pulses | Corroborated |
 | 2 | PT3/IOC3 | Ignition-coil driver command | Corroborated |
-| 3 | PT4/IOC4 | Application role not established | Unassigned |
+| 3 | PT4/IOC4 | GPIO output initialized high | Configured |
 | 4 | PT5/IOC5 | Ignition monitoring capture | Candidate |
 | 5 | PT6/IOC6 | Primary fuel-injector command | Corroborated |
 | 6 | PT7/IOC7 | Secondary injector code path | Decoded |
@@ -471,16 +617,16 @@ ECU drawing position: **U06**, upper row position 6, wire Gy (function corrobora
 | 14 | PP2/PWM2 | Radiator-fan relay command | Corroborated |
 | 15 | PP3/PWM3 | Storage transaction select/strobe | Decoded |
 | 16 | PP4/PWM4 | Headlight-relay command | Corroborated |
-| 17 | PP5/PWM5 | Application role not established | Unassigned |
-| 18 | PP6/PWM6 | Application role not established | Unassigned |
+| 17 | PP5/PWM5 | GPIO output initialized high | Configured |
+| 18 | PP6/PWM6 | GPIO output initialized high | Configured |
 | 19 | PP7/PWM7 | Memory-test status/enable output | Decoded |
 | 20 | PB0 | Sidestand / start-interlock input | Corroborated |
 | 21 | PB1 | Starter-request input candidate | Candidate |
-| 22 | PB2 | Application role not established | Unassigned |
-| 23 | PB3 | Application role not established | Unassigned |
+| 22 | PB2 | GPIO output initialized high | Configured |
+| 23 | PB3 | GPIO output initialized high | Configured |
 | 24 | PB4 | Neutral input | Corroborated |
-| 25 | PB5 | Application role not established | Unassigned |
-| 26 | PB6 | Application role not established | Unassigned |
+| 25 | PB5 | GPIO output initialized high | Configured |
+| 26 | PB6 | GPIO output initialized high | Configured |
 | 27 | PB7 | Timed digital output | Unassigned |
 | 28 | RESET | RESET | Datasheet |
 | 29 | EXTAL | EXTAL | Datasheet |
@@ -490,25 +636,25 @@ ECU drawing position: **U06**, upper row position 6, wire Gy (function corrobora
 | 33 | VDDPLL | VDDPLL | Datasheet |
 | 34 | VDDR | VDDR | Datasheet |
 | 35 | VSSR | VSSR | Datasheet |
-| 36 | PK7/ROMONE/ECS | PK7/ROMONE/ECS | Datasheet |
+| 36 | PK7/ROMONE/ECS | Port-K output direction configured | Configured |
 | 37 | PE0/XIRQ | PE0/XIRQ | Datasheet |
 | 38 | PE1/IRQ | PE1/IRQ | Datasheet |
 | 39 | PE2/RW | Analog-bank selection bit 0 | Decoded |
 | 40 | PE3/LSTRB/TAGLO | Analog-bank selection bit 1 | Decoded |
-| 41 | PE4/ECLK | PE4/ECLK | Datasheet |
-| 42 | PE5/MODA/IPIPE0 | PE5/MODA/IPIPE0 | Datasheet |
-| 43 | PE6/MODB/IPIPE1 | PE6/MODB/IPIPE1 | Datasheet |
-| 44 | PE7/NOACC/XCLKS | PE7/NOACC/XCLKS | Datasheet |
+| 41 | PE4/ECLK | Port-E output direction configured | Configured |
+| 42 | PE5/MODA/IPIPE0 | Port-E input direction configured | Configured |
+| 43 | PE6/MODB/IPIPE1 | Port-E input direction configured | Configured |
+| 44 | PE7/NOACC/XCLKS | Port-E output direction configured | Configured |
 | 45 | PA0 | Injector-path readback / control bit | Unassigned |
 | 46 | PA1 | Injector-path readback / control bit | Unassigned |
 | 47 | PA2 | Fuel-injection system relay command | Corroborated |
-| 48 | PA3 | Application role not established | Unassigned |
+| 48 | PA3 | GPIO output initialized high | Configured |
 | 49 | PA4 | Periodic service/watchdog candidate | Candidate |
 | 50 | VDD2 | VDD2 | Datasheet |
 | 51 | VSS2 | VSS2 | Datasheet |
-| 52 | PA5 | Application role not established | Unassigned |
-| 53 | PA6 | Application role not established | Unassigned |
-| 54 | PA7 | Application role not established | Unassigned |
+| 52 | PA5 | Service-test selector input 0 | Decoded |
+| 53 | PA6 | Service-test selector input 1 | Decoded |
+| 54 | PA7 | Service-test selector input 2 | Decoded |
 | 55 | VDDA | VDDA | Datasheet |
 | 56 | VRH | VRH | Datasheet |
 | 57 | VRL | VRL | Datasheet |
@@ -528,12 +674,12 @@ ECU drawing position: **U06**, upper row position 6, wire Gy (function corrobora
 | 71 | PS4/MISO | SPI data input | Decoded |
 | 72 | PS5/MOSI | SPI data output | Decoded |
 | 73 | PS6/SCK | SPI clock | Decoded |
-| 74 | PS7/SS | Application role not established | Unassigned |
+| 74 | PS7/SS | GPIO output initialized high; SPI SS not selected | Configured |
 | 75 | VREGEN | VREGEN | Datasheet |
 | 76 | VSSX | VSSX | Datasheet |
 | 77 | VDDX | VDDX | Datasheet |
 | 78 | TEST | TEST | Datasheet |
-| 79 | PT0/IOC0 | Application role not established | Unassigned |
+| 79 | PT0/IOC0 | GPIO output initialized low | Configured |
 | 80 | PT1/IOC1 | Crank-position sensor (CPS) | Corroborated |
 
 ## What is still needed for a board pinout

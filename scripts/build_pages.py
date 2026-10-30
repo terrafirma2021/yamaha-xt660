@@ -80,6 +80,7 @@ write('index.html', shell('Yamaha XT660 ECU Research / Choose your motorcycle', 
 pin_page = (SOURCE / 'MCU_PIN_OVERVIEW.html').read_text(encoding='utf-8')
 pin_page = pin_page.replace('href="MCU_PIN_OVERVIEW.md"', 'href="../docs/semantics/MCU_PIN_OVERVIEW.html"')
 pin_page = pin_page.replace('href="ECU_CONNECTOR.md"', 'href="../docs/semantics/ECU_CONNECTOR.html"')
+pin_page = pin_page.replace('href="PIN_CONFIGURATION_REVIEW.md"', 'href="../docs/semantics/PIN_CONFIGURATION_REVIEW.html"')
 pin_page = pin_page.replace('</head>', '<link rel="stylesheet" href="../assets/nav.css">'+theme_head('pins/index.html')+'</head>')
 pin_page = pin_page.replace('<body>', '<body>'+nav('pins/index.html', 'MCU pins')+vehicle_context('pins/index.html',rel), 1)
 pin_page = pin_page.replace('<main>', '<main data-study="pins">', 1)
@@ -187,7 +188,7 @@ for source in documents:
         script=f'<script src="{rel("assets/map-grid.js",target)}?v={revision}" defer></script>'
     parser=LinkRewriter(source,target);parser.feed(rendered)
     body=f'<div class="doc-toolbar"><a href="{rel("research/index.html",target)}">← Research library</a><a href="{REPO}/blob/main/{quote(source.relative_to(ROOT).as_posix())}">View source on GitHub ↗</a></div><article class="document">'+''.join(parser.parts)+'</article>'
-    comparison_docs={'LOCAL_XDF_REVIEW.md','EXTERNAL_SCALE_CHECKS.md','WIDER_SCALING_RESEARCH.md','YAMAHA_SERVICE_TOOL.md'}
+    comparison_docs={'LOCAL_XDF_REVIEW.md','EXTERNAL_SCALE_CHECKS.md','WIDER_SCALING_RESEARCH.md','YAMAHA_SERVICE_TOOL.md','PIN_CONFIGURATION_REVIEW.md'}
     if source.is_relative_to(ROOT/'analysis') and not source.is_relative_to(ROOT/'analysis/firmware') and source.name not in comparison_docs:
         scope='hardware' if source.name in ('MCU_PIN_OVERVIEW.md','ECU_CONNECTOR.md') else 'primary'
         body=f'<section data-study="{scope}"><p class="scope-primary-label">Scope: original owner application / explicitly byte-matched companion. Existing code, scaling and hardware qualifications remain in force.</p>'+body+'</section>'

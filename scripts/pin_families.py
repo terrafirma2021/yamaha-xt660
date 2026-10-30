@@ -10,6 +10,7 @@ import csv
 import hashlib
 import json
 from pathlib import Path
+from pin_configuration import apply_configuration, apply_boot_configuration
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'analysis/firmware/pin_audit.json'
@@ -32,6 +33,8 @@ def anchors(rows, addresses):
 def late_pins(primary, rows):
     pins = copy.deepcopy(primary)
     for p in pins:
+        p.pop('evidence_kind', None)
+        p.pop('datasheet_pages', None)
         p.update(evidence=[], evidence_instructions=[], ram=[], diagnostic=None,
                  xt_wire=None, ecu_connector_positions=[], code_review=[])
         if p['category'] not in ('power',) and p['status'] != 'Datasheet':
@@ -137,11 +140,13 @@ def make_report():
     late_rows=listing('analysis/firmware/families/late/disassembly.tsv')
     families={'early':dict(pins=early, connector=copy.deepcopy(primary['ecu_connector'])),
               'late':dict(pins=late_pins(primary['pins'], late_rows), connector=late_connector(primary['ecu_connector']))}
+    apply_configuration(families['late']['pins'], late_rows, 'late')
     boot_rows=listing('analysis/firmware/xt660-2004-2006-companion/boot/disassembly.tsv')
     boot_rx=[a for a,r in boot_rows.items() if '0x00cf' in r['instruction'].lower() and r['instruction'].startswith(('LDA','LDB','LDAB'))]
     boot_tx=[a for a,r in boot_rows.items() if '0x00cf' in r['instruction'].lower() and r['instruction'].startswith(('STA','STB'))]
     assert boot_rx and boot_tx, 'Boot UART anchors missing'
     for family, f in families.items():
+        apply_boot_configuration(f['pins'], boot_rows)
         for n, direction, direct in [(67,'RX',boot_rx[0]),(68,'TX',boot_tx[0])]:
             f['pins'][n-1].update(category='communication', status='Decoded', role='Boot / flashing serial '+direction,
                 function='SCI0 handles the recovered boot protocol. A populated boot is required to verify these instructions in the selected BIN. The external connector-to-SCI0 route is not established by the manual or the flashing sketch.',
@@ -151,7 +156,7 @@ def make_report():
             combined={int(a['address'],16):a for a in p['evidence_instructions']+p['code_review']}
             p['evidence_instructions']=[combined[a] for a in sorted(combined)]
             p['evidence']=[a['address'] for a in p['evidence_instructions']]
-            p['datasheet_pages']=reviewed.get(p['pin'],{}).get('register_pdf_pages', [98] if p['pin'] in (67,68) else [60])
+            p['datasheet_pages']=p.get('datasheet_pages') or reviewed.get(p['pin'],{}).get('register_pdf_pages', [98] if p['pin'] in (67,68) else [60])
             if p['pin'] in (67,68):p['datasheet_pages']=[73,98]
             if family=='late' and p['pin'] in (6,18,26):p['datasheet_pages']={6:[90,100],18:[101],26:[86]}[p['pin']]
             p['ecu_connector_positions']=[{k:s[k] for k in ('position','row','column','wire','association')} for s in f['connector']['slots'] if p['pin'] in s['mcu_package_pins']]
@@ -175,7 +180,8 @@ def make_report():
                     pc=int(a['address'],16);code=bytes.fromhex(a['bytes'])
                     assert rom[pc:pc+len(code)]==code,(image['id'],p['pin'],a)
             checks.append(dict(pin=p['pin'],code_verified=bool(evidence) and present,
-                               code_status='Verified instruction bytes' if evidence and present else 'Boot not captured' if not present else 'No application assignment',
+                               evidence_kind=p.get('evidence_kind','runtime' if evidence else 'datasheet'),
+                               code_status=('Configuration instruction bytes checked' if p.get('evidence_kind')=='configuration' else 'Runtime-use instruction bytes checked') if evidence and present else 'Boot not captured' if not present else 'Datasheet function only',
                                package_reference_checked=p['package_checked'],physical_package_verified=False,board_continuity_verified=False))
         table=0x6968 if image['code_family']=='early' else 0x61B6
         expected=[0x6996,0x6AA5,0x6AF6,0x6FC2,0x6C5E,0x71EB,0x70A3,0x707C] if image['code_family']=='early' else [0x61F5,0x6304,0x6353,0x6877,0x64BA,0x6B1C,0x6931,0x6B29]
@@ -185,7 +191,10 @@ def make_report():
             assert rom[0x4854:0x4858]==bytes.fromhex('c6305b48'), 'Re-review channel-7 output mux'
             assert list(rom[0x46C2:0x46C2+rom[0x46C1]])==[1,3,5,6,7,8,9,20,21,30,36,48,49,50,51,52,54,60,61,62,63,70]
         images.append(dict(id=image['id'],label=image['label'],variant=image['variant'],sha256=image['sha256'],family=image['code_family'],boot_status=image['boot_status'],checks=checks,
-                           verified_code_pins=sum(c['code_verified'] for c in checks),connector_fitment='Manual reference; exact ECU hardware not independently confirmed'))
+                           verified_code_pins=sum(c['code_verified'] for c in checks),
+                           runtime_code_pins=sum(c['code_verified'] and c['evidence_kind']=='runtime' for c in checks),
+                           configuration_code_pins=sum(c['code_verified'] and c['evidence_kind']=='configuration' for c in checks),
+                           connector_fitment='Manual reference; exact ECU hardware not independently confirmed'))
     flash=dict(source='dataset/sources/xt 660 r/XT660_PinOut.JPG',label='2C1-8591A-10 / XT660 2012',positions=34,
                source_sha256=hashlib.sha256((ROOT/'dataset/sources/xt 660 r/XT660_PinOut.JPG').read_bytes()).hexdigest(),
                source_numbering='Sketch numbering only; view side is not stated.',
@@ -193,7 +202,8 @@ def make_report():
                finding='All three coloured terminals agree with the 34-position 2007 manual only under horizontal reflection. This is a consistent orientation hypothesis, not OEM numbering or an approved bench-wiring procedure.',
                early_finding='The 34-position sketch does not match the early 26-position drawing. Do not transfer its 3 / 7 / 12 numbers to the early ECU.',
                route_status='SCI0 is verified in the five populated boots; SCI1 is verified in all applications. The sketch labels K-line but does not establish which transceiver route reaches SCI0, SCI1, or both.')
-    return dict(schema_version=1,source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),package=package,
+    return dict(schema_version=2,source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                configuration_source_sha256=hashlib.sha256((ROOT/'scripts/pin_configuration.py').read_bytes()).hexdigest(),package=package,
                 families=families,images=images,flash_comparison=flash,
                 sources=primary['sources']+[dict(id='xt-2007',title='Yamaha XT660R/X 2007 supplement',url=LATE_MANUAL,pdf_pages=[55,56,81])])
 

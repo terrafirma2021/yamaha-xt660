@@ -104,7 +104,7 @@ def build():
             'continuity_verified': s['continuity_verified'],
             'signoff': 'Open: connector face/OEM identity and physical route unverified',
         })
-    report_paths = [ROOT / 'analysis/full/validation.json', *sorted(OUT.glob('*_validation.json'))]
+    report_paths = [ROOT / 'analysis/full/validation.json', ROOT/'analysis/firmware/pin_configuration_validation.json', *sorted(OUT.glob('*_validation.json'))]
     for path in report_paths:
         r = json.loads(path.read_text())
         assert r['result'] == 'passed'
@@ -154,9 +154,10 @@ def render(r):
         '- [x] All 71 map extracts and 32 stored axes match the supplied bytes.',
         '- [x] All 90 input-axis uses have explicit coordinate and remaining physical-scale requirements; every map has specific open items.',
         '- [x] All 80 displayed package assignments visually compared with NXP Figure 11; transcription locked for future change detection.',
-        '- [x] All 35 firmware-linked pin entries reviewed from code operands and setup through the datasheet register/channel to the package pin.',
+        f'- [x] All {r["summary"]["pins_with_instruction_anchors"]} firmware-linked early pin entries reviewed from code operands and setup through the datasheet register/channel to the package pin; configuration-only entries are explicitly marked.',
         '- [x] Existing software reports match the checked source/image provenance.',
-        '- [x] All 26 drawn connector positions have an inventory entry; 101 MCU instruction anchors match the image.',
+        f'- [x] All 26 drawn connector positions have an inventory entry; {sum(p["instruction_anchors_checked"] for p in r["mcu_pins"])} MCU instruction anchors match the image.',
+        '- [x] [Both firmware families](PIN_CONFIGURATION_REVIEW.md): per-BIN configuration/use evidence and boot applicability reviewed, with 13,866 instruction replay cases.',
         '- [ ] Complete engineering-unit interpretation and tuning sign-off for all maps.',
         '- [ ] Exact fitted MCU/package and ECU revision confirmed.',
         '- [ ] Connector face/OEM numbering and physical routes confirmed.',
@@ -212,7 +213,7 @@ def render(r):
         '| Report | Recorded cases | Recorded result | What the result does not establish |', '|---|---|---|---|']
     for t in r['software_reports']:
         name = Path(t['path']).name
-        target = '../full/validation.json' if '/full/' in t['path'] else name
+        target = '../full/validation.json' if '/full/' in t['path'] else '../firmware/'+name if '/firmware/' in t['path'] else name
         lines.append(f'| [{name}]({target}) | {t["recorded_cases"]} | Passed | {cell(t["scope"])} |')
     lines += ['', '## Reproduce the audit', '',
         'Run `python scripts/build_verification_ledger.py` to run extraction, semantic provenance, pin and naming checks, '

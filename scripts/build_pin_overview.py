@@ -5,6 +5,7 @@ import html
 import json
 from pathlib import Path
 from ecu_connector import build_connector, connector_svg, write_connector_doc
+from pin_configuration import apply_configuration
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'analysis/semantics'
@@ -151,6 +152,7 @@ def build():
     image=(ROOT/'firmware/XT660X 2005.bin').read_bytes()
     dis=list(csv.DictReader((ROOT/'analysis/disassembly.tsv').open(),delimiter='\t'))
     by_pc={int(r['address'],16):r for r in dis}
+    apply_configuration(pins, by_pc, 'early')
     for p in pins:
         p['evidence_instructions']=[by_pc[int(a,16)] for a in p['evidence']]
     connector=build_connector(pins,ROOT/'scripts/ecu_connector.py')
@@ -159,6 +161,7 @@ def build():
         generator_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         template_sha256=hashlib.sha256((ROOT/'scripts/pin_overview_template.html').read_bytes()).hexdigest(),
         family_ui_sha256=hashlib.sha256((ROOT/'scripts/pin_family_ui.js').read_bytes()).hexdigest(),
+        configuration_source_sha256=hashlib.sha256((ROOT/'scripts/pin_configuration.py').read_bytes()).hexdigest(),
         target='Supplied XT660X 2005 image; variant 9',
         package_assumption='MC9S12T64 80-pin LQFP, top view, conditional on physical chip identification. CPU/register evidence fits this family; chip marking has not been supplied.',
         connector_policy='All 26 manual connector positions are inventoried separately using upper/lower drawing coordinates. OEM cavity numbers and view-side convention are not printed; function links are not measured board continuity.',
@@ -170,7 +173,8 @@ def build():
            '**80-pin MC9S12T64 reference, conditional on confirming the chip marking.** The firmware/register map supports this family; actual package identity has not been verified. Pin numbers below refer to the MCU, never the ECU connector.','',
            '[Interactive overview](MCU_PIN_OVERVIEW.html) | [ECU connector positions](ECU_CONNECTOR.md) | [Machine-readable catalogue](mcu_pin_overview.json) | [Package drawing](mcu_pin_overview.svg)','',
            'The [ECU connector inventory](ECU_CONNECTOR.md) accounts for all 26 drawn positions: 15 function-correlated circuits, one candidate starter association, two unresolved interlock alternatives, five power/return networks and three crosses. The [route audit](CONNECTOR_ROUTE_AUDIT.md) explains the evidence and corrections. These are function associations through board circuitry, not direct-wire claims.','',
-           'The overview covers all 80 package positions. Corroborated means firmware dataflow plus Yamaha diagnostic identity; Decoded means a software role is established; Candidate means a physical role is tentative. Datasheet entries identify package functions only. Unassigned does not mean unused.','',
+           'The overview covers all 80 package positions. Corroborated means firmware dataflow plus Yamaha diagnostic identity; Decoded means a software role is established; Configured means register setup is established without an identified device; Candidate means a physical role is tentative. Datasheet entries identify package functions only. Unassigned does not mean unused.','',
+           'The [extended pin review](PIN_CONFIGURATION_REVIEW.md) covers both application families, the service-test inputs, the later PB5 output, startup-only GPIO settings and the remaining special-function positions. The live explorer counts runtime-use evidence separately from configuration evidence.','',
            '## Sensors and switch inputs','',
            '| MCU pin | Signal | Function | Status | Diagnostic |','|---:|---|---|---|---|']
     for p in pins:

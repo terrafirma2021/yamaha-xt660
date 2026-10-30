@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "result": "passed",
+  "source_sha256": "09120893833c37a25505539d2e77b0b95ed08c8551ea1d677e43155c04e2fc8e",
+  "configuration_source_sha256": "d37ef91fcb2c5a2df95ff79c3db33148d363ef7b2e98cb7f168ab16119703683",
+  "dependencies": {
+    "scripts/test_speed_sources.py": "711736c4eaf176eab614270464ab1373ca513da27c60502f045d299dad56c365",
+    "scripts/test_firmware_lookups.py": "f8293207bc2405282cd61572fd5e058fef90d3c93872b8465106488877ad781e",
+    "scripts/test_full_lift.py": "7ab5b7b12c5707c14d91b489238c5dc0502f9ebc1987dba8842d6e4ecd0119e1",
+    "analysis/full/instructions.jsonl": "6ca52efd1a1601bd2f8ff117a05665e10034866343f478c161b8f52366f18bbf",
+    "analysis/firmware/families/late/full/instructions.jsonl.gz": "0ea6ef1c2b9cdb10d1eaf5234edddffe10e26f8f11b79074c69201da164014e0"
+  },
+  "scope": "Instruction execution only; no ECU is connected and no BIN is modified. Service-selector tests stop before destructive test/halt targets.",
+  "static_reviews": {
+    "early": {
+      "scope": "Direct register operands in decoded application instructions; not a proof that arbitrary indirect accesses or external circuitry are absent.",
+      "references": {
+        "0x0002": [
+          {
+            "address": "0x501E",
+            "bytes": "5a02",
+            "instruction": "STAA 0x0002"
+          }
+        ],
+        "0x0003": [
+          {
+            "address": "0x5031",
+            "bytes": "5a03",
+            "instruction": "STAA 0x0003"
+          }
+        ],
+        "0x0009": [
+          {
+            "address": "0x504D",
+            "bytes": "5b09",
+            "instruction": "STAB 0x0009"
+          }
+        ],
+        "0x0033": [
+          {
+            "address": "0x5051",
+            "bytes": "5b33",
+            "instruction": "STAB 0x0033"
+          }
+        ],
+        "0x00E2": [
+          {
+            "address": "0x5041",
+            "bytes": "5be2",
+            "instruction": "STAB 0x00e2"
+          }
+        ],
+        "0x00E8": [
+          {
+            "address": "0x5045",
+            "bytes": "5be8",
+            "instruction": "STAB 0x00e8"
+          }
+        ],
+        "0x00EA": [
+          {
+            "address": "0x5049",
+            "bytes": "5bea",
+            "instruction": "STAB 0x00ea"
+          }
+        ],
+        "0x00F2": [
+          {
+            "address": "0x5039",
+            "bytes": "5bf2",
+            "instruction": "STAB 0x00f2"
+          }
+        ],
+        "0x000A": [],
+        "0x000B": [],
+        "0x001E": [],
+        "0x0032": [],
+        "0x0050": [],
+        "0x0058": [],
+        "0x00D9": []
+      }
+    },
+    "late": {
+      "scope": "Direct register operands in decoded application instructions; not a proof that arbitrary indirect accesses or external circuitry are absent.",
+      "references": {
+        "0x0002": [
+          {
+            "address": "0x481E",
+            "bytes": "5a02",
+            "instruction": "STAA 0x0002"
+          }
+        ],
+        "0x0003": [
+          {
+            "address": "0x4826",
+            "bytes": "5a03",
+            "instruction": "STAA 0x0003"
+          }
+        ],
+        "0x0009": [
+          {
+            "address": "0x4842",
+            "bytes": "5b09",
+            "instruction": "STAB 0x0009"
+          }
+        ],
+        "0x0033": [
+          {
+            "address": "0x4846",
+            "bytes": "5b33",
+            "instruction": "STAB 0x0033"
+          }
+        ],
+        "0x00E2": [
+          {
+            "address": "0x4836",
+            "bytes": "5be2",
+            "instruction": "STAB 0x00e2"
+          }
+        ],
+        "0x00E8": [
+          {
+            "address": "0x483A",
+            "bytes": "5be8",
+            "instruction": "STAB 0x00e8"
+          }
+        ],
+        "0x00EA": [
+          {
+            "address": "0x483E",
+            "bytes": "5bea",
+            "instruction": "STAB 0x00ea"
+          }
+        ],
+        "0x00F2": [
+          {
+            "address": "0x482E",
+            "bytes": "5bf2",
+            "instruction": "STAB 0x00f2"
+          }
+        ],
+        "0x000A": [],
+        "0x000B": [],
+        "0x001E": [],
+        "0x0032": [],
+        "0x0050": [],
+        "0x0058": [],
+        "0x00D9": []
+      }
+    }
+  },
+  "images": [
+    {
+      "id": "xt660x-2005-owner",
+      "sha256": "5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280",
+      "family": "early",
+      "setup_cases": 2,
+      "selector_cases": 512,
+      "pb5_cases": 0,
+      "checked_instructions": 100,
+      "executed_bytes_sha256": "e714eafc68470eec73e7b380509c1a03e97f05c0b65e8831d64147c4a80336d3"
+    },
+    {
+      "id": "xt660-2004-2006-companion",
+      "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "family": "early",
+      "setup_cases": 2,
+      "selector_cases": 512,
+      "pb5_cases": 0,
+      "checked_instructions": 100,
+      "executed_bytes_sha256": "e714eafc68470eec73e7b380509c1a03e97f05c0b65e8831d64147c4a80336d3"
+    },
+    {
+      "id": "xt660x-2005-checksum-fixed",
+      "sha256": "972ac93e76cb632470092d88c2a57e910daae69c02d6cdef52f1cad72f6909e7",
+      "family": "early",
+      "setup_cases": 2,
+      "selector_cases": 512,
+      "pb5_cases": 0,
+      "checked_instructions": 100,
+      "executed_bytes_sha256": "e714eafc68470eec73e7b380509c1a03e97f05c0b65e8831d64147c4a80336d3"
+    },
+    {
+      "id": "xt660-5vk-1x-2008",
+      "sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
+      "family": "late",
+      "setup_cases": 1,
+      "selector_cases": 512,
+      "pb5_cases": 2311,
+      "checked_instructions": 126,
+      "executed_bytes_sha256": "a03cefad770b31fcfc3d72e73f365d0888fcab83eab9120371ec033e80b2ff09"
+    },
+    {
+      "id": "xt660-2c1-10",
+      "sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+      "family": "late",
+      "setup_cases": 1,
+      "selector_cases": 512,
+      "pb5_cases": 2311,
+      "checked_instructions": 126,
+      "executed_bytes_sha256": "a03cefad770b31fcfc3d72e73f365d0888fcab83eab9120371ec033e80b2ff09"
+    },
+    {
+      "id": "xt660-2c1-10-immo-off",
+      "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "family": "late",
+      "setup_cases": 1,
+      "selector_cases": 512,
+      "pb5_cases": 2311,
+      "checked_instructions": 126,
+      "executed_bytes_sha256": "a03cefad770b31fcfc3d72e73f365d0888fcab83eab9120371ec033e80b2ff09"
+    },
+    {
+      "id": "xt660-2c1-00",
+      "sha256": "305ac6084de00f1da1bf17767795c935095b2eb3574c898e683a6196d545d15e",
+      "family": "early",
+      "setup_cases": 2,
+      "selector_cases": 512,
+      "pb5_cases": 0,
+      "checked_instructions": 100,
+      "executed_bytes_sha256": "e714eafc68470eec73e7b380509c1a03e97f05c0b65e8831d64147c4a80336d3"
+    },
+    {
+      "id": "xt660-2c1-00-immo-off",
+      "sha256": "98d450f5bcb2052a5a5f3e88a36d5336cedffd4ff6eca5c02cc44f3893785316",
+      "family": "early",
+      "setup_cases": 2,
+      "selector_cases": 512,
+      "pb5_cases": 0,
+      "checked_instructions": 100,
+      "executed_bytes_sha256": "e714eafc68470eec73e7b380509c1a03e97f05c0b65e8831d64147c4a80336d3"
+    },
+    {
+      "id": "xt660-5vk-11",
+      "sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "family": "late",
+      "setup_cases": 1,
+      "selector_cases": 512,
+      "pb5_cases": 2311,
+      "checked_instructions": 126,
+      "executed_bytes_sha256": "a03cefad770b31fcfc3d72e73f365d0888fcab83eab9120371ec033e80b2ff09"
+    }
+  ],
+  "total_cases": 13866
+}
