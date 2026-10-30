@@ -1,10 +1,12 @@
 import {hex,sha256,inspect,baseAddress,differences,readCell,editCell,verifyStartupChecksum,correctStartupChecksum} from './tools-core.mjs';
 import {featureStates,setFeature,matchesFeatureVariant} from './tools-features.mjs';
 import {speedState,setSpeed} from './tools-speed.mjs';
+import {createWorkspace} from './tools-workspace.mjs';
+import {matchesMapVariant} from './tools-map-core.mjs';
 const $=id=>document.getElementById(id),root=new URL('../',import.meta.url);
 const error=e=>{$('tool-error').textContent=e.message||String(e);$('tool-error').hidden=false};
 const guarded=fn=>async event=>{try{$('tool-error').hidden=true;await fn(event)}catch(e){error(e)}};
-let original=null,draft=null,identity=null,maps=[],base=0,filename='',hash='',selected=null,cell=0,undo=[],generation=0,loading=false,origin='',repositoryImages=[];
+let original=null,draft=null,identity=null,maps=[],base=0,filename='',hash='',selected=null,cell=0,undo=[],redo=[],generation=0,loading=false,origin='',repositoryImages=[];
 let matchMethod='none';
 const referenceCache=new Map();
 async function referenceBin(image){
@@ -32,7 +34,7 @@ function renderFeatures(){
       input.addEventListener(f.legacyPatch?'click':'change',guarded(()=>{
         if(loading||!input.checked)return;
         const change=setFeature(draft,identity,f.id,enabled);
-        if(change.changes.length)undo.push(change);
+        if(change.changes.length)record(change);
         updateChecksum();renderGrid();controls();
         $('feature-status').textContent=f.name+(enabled?' enabled':' disabled')+' in the draft. Startup checksum corrected.';
       }));
@@ -48,7 +50,7 @@ const catalogPromise=fetch(new URL('firmware/catalog.json',root)).then(r=>{if(!r
 // Capture a rejection immediately; the file handler displays it when needed.
 catalogPromise.then(catalog=>{
   repositoryImages=catalog.images;
-  $('repo-bin').replaceChildren(...repositoryImages.map(i=>new Option(i.label+' Â· '+i.variant,i.id)));
+  $('repo-bin').replaceChildren(...repositoryImages.map(i=>new Option(i.label+' · '+i.variant,i.id)));
   const requested=new URL(location.href).searchParams.get('firmware');
   if(repositoryImages.some(i=>i.id===requested))$('repo-bin').value=requested;
   $('repo-bin').disabled=false;controls();
@@ -56,7 +58,7 @@ catalogPromise.then(catalog=>{
 function save(name,data,type='application/octet-stream'){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function jsonSave(name,value){save(name,JSON.stringify(value,null,2)+'\n','application/json')}
 function facts(values){const dl=$('bin-facts');dl.replaceChildren();for(const [key,value] of Object.entries(values)){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=key;dd.textContent=String(value);dl.append(dt,dd)}}
-function controls(){const checked=!!identity&&!!draft&&verifyStartupChecksum(draft,identity).status==='pass';$('repo-open').disabled=!repositoryImages.length||loading;for(const id of ['backup-save','backup-report','compare-file'])$(id).disabled=!original||loading;for(const id of ['draft-save','draft-report'])$(id).disabled=!checked||loading;for(const id of ['edit-reset','edit-undo'])$(id).disabled=!undo.length||loading;$('tune-map').disabled=!maps.length||loading;for(const id of ['cell-apply','cell-value'])$(id).disabled=!selected||loading;renderFeatures();renderSpeed()}
+function controls(){const checked=!!identity&&!!draft&&verifyStartupChecksum(draft,identity).status==='pass';$('repo-open').disabled=!repositoryImages.length||loading;for(const id of ['backup-save','backup-report','compare-file'])$(id).disabled=!original||loading;for(const id of ['draft-save','draft-report'])$(id).disabled=!checked||loading;for(const id of ['edit-reset','edit-undo'])$(id).disabled=!undo.length||loading;$('tune-map').disabled=!maps.length||loading;$('edit-redo').disabled=!redo.length||loading;renderFeatures();renderSpeed();workspace.render()}
 function renderSpeed(){
   const s=speedState(draft,identity),ready=s.editable&&!loading;
   for(const id of ['speed-enabled','speed-disabled','speed-apply'])$(id).disabled=!ready;
@@ -69,7 +71,7 @@ function renderSpeed(){
 function applySpeed(enabled,offset){
   if(loading)return;
   const change=setSpeed(draft,identity,enabled,offset);
-  if(change.changes.length)undo.push(change);
+  if(change.changes.length)record(change);
   updateChecksum();controls();
 }
 $('speed-form').addEventListener('submit',guarded(event=>{event.preventDefault();if($('speed-offset').value.trim()==='')throw Error('Enter a whole pulse offset');applySpeed(true,Number($('speed-offset').value))}));
@@ -81,12 +83,12 @@ function updateChecksum(){
   $('checksum-status').dataset.status=result.status;
   $('checksum-status').textContent=`Original: ${source.status.toUpperCase()} (${source.actual}). Editable copy: ${result.status.toUpperCase()} (${result.actual}). ${result.expected?'Expected '+result.expected+' over '+result.range+'. Automatic correction is on.':'No matching checksum profile; no correction applied.'}`;
   const offset=0xF7FC-base,changed=original[offset]!==draft[offset]||original[offset+1]!==draft[offset+1];
-  $('checksum-detail').textContent=changed?'The editable copy includes compensation at CPU 0xF7FCâ€“0xF7FD. The original is untouched. This is reviewed trailer padding, not an identified factory checksum field.':'Only the application startup checksum is covered. Passing does not verify the boot region, other storage or ECU compatibility.';
+  $('checksum-detail').textContent=changed?'The editable copy includes compensation at CPU 0xF7FC–0xF7FD. The original is untouched. This is reviewed trailer padding, not an identified factory checksum field.':'Only the application startup checksum is covered. Passing does not verify the boot region, other storage or ECU compatibility.';
   return result;
 }
 async function report(){updateChecksum();const a=original.slice(),b=draft.slice(),changed=differences(a,b,base),snapshot={schema_version:1,source_name:filename,source_sha256:hash,registered_firmware:identity?.id||null,identity_match:matchMethod,speed_output:{...speedState(b,identity),unit:"pulses per reply",hardware_verified:false},features:featureStates(b,identity).map(f=>({id:f.id,state:f.state,legacy_threshold_patch:f.legacyPatch,hardware_verified:false})),source:inspect(a),origin,draft:inspect(b),changed_bytes:changed,source_checksum:verifyStartupChecksum(a,identity),draft_checksum:verifyStartupChecksum(b,identity),checksum_repaired:changed.some(c=>c.address===0xF7FC||c.address===0xF7FD),checksum_method:'Analyst-selected trailer compensation at 0xF7FC; startup range only',flash_ready:false};return {...snapshot,draft_sha256:await sha256(b)}}
 async function openBin(name,readBytes,source,expected=null){
-  const token=++generation;loading=true;matchMethod='none';$('feature-status').textContent='Opening BINâ€¦';original=draft=identity=selected=null;maps=[];undo=[];$('bin-status').textContent='Opening '+name+'â€¦';$('tune-grid').replaceChildren();$('bin-facts').replaceChildren();$('tune-map').replaceChildren(new Option('Open a registered BIN first',''));$('compare-file').value='';$('compare-status').textContent='';$('tune-status').textContent='';$('edit-status').textContent='';$('checksum-status').textContent='No BIN checked.';$('checksum-status').dataset.status='unverified';$('checksum-detail').textContent='';$('cell-info').textContent='Select a cell to edit.';controls();
+  const token=++generation;loading=true;matchMethod='none';$('feature-status').textContent='Opening BIN…';original=draft=identity=selected=null;maps=[];undo=[];redo=[];$('bin-status').textContent='Opening '+name+'…';$('tune-grid').replaceChildren();$('bin-facts').replaceChildren();$('tune-map').replaceChildren(new Option('Open a registered BIN first',''));$('compare-file').value='';$('compare-status').textContent='';$('tune-status').textContent='';$('edit-status').textContent='';$('checksum-status').textContent='No BIN checked.';$('checksum-status').dataset.status='unverified';$('checksum-detail').textContent='';$('cell-info').textContent='Select a cell to edit.';controls();
   try{
     const bytes=new Uint8Array(await readBytes());
     if(![65536,59392].includes(bytes.length))throw Error('This tool accepts the two known BIN sizes: 65,536 or 59,392 bytes');
@@ -98,17 +100,19 @@ async function openBin(name,readBytes,source,expected=null){
     if(!identity){
       for(const candidate of catalog.images.filter(i=>i.size===bytes.length)){
         const reference=await referenceBin(candidate);if(token!==generation)return;
-        if(matchesFeatureVariant(bytes,reference,candidate)){identity=candidate;matchMethod='recognised feature-edited layout; source variant is not established';break}
+        const layoutsResponse=await fetch(new URL('tools/maps/'+candidate.id+'.json',root));
+        if(!layoutsResponse.ok)continue;const candidateMaps=await layoutsResponse.json();if(token!==generation)return;
+        if(matchesFeatureVariant(bytes,reference,candidate)||matchesMapVariant(bytes,reference,candidate,candidateMaps)){identity=candidate;matchMethod='recognised map/feature-edited layout; source variant is not established';break}
       }
     }
     updateChecksum();
     $('feature-status').textContent=identity?'States detected from BIN bytes. Changes affect the draft only.':'Unregistered BIN: feature controls are unavailable.';
-    $('bin-status').textContent=identity?`${identity.label} â€” ${matchMethod}`:'Unregistered BIN â€” inspection and comparison only; no layout is guessed';
-    const info=inspect(original);facts({'File':filename,'Source':origin,'SHA-256':hash,'CPU range':hex(base)+'â€“'+hex(info.end_address),'Application word sum':info.application_word_sum,'Boot':info.boot,'Coverage':'Full ECU backup status is unverified; boot and persistent storage need separate coverage.'});
+    $('bin-status').textContent=identity?`${identity.label} — ${matchMethod}`:'Unregistered BIN — inspection and comparison only; no layout is guessed';
+    const info=inspect(original);facts({'File':filename,'Source':origin,'SHA-256':hash,'CPU range':hex(base)+'–'+hex(info.end_address),'Application word sum':info.application_word_sum,'Boot':info.boot,'Coverage':'Full ECU backup status is unverified; boot and persistent storage need separate coverage.'});
     if(identity){
       const r=await fetch(new URL('tools/maps/'+identity.id+'.json',root));if(!r.ok)throw Error('Map layouts could not be loaded');const loaded=await r.json();if(token!==generation)return;
       for(const m of loaded)readCell(draft,base,m,m.rows*m.columns-1);maps=loaded;
-      $('tune-map').replaceChildren(...maps.map(m=>new Option(m.display_name+' Â· '+m.data_address,m.id)));selectMap();
+      $('tune-map').replaceChildren(...maps.map(m=>new Option(m.display_name+' · '+m.data_address,m.id)));selectMap();
     }
   }catch(e){if(token===generation){$('bin-status').textContent=original?'BIN opened; map editing unavailable.':'BIN could not be opened';throw e}}
   finally{if(token===generation){loading=false;controls()}}
@@ -129,20 +133,30 @@ $('repo-open').addEventListener('click',guarded(async()=>{
 $('backup-save').addEventListener('click',guarded(()=>save(filename.replace(/\.bin$/i,'')+'-untouched.bin',original)));
 $('backup-report').addEventListener('click',guarded(async()=>jsonSave(filename+'.identity.json',{source_name:filename,sha256:hash,registered_firmware:identity?.id||null,identity_match:matchMethod,speed_output:{...speedState(original,identity),unit:"pulses per reply",hardware_verified:false},features:featureStates(original,identity).map(f=>({id:f.id,state:f.state,legacy_threshold_patch:f.legacyPatch})),...inspect(original),checksum:verifyStartupChecksum(original,identity),origin})));
 $('compare-file').addEventListener('change',guarded(async()=>{const file=$('compare-file').files[0];if(!file||!original)return;const token=generation;if(file.size!==original.length)throw Error('Comparison sizes differ; no padding or address shift is applied');const bytes=new Uint8Array(await file.arrayBuffer());if(token!==generation)return;const changes=differences(original,bytes,base);$('compare-status').textContent=changes.length?`${changes.length.toLocaleString()} changed bytes. First CPU address: ${hex(changes[0].address)}.`:'Byte-for-byte identical. This confirms file equality, not complete ECU coverage.'}));
-function axis(map,name,index){const a=map[name]?.raw_values;if(map.kind==='2D_step_grid'&&a)return index===0?'â‰¤'+a[0]:index===a.length?'>'+a.at(-1):a[index-1]+'â€¦'+a[index];if(a)return a[index];if(name==='column_axis'&&map.kind==='1D_uniform_axis')return Number((map.input_min_raw+index*map.index_divisor/map.index_factor_raw).toFixed(3));return index+1}
-function selectMap(){selected=maps.find(m=>m.id===$('tune-map').value)||null;cell=0;renderGrid();controls()}
-function renderGrid(){
-  if(!selected)return;const m=selected,count=m.rows*m.columns,values=Array.from({length:count},(_,i)=>readCell(draft,base,m,i)),lo=Math.min(...values),hi=Math.max(...values);
-  const table=document.createElement('table');table.className=m.columns>15?'wide-map':'';const head=table.createTHead().insertRow();let th=document.createElement('th');th.textContent='Raw axes';head.append(th);for(let c=0;c<m.columns;c++){th=document.createElement('th');th.textContent=axis(m,'column_axis',c);head.append(th)}
-  const tbody=table.createTBody(),stops=[[108,161,255],[91,221,232],[128,222,143],[255,223,109],[249,132,116]];
-  for(let r=0;r<m.rows;r++){const row=tbody.insertRow();th=document.createElement('th');th.textContent=axis(m,'row_axis',r);row.append(th);for(let c=0;c<m.columns;c++){const i=r*m.columns+c,v=values[i],t=hi===lo?2:4*(v-lo)/(hi-lo),s=Math.min(3,Math.floor(t)),rgb=stops[s].map((a,k)=>Math.round(a+(stops[s+1][k]-a)*(t-s)));const button=document.createElement('button');button.type='button';button.className='tune-cell'+(readCell(original,base,m,i)!==v?' edited':'');button.textContent=v;button.dataset.index=i;button.style.setProperty('--cell-bg',`rgb(${rgb})`);button.setAttribute('aria-label',`Row ${r+1}, column ${c+1}, raw value ${v}`);button.setAttribute('aria-pressed',String(i===cell));button.title=button.getAttribute('aria-label');button.addEventListener('click',()=>{cell=i;showCell()});row.insertCell().append(button)}}
-  $('tune-grid').replaceChildren(table);$('tune-status').textContent=`${identity.label} Â· ${identity.variant} Â· ${m.rows} Ã— ${m.columns} Â· ${m.element_bytes*8}-bit Â· raw values. Colours span ${lo}â€“${hi}. Select a cell for its full value.`;showCell();
-  const n=differences(original,draft,base).length;$('edit-status').textContent=`${n} changed bytes including checksum compensation. Startup checksum is verified again before saving. Physical units and flash readiness remain unverified.`;
-}
-function showCell(){if(!selected)return;const value=readCell(draft,base,selected,cell);$('cell-value').max=selected.element_bytes===2?65535:255;$('cell-value').value=value;$('cell-info').textContent=`Row ${Math.floor(cell/selected.columns)+1} Â· column ${cell%selected.columns+1} Â· CPU ${hex(Number(selected.data_address)+cell*selected.element_bytes)} Â· original ${readCell(original,base,selected,cell)} Â· draft ${value}`;document.querySelectorAll('.tune-cell').forEach(b=>b.setAttribute('aria-pressed',String(Number(b.dataset.index)===cell)))}
+function record(change){undo.push(change);redo=[]}
+const workspace=createWorkspace({
+  getState:()=>({original,draft,identity,maps,base,selected,loading}),
+  onSelect:id=>{$('tune-map').value=id;selectMap()},
+  onExport:save,
+  onCommit:changes=>{
+    if(!selected||loading)return;
+    // Validate every proposed cell before touching the draft, then record bytes.
+    const copy=draft.slice(),bytes=[];
+    for(const c of changes){if(readCell(draft,base,selected,c.index)!==c.before)throw Error('Preview is stale; preview the edit again');editCell(copy,base,selected,c.index,c.after)}
+    for(const c of changes){const address=Number(selected.data_address)+c.index*selected.element_bytes;for(let j=0;j<selected.element_bytes;j++){const a=address+j;if(draft[a-base]!==copy[a-base])bytes.push({address:a,before:draft[a-base],after:copy[a-base]})}}
+    if(bytes.length){draft=copy;record({kind:'map-batch',map:selected.id,changes:bytes})}updateChecksum();controls();renderGrid();
+  }
+});
+function selectMap(){selected=maps.find(m=>m.id===$('tune-map').value)||null;controls();renderGrid()}
+function renderGrid(){workspace.render();if(!draft)return;const n=differences(original,draft,base).length;$('edit-status').textContent=`${n} changed bytes including checksum compensation. Startup checksum is verified again before saving.`}
 $('tune-map').addEventListener('change',guarded(selectMap));
-$('tune-form').addEventListener('submit',guarded(event=>{event.preventDefault();if(!selected||loading)return;if($('cell-value').value.trim()==='')throw Error('Enter a raw value');const change=editCell(draft,base,selected,cell,Number($('cell-value').value));if(change.before!==change.after)undo.push(change);updateChecksum();renderGrid();controls()}));
-$('edit-undo').addEventListener('click',guarded(()=>{const change=undo.pop();if(!change)return;if(change.kind==='feature'){for(const c of change.changes)draft[c.address-base]=c.before}else{const m=maps.find(m=>m.id===change.map);editCell(draft,base,m,change.index,change.before)}$('feature-status').textContent='Last edit undone; feature states refreshed.';updateChecksum();renderGrid();controls()}));
-$('edit-reset').addEventListener('click',guarded(()=>{draft=original.slice();undo=[];$('feature-status').textContent='Edits discarded; original feature states restored.';updateChecksum();renderGrid();controls()}));
+function replay(change,forward){
+  if(change.changes){for(const c of change.changes)draft[c.address-base]=forward?c.after:c.before}
+  else{const m=maps.find(m=>m.id===change.map);editCell(draft,base,m,change.index,forward?change.after:change.before)}
+  updateChecksum();controls();renderGrid();
+}
+$('edit-undo').addEventListener('click',guarded(()=>{const c=undo.pop();if(c){redo.push(c);replay(c,false)}}));
+$('edit-redo').addEventListener('click',guarded(()=>{const c=redo.pop();if(c){undo.push(c);replay(c,true)}}));
+$('edit-reset').addEventListener('click',guarded(()=>{draft=original.slice();undo=[];redo=[];$('feature-status').textContent='Edits discarded; original feature states restored.';updateChecksum();controls();renderGrid()}));
 $('draft-save').addEventListener('click',guarded(()=>{const verified=updateChecksum();controls();if(verified?.status!=='pass')throw Error('Save stopped: startup checksum is not verified');save(filename.replace(/\.bin$/i,'')+'.draft.bin',draft)}));
 $('draft-report').addEventListener('click',guarded(async()=>jsonSave(filename+'.changes.json',await report())));
