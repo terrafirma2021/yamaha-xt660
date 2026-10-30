@@ -1,0 +1,87 @@
+{
+  "review_date": "2026-10-30",
+  "source": "Owner-provided YamahaServiceTool.Communication folder; third-party source not redistributed",
+  "finding": "Contains KWP/CAN reprogramming workflow; applicability to the recovered XT SCI0 boot is unverified",
+  "files": [
+    {
+      "path": "Reprogram/Reprogram.cs",
+      "sha256": "60f6b9adc06f1c261cf48e50ba2d81626226aee5098f26ec0a8370d3ade198a0",
+      "bytes": 34553,
+      "anchors": {
+        "ReprogramPhase1()": [
+          149,
+          182,
+          365
+        ],
+        "ReprogramPhase3()": [
+          152,
+          187,
+          458
+        ],
+        "ReprogramPhase4()": [
+          155,
+          192,
+          524
+        ],
+        "RequestDownload(": [
+          475
+        ],
+        "TransferData(": [
+          490
+        ],
+        "RequestTransferExit(": [
+          91,
+          129,
+          511
+        ],
+        "StartDiagnosticSession(": [
+          220,
+          368,
+          840,
+          871,
+          940
+        ],
+        "SecurityAccess(": [
+          375,
+          383
+        ]
+      }
+    },
+    {
+      "path": "Protocol/RequestDownload.cs",
+      "sha256": "9f41a5f48e844b235ac30018eba42760940f37b5a8b59b978c0463ba1157ff78",
+      "bytes": 1264,
+      "anchors": {
+        "MaxFrameLen": [
+          20
+        ],
+        "RequestDownload(byte[]": [
+          29
+        ]
+      }
+    },
+    {
+      "path": "Protocol/RequestID.cs",
+      "sha256": "24b8be5e9ed48aacca7c27bfc2abeddbea71f6e0b796aa77f90fcb7dc45805b7",
+      "bytes": 2935,
+      "anchors": {
+        "StartDiagnosticSession =": [
+          21
+        ],
+        "SecurityAccess,": [
+          47
+        ],
+        "RequestDownload,": [
+          63
+        ],
+        "TransferData,": [
+          67
+        ],
+        "RequestTransferExit,": [
+          69
+        ]
+      }
+    }
+  ],
+  "hardware_execution_performed": false
+}

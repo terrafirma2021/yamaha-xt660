@@ -12,6 +12,7 @@ import markdown
 from site_vehicles import home as build_vehicle_home, context as vehicle_context, build_pages as build_vehicle_pages
 from site_firmware import build_library
 from site_routes import build as build_bike_routes
+from site_tools import build as build_tools
 from site_decoded_maps import build as build_decoded_maps
 from firmware_catalog import build as build_firmware_catalog
 from site_map_grids import grid as map_grid, preview as map_preview, palette_css
@@ -43,7 +44,7 @@ def rel(target, current):
     return Path(os.path.relpath(target, Path(current).parent)).as_posix()
 
 def nav(current, active):
-    links = [('Overview', 'index.html'), ('Firmware', 'firmware/index.html'), ('Maps', 'maps/index.html'), ('Wiring', 'wiring/index.html'), ('MCU pins', 'pins/index.html'), ('Research', 'research/index.html')]
+    links = [('Overview', 'index.html'), ('Firmware', 'firmware/index.html'), ('Maps', 'maps/index.html'), ('Tools', 'tools/index.html'), ('Wiring', 'wiring/index.html'), ('MCU pins', 'pins/index.html'), ('Research', 'research/index.html')]
     return '<header id="sitebar"><a class="brand" href="'+rel('index.html', current)+'"><span class="brand-mark"><img class="yamaha-logo" src="'+rel('assets/yamaha-motor-logo.png',current)+'" width="1042" height="360" alt="Yamaha Motor — Revs Your Heart"></span><span class="brand-model">ECU RESEARCH<small>XT660R / XT660X / XT660Z</small></span></a><nav aria-label="Main navigation">'+''.join(
         f'<a href="{rel(url,current)}"'+(' aria-current="page"' if label==active else '')+f'>{label}</a>' for label,url in links)+f'<a href="{REPO}">GitHub ↗</a><button id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></nav></header>'
 
@@ -66,6 +67,7 @@ write('assets/map-grid.css', (ROOT/'site/assets/map-grid.css').read_text(encodin
 
 build_library(firmware_catalog,shell,write,REPO)
 build_decoded_maps(shell,write,REPO)
+build_tools(shell,write)
 write('firmware/catalog.json',json.dumps(firmware_catalog,indent=2)+'\n')
 build_vehicle_pages(shell,write,REPO)
 home = build_vehicle_home()

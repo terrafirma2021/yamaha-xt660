@@ -12,6 +12,10 @@ All 71 stored map bodies and stored axes match across the owner image, corrected
 
 The [dataset guide](dataset/README.md) explains the 21 preserved sources, 110 applicability profiles, including 89 Fowlers model/market records and manufacturer references. XT660X, XT660R and XT660Z Ténéré have separate entries; TDM900 material is retained only as supporting research, outside the motorcycle selector. Later revisions do not inherit the original maps or connector claims.
 
+## Browser tools
+
+The [Tools workbench](https://terrafirma2021.github.io/yamaha-xt660/tools/) identifies local BINs, saves untouched copies, compares reads and edits raw map cells in a separate draft for exact registered images. It also provides receive-only COM-port capture, frame inspection and an offline boot-read request preview. Files remain in the browser. **Live ECU dumping and flashing are not implemented**; drafts are not checksum-repaired or flash-ready. See [protocol and tool evidence](analysis/firmware/FLASH_TOOLING.md) for the recovered boot handlers, Yamaha tool comparison and hardware validation still required.
+
 ## Original application study
 
 The following analysis statistics concern the original owner image and explicitly byte-matched companions. They do not describe all nine images.
