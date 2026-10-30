@@ -6,12 +6,17 @@ Exercises every 8-bit coolant value, active/inactive cut, and speed boundaries.
 import ast
 import csv
 import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 tree = ast.parse((ROOT/'scripts/verify_protocol.py').read_text(encoding='utf-8'))
 cpu_class = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'CPU')
 catalog = json.loads((ROOT/'analysis/firmware/catalog.json').read_text(encoding='utf-8'))
+# Exercise the exact byte recipe shipped to the browser, then independently
+# decode each replacement as a CPU12 extended JMP (06, high, low).
+recipes=json.loads(subprocess.check_output(['node','--input-type=module','-e',
+    "import {featureDefinitions} from './site/assets/tools-features.mjs'; console.log(JSON.stringify(Object.fromEntries(['early','late'].map(code_family=>[code_family,featureDefinitions({code_family}).find(f=>f.id==='overrun')]))));"],cwd=ROOT,text=True))
 checks = 0
 for image in catalog['images']:
     early = image['code_family'] == 'early'
@@ -27,8 +32,21 @@ for image in catalog['images']:
     ns={'ROM':rom,'ROWS':rows}
     exec(compile(ast.Module(body=[cpu_class],type_ignores=[]),'<CPU12 selected-path interpreter>','exec'),ns)
     CPU=ns['CPU']
-    cut = [(0x348A,144)] if early else [(0x3451,125),(0x3456,133)]
-    for a,v in cut: assert rom[a]==v
+    recipe=recipes[image['code_family']]
+    sites=[(0x765D,0x777A),(0x778D,0x77A2)] if early else [(0x6E6B,0x6F8F),(0x6FA2,0x6FB7)]
+    assert [p['address'] for p in recipe['bytes']]==[a+i for a,_ in sites for i in range(3)]
+    patch_rom=bytearray(rom)
+    for p in recipe['bytes']:
+        assert rom[p['address']]==p['on']
+        patch_rom[p['address']]=p['off']
+    patched=dict(rows)
+    for a,target in sites:
+        assert len(bytes.fromhex(rows[a]['bytes']))==3
+        raw=patch_rom[a:a+3]
+        assert raw[0]==6 and int.from_bytes(raw[1:],'big')==target
+        assert target in rows
+        patched[a]={**rows[a],'bytes':raw.hex(),'instruction':f'JMP {hex(target)}'}
+    for p in recipe['legacy']: assert patch_rom[p['address']]==rom[p['address']]==p['on']
     # Positive control: stock parameters really reach the cut path.
     c=CPU()
     c.m[0x8F4 if early else 0x914]=200
@@ -40,11 +58,12 @@ for image in catalog['images']:
     c.m[0xD87]=9;c.m[0x896]=0x10
     c.run(start,stop=stop,max_steps=200)
     assert c.m[0x886]&0x40 and c.m[0x97A]==0, image['id']
+    ns['ROWS']=patched
+    ns['ROM']=bytes(patch_rom)
     for temp in range(256):
         for active in (False,True):
             for speed in (0,23,24,54,55,60,61,255):
                 c=CPU()
-                for a,_ in cut:c.m[a]=255
                 c.m[0x8F4 if early else 0x914]=temp
                 c.m[0x900 if early else 0x920]=speed
                 c.m[0xAFA if early else 0xB2D]=255
@@ -56,6 +75,28 @@ for image in catalog['images']:
                 assert c.m[0x886]&0xC1==0x81 # clears only decel in this mask
                 assert c.m[0x97A]==128 and c.m[0x88C]==0xA5
                 checks+=1
+    # All shared flag patterns; both throttle-latch states; old multiplier values.
+    # This also starts with an already-active cut and non-neutral ignition trim.
+    for flags in range(256):
+        for multiplier in (0,1,64,127,128,129,254,255):
+            for throttle in (0,4):
+                c=CPU();c.m[0x886]=flags;c.m[0x88A]=255;c.m[0x88D]=throttle
+                c.m[0x97A]=multiplier;c.m[0x88C]=flags^255
+                spark=0xA86 if early else 0xA8E
+                c.m[spark]=73
+                c.m[0x8F4 if early else 0x914]=flags
+                c.m[0x900 if early else 0x920]=255-flags
+                c.m[0xAFA if early else 0xB2D]=flags
+                c.m[0x896]=flags;c.m[0x88F]=flags
+                # Deliberately vary the old thresholds: bypass must not depend on them.
+                for p in recipe['legacy']: c.m[p['address']]=flags
+                c.run(start,stop=stop,max_steps=40)
+                assert c.m[0x886]==flags&~0x58 and c.m[0x88A]==0
+                assert c.m[0x97A]==128 and c.m[0x88C]==flags^255
+                assert c.m[0x88D]==throttle and c.m[spark]==73
+                assert c.m[0xB16 if early else 0xB4E]==0
+                checks+=1
+    ns['ROWS']=rows;ns['ROM']=rom
     # PAIR: replace both normal and diagnostic assert instructions with clear.
     pair,mask=([0x9D5A,0xBAC3],2) if early else ([0x91EF,0xA465],1)
     writers=[a for a,r in rows.items() if r['instruction'].startswith('BSET 0x00f0,') and int(r['instruction'].split(',')[-1],0)&mask]

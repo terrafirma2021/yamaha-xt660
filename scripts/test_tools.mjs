@@ -30,6 +30,27 @@ for(const image of registry.images){
   assert.equal(featureStates(unsupportedO2,identity)[3].state,'unverified');
   assert.throws(()=>setFeature(unsupportedO2,identity,'o2',false));
   assert.equal(matchesFeatureVariant(unsupportedO2,original,identity),false);
+  const overrun=states[2];
+  const targetCut=bytes.slice();setFeature(targetCut,identity,'overrun',false);
+  for(const p of overrun.legacy)assert.equal(targetCut[p.address-base],p.on);
+  // Every incomplete code patch must stay unavailable, including one missing byte.
+  for(const p of overrun.bytes){
+    const partial=targetCut.slice();partial[p.address-base]=p.on;
+    assert.equal(featureStates(partial,identity)[2].state,'unverified');
+    assert.equal(matchesFeatureVariant(partial,original,identity),false);
+  }
+  const oldCut=bytes.slice();for(const p of overrun.legacy)oldCut[p.address-base]=p.off;
+  assert.equal(featureStates(oldCut,identity)[2].state,'disabled');
+  assert.equal(featureStates(oldCut,identity)[2].legacyPatch,true);
+  assert.ok(matchesFeatureVariant(oldCut,original,identity));
+  const restoredOld=oldCut.slice();setFeature(restoredOld,identity,'overrun',true);
+  assert.deepEqual(restoredOld,original);
+  setFeature(oldCut,identity,'overrun',false);
+  assert.deepEqual(oldCut,targetCut);
+  assert.equal(featureStates(oldCut,identity)[2].legacyPatch,false);
+  const hybrid=targetCut.slice();for(const p of overrun.legacy)hybrid[p.address-base]=p.off;
+  assert.equal(featureStates(hybrid,identity)[2].state,'unverified');
+  assert.equal(matchesFeatureVariant(hybrid,original,identity),false);
   const featured=bytes.slice();
   for(const id of states.filter(f=>f.editable).map(f=>f.id)){
     const saved=featured.slice(),change=setFeature(featured,identity,id,false);
