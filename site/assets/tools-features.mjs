@@ -1,4 +1,5 @@
 import {baseAddress} from './tools-core.mjs';
+import {speedState,speedAddresses} from './tools-speed.mjs';
 
 // CPU addresses, never file offsets. These recipes are limited to registered
 // images, with the instruction-path checks in test_feature_patches.py.
@@ -54,7 +55,7 @@ export function setFeature(bytes,identity,id,enabled){
 export function matchesFeatureVariant(bytes,reference,identity){
   if(bytes.length!==reference.length||!families[identity?.code_family])return false;
   const states=featureStates(bytes,identity),base=baseAddress(bytes);
-  if(states.some(f=>f.bytes&&!f.editable))return false;
-  const allowed=new Set([0xF7FC,0xF7FD,...states.flatMap(f=>[...(f.bytes||[]),...(f.legacy||[])].map(p=>p.address))]);
+  if(states.some(f=>f.bytes&&!f.editable)||!speedState(bytes,identity).editable)return false;
+  const allowed=new Set([0xF7FC,0xF7FD,...speedAddresses(identity),...states.flatMap(f=>[...(f.bytes||[]),...(f.legacy||[])].map(p=>p.address))]);
   return bytes.every((v,i)=>v===reference[i]||allowed.has(i+base));
 }

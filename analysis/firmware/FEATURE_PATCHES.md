@@ -74,3 +74,7 @@ The page now shows one **Overrun cut** row. The shared deceleration flag affects
 `python scripts/test_o2_control.py` adds 11,314 selected-path cases covering O2 fault creation, disabled-path suppression, neutral correction, actual serial reply packing and the injection/coil-charge distinction. Existing faults deliberately remain reportable. No test communicates with an ECU.
 
 `python scripts/test_interlock_features.py` adds 25,344 selected-path cases for sidestand inhibition, fault 19, tip-over detection and fault 41 across all nine BINs. External relay and physical vehicle behaviour are not simulated.
+
+## Dashboard pulse offset
+
+[Dashboard speed output](SPEED_OUTPUT.md) documents the separate fixed −20 to +20 pulse offset and zero-output switch. The stateless constructor patch preserves zero input, clamps to 0–255, uses no persistent RAM and is verified across all nine registered BINs. This is not percentage scaling or a proportional sprocket correction.
