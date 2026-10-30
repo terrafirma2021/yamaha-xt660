@@ -78,7 +78,9 @@ def remaining_questions(m, unit):
         items.append('Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.')
     if conversion is None:
         items.append('The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.')
-    if m['selection'].startswith('See caller evidence'):
+    if m['id'] in {'curve_1854', 'curve_1880'}:
+        items.append('Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.')
+    elif m['selection'].startswith('See caller evidence'):
         items.append('Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.')
     else:
         items.append('Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.')

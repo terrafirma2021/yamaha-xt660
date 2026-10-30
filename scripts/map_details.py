@@ -176,7 +176,11 @@ def extend(maps, axes, image):
         m.setdefault('ready_for_tuning_export',False)
         m.setdefault('selection','See caller evidence; full mode/override conditions not yet exhaustively documented')
         key=m['id']
-        if key in {'main_quantity_A','main_quantity_C'}:
+        if key=='curve_1854':
+            m['selection']='RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md'
+        elif key=='curve_1880':
+            m['selection']='Evaluated at 0xB27B after inclusive throttle/speed/load gates, clear 08AF:3C / 089F:80 / 0881:10 and counter B3A > ROM 1871 (or an already-saturated counter). CB6 keeps filtering its retained target when gates reject. ROM 186F != 128 selects this estimator; see semantics/PRESSURE_ESTIMATE.md'
+        elif key in {'main_quantity_A','main_quantity_C'}:
             m['selection']='RAM 0x0B80 bit 0 '+('clear: normal load fuel path' if key.endswith('A') else 'set: completed four-stage road-speed sequence; stock zero timeout prevents completion from cleared state')+'; see semantics/MAP_SELECTORS.md'
         elif key.startswith('main_u8_'):
             m['selection']={'A':'Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)', 'B':'Outside neutral-input branch: ratio code 0x0898 <= ROM 0x4245 (stock 5)', 'C':'Outside neutral-input branch: ratio code 0x0898 > ROM 0x4245 (stock 5); not emitted by the recovered normal classifier'}[key[-1]]

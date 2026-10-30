@@ -10726,7 +10726,7 @@
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Pressure-processing offset vs engine speed",
@@ -14050,7 +14050,7 @@
       ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Pressure-to-load processing gain",
@@ -14101,5 +14101,5 @@
     "unresolved_cell_maps": [],
     "axes_with_explicit_review": 90
   },
-  "review_generator_sha256": "80810216edbe56768cc7bb42f958341a16c96f8badcbfc4d56d6bc8dd0e2436b"
+  "review_generator_sha256": "1bca11a483bd579358657104789127c86a7b0356f53eb8f04041ca321e0ae1c3"
 }

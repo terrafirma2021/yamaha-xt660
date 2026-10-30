@@ -16,7 +16,7 @@ Inputs: u16 0x08F2 pressure-derived estimate.
 
 Output: u8 0x0C92 for filtered load; 0x0C93 for the unfiltered sampled-load path.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -105,7 +105,7 @@ Consumer instruction addresses: `0x9609`, `0x965E`.
 ### What remains for this map
 
 - Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

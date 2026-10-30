@@ -3000,7 +3000,7 @@
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_1880.md",
@@ -3968,7 +3968,7 @@
       ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_1854.md",
@@ -5360,12 +5360,12 @@
     "connector_routes_physically_verified": 0
   },
   "input_sha256": {
-    "analysis/maps.json": "0dfd11033399fdc2bb7a236935682c5e87b78e4ec2a7e781dc75019423f05dd7",
-    "analysis/semantics/physical_units.json": "36c840342914b6b4ae54675215b72fc661fa418e1b4383732cae7fc18f253bc1",
+    "analysis/maps.json": "9842ae50767ec4eaa1d93780d7ecebcf370094cf5c4c9f25f06454d9529bbd4a",
+    "analysis/semantics/physical_units.json": "15e6e761d2eb36daf2cdc2977bb487ce9a294b2b24774482b543855b43f34e26",
     "analysis/semantics/mcu_pin_overview.json": "8cd9536c122b0bc93794495fc29f1df9c6928068c8c2a263ae4e534dc0f81480",
     "analysis/semantics/package_datasheet_review.json": "1f5f1d8a7c7b2d2acaf66dc4da1385a65e1f1a3fc9c426c7c4e555353414ce4a",
     "analysis/semantics/code_pin_review.json": "e888703265b48fa9e3ca1cb1ee4506f9445278d5dbfd9979bcd11ee4e6b46072",
-    "scripts/map_review.py": "80810216edbe56768cc7bb42f958341a16c96f8badcbfc4d56d6bc8dd0e2436b",
+    "scripts/map_review.py": "1bca11a483bd579358657104789127c86a7b0356f53eb8f04041ca321e0ae1c3",
     "scripts/build_verification_ledger.py": "ccc2950d6f911505201c5f0033666366eaf0b8b14b1493139f3d74042b9f1bde"
   }
 }

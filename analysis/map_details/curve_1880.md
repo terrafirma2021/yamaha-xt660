@@ -16,7 +16,7 @@ Inputs: u16 0x0900 selected speed.
 
 Output: u8 0x0CB0; 0x0CB4 = clamp(0x0CB2 + 64*(cell-128),0,65535).
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Evaluated at 0xB27B after inclusive throttle/speed/load gates, clear 08AF:3C / 089F:80 / 0881:10 and counter B3A > ROM 1871 (or an already-saturated counter). CB6 keeps filtering its retained target when gates reject. ROM 186F != 128 selects this estimator; see semantics/PRESSURE_ESTIMATE.md.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -83,7 +83,7 @@ Converted values: 1200, 1600, 2000, 2400, 2800, 3200, 3600, 4000, 4400, 4800, 52
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

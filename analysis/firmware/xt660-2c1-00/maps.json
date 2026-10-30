@@ -10630,12 +10630,12 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB27B after inclusive throttle/speed/load gates, clear 08AF:3C / 089F:80 / 0881:10 and counter B3A > ROM 1871 (or an already-saturated counter). CB6 keeps filtering its retained target when gates reject. ROM 186F != 128 selects this estimator; see semantics/PRESSURE_ESTIMATE.md",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Pressure-processing offset vs engine speed",
@@ -14191,10 +14191,10 @@
     },
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "pointer_base": "0x1854",
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md",
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Pressure-to-load processing gain",
