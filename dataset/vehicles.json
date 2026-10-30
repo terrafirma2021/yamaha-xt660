@@ -101,7 +101,7 @@
       "model": "xt660x",
       "year": "2004",
       "market": "Early R/X · market unconfirmed",
-      "ecu": "5VK-8591A-01 · filename claim",
+      "ecu": "5VK-8591A-01",
       "firmware_ids": [
         "xt660-2004-2006-companion"
       ],
@@ -113,14 +113,15 @@
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
       "association": "candidate",
-      "route": "bikes/xt660x/2004/early/"
+      "route": "bikes/xt660x/2004/early/",
+      "ecu_reference_evidence": "5VK-8591A-01 · filename claim"
     },
     {
       "id": "xt660x-2005-early",
       "model": "xt660x",
       "year": "2005",
       "market": "Early R/X · market unconfirmed",
-      "ecu": "5VK-8591A-01 · filename claim",
+      "ecu": "5VK-8591A-01",
       "firmware_ids": [
         "xt660-2004-2006-companion"
       ],
@@ -132,14 +133,15 @@
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
       "association": "candidate",
-      "route": "bikes/xt660x/2005/early/"
+      "route": "bikes/xt660x/2005/early/",
+      "ecu_reference_evidence": "5VK-8591A-01 · filename claim"
     },
     {
       "id": "xt660x-2006-early",
       "model": "xt660x",
       "year": "2006",
       "market": "Early R/X · market unconfirmed",
-      "ecu": "5VK-8591A-01 · filename claim",
+      "ecu": "5VK-8591A-01",
       "firmware_ids": [
         "xt660-2004-2006-companion"
       ],
@@ -151,7 +153,8 @@
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
       "association": "candidate",
-      "route": "bikes/xt660x/2006/early/"
+      "route": "bikes/xt660x/2006/early/",
+      "ecu_reference_evidence": "5VK-8591A-01 · filename claim"
     },
     {
       "id": "xt660x-2007",
@@ -173,7 +176,7 @@
       "model": "xt660x",
       "year": "2008",
       "market": "Market/model association unconfirmed",
-      "ecu": "5VK-8591A-1X · incomplete filename reference",
+      "ecu": "5VK-8591A-1X",
       "firmware_ids": [
         "xt660-5vk-1x-2008"
       ],
@@ -184,14 +187,15 @@
       ],
       "notes": "The filename says XT660, not R or X. Both model entries are candidates for the same image, not two independently identified ECUs. Its edit log prevents a stock claim.",
       "association": "candidate",
-      "route": "bikes/xt660x/2008/5vk-1x/"
+      "route": "bikes/xt660x/2008/5vk-1x/",
+      "ecu_reference_evidence": "5VK-8591A-1X · incomplete filename reference"
     },
     {
       "id": "xt660r-2004-early",
       "model": "xt660r",
       "year": "2004",
       "market": "Early R/X · market unconfirmed",
-      "ecu": "5VK-8591A-01 · filename claim",
+      "ecu": "5VK-8591A-01",
       "firmware_ids": [
         "xt660-2004-2006-companion"
       ],
@@ -203,14 +207,15 @@
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
       "association": "candidate",
-      "route": "bikes/xt660r/2004/early/"
+      "route": "bikes/xt660r/2004/early/",
+      "ecu_reference_evidence": "5VK-8591A-01 · filename claim"
     },
     {
       "id": "xt660r-2005-early",
       "model": "xt660r",
       "year": "2005",
       "market": "Early R/X · market unconfirmed",
-      "ecu": "5VK-8591A-01 · filename claim",
+      "ecu": "5VK-8591A-01",
       "firmware_ids": [
         "xt660-2004-2006-companion"
       ],
@@ -222,14 +227,15 @@
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
       "association": "candidate",
-      "route": "bikes/xt660r/2005/early/"
+      "route": "bikes/xt660r/2005/early/",
+      "ecu_reference_evidence": "5VK-8591A-01 · filename claim"
     },
     {
       "id": "xt660r-2006-early",
       "model": "xt660r",
       "year": "2006",
       "market": "Early R/X · market unconfirmed",
-      "ecu": "5VK-8591A-01 · filename claim",
+      "ecu": "5VK-8591A-01",
       "firmware_ids": [
         "xt660-2004-2006-companion"
       ],
@@ -241,7 +247,8 @@
       ],
       "notes": "2004–2006 comes from the companion filename; assigning it to this bike/year remains a candidate. Shared application research does not prove that year or connector hardware.",
       "association": "candidate",
-      "route": "bikes/xt660r/2006/early/"
+      "route": "bikes/xt660r/2006/early/",
+      "ecu_reference_evidence": "5VK-8591A-01 · filename claim"
     },
     {
       "id": "xt660r-2007",
@@ -264,7 +271,7 @@
       "model": "xt660r",
       "year": "2008",
       "market": "Market/model association unconfirmed",
-      "ecu": "5VK-8591A-1X · incomplete filename reference",
+      "ecu": "5VK-8591A-1X",
       "firmware_ids": [
         "xt660-5vk-1x-2008"
       ],
@@ -275,7 +282,8 @@
       ],
       "notes": "The filename says XT660, not R or X. Both model entries are candidates for the same image, not two independently identified ECUs. Its edit log prevents a stock claim.",
       "association": "candidate",
-      "route": "bikes/xt660r/2008/5vk-1x/"
+      "route": "bikes/xt660r/2008/5vk-1x/",
+      "ecu_reference_evidence": "5VK-8591A-1X · incomplete filename reference"
     },
     {
       "id": "xt660r-2008-brazil",
