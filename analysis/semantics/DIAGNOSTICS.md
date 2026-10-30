@@ -72,6 +72,8 @@ Zero entries are unmapped/reserved. Persistent/history bitmaps are accumulated s
 
 ## Evidence
 
+The late application's O2 fault-24/31/32 paths, fault bitmap, serial reply packing and master enable setting are now traced separately in [O2 control and fuel-map behaviour](O2_CONTROL.md). Disabling that master setting prevents new O2 faults but deliberately preserves existing diagnostic history.
+
 Addresses apply to the supplied image (SHA-256 `5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280`); CPU addresses equal file offsets. Addresses are hexadecimal; diagnostic menu numbers are decimal unless prefixed with `0x`.
 
 See [byte-backed protocol excerpts](protocol_evidence.tsv) and [verification and reproduction](PROTOCOL_VERIFICATION.md).

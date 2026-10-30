@@ -98,6 +98,7 @@ class CPU:
             elif op=='ABX': self.x=(self.x+self.b)&65535
             elif op=='MUL': self.d=self.a*self.b; self.c=bool(self.b&128)
             elif op=='LSRD': self.c=bool(self.d&1); self.d>>=1; self.z=self.d==0
+            elif op=='ASLD': self.c=bool(self.d&0x8000); self.d=(self.d<<1)&65535; self.z=self.d==0
             elif op in ('NOP','SEI','CLI'): pass
             else: raise ValueError(f'Unsupported {pc:04X}: {ins}')
             pc=nxt

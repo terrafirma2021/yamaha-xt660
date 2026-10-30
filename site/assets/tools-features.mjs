@@ -11,22 +11,27 @@ export function featureDefinitions(identity){
   const available=f ? [
     {id:'pair',name:'PAIR valve',detail:'Normal and diagnostic air-induction commands. Enabled means firmware control is available, not that the valve is currently open.',bytes:f.pair.map(address=>({address,on:0x4C,off:0x4D})),guards:f.pair.flatMap(address=>[[address+1,0xF0],[address+2,f.mask]])},
     {id:'immo',name:'Immobilizer',detail:'Authentication configuration read by startup and runtime code. Detected from the bytes, including existing immobilizer-off BINs.',bytes:[{address:f.immo,on:0,off:0x80}],guards:[]},
-    {id:'overrun',name:'Deceleration fuel cut',detail:'Closed-throttle fuel-cut thresholds. Disabling also clears an active deceleration cut and restores its fuel multiplier. Rev-limit and other cut logic are unchanged.',bytes:f.cut.map(([address,on])=>({address,on,off:0xFF})),guards:[]}
-  ] : ['pair','immo','overrun'].map((id,i)=>({id,name:['PAIR valve','Immobilizer','Deceleration fuel cut'][i],detail:'Open a registered BIN to identify this feature.'}));
-  return [...available,
-    {id:'o2',name:'O2 sensor / feedback',detail:'Unverified. The supplied XDF flag has not been traced to a complete feedback and fault disable. No patch is offered.'},
-    {id:'spark-overrun',name:'Deceleration spark cut',detail:'Unverified. A separate overrun spark-cut switch has not been established. Ignition corrections and rev-limit spark cuts are not treated as this feature.'}
-  ];
+    {id:'overrun',name:'Overrun cut',detail:'Deceleration fuel cut and the ignition corrections linked to that cut state. Rev-limit fuel and spark cuts are unchanged.',bytes:f.cut.map(([address,on])=>({address,on,off:0xFF})),guards:[]}
+  ] : ['pair','immo','overrun'].map((id,i)=>({id,name:['PAIR valve','Immobilizer','Overrun cut'][i],detail:''}));
+  const o2={id:'o2',name:'O2 sensor / feedback',detail:''};
+  if(identity?.code_family==='late')Object.assign(o2,{
+    detail:'Disabling stops O2 feedback and new faults 24, 31 and 32. Normal fuel maps remain selected. Existing stored faults are retained.',
+    bytes:[{address:0x368E,on:0x80,off:0}],guards:[[0x6410,0xF6],[0x6411,0x36],[0x6412,0x8E],[0x9800,0xF6],[0x9801,0x36],[0x9802,0x8E]]
+  });
+  else if(identity?.code_family==='early')Object.assign(o2,{detail:'Not configured in this BIN; no O2 enable/disable patch is offered for this application.',readonly:true,
+    guards:[[0x18D3,9],...Array.from({length:100},(_,i)=>[0x35B0+i,0]),...Array.from({length:100},(_,i)=>[0x363C+i,0])]});
+  return [...available,o2];
 }
 export function featureStates(bytes,identity){
   const base=bytes?baseAddress(bytes):0;
   return featureDefinitions(identity).map(f=>{
     let state='unverified';
-    if(bytes&&f.bytes&&f.guards.every(([a,v])=>bytes[a-base]===v)){
-      if(f.bytes.every(p=>bytes[p.address-base]===p.on))state='enabled';
+    if(bytes&&f.guards?.every(([a,v])=>bytes[a-base]===v)){
+      if(f.readonly)state='disabled';
+      else if(f.bytes.every(p=>bytes[p.address-base]===p.on))state='enabled';
       else if(f.bytes.every(p=>bytes[p.address-base]===p.off))state='disabled';
     }
-    return {...f,state,editable:state!=='unverified'};
+    return {...f,detail:f.readonly&&state==='unverified'?'Configuration changed; no supported O2 patch for this application.':f.detail,state,editable:!!f.bytes&&state!=='unverified'};
   });
 }
 export function setFeature(bytes,identity,id,enabled){

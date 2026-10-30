@@ -1,8 +1,8 @@
 # BIN feature controls
 
-The [Tools page](../../tools/index.html) detects feature states from the loaded bytes. A checked control means **enabled**, not “disable enabled”. Source files remain untouched. Changes, undo and reset use a draft with automatic startup-checksum compensation; exported reports include feature states and byte differences.
+The [Tools page](../../tools/index.html) detects feature states from the loaded bytes. Each feature has **Enabled / Disabled** radio buttons. Unsupported controls and controls without an identified BIN are greyed out. Source files remain untouched. Changes, undo and reset use a draft with automatic startup-checksum compensation; exported reports include feature states and byte differences.
 
-These recipes are instruction-tested against all nine registered BINs. **No patched ECU has been bench-tested.** An enabled PAIR control means the firmware may command the valve; it is not a live valve reading. Unresolved features display **Unverified** with editing unavailable.
+These recipes are instruction-tested against all nine registered BINs. **No patched ECU has been bench-tested.** An enabled PAIR control means the firmware may command the valve; it is not a live valve reading. Early applications without configured O2 feedback show that row disabled and read-only. Unexpected patch bytes remain unavailable.
 
 ## Supported recipes
 
@@ -12,7 +12,9 @@ All addresses below are CPU addresses. For a 59,392-byte BIN, subtract `0x1800` 
 |---|---|---|---|
 | Immobilizer | `4E7D` → RAM `0DD5`, copy at `61DE` | `4619` → RAM `0E4D`, copy at `58DF` | `00 → 80` |
 | PAIR valve command | `9D5A` and `BAC3`, PTP bit 1 | `91EF` and `A465`, PTP bit 0 | Replace opcode `4C` (BSET) with `4D` (BCLR), keeping operands |
-| Deceleration fuel cut | `348A`: `90 → FF` | `3451`: `7D → FF` and `3456`: `85 → FF` | Impossible entry condition plus restoration of the cut multiplier |
+| Overrun cut | `348A`: `90 → FF` | `3451`: `7D → FF` and `3456`: `85 → FF` | Impossible entry condition plus restoration of the cut multiplier |
+
+| O2 feedback and new O2 faults | Not configured in the registered early images; read-only | `368E`: `80 → 00` | Bypass feedback eligibility and faults 24/31/32 |
 
 Enabling restores the recipe's original registered bytes. A partial patch or unexpected parameter is unverified, not guessed to be enabled. Imported files with only these recognised changes and checksum compensation can be matched byte-for-byte against registered references outside those positions. That is labelled a recognised feature-edited layout, not an exact source identity. Files with other edits remain inspection-only on re-import.
 
@@ -36,14 +38,22 @@ The late coolant comparisons differ, so the same one-byte recipe is not portable
 
 No RPM limit, other fuel-cut flags, ignition timing table or spark-cut limiter is altered. Deceleration ignition correction/recovery is not evidence of a separate spark-cut switch.
 
-## Unresolved controls
+## O2 feedback and diagnostic reporting
 
-**O2 sensor / feedback:** the supplied 2008 XDF names file offset `2E6E` (`466E` CPU) as an O2 disable, changing `01 → 00`. The traced indexed path `502D` copies this byte into staging RAM `0E5D`, then writes through the serial-storage helper `4FBF` to storage command address `0A07`. The direct path is a stored default, not a demonstrated live feedback-enable gate. A complete link through stored state, feedback eligibility and sensor fault handling has not been established. Offering it as a complete O2 disable would overstate the evidence.
+The late application has a verified master setting at `368E`. Disabling it bypasses feedback eligibility and the detection paths for faults 24, 31 and 32. This prevents new current/history flags and their log-update requests; it does **not** erase existing faults or hide them from the serial reply. The stock early BINs use variant 9, skip these fault paths and contain zero feedback eligibility grids, so no enable patch is offered for them.
 
-**Deceleration spark cut:** a separate switch has not been identified. Fuel-cut gating, ignition corrections and rev-limit spark cuts must not be collapsed into one control. This row remains unverified.
+The previous XDF candidate at `466E` remains excluded: it affects a serial-storage default and has not been established as the master O2 control. The new recipe uses the directly consumed `368E` flag instead.
+
+See [O2 control, fuel maps and fault reporting](../semantics/O2_CONTROL.md) for the consumer addresses, neutral correction calculation, retained base fuel maps, stored-history limitation and manufacturer fault definitions.
+
+## One overrun control
+
+The page now shows one **Overrun cut** row. The shared deceleration flag affects injection and linked ignition corrections, but it is not itself a normal coil-charge inhibit. Selected-path execution with `0886:40` both clear and set proves that injection is gated while coil charging can still be scheduled. Separate rev-limit fuel/spark cut flags remain untouched. Combining the UI row does not equate fuel cut with suppressing every spark.
 
 ## Reproducible checks
 
 `python scripts/test_feature_patches.py` executes selected CPU12 paths using byte-checked disassembly for both families and all nine registered BINs. It includes a stock positive control that enters fuel cut; all 256 coolant values with active/inactive cut and eight speed boundaries; preservation of unrelated cut flags; every possible port value at both PAIR patch sites; and enabled/disabled authentication branches. Total: 41,490 selected-path cases.
 
 `node scripts/test_tools.mjs` checks detected source states, both directions of editing, exact changed-byte sets, checksum correction, untouched boot bytes, unsupported and partial-patch rejection, strict re-import matching, and original-file preservation. These are software checks, not whole-ECU simulation or hardware qualification.
+
+`python scripts/test_o2_control.py` adds 11,314 selected-path cases covering O2 fault creation, disabled-path suppression, neutral correction, actual serial reply packing and the injection/coil-charge distinction. Existing faults deliberately remain reportable. No test communicates with an ECU.

@@ -41,6 +41,7 @@ jobs:
           python3 scripts/verify_site_routes.py
           node scripts/test_tools.mjs
           python3 scripts/test_feature_patches.py
+          python3 scripts/test_o2_control.py
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:

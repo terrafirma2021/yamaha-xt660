@@ -15,12 +15,18 @@ for(const image of registry.images){
   const bytes=new Uint8Array(readFileSync(resolve(root,image.file))),base=baseAddress(bytes);
   const identity=catalogue.images.find(i=>i.id===image.id),original=bytes.slice(),corrected=bytes.slice();
   const states=featureStates(bytes,identity);
-  assert.deepEqual(states.map(f=>f.id),['pair','immo','overrun','o2','spark-overrun']);
+  assert.deepEqual(states.map(f=>f.id),['pair','immo','overrun','o2']);
   assert.equal(states[0].state,'enabled');assert.equal(states[2].state,'enabled');
   assert.equal(states[1].state,bytes[(identity.code_family==='early'?0x4E7D:0x4619)-base]===128?'disabled':'enabled');
-  assert.ok(states.slice(3).every(f=>!f.editable&&f.state==='unverified'));
+  assert.equal(states[3].state,identity.code_family==='late'?'enabled':'disabled');
+  assert.equal(states[3].editable,identity.code_family==='late');
+  const unsupportedO2=bytes.slice();
+  unsupportedO2[(identity.code_family==='late'?0x368E:0x35B0)-base]=1;
+  assert.equal(featureStates(unsupportedO2,identity)[3].state,'unverified');
+  assert.throws(()=>setFeature(unsupportedO2,identity,'o2',false));
+  assert.equal(matchesFeatureVariant(unsupportedO2,original,identity),false);
   const featured=bytes.slice();
-  for(const id of ['pair','immo','overrun']){
+  for(const id of states.filter(f=>f.editable).map(f=>f.id)){
     const saved=featured.slice(),change=setFeature(featured,identity,id,false);
     assert.equal(featureStates(featured,identity).find(f=>f.id===id).state,'disabled');
     assert.deepEqual(differences(saved,featured,base).map(d=>d.address),change.changes.map(d=>d.address).sort((a,b)=>a-b));
@@ -30,7 +36,7 @@ for(const image of registry.images){
     assert.deepEqual(featured.slice(0xF800-base),original.slice(0xF800-base));
   }
   const beforeUnsupported=featured.slice();
-  for(const id of ['o2','spark-overrun','missing'])assert.throws(()=>setFeature(featured,identity,id,false));
+  for(const id of ['missing',...(identity.code_family==='early'?['o2']:[])])assert.throws(()=>setFeature(featured,identity,id,false));
   assert.throws(()=>setFeature(featured,null,'immo',false));
   assert.deepEqual(featured,beforeUnsupported);
   const corrupt=featured.slice();corrupt[0x6000-base]^=1;

@@ -20,20 +20,26 @@ function renderFeatures(){
   const focused=document.activeElement?.id;
   const list=$('feature-list');list.replaceChildren();
   for(const f of featureStates(draft,identity)){
-    const row=document.createElement('div');row.className='feature-row';
-    const label=document.createElement('label'),input=document.createElement('input'),name=document.createElement('strong'),state=document.createElement('span'),detail=document.createElement('p');
-    input.type='checkbox';input.id='feature-'+f.id;input.checked=f.state==='enabled';input.indeterminate=f.state==='unverified';input.disabled=loading||!f.editable;
-    input.setAttribute('aria-label',f.name+' enabled');
-    name.textContent=f.name;state.className='feature-state';state.dataset.state=f.state;state.textContent=f.state==='unverified'?'Unverified':f.state==='enabled'?'Enabled':'Disabled';
-    detail.id=input.id+'-detail';detail.textContent=f.detail;input.setAttribute('aria-describedby',detail.id);
-    input.addEventListener('change',guarded(()=>{
-      if(loading)return;
-      const change=setFeature(draft,identity,f.id,input.checked);
-      if(change.changes.length)undo.push(change);
-      updateChecksum();renderGrid();controls();
-      $('feature-status').textContent=f.name+(input.checked?' enabled':' disabled')+' in the draft. Startup checksum corrected.';
-    }));
-    label.append(input,name,state);row.append(label,detail);list.append(row);
+    const row=document.createElement('div');row.className='feature-row';row.dataset.available=String(f.editable&&!loading);
+    const heading=document.createElement('div');heading.className='feature-heading';
+    const name=document.createElement('strong');name.id='feature-'+f.id+'-name';name.textContent=f.name;
+    const group=document.createElement('div');group.className='feature-options';group.setAttribute('role','radiogroup');group.setAttribute('aria-labelledby',name.id);
+    for(const enabled of [true,false]){
+      const label=document.createElement('label'),input=document.createElement('input');
+      input.type='radio';input.name='feature-'+f.id;input.id='feature-'+f.id+(enabled?'-enabled':'-disabled');input.value=String(enabled);
+      input.checked=f.state===(enabled?'enabled':'disabled');input.disabled=loading||!f.editable;
+      input.addEventListener('change',guarded(()=>{
+        if(loading||!input.checked)return;
+        const change=setFeature(draft,identity,f.id,enabled);
+        if(change.changes.length)undo.push(change);
+        updateChecksum();renderGrid();controls();
+        $('feature-status').textContent=f.name+(enabled?' enabled':' disabled')+' in the draft. Startup checksum corrected.';
+      }));
+      label.append(input,document.createTextNode(enabled?'Enabled':'Disabled'));group.append(label);
+    }
+    heading.append(name,group);row.append(heading);
+    if(f.detail){const detail=document.createElement('p');detail.textContent=f.detail;row.append(detail)}
+    list.append(row);
   }
   if(focused?.startsWith('feature-'))$(focused)?.focus({preventScroll:true});
 }
