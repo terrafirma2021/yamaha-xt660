@@ -1759,13 +1759,13 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -4841,13 +4841,13 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -8126,13 +8126,13 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -8486,13 +8486,13 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -8629,11 +8629,11 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -9103,11 +9103,11 @@
           "meaning": "Pressure-derived estimate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa."
+          "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
       "open_items": [
-        "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.",
+        "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -9462,11 +9462,11 @@
           "meaning": "Pressure-derived estimate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa."
+          "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
       "open_items": [
-        "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.",
+        "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -10780,11 +10780,11 @@
           "meaning": "Pressure-derived estimate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa."
+          "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
       "open_items": [
-        "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.",
+        "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -10821,11 +10821,11 @@
           "meaning": "Pressure-derived estimate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa."
+          "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
       "open_items": [
-        "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.",
+        "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -11290,12 +11290,12 @@
           "meaning": "Pressure-derived estimate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa."
+          "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.",
+        "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
@@ -13034,13 +13034,13 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -13404,13 +13404,13 @@
           "meaning": "Processed load coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate."
+          "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.",
+        "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -14045,11 +14045,11 @@
           "meaning": "Pressure-derived estimate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa."
+          "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
       "open_items": [
-        "Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.",
+        "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
@@ -14101,5 +14101,5 @@
     "unresolved_cell_maps": [],
     "axes_with_explicit_review": 90
   },
-  "review_generator_sha256": "1d25ae969d66f945db830d5ad9d2857f7fe6dcc685016433414db54e0cdfe66c"
+  "review_generator_sha256": "80810216edbe56768cc7bb42f958341a16c96f8badcbfc4d56d6bc8dd0e2436b"
 }

@@ -49,7 +49,49 @@ Without that mode, the families differ:
 - Early `E475–E483` copies the separately maintained `C88` into the selected load sample and its secondary filter target.
 - Later `DDB1–DDC8` retains the previous target unless `CCA:08` requests a refresh. A refresh clears that request and samples the short history instead, using the same configured index 6. `DFCC–DFE7` can arm this request when synchronized, outside the long-history mode, after the phase comparison has fallen.
 
-Both families also contain configurable multi-sample modes. The new acquisition fixtures verify the stock one-sample configuration, not every dormant multi-sample combination. The later weighted loop must not be treated as byte-for-byte equivalent to the early unrolled code.
+Both families also contain configurable multi-sample modes. The first acquisition fixture checked the stock one-sample configuration. The subsequent [alternate-path replay](../../scripts/test_alternate_paths.py) now checks all count-byte dispatch values and the two-to-six-sample arithmetic, including the later short-history refresh path. The algorithms differ as detailed below.
+
+## Configurable multi-sample modes
+
+The count is copied from early `1845` to `D8D`, or later `184B` to `DE8`. Counts **2 through 6** invoke the weighted calculation. Count **1**, count **0**, and every value **7 through 255** take the one-sample fallback. The six sample indices are copied from early `184C–1851` or later `1852–1857`; the coefficients come from early `1846–184B` or later `184C–1851`.
+
+For selected sample words `s[0..n-1]` and coefficient bytes `w[0..n-1]`, the early code at `E4A7–EA1B` computes:
+
+```text
+total = sum(floor(s[i] * w[i] / 256), i=0..n-1)
+        + sum(s[i], i=1..n-1)
+sample = min(65535, floor(total/n))
+```
+
+The first sample has **no unweighted contribution**. The remaining samples each contribute their raw value as well as the weighted term. This is observed instruction behaviour, not a suggested averaging formula or an assumption that the firmware contains a defect. With two samples of 20000 and coefficients zero, the result is **10000**. The zero coefficients in the supplied early BINs are irrelevant to their stock count of one; changing only the count would activate this different calculation.
+
+The later code at `DDD9–DF0E` instead computes:
+
+```text
+term[i] = sign(s[i]-7863) * floor(abs(s[i]-7863) * w[i] / 128)
+total = sum(term[i])
+sample = clamp(7863 + sign(total)*floor(abs(total)/n), 0, 65535)
+```
+
+The sign is applied to each truncated magnitude before summing. The final signed division truncates toward zero. Coefficient **128** is unity. With two samples of 20000 and coefficients 128, the result is **20000**. The same loop works on the long-history and requested short-history sources. The six supplied later coefficients are all 128, but their stock count is also one.
+
+The replay covers every count byte, every coefficient byte in common-coefficient boundary fixtures, independent random coefficients, positive/negative/mixed contributions, overflow/clamping, and both later history choices. Sample indices are valid history positions in these fixtures. Neither algorithm clamps a corrupted index back into its history array; arbitrary calibration addresses are not valid sample choices.
+
+## Alternate estimator and replacement path
+
+The early-only estimator at `B209–B2C9`, selected by any `ROM[186F]` value other than **128**, is now traced through its complete update gates:
+
+1. If crank synchronization flag `BFE:80` is set, copy long-history sample `ROM[1870]` to `CB2`. Otherwise retain the previous `CB2`.
+2. Require fault mask `08AF:3C`, replacement flag `089F:80` and state flag `0881:10` to be clear, plus inclusive throttle/speed/load bounds at `1874–187F`.
+3. If any gate fails, reset counter `B3A` and retain target `CB4`. Otherwise increment the counter with saturation. A target update requires the incremented count to be **greater than** `ROM[1871]`. An already-saturated counter takes the update branch directly, even for a synthetic limit of 255.
+4. On an accepted target update, `CB4 = clamp(CB2 + 64*(curve_1880(speed)-128), 0, 65535)`.
+5. On every call, including rejected target updates, move `CB6` toward the retained/current `CB4` by `floor(abs(CB4−CB6)*ROM[1872]/256)`.
+
+Stock settings are sample index **1**, hold threshold **25**, filter gain **64/256**, and an all-128 speed curve (zero additive offset). Rejected eligibility therefore does **not** freeze the filtered result: it can continue converging on its previous target. The supplied early images select the five-sample estimator instead, but the alternate implementation and selector have now both been replayed.
+
+The pressure replacement latch also has a matching later implementation: early `B1A4–B209`, later `A9A1–AA06`. It qualifies while `0881:20` is set and `0880:08` is clear. The first bit is set by the capture-inactivity handling at `686B` / `60A8` and cleared along the crank processing path at `DE8A` / `D85E`; the second is set by the capture handler at `D894` / `D1FC` and cleared during reset of crank state at `7246` / `F3CF`. These are code-level state identities, not a time measurement.
+
+Qualification increments `B3D` / `B72` with saturation. At **count ≥ 5** under stock settings it enables the replacement flag. On the first accepted latch it copies `CA2` / `CC4` directly into `CA4` / `CC6`; subsequent accepted calls filter toward that source with stock gain **32/256**. Losing qualification resets the counter and clears both latch flags, while retaining the replacement word. Boundary and re-entry cases are replayed in both families.
 
 ### Exact pressure-to-load transfer
 
@@ -107,8 +149,10 @@ The selection fixture covers all **65,536 request/fault byte pairs**, all **65,5
 
 The cross-family pass adds 23,904 checks: 9,504 acquisition-result storage cases, 1,152 window-gate cases, 2,304 tracking cases spanning all gain bytes, 4,689 source/limit cases, 1,152 load-selection cases and 5,103 lookup/filter/normalization cases. Every executed instruction is compared with the respective BIN's bytes. Synthetic boundary values also exercise rounding and saturation outside normal operating conditions; they are not tuning recommendations.
 
-The remaining physical-scale gap is the sensor/circuit transfer and absolute pressure reference, not the stock filter's arithmetic. Dormant weighted sample modes, the complete interrupt/task timing interaction, and the physical meanings of every eligibility flag also remain outside this fixture's coverage. The load normalization feeds the [family-specific fuel correction and request chains](MAP_CONSUMERS.md#fuel-transfer-checked-in-both-firmware-families).
+The subsequent [alternate-path results](../firmware/alternate_path_validation.json) cover the configurable sample modes, early alternate estimator, selector values and replacement latch described above. Those calculations are no longer deferred as unknown alternate paths. The remaining physical-scale gap is the sensor/circuit transfer and absolute pressure reference. Complete simultaneous interrupt/task timing and behaviour on hardware are separate from the tested calculations. The load normalization feeds the [family-specific fuel correction and request chains](MAP_CONSUMERS.md#fuel-transfer-checked-in-both-firmware-families).
 
 Reproduce with `python3 scripts/test_pressure_state.py /path/to/libxt660_full.so`. Original and checksum-corrected firmware files are unchanged.
 
 Reproduce the new family pass with `python3 scripts/test_pressure_sources.py --check`; it does not require a compiled library or ECU connection.
+
+Reproduce the configurable-path pass with `python3 scripts/test_alternate_paths.py --check`.

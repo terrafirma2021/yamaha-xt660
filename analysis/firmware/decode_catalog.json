@@ -12,7 +12,7 @@
       "map_count": 71,
       "cell_count": 8275,
       "maps_path": "analysis/firmware/xt660x-2005-owner/maps.json",
-      "maps_sha256": "70dd33eba65a9543e8e740c5a1075b0acbcce440cd8440abdac9bf0d1c920a72",
+      "maps_sha256": "96a11e2741d436fdc016171a372b6fd11f24abde7afa749cc0f916297fdbf97f",
       "physical_units_complete": false
     },
     {
@@ -26,7 +26,7 @@
       "map_count": 71,
       "cell_count": 8275,
       "maps_path": "analysis/firmware/xt660-2004-2006-companion/maps.json",
-      "maps_sha256": "70dd33eba65a9543e8e740c5a1075b0acbcce440cd8440abdac9bf0d1c920a72",
+      "maps_sha256": "96a11e2741d436fdc016171a372b6fd11f24abde7afa749cc0f916297fdbf97f",
       "physical_units_complete": false
     },
     {
@@ -40,7 +40,7 @@
       "map_count": 71,
       "cell_count": 8275,
       "maps_path": "analysis/firmware/xt660x-2005-checksum-fixed/maps.json",
-      "maps_sha256": "70dd33eba65a9543e8e740c5a1075b0acbcce440cd8440abdac9bf0d1c920a72",
+      "maps_sha256": "96a11e2741d436fdc016171a372b6fd11f24abde7afa749cc0f916297fdbf97f",
       "physical_units_complete": false
     },
     {
@@ -96,7 +96,7 @@
       "map_count": 71,
       "cell_count": 8275,
       "maps_path": "analysis/firmware/xt660-2c1-00/maps.json",
-      "maps_sha256": "18b44bfefa9ad67a9ca19388443428e088239926e2213e213e5c8bdd62ee7005",
+      "maps_sha256": "b8196e8b61dd934e503b071155c45c0d56293df4b9e251def9468a71e1f7eccc",
       "physical_units_complete": false
     },
     {
@@ -110,7 +110,7 @@
       "map_count": 71,
       "cell_count": 8275,
       "maps_path": "analysis/firmware/xt660-2c1-00-immo-off/maps.json",
-      "maps_sha256": "18b44bfefa9ad67a9ca19388443428e088239926e2213e213e5c8bdd62ee7005",
+      "maps_sha256": "b8196e8b61dd934e503b071155c45c0d56293df4b9e251def9468a71e1f7eccc",
       "physical_units_complete": false
     },
     {

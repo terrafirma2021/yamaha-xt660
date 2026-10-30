@@ -87,11 +87,11 @@ multiplicative factor in the denominator, not a direct fuel multiplier
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | row_axis | u8 0x0CD0 combined normalization code | Combined normalization code | Not required: internal code/count |
-| column_axis | u16 0x0C90 load code | Processed load coordinate | Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate. |
+| column_axis | u16 0x0C90 load code | Processed load coordinate | Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa. |
 
 ### What remains for this map
 
-- Stock sampling, filter and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa; dormant sample modes remain separate.
+- Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.
 - Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 

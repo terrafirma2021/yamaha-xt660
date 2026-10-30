@@ -38,6 +38,8 @@ jobs:
           python3 scripts/test_speed_sources.py --check
           python3 scripts/test_pressure_sources.py --check
           python3 scripts/test_fuel_transfer.py --check
+          python3 scripts/test_alternate_paths.py --check
+          python3 scripts/test_fuel_modes.py --check
           python3 scripts/verify_vehicle_catalog.py
           python3 scripts/test_firmware_library.py
           python3 scripts/build_pages.py

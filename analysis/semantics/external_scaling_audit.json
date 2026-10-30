@@ -4,7 +4,7 @@
   "generator_sha256": "4fded8bd053c07947966cecdbdaf9e03589a3283e240a5eceee778f76e0ff48e",
   "sensor_model_sha256": "528590c2b84127a90eb512f9ff0eeb2a28be405f12e37771767674f5fb141d31",
   "source_manifest_sha256": "93a86a83749b557d174878a938684c3c139c45ce0d72d495822108cbbbf02b51",
-  "physical_units_sha256": "cb401ba09407cab0ee5f1ecaa00766a55287596922211ec0baf33329aac5e913",
+  "physical_units_sha256": "36c840342914b6b4ae54675215b72fc661fa418e1b4383732cae7fc18f253bc1",
   "temperature_trials": [
     {
       "hypothesis": "suzuki_liana_iat",

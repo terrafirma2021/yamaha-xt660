@@ -68,6 +68,14 @@ for report_name, script_name in [('pressure_source_validation.json', 'test_press
     assert replay_report['interpreter_sha256'] == digest(ROOT/'scripts/test_full_lift.py')
     if 'model_script_sha256' in replay_report:
         assert replay_report['model_script_sha256'] == digest(ROOT/'scripts/map_models.py')
+for report_name, script_name in [('alternate_path_validation.json', 'test_alternate_paths.py'),
+                                  ('fuel_mode_validation.json', 'test_fuel_modes.py')]:
+    replay_report = json.loads((ROOT/'analysis/firmware'/report_name).read_text())
+    assert replay_report['result'] == 'passed'
+    assert {item['id']: item['firmware_sha256'] for item in replay_report['images']} == firmware_hashes
+    assert replay_report['test_script_sha256'] == digest(ROOT/'scripts'/script_name)
+    for dependency, expected_hash in replay_report['dependencies'].items():
+        assert digest(ROOT/'scripts'/dependency) == expected_hash
 assert json.loads((OUT/'external_scaling_audit.json').read_text(encoding='utf-8'))==external_scaling_audit()
 for report_name,test_name,model_name in [
     ('spark_schedule_validation.json','test_spark_schedule.py','spark_models.py'),

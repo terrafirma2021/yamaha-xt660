@@ -80,12 +80,12 @@ Consumer instruction addresses: `0x89A9`, `0x8A2F`.
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
-| uniform_input | u16 0x08F2 pressure-derived estimate | Pressure-derived estimate | Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa. |
+| uniform_input | u16 0x08F2 pressure-derived estimate | Pressure-derived estimate | Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa. |
 
 ### What remains for this map
 
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Five-sample eligibility, tracking and source selection are replay-checked in both families. Confirm analog transfer and absolute reference before assigning kPa.
+- Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.
 - Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.
 - Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.

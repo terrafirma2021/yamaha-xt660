@@ -106,7 +106,37 @@ The subsequent paths differ:
 - With the mode bit set, the early normal path skips that global factor. The later path can instead apply byte `AD7/128`, gated by `ROM[4124] == 128` and either `ACF:04` or `AD0:20`. **All four supplied later BINs contain 255 at `4124`**, so this extra factor is inactive in their stock normal path. The arithmetic fixture also exercises the enabled gate synthetically; it does not assign a hardware meaning to those flags.
 - Finally the compensation word is added with saturation. It is `095E` in early code and `0966` in later code. Adding compensation before these factors would give the wrong result.
 
-This establishes the ordinary integer correction-to-request transfer for both families. It does not establish injector flow in fuel-mass units, AFR, all forced modes, a physical timer measurement or engine behaviour. See the [pressure sampling and load derivation](PRESSURE_ESTIMATE.md) for the separate coordinates that select these maps. Reproduce with `python3 scripts/test_fuel_transfer.py --check`.
+This establishes the ordinary integer correction-to-request transfer for both families. The forced modes are now covered by the separate replay below. Neither fixture establishes injector flow in fuel-mass units, AFR, a physical timer measurement or engine behaviour. See the [pressure sampling and load derivation](PRESSURE_ESTIMATE.md) for the separate coordinates that select these maps. Reproduce the ordinary transfer with `python3 scripts/test_fuel_transfer.py --check`.
+
+## Fuel calculation modes and blend qualification
+
+The selector is **ROM `19DE` in early code, `19B8` in later code**. Every supplied BIN contains **3**. [test_fuel_modes.py](../../scripts/test_fuel_modes.py) now replays all 256 selector values, then follows modes 1, 2 and 4 through their request construction. [Results](../firmware/fuel_mode_validation.json): **20,416 cases across all nine BINs**.
+
+| Selector | Actual calculation | Early parameters | Later parameters |
+|---|---|---|---|
+| 1 | Fixed quantity request, then limits, mode-dependent gain and compensation | Primary `19DF*32`; secondary `19E0*32` | Primary `19B9*32` |
+| 2 | Force correction gains to `byte/128`, then use the normal base-quantity blend/request path | `19E1`, both channels and load/throttle lanes | `19BB`, load/throttle lanes |
+| 4 | Force gains as above; early channels have separate settings | Primary `19E2`, secondary `19E3` | `19BC`, load/throttle lanes |
+| 3, 0, or any other byte | Use the ordinary correction calculation | Normal block `8220` | Normal block `77F8` |
+
+Mode 1 bypasses the base-quantity maps for that request. It initializes correction gains to unity, multiplies each fixed quantity byte by **32**, then applies the request bounds. Stock bounds are **100–25000** in all nine images, so a fixed quantity byte of zero does **not** mean “injector off”: it is raised to the lower bound before the subsequent factors and compensation.
+
+In early mode 1 the second channel still uses the real channel-gain lookup at `864E`; its result is applied after the fixed secondary quantity's first clamp, followed by a second clamp. An overflow in that multiplication takes the existing 65535 branch and bypasses the second clamp and compensation. The fixtures exercise that branch and verify which intermediate words retain their old values. This is a calculation path; the separately documented variant-9 gate can still block the second injector's normal scheduling entry.
+
+Modes 2 and 4 replace the normal coolant/IAT/transient/adaptive gain calculation with the forced gain. They retain the additive quantity correction, load/throttle blend, family-specific reduction/post-blend handling, bounds and final compensation. The early secondary dispatch is included, not inferred from the primary channel. Their stock forced-gain bytes are all **128**, but these overrides are inactive while the selector remains 3.
+
+### How the load/throttle blend byte is chosen
+
+The qualification block is `8152–81E8` / `773B–77D1`. A width selector `19D6` / `19B0` is clamped to table index 8; the constant pairs are `(margin, multiplier)` = `(1,255), (2,128), (4,64), …, (128,2), (255,1)`. Let `t` be the high byte of the throttle coordinate, `T` the threshold at `19D5` / `19AF`, and `counter` be `B03` / `B36`. It chooses the blend byte in this order:
+
+1. Pressure fault mask `08AF:30` / `08B1:30`: select **255**, increment the counter with saturation.
+2. Fault mask `0C`, or state flag `088D:04` clear: select **0**, retain the counter.
+3. `t ≥ T`: select **255**, increment the counter with saturation.
+4. Otherwise compute `min(255, max(0,t+margin−T)*multiplier)`. While the counter is below the hold setting `19D8` / `19B2`, override that result with **255** and increment the counter. At equality the computed result is allowed.
+
+The test exercises each throttle byte, fault precedence, disabled-state and hold boundaries, index clamping, carry across `t+margin`, and randomized combinations in both families. Blend 255 favours the throttle quantity; blend zero favours the load quantity. The subsequent division by 256 still retains the 255-total-weight rounding described above.
+
+Reproduce with `python3 scripts/test_fuel_modes.py --check`. Inputs outside normal operation are test fixtures, not newly approved calibration ranges. This pass resolves the named forced-calculation branches; it does not claim a complete concurrent simulation of the ECU.
 
 ## Post-start states
 
