@@ -15,11 +15,16 @@ for(const image of registry.images){
   const bytes=new Uint8Array(readFileSync(resolve(root,image.file))),base=baseAddress(bytes);
   const identity=catalogue.images.find(i=>i.id===image.id),original=bytes.slice(),corrected=bytes.slice();
   const states=featureStates(bytes,identity);
-  assert.deepEqual(states.map(f=>f.id),['pair','immo','overrun','o2']);
+  assert.deepEqual(states.map(f=>f.id),['pair','immo','overrun','o2','sidestand','lean-angle']);
   assert.equal(states[0].state,'enabled');assert.equal(states[2].state,'enabled');
   assert.equal(states[1].state,bytes[(identity.code_family==='early'?0x4E7D:0x4619)-base]===128?'disabled':'enabled');
   assert.equal(states[3].state,identity.code_family==='late'?'enabled':'disabled');
   assert.equal(states[3].editable,identity.code_family==='late');
+  for(const f of states.slice(4)){assert.equal(f.state,'enabled');assert.equal(f.editable,true)}
+  const partialStand=bytes.slice();partialStand[states[4].bytes[0].address-base]=0x1D;
+  assert.equal(featureStates(partialStand,identity)[4].state,'unverified');
+  assert.throws(()=>setFeature(partialStand,identity,'sidestand',false));
+  assert.equal(matchesFeatureVariant(partialStand,original,identity),false);
   const unsupportedO2=bytes.slice();
   unsupportedO2[(identity.code_family==='late'?0x368E:0x35B0)-base]=1;
   assert.equal(featureStates(unsupportedO2,identity)[3].state,'unverified');

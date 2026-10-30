@@ -3,8 +3,8 @@ import {baseAddress} from './tools-core.mjs';
 // CPU addresses, never file offsets. These recipes are limited to registered
 // images, with the instruction-path checks in test_feature_patches.py.
 const families = {
-  early: {immo:0x4E7D,pair:[0x9D5A,0xBAC3],mask:2,cut:[[0x348A,144]]},
-  late: {immo:0x4619,pair:[0x91EF,0xA465],mask:1,cut:[[0x3451,125],[0x3456,133]]}
+  early: {immo:0x4E7D,pair:[0x9D5A,0xBAC3],mask:2,cut:[[0x348A,144]],stand:[0xCC5E,0x4E6C],lean:0x4E91},
+  late: {immo:0x4619,pair:[0x91EF,0xA465],mask:1,cut:[[0x3451,125],[0x3456,133]],stand:[0xC2C4,0x4608],lean:0x462D}
 };
 export function featureDefinitions(identity){
   const f=families[identity?.code_family];
@@ -20,7 +20,11 @@ export function featureDefinitions(identity){
   });
   else if(identity?.code_family==='early')Object.assign(o2,{detail:'Not configured in this BIN; no O2 enable/disable patch is offered for this application.',readonly:true,
     guards:[[0x18D3,9],...Array.from({length:100},(_,i)=>[0x35B0+i,0]),...Array.from({length:100},(_,i)=>[0x363C+i,0])]});
-  return [...available,o2];
+  const interlocks=f ? [
+    {id:'sidestand',name:'Sidestand ECU cut-off',detail:'Disabling allows the ECU to run with the stand down and suppresses new fault 19. The external starter-relay interlock still applies.',bytes:[{address:f.stand[0],on:0x1C,off:0x1D},{address:f.stand[1],on:0,off:0x80}],guards:[[f.stand[0]+1,8],[f.stand[0]+2,0x8C],[f.stand[0]+3,0x80]]},
+    {id:'lean-angle',name:'Lean-angle cut-off',detail:'Disabling removes ECU tip-over detection and the sensor fault-41 path: the engine may keep running after a fall. Existing latches or stored faults can still inhibit starting.',bytes:[{address:f.lean,on:0,off:0x80}],guards:[]}
+  ] : ['sidestand','lean-angle'].map((id,i)=>({id,name:['Sidestand ECU cut-off','Lean-angle cut-off'][i],detail:''}));
+  return [...available,o2,...interlocks];
 }
 export function featureStates(bytes,identity){
   const base=bytes?baseAddress(bytes):0;

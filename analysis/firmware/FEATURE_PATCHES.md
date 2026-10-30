@@ -15,6 +15,8 @@ All addresses below are CPU addresses. For a 59,392-byte BIN, subtract `0x1800` 
 | Overrun cut | `348A`: `90 → FF` | `3451`: `7D → FF` and `3456`: `85 → FF` | Impossible entry condition plus restoration of the cut multiplier |
 
 | O2 feedback and new O2 faults | Not configured in the registered early images; read-only | `368E`: `80 → 00` | Bypass feedback eligibility and faults 24/31/32 |
+| Sidestand ECU cut-off | `CC5E`: `1C → 1D`; `4E6C`: `00 → 80` | `C2C4`: `1C → 1D`; `4608`: `00 → 80` | Prevent the shared inhibit assertion and new fault 19 |
+| Lean-angle cut-off | `4E91`: `00 → 80` | `462D`: `00 → 80` | Bypass tip-over detection and use the fault-41 clear path |
 
 Enabling restores the recipe's original registered bytes. A partial patch or unexpected parameter is unverified, not guessed to be enabled. Imported files with only these recognised changes and checksum compensation can be matched byte-for-byte against registered references outside those positions. That is labelled a recognised feature-edited layout, not an exact source identity. Files with other edits remain inspection-only on re-import.
 
@@ -52,8 +54,12 @@ The page now shows one **Overrun cut** row. The shared deceleration flag affects
 
 ## Reproducible checks
 
+[Sidestand and lean-angle controls](../semantics/INTERLOCK_CONTROLS.md) document the two interlock recipes, their source paths and physical limitations. The sidestand patch does not change the external starting relay. The lean-angle patch is not a blanket erase of existing trip latches or stored faults. No clutch switch is provided in the editor.
+
 `python scripts/test_feature_patches.py` executes selected CPU12 paths using byte-checked disassembly for both families and all nine registered BINs. It includes a stock positive control that enters fuel cut; all 256 coolant values with active/inactive cut and eight speed boundaries; preservation of unrelated cut flags; every possible port value at both PAIR patch sites; and enabled/disabled authentication branches. Total: 41,490 selected-path cases.
 
 `node scripts/test_tools.mjs` checks detected source states, both directions of editing, exact changed-byte sets, checksum correction, untouched boot bytes, unsupported and partial-patch rejection, strict re-import matching, and original-file preservation. These are software checks, not whole-ECU simulation or hardware qualification.
 
 `python scripts/test_o2_control.py` adds 11,314 selected-path cases covering O2 fault creation, disabled-path suppression, neutral correction, actual serial reply packing and the injection/coil-charge distinction. Existing faults deliberately remain reportable. No test communicates with an ECU.
+
+`python scripts/test_interlock_features.py` adds 25,344 selected-path cases for sidestand inhibition, fault 19, tip-over detection and fault 41 across all nine BINs. External relay and physical vehicle behaviour are not simulated.
