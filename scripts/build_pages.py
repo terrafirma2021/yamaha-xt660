@@ -47,7 +47,7 @@ def rel(target, current):
     return Path(os.path.relpath(target, Path(current).parent)).as_posix()
 
 def nav(current, active):
-    links = [('Overview', 'index.html'), ('Firmware', 'firmware/index.html'), ('Maps', 'maps/index.html'), ('Tools', 'tools/index.html'), ('Wiring', 'wiring/index.html'), ('MCU pins', 'pins/index.html'), ('Research', 'research/index.html')]
+    links = [('Overview', 'index.html'), ('Firmware', 'firmware/index.html'), ('Maps', 'maps/index.html'), ('Tune', 'tools/index.html'), ('Wiring', 'wiring/index.html'), ('MCU pins', 'pins/index.html'), ('Research', 'research/index.html')]
     return '<header id="sitebar"><a class="brand" href="'+rel('index.html', current)+'"><span class="brand-mark"><img class="yamaha-logo" src="'+rel('assets/yamaha-motor-logo.png',current)+'" width="1042" height="360" alt="Yamaha Motor — Revs Your Heart"></span><span class="brand-model">ECU RESEARCH<small>XT660R / XT660X / XT660Z</small></span></a><nav aria-label="Main navigation">'+''.join(
         f'<a href="{rel(url,current)}"'+(' aria-current="page"' if label==active else '')+f'>{label}</a>' for label,url in links)+f'<a href="{REPO}">GitHub ↗</a><button id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></nav></header>'
 
