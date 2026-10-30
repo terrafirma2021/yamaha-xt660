@@ -61,6 +61,8 @@ function facts(values){const dl=$('bin-facts');dl.replaceChildren();for(const [k
 function controls(){const checked=!!identity&&!!draft&&verifyStartupChecksum(draft,identity).status==='pass';$('repo-open').disabled=!repositoryImages.length||loading;for(const id of ['backup-save','backup-report','compare-file'])$(id).disabled=!original||loading;for(const id of ['draft-save','draft-report'])$(id).disabled=!checked||loading;for(const id of ['edit-reset','edit-undo'])$(id).disabled=!undo.length||loading;$('tune-map').disabled=!maps.length||loading;$('edit-redo').disabled=!redo.length||loading;renderFeatures();renderSpeed();workspace.render()}
 function renderSpeed(){
   const s=speedState(draft,identity),ready=s.editable&&!loading;
+  $('speed-output-row').dataset.available=String(ready);
+  $('speed-form').dataset.available=String(ready&&s.enabled);
   for(const id of ['speed-enabled','speed-disabled','speed-apply'])$(id).disabled=!ready;
   $('speed-offset').disabled=!ready||!s.enabled;
   $('speed-apply').disabled=!ready||!s.enabled;

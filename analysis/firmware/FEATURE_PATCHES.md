@@ -78,3 +78,26 @@ The page now shows one **Overrun cut** row. The shared deceleration flag affects
 ## Dashboard pulse offset
 
 [Dashboard speed output](SPEED_OUTPUT.md) documents the separate fixed −20 to +20 pulse offset and zero-output switch. The stateless constructor patch preserves zero input, clamps to 0–255, uses no persistent RAM and is verified across all nine registered BINs. This is not percentage scaling or a proportional sprocket correction.
+
+## CO full-range override
+
+**Enabled removes the CO correction's RPM fade-out; Disabled restores its stock curve.** This row controls the range of the dashboard adjustment, not the adjustment value itself. It changes neither spark timing nor the base fuel-table cells. Startup, other fuel corrections, output limits and fuel cuts still apply. On later applications, O2 feedback remains a separate correction and can influence the resulting mixture.
+
+| Item | Early family | Late family |
+|---|---|---|
+| Curve descriptor | `34B0` | `3478` |
+| Fifteen byte cells | `34B6–34C4` | `347E–348C` |
+| Two changed cells for Enabled | `34C3–34C4`: `00 → FF` | `348B–348C`: `00 → FF` |
+| Lookup and CO application | `800C–8031` | `768E–76A3` |
+| Stored CO value in RAM | `09FC` (C1) | `0A00` |
+| Speed / gain / scaled trim in RAM | `0900 / 09A0 / 095C` | `0920 / 099E / 0964` |
+| Signed rounding helper | `8623–864D` | `7A2B–7A55` |
+| Load and throttle fuel-lane consumers | `8323–83A0` | `7885–7902` |
+
+Every registered image contains the same six-byte descriptor (`14 00 1C 00 00 80`) and stock cells (thirteen `FF` values, then two zeros), at its own family's addresses. The tool subtracts the loaded file's base address. It verifies the descriptor, lookup caller, signed-scaling helper and dashboard CO writer before allowing the toggle. Stock and all-`FF` curves are recognised; custom curves leave this control unavailable without discarding the user's map edits. Those custom cells can still be edited and re-imported through the ordinary map workspace. Unknown code or descriptor changes do not pass recognition.
+
+The lookup clamps speed minus 5120 into 0–7168. Nodes are 512 speed-code units apart. Stock gain is 255 through speed code 11264, fades to zero near 11776, and holds zero above it. With all cells 255, it returns 255 for the entire 16-bit input domain, including above the last node. The new setting therefore removes the curve's fade-out without changing its axis or redirecting code.
+
+For stored CO byte `C` and interpolated gain `G`, the centered correction is `sign(C−128) × floor((abs(C−128) × G + 128)/256)`. Four times that result is added to both normal fuel quantities before their gains and blend. Constant gain does not imply a constant percentage increase in final fuel. The early alternate load map, if selected, feeds the same corrected load lane.
+
+`node scripts/test_co_tools.mjs` checks all nine image-specific layouts, the exact two-byte edit, checksums, restore/history, saved-file recognition, custom-map preservation and rejection of 800 individually corrupted lookup guards. `python scripts/test_co_override.py` executes 10,900 stock/override cases against the original CPU12 p-code, including both fuel lanes, every valid CO byte in both code families, speed transition points and upper clamping. Source instructions are checked against every BIN. These tests do not establish physical timing or bench-tested engine behaviour.

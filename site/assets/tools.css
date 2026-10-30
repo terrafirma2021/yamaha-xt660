@@ -40,3 +40,4 @@
 @media(min-width:1500px){.map-layout{grid-template-columns:260px minmax(0,1fr)}}
 @media(max-width:1000px){.map-layout{grid-template-columns:190px minmax(0,1fr)}.map-editor{padding:12px}.map-library{padding:12px}}
 @media(max-width:1000px){.map-layout{display:block}.map-library{border-right:0;border-bottom:1px solid var(--line)}.map-library #map-list{max-height:180px}.map-workspace-title{padding:16px}.map-workspace-title h3{font-size:26px}.map-workspace .workspace-grid{min-width:calc(var(--map-columns)*30px + 56px)}.map-toolbar button{flex:1}.map-operation label{flex:1}.map-operation input{width:100%}.map-operation button{width:100%}}
+.tool-panel #speed-form[data-available=false] label{color:var(--muted);opacity:.55;cursor:not-allowed}.tool-panel #speed-offset:disabled{color:var(--muted);cursor:not-allowed}

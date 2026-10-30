@@ -1,5 +1,6 @@
 import {baseAddress} from './tools-core.mjs';
 import {speedState,speedAddresses} from './tools-speed.mjs';
+import {coDefinition} from './tools-co.mjs';
 
 // CPU addresses, never file offsets. These recipes are limited to registered
 // images, with the instruction-path checks in test_feature_patches.py.
@@ -25,7 +26,7 @@ export function featureDefinitions(identity){
     {id:'sidestand',name:'Sidestand cut-off',detail:'Disabling allows the ECU to run with the stand down and suppresses new fault 19. The external starter-relay interlock still applies.',bytes:[{address:f.stand[0],on:0x1C,off:0x1D},{address:f.stand[1],on:0,off:0x80}],guards:[[f.stand[0]+1,8],[f.stand[0]+2,0x8C],[f.stand[0]+3,0x80]]},
     {id:'lean-angle',name:'Lean-angle cut-off',detail:'Disabling removes ECU tip-over detection and the sensor fault-41 path: the engine may keep running after a fall. Existing latches or stored faults can still inhibit starting.',bytes:[{address:f.lean,on:0,off:0x80}],guards:[]}
   ] : ['sidestand','lean-angle'].map((id,i)=>({id,name:['Sidestand cut-off','Lean-angle cut-off'][i],detail:''}));
-  return [...available,o2,...interlocks];
+  return [...available,o2,...interlocks,coDefinition(identity)];
 }
 export function featureStates(bytes,identity){
   const base=bytes?baseAddress(bytes):0;
@@ -41,7 +42,7 @@ export function featureStates(bytes,identity){
         else if(originalCode&&f.legacy?.every(p=>bytes[p.address-base]===p.off)){state='disabled';legacyPatch=true;}
       }
     }
-    return {...f,legacyPatch,detail:legacyPatch?'Earlier threshold-based disable detected. Select Disabled to replace it with the targeted bypass, or Enabled to restore stock.':f.readonly&&state==='unverified'?'Configuration changed; no supported O2 patch for this application.':f.detail,state,editable:!!f.bytes&&state!=='unverified'};
+    return {...f,legacyPatch,detail:legacyPatch?'Earlier threshold-based disable detected. Select Disabled to replace it with the targeted bypass, or Enabled to restore stock.':f.readonly&&state==='unverified'?'Configuration changed; no supported O2 patch for this application.':f.mapBacked&&bytes&&state==='unverified'?'CO curve is custom or its lookup is unverified. The override is unavailable; existing values are preserved.':f.detail,state,editable:!!f.bytes&&state!=='unverified'};
   });
 }
 export function setFeature(bytes,identity,id,enabled){

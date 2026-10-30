@@ -47,6 +47,8 @@ jobs:
           python3 scripts/test_feature_patches.py
           python3 scripts/test_speed_patch.py
           node scripts/test_speed_tools.mjs
+          node scripts/test_co_tools.mjs
+          python3 scripts/test_co_override.py
           python3 scripts/test_o2_control.py
           python3 scripts/test_interlock_features.py
       - name: Upload site
