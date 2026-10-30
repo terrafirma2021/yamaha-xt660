@@ -4,6 +4,32 @@ The browser workbench provides **BIN inspection, unchanged-copy export, byte com
 
 ## What the existing tools actually establish
 
+### YamahaFlasher: direct XT boot evidence
+
+The installed `YamahaFlasher.exe` extracted from Yamaha ECU V1 is a native x86 Visual Basic 6 program, 729,088 bytes, SHA-256 `706666bf83a737d2a4bc1965c662469fdb2e2d50c6ee01252d9d39065cb9b08c`. It was inspected without launching it or booting the VM. This executable provides **direct evidence for the recovered XT boot protocol**. Its form's default 16-byte session record exactly matches CPU FF10–FF1F in the populated companion boot. This is separate from the newer Yamaha service-tool library discussed below.
+
+| Finding | Native executable evidence | Firmware comparison |
+|---|---|---|
+| XT660 selects the 64K reader/writer | XT660 selector at 4631F3 / 478FF7; method slots 718 / 71C; entry thunks lead to 469770 / 470910 | 16-bit address space; “64K” is the tool's operation name |
+| Boot connection is 9,600 baud, 8N1 | Read baud call 46BB69, write call 472E4D; each receives immediate 2580. Data setup 46BC49–46BC6E and 472F2D–472F52 | SCI0 divisor 0068; confirms the target rate independently of oscillator inference |
+| Session record matches exactly | Form `Text1` default: 32 ASCII hex characters at executable file offset 5F2F1; command header `01 00 00 15` | F913 compares the same 16-byte record at FF10 |
+| Service transition | Sends `02 01 00 05 F8` after session exchange | F945 mode 1 disables application peripherals and enters the boot service loop |
+| Memory reads | Builds command 03, mode 02, seven-byte request at 46F051–46F336 | F99A mode 2 returns 512 data bytes |
+| Read coverage | Base 1800 at 46EF55; offset limit E7FF at 46EDE4; increment 0200 at 4702B4 | 116 blocks cover CPU 1800–FFFF: **59,392 bytes**, including F800–FFFF boot |
+| Cable echo handling | Reader excludes first 7 received bytes; takes payload at one-based positions 12–523, checksum at 524 | Seven request bytes + 517-byte ECU reply; USB chunk boundaries are irrelevant |
+| Programming | Command 09, parameter = address high byte, length 0805, 2048-byte payload; send at 477A16, increment 0800 at 478802 | FB63 erases the addressed 2 KiB span, programs staged RAM 1000–17FF and compares it with flash |
+| Successful programming reply | UTF-16 hex string `09000005F2` at 4619E4 | Command 09, status 00, length 0005, negated-sum checksum F2 |
+
+Addresses in the executable column are preferred PE virtual addresses, except the explicitly named file offset. The [machine-readable evidence](yamaha_flasher_evidence.json) records 50 native/data anchors. With your own copy of this exact executable, run `python scripts/verify_yamaha_flasher.py /path/to/YamahaFlasher.exe` to check its hash, anchors and session-record equality. The executable, license files and full decompilation are not distributed. Ghidra completed both large writer decompilations; both reader decompilations timed out. Reader findings above were checked in native instructions rather than inferred from incomplete pseudocode.
+
+The first bulk-read request is `03 02 00 07 18 00 DC`; the last is for FE00. The reader also makes 16-byte probes at 7FF0 and F770. The writer makes probes at 7FF0, 1800 and 1820, then sends `05 01 00 09 08 20 5A A5 CA` to write the boot's special RAM gate at 0820. These observations establish protocol compatibility, not a complete hardware-tested connection sequence. The tool uses FTDI D2XX; its baud/data/read/write declarations match the [FTDI D2XX API](https://ftdichip.com/wp-content/uploads/2025/06/D2XX_Programmers_Guide.pdf). Web Serial needs its own transport implementation.
+
+The write loop reaches the F800–FFFF boot block. Consequently a source with an FF placeholder there must not be treated as a complete programming image. Erase/program behavior is now traceable in both host and ECU code; ignition sequencing, all timeout/retry branches, adapter behavior and recovery still require reconstruction and a bench transaction. No live read or write was performed.
+
+The independent [offline read module](../../site/assets/tools-boot.mjs) now builds that 116-block plan, separates explicitly configured cable echo from replies, checks command/status/length/checksum, and assembles exact addressed coverage without padding missing bytes. It preserves captured bytes, including a failing startup checksum. Tests cover every split position in a 524-byte transaction, one-byte chunks, malformed replies, truncation, extra bytes, duplicate/missing blocks and reconstruction of the unchanged companion BIN. It has no serial access or session/programming transmitter and is not yet wired into the browser connection button.
+
+### Yamaha service-tool communication library
+
 The supplied `YamahaServiceTool.Communication` project includes real reprogramming code, not just monitoring. In `Reprogram/Reprogram.cs`, `ReprogramPhase1` selects a programming session and performs seed/key access; `ReprogramPhase3` starts a routine, requests a download, sends bounded chunks with a transfer counter and exits the transfer; `ReprogramPhase4` requests a memory checksum and compares it against the reprogramming file. `Protocol/RequestDownload.cs` interprets the ECU-advertised maximum frame length.
 
 Those paths use the library's KWP/CAN message layer and external file definitions. Their presence does **not** establish compatibility with this XT boot. Our boot dispatcher accepts command indices 0–15 and a different frame format. No manufacturer reprogramming files for these exact BINs, paired adapter/ECU capture or bench execution was supplied. The third-party source stays local; [the source audit](flash_tool_sources.json) records hashes and line locators.
@@ -69,7 +95,7 @@ Before enabling a live driver:
 
 These instruction anchors are checked against every applicable registered BIN. The four FF boot placeholders supply no boot evidence. The application loop also conditionally disables SCI0: early 53BB–53C0 and late 4BF9–4BFE inspect boot state bit 0020:04. Application protocol handling can set that bit (early CE70, late C4E0). Thus session timing and state matter; opening a serial port alone is not ECU identification or entry into programming mode.
 
-The [MC9S12T64 specification, SCI section](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf#page=424) gives baud = bus clock / (16 × divisor). Its table on PDF page 437 explicitly lists divisor 104 at a 16 MHz bus as 9,615 actual baud for a **9,600-baud target**, with 0.16% error. Divisor 64 yields 15,625 at that bus rate, matching `Communication.cs`'s `ConnectMeter` request (`Baud15625`, lines 1585/1592). Consequently **15,625 for meter/diagnostics and nominal 9,600 for boot** is the supported working interpretation; the latter still depends on the assumed oscillator and actual adapter/ECU validation. Users should not have to enter these rates manually once each connection profile is validated.
+The [MC9S12T64 specification, SCI section](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf#page=424) gives baud = bus clock / (16 × divisor). Its table on PDF page 437 explicitly lists divisor 104 at a 16 MHz bus as 9,615 actual baud for a **9,600-baud target**, with 0.16% error. Divisor 64 yields 15,625 at that bus rate, matching `Communication.cs`'s `ConnectMeter` request (`Baud15625`, lines 1585/1592). Consequently **15,625 for meter/diagnostics and nominal 9,600 for boot** is supported by the register settings. YamahaFlasher's direct 9,600-baud API calls now independently confirm its requested boot rate; actual adapter/ECU operation remains untested here. Users should not have to enter these rates manually once each connection profile is validated.
 
 The present workbench enables only the 15,625-baud receive profile. There is no evidence here of a command that simply switches the dashboard wire to a flashing baud. SCI0 and SCI1 are separate MCU interfaces: conditional 80-pin-package PS0/RxD0 and PS1/TxD0 (67/68), versus PS2/RxD1 and PS3/TxD1 (69/70). Physical routing through the ECU PCB/transceiver to a connector remains unresolved. Existing decompiler warnings around overlapping instructions and flash return flags must also be resolved before trusting live retries.
 

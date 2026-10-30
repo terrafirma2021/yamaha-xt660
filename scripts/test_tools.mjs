@@ -5,6 +5,7 @@ import {resolve,dirname} from 'node:path';
 import {webcrypto} from 'node:crypto';
 import {sha256,baseAddress,inspect,wordSum,differences,readCell,editCell,parseHex,bootReadPreview,READ_LENGTHS,decodeBootFrame,decodeApplicationFrame,verifyStartupChecksum,correctStartupChecksum} from '../site/assets/tools-core.mjs';
 import {SerialCapture} from '../site/assets/tools-serial.mjs';
+import {XT_BOOT_PROFILE,xtReadPlan,BootReadTransaction,XtReadAssembly} from '../site/assets/tools-boot.mjs';
 if(!globalThis.crypto)globalThis.crypto=webcrypto;
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..'),json=p=>JSON.parse(readFileSync(resolve(root,p),'utf8'));
 const registry=json('firmware/registry.json'),decodes=json('analysis/firmware/decode_catalog.json');let cells=0,edits=0;
@@ -70,6 +71,39 @@ for(const [i,address] of [0xF99A,0xF9A2,0xF9A9,0xF9B0,0xF9B7,0xF9BE].entries()){
 }
 assert.deepEqual([...boot.slice(at(0xFDFF),at(0xFE04))],[0x96,0x23,0x40,0x5A,0xCF]);
 assert.deepEqual([...boot.slice(at(0xFE7B),at(0xFE80))],[0x9B,0x23,0x97,0x26,0x0D]);
+// YamahaFlasher's XT path: 116 addressed 512-byte reads, 7 echoed bytes + 517-byte reply.
+assert.equal(XT_BOOT_PROFILE.baudRate,9600);assert.equal(XT_BOOT_PROFILE.hardwareValidated,false);
+const plan=xtReadPlan();assert.equal(plan.length,116);assert.equal(plan.at(-1).address,0xFE00);
+assert.deepEqual([...plan[0].request],[3,2,0,7,0x18,0,0xDC]);
+function readFixture(address,echo=true){
+  const reply=new Uint8Array(517);reply.set([3,0,2,5]);reply.set(boot.subarray(address-0x1800,address-0x1800+512),4);
+  let sum=0;for(let i=0;i<516;i++)sum+=reply[i];reply[516]=(-sum)&255;
+  return echo?Uint8Array.from([...bootReadPreview(address,2),...reply]):reply;
+}
+const wire=readFixture(0x1800);
+for(let split=0;split<wire.length;split++){
+  const tx=new BootReadTransaction(0x1800);tx.feed(wire.slice(0,split));tx.feed(wire.slice(split));
+  assert.deepEqual(tx.finish(),boot.slice(0,512));
+}
+const bytewise=new BootReadTransaction(0x1800);for(const byte of wire)bytewise.feed(Uint8Array.of(byte));
+assert.deepEqual(bytewise.finish(),boot.slice(0,512));
+const direct=new BootReadTransaction(0x1800,{echo:false});direct.feed(readFixture(0x1800,false));assert.ok(direct.complete);
+for(const index of [0,7,8,9,10,100,523]){
+  const corrupt=wire.slice();corrupt[index]^=1;const tx=new BootReadTransaction(0x1800);
+  assert.throws(()=>tx.feed(corrupt));assert.throws(()=>tx.finish());assert.throws(()=>tx.feed(wire));
+}
+const short=new BootReadTransaction(0x1800);short.feed(wire.slice(0,-1));assert.throws(()=>short.finish());
+assert.throws(()=>new BootReadTransaction(0x1800).feed(Uint8Array.from([...wire,0])));
+assert.throws(()=>new BootReadTransaction(0x1800).feed(readFixture(0x1800,false)));
+for(const address of [0,0x1801,0xFFFF,0x10000,NaN])assert.throws(()=>new BootReadTransaction(address));
+assert.throws(()=>new BootReadTransaction(0x1800,{echo:'auto'}));
+const assembly=new XtReadAssembly();assert.throws(()=>assembly.finish());assert.throws(()=>assembly.add(short));
+for(const item of plan.toReversed()){
+  const tx=new BootReadTransaction(item.address);tx.feed(readFixture(item.address));assembly.add(tx);
+  assert.throws(()=>assembly.add(tx));
+}
+assert.equal(assembly.blocksReceived,116);assert.deepEqual(assembly.finish(),boot);
+const isolated=assembly.finish();isolated.fill(0);assert.deepEqual(assembly.finish(),boot);
 // A fake serial adapter proves bounded receive/close without touching hardware.
 function mock(){let controller;const port={opened:0,closed:0,async open(options){this.options=options;this.opened++;this.readable=new ReadableStream({start(c){controller=c}})},async close(){this.closed++},get writable(){throw Error('Transmit access is forbidden')}};return {port,push:b=>controller.enqueue(Uint8Array.from(b)),end:()=>controller.close(),fail:()=>controller.error(Error('USB unplugged'))}}
 const tick=()=>new Promise(r=>setTimeout(r,0));
@@ -77,4 +111,4 @@ let m=mock(),states=[],c=new SerialCapture({limit:5,onState:s=>states.push(s)});
 m=mock();c=new SerialCapture();await c.connect(m.port,9600);m.push([8,9]);await tick();await c.disconnect();assert.equal(c.count,2);assert.equal(m.port.closed,1);
 m=mock();await c.connect(m.port,15625);assert.equal(c.count,0);m.fail();await c.task;assert.match(c.error,/USB unplugged/);assert.equal(m.port.closed,1);
 await assert.rejects(()=>c.connect(mock().port,0));await assert.rejects(()=>c.connect({open:async()=>{throw Error('Port busy')}},15625));assert.equal(c.port,null);assert.equal(c.busy,false);
-console.log(`Tools verified: ${registry.images.length} BIN identities, ${cells} source cells, ${edits} edit/undo/checksum boundaries; compensation bounds, both UART profiles, boot-byte anchors, malformed frames and receive-only serial lifecycle.`);
+console.log(`Tools verified: ${registry.images.length} BIN identities, ${cells} source cells, ${edits} edit/undo/checksum boundaries; 116-block XT assembly, 524 chunk splits, echo/reply validation, compensation bounds, both UART profiles, boot-byte anchors and receive-only serial lifecycle.`);

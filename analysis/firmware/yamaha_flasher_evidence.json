@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "source": {
+    "file": "YamahaFlasher.exe",
+    "size": 729088,
+    "sha256": "706666bf83a737d2a4bc1965c662469fdb2e2d50c6ee01252d9d39065cb9b08c",
+    "format": "PE32 x86 native Visual Basic 6",
+    "image_base": "0x00400000",
+    "executed": false
+  },
+  "scope": "Static evidence from the installed executable extracted from Yamaha ECU V1. No license file analysis, VM boot, executable launch or live ECU transaction.",
+  "handlers": {
+    "read64": "0x00469770",
+    "write64": "0x00470910",
+    "read128": "0x00463480",
+    "write128": "0x0047BFD0"
+  },
+  "xt_read": {
+    "baud": 9600,
+    "data_bits": 8,
+    "parity": "none",
+    "stop_bits": 1,
+    "command": 3,
+    "mode": 2,
+    "start": "0x1800",
+    "end_inclusive": "0xFFFF",
+    "block_size": 512,
+    "blocks": 116,
+    "bytes": 59392,
+    "echo_bytes": 7,
+    "reply_bytes": 517
+  },
+  "xt_write": {
+    "command": 9,
+    "payload_bytes": 2048,
+    "frame_bytes": 2053,
+    "address_parameter": "CPU address >> 8",
+    "success_reply": "09 00 00 05 F2",
+    "hardware_validated": false
+  },
+  "anchors": [
+    {
+      "va": "0x004631F3",
+      "bytes": "68b8164600",
+      "instruction": "push 0x4616b8",
+      "claim": "XT660 read selector string"
+    },
+    {
+      "va": "0x00463435",
+      "bytes": "ff9118070000",
+      "instruction": "call dword ptr [ecx + 0x718]",
+      "claim": "XT read dispatch, slot 718"
+    },
+    {
+      "va": "0x00478FF7",
+      "bytes": "68b8164600",
+      "instruction": "push 0x4616b8",
+      "claim": "XT660 write selector string"
+    },
+    {
+      "va": "0x00479025",
+      "bytes": "ff911c070000",
+      "instruction": "call dword ptr [ecx + 0x71c]",
+      "claim": "XT write dispatch, slot 71C"
+    },
+    {
+      "va": "0x004606FF",
+      "bytes": "e96c900000",
+      "instruction": "jmp 0x469770",
+      "claim": "read64 entry thunk"
+    },
+    {
+      "va": "0x0046070C",
+      "bytes": "e9ff010100",
+      "instruction": "jmp 0x470910",
+      "claim": "write64 entry thunk"
+    },
+    {
+      "va": "0x00465812",
+      "bytes": "6880250000",
+      "instruction": "push 0x2580",
+      "claim": "read128 baud 9600"
+    },
+    {
+      "va": "0x0046581B",
+      "bytes": "e8e4b4ffff",
+      "instruction": "call 0x460d04",
+      "claim": "read128 baud call"
+    },
+    {
+      "va": "0x0046BB60",
+      "bytes": "6880250000",
+      "instruction": "push 0x2580",
+      "claim": "read64 baud 9600"
+    },
+    {
+      "va": "0x0046BB69",
+      "bytes": "e89651ffff",
+      "instruction": "call 0x460d04",
+      "claim": "read64 baud call"
+    },
+    {
+      "va": "0x00472E44",
+      "bytes": "6880250000",
+      "instruction": "push 0x2580",
+      "claim": "write64 baud 9600"
+    },
+    {
+      "va": "0x00472E4D",
+      "bytes": "e8b2defeff",
+      "instruction": "call 0x460d04",
+      "claim": "write64 baud call"
+    },
+    {
+      "va": "0x0047E505",
+      "bytes": "6880250000",
+      "instruction": "push 0x2580",
+      "claim": "write128 baud 9600"
+    },
+    {
+      "va": "0x0047E50E",
+      "bytes": "e8f127feff",
+      "instruction": "call 0x460d04",
+      "claim": "write128 baud call"
+    },
+    {
+      "va": "0x00472F2D",
+      "bytes": "33c9",
+      "instruction": "xor ecx, ecx",
+      "claim": "parity zero"
+    },
+    {
+      "va": "0x00472F36",
+      "bytes": "33c9",
+      "instruction": "xor ecx, ecx",
+      "claim": "stop bits zero"
+    },
+    {
+      "va": "0x00472F3F",
+      "bytes": "b908000000",
+      "instruction": "mov ecx, 8",
+      "claim": "data bits eight"
+    },
+    {
+      "va": "0x00472F52",
+      "bytes": "e8e5e0feff",
+      "instruction": "call 0x46103c",
+      "claim": "FT_SetDataCharacteristics call"
+    },
+    {
+      "va": "0x0046BC49",
+      "bytes": "33c9",
+      "instruction": "xor ecx, ecx",
+      "claim": "read parity zero"
+    },
+    {
+      "va": "0x0046BC52",
+      "bytes": "33c9",
+      "instruction": "xor ecx, ecx",
+      "claim": "read stop bits zero"
+    },
+    {
+      "va": "0x0046BC5B",
+      "bytes": "b908000000",
+      "instruction": "mov ecx, 8",
+      "claim": "read data bits eight"
+    },
+    {
+      "va": "0x0046BC6E",
+      "bytes": "e8c953ffff",
+      "instruction": "call 0x46103c",
+      "claim": "read FT_SetDataCharacteristics call"
+    },
+    {
+      "va": "0x0046C63E",
+      "bytes": "c785ecfdffff01000000",
+      "instruction": "mov dword ptr [ebp - 0x214], 1",
+      "claim": "session command 01"
+    },
+    {
+      "va": "0x0046C827",
+      "bytes": "c785ecfdffff15000000",
+      "instruction": "mov dword ptr [ebp - 0x214], 0x15",
+      "claim": "session frame length 21"
+    },
+    {
+      "va": "0x0046D7D3",
+      "bytes": "b802000000",
+      "instruction": "mov eax, 2",
+      "claim": "service command 02"
+    },
+    {
+      "va": "0x0046DA65",
+      "bytes": "c785ecfdfffff8000000",
+      "instruction": "mov dword ptr [ebp - 0x214], 0xf8",
+      "claim": "service frame checksum F8"
+    },
+    {
+      "va": "0x0046ECC0",
+      "bytes": "c7855cffffff00e80000",
+      "instruction": "mov dword ptr [ebp - 0xa4], 0xe800",
+      "claim": "read buffer length E800"
+    },
+    {
+      "va": "0x0046EDE4",
+      "bytes": "b9ffe70000",
+      "instruction": "mov ecx, 0xe7ff",
+      "claim": "read final offset E7FF"
+    },
+    {
+      "va": "0x0046EF55",
+      "bytes": "bb00180000",
+      "instruction": "mov ebx, 0x1800",
+      "claim": "read base 1800"
+    },
+    {
+      "va": "0x0046F051",
+      "bytes": "b903000000",
+      "instruction": "mov ecx, 3",
+      "claim": "read command 03"
+    },
+    {
+      "va": "0x0046F0A9",
+      "bytes": "b902000000",
+      "instruction": "mov ecx, 2",
+      "claim": "read mode 02"
+    },
+    {
+      "va": "0x0046F174",
+      "bytes": "b907000000",
+      "instruction": "mov ecx, 7",
+      "claim": "read request length 7"
+    },
+    {
+      "va": "0x0046F32C",
+      "bytes": "6a07",
+      "instruction": "push 7",
+      "claim": "FT_Write request count 7"
+    },
+    {
+      "va": "0x0046F336",
+      "bytes": "e80d1affff",
+      "instruction": "call 0x460d48",
+      "claim": "FT_Write read request"
+    },
+    {
+      "va": "0x0046F5A9",
+      "bytes": "83f807",
+      "instruction": "cmp eax, 7",
+      "claim": "skip seven echo bytes"
+    },
+    {
+      "va": "0x0046F5FE",
+      "bytes": "83f80b",
+      "instruction": "cmp eax, 0xb",
+      "claim": "skip echo and four response header bytes"
+    },
+    {
+      "va": "0x0046F603",
+      "bytes": "3d0c020000",
+      "instruction": "cmp eax, 0x20c",
+      "claim": "exclude checksum at one-based position 524"
+    },
+    {
+      "va": "0x004702B4",
+      "bytes": "b800020000",
+      "instruction": "mov eax, 0x200",
+      "claim": "read increment 512"
+    },
+    {
+      "va": "0x004775FA",
+      "bytes": "c1f908",
+      "instruction": "sar ecx, 8",
+      "claim": "write parameter is address high byte"
+    },
+    {
+      "va": "0x0047765D",
+      "bytes": "b909000000",
+      "instruction": "mov ecx, 9",
+      "claim": "write command 09"
+    },
+    {
+      "va": "0x004776EE",
+      "bytes": "b908000000",
+      "instruction": "mov ecx, 8",
+      "claim": "write length high byte 08"
+    },
+    {
+      "va": "0x00477736",
+      "bytes": "b905000000",
+      "instruction": "mov ecx, 5",
+      "claim": "write length low byte 05"
+    },
+    {
+      "va": "0x0047778F",
+      "bytes": "baff070000",
+      "instruction": "mov edx, 0x7ff",
+      "claim": "payload final offset 7FF"
+    },
+    {
+      "va": "0x00477A09",
+      "bytes": "6805080000",
+      "instruction": "push 0x805",
+      "claim": "FT_Write count 2053"
+    },
+    {
+      "va": "0x00477A16",
+      "bytes": "e82d93feff",
+      "instruction": "call 0x460d48",
+      "claim": "FT_Write programming block"
+    },
+    {
+      "va": "0x00478802",
+      "bytes": "b800080000",
+      "instruction": "mov eax, 0x800",
+      "claim": "programming address increment 2048"
+    },
+    {
+      "va": "0x004601AC",
+      "bytes": "ff064600",
+      "claim": "read64 method pointer"
+    },
+    {
+      "va": "0x004601B0",
+      "bytes": "0c074600",
+      "claim": "write64 method pointer"
+    },
+    {
+      "va": "0x004616B8",
+      "bytes": "580054003600360030000000",
+      "claim": "XT660 UTF16 label"
+    },
+    {
+      "va": "0x004619E4",
+      "bytes": "30003900300030003000300030003500460032000000",
+      "claim": "successful command09 reply as UTF16 hex"
+    }
+  ],
+  "limits": [
+    "Read/write selector and native byte evidence are distinct from bench validation.",
+    "The four large handlers do not all decompile cleanly; claims are anchored to native instructions.",
+    "All timing/retry branches and physical connector routing are not fully reconstructed here.",
+    "The write loop includes F800-FFFF; it must not be applied indiscriminately to FF-placeholder BINs.",
+    "No third-party executable or full decompilation is distributed."
+  ],
+  "session_record": {
+    "form_control": "Text1",
+    "exe_file_offset": "0x5F2F1",
+    "encoding": "32 ASCII hex characters",
+    "firmware_file": "firmware/images/xt660-2004-2006-companion.bin",
+    "firmware_sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+    "cpu_address": "0xFF10",
+    "bytes": 16,
+    "exact_match": true,
+    "record_sha256": "eb18f8dd08e5f450ccc33f20b75d33d5d55785490c3d9fd03c5d8c4c641a9a40"
+  }
+}
