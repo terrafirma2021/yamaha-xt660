@@ -1,4 +1,4 @@
-import {hex,sha256,inspect,baseAddress,differences,readCell,editCell,parseHex,hexBytes,bootReadPreview,READ_LENGTHS,decodeBootFrame,decodeApplicationFrame,verifyStartupChecksum,correctStartupChecksum} from './tools-core.mjs';
+import {hex,sha256,inspect,baseAddress,differences,readCell,editCell,verifyStartupChecksum,correctStartupChecksum} from './tools-core.mjs';
 import {SerialCapture} from './tools-serial.mjs';
 const $=id=>document.getElementById(id),root=new URL('../',import.meta.url);
 const error=e=>{$('tool-error').textContent=e.message||String(e);$('tool-error').hidden=false};
@@ -81,8 +81,6 @@ $('edit-undo').addEventListener('click',guarded(()=>{const change=undo.pop();if(
 $('edit-reset').addEventListener('click',guarded(()=>{draft=original.slice();undo=[];updateChecksum();renderGrid();controls()}));
 $('draft-save').addEventListener('click',guarded(()=>{const verified=updateChecksum();controls();if(verified?.status!=='pass')throw Error('Save stopped: startup checksum is not verified');save(filename.replace(/\.bin$/i,'')+'.draft.bin',draft)}));
 $('draft-report').addEventListener('click',guarded(async()=>jsonSave(filename+'.changes.json',await report())));
-$('frame-decode').addEventListener('click',guarded(()=>{$('frame-result').textContent='';const bytes=parseHex($('frame-bytes').value);$('frame-result').textContent=JSON.stringify(($('frame-type').value==='boot'?decodeBootFrame:decodeApplicationFrame)(bytes),null,2)}));
-$('read-preview').addEventListener('click',guarded(()=>{const text=$('read-address').value.trim().replace(/^0x/i,'');if(!/^[0-9a-f]{1,4}$/i.test(text))throw Error('Enter a 16-bit hexadecimal CPU address');const mode=Number($('read-mode').value),packet=bootReadPreview(parseInt(text,16),mode);$('read-result').textContent=`Offline preview: ${hexBytes(packet)}\nExpected read payload: ${READ_LENGTHS[mode]} bytes. A matching boot session and hardware route are required. Nothing transmitted.`}));
 let terminalTail='';
 const capture=new SerialCapture({onChunk:(item,count)=>{terminalTail=(terminalTail+`${item.elapsed_ms} ms  RX  ${item.bytes}\n`).slice(-12000);if($('terminal-toggle').checked)$('serial-log').textContent=terminalTail;$('serial-status').textContent=`Receiving: ${count.toLocaleString()} bytes · no transmitted data`;$('serial-save').disabled=false},onState:state=>{$('serial-status').textContent=state;$('serial-stop').disabled=!capture.port;$('serial-connect').disabled=!!capture.port}});
 $('terminal-toggle').addEventListener('change',()=>{$('serial-terminal').hidden=!$('terminal-toggle').checked;if($('terminal-toggle').checked)$('serial-log').textContent=terminalTail});
