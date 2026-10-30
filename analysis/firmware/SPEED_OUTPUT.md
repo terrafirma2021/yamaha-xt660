@@ -4,6 +4,8 @@ The editor applies a **fixed integer pulse offset from −20 to +20 per dashboar
 
 ## Placement and memory
 
+The Features panel now has two Enabled/Disabled rows. **Speedo disable: Enabled** selects zero output; Disabled allows the normal or offset-adjusted speed byte. **Speedo pulse offset: Enabled** applies the selected nonzero integer; Disabled restores offset zero. Changes to the number apply on commit while the offset is enabled. Zero means no adjustment, so its detected state is Disabled. The page may remember a previously entered amount for re-enabling, but radio states come from the BIN bytes. Both controls preserve the other setting, participate in undo/redo and automatic checksum correction, and remain unavailable for an unsupported BIN. The existing patch bytes and metadata format are unchanged.
+
 | Family | Original load → store | Captured pulse byte | Outgoing speed byte | Reserved ROM patch block |
 |---|---|---|---|---|
 | Early | `6341 → 6344` | `0AE3` | `08A7` | `4FA6–4FBD` (24 bytes) |

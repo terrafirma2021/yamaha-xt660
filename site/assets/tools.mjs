@@ -7,7 +7,7 @@ const $=id=>document.getElementById(id),root=new URL('../',import.meta.url);
 const error=e=>{$('tool-error').textContent=e.message||String(e);$('tool-error').hidden=false};
 const guarded=fn=>async event=>{try{$('tool-error').hidden=true;await fn(event)}catch(e){error(e)}};
 let original=null,draft=null,identity=null,maps=[],base=0,filename='',hash='',selected=null,cell=0,undo=[],redo=[],generation=0,loading=false,origin='',repositoryImages=[];
-let matchMethod='none';
+let matchMethod='none',speedOffsetChoice=0;
 const referenceCache=new Map();
 async function referenceBin(image){
   if(!referenceCache.has(image.id))referenceCache.set(image.id,(async()=>{
@@ -62,13 +62,14 @@ function controls(){const checked=!!identity&&!!draft&&verifyStartupChecksum(dra
 function renderSpeed(){
   const s=speedState(draft,identity),ready=s.editable&&!loading;
   $('speed-output-row').dataset.available=String(ready);
-  $('speed-form').dataset.available=String(ready&&s.enabled);
-  for(const id of ['speed-enabled','speed-disabled','speed-apply'])$(id).disabled=!ready;
-  $('speed-offset').disabled=!ready||!s.enabled;
-  $('speed-apply').disabled=!ready||!s.enabled;
-  $('speed-enabled').checked=s.enabled===true;$('speed-disabled').checked=s.enabled===false;
-  $('speed-offset').value=s.offset??0;
-  $('speed-status').textContent=!ready?'No supported BIN loaded, or speed patch bytes are unverified.':s.enabled?`Enabled · ${s.offset>0?'+':''}${s.offset} pulses per reply. Zero remains zero; bounds 0–255. Hardware untested.`:'Disabled · speed field sends zero. Other reply fields continue normally. Hardware untested.';
+  $('speed-form').dataset.available=String(ready);
+  for(const id of ['speed-disable-enabled','speed-disable-disabled','speed-offset-enabled','speed-offset-disabled','speed-offset'])$(id).disabled=!ready;
+  $('speed-disable-enabled').checked=s.enabled===false;$('speed-disable-disabled').checked=s.enabled===true;
+  $('speed-offset-enabled').checked=s.editable&&s.offset!==0;$('speed-offset-disabled').checked=s.editable&&s.offset===0;
+  if(s.editable&&s.offset!==0)speedOffsetChoice=s.offset;
+  $('speed-offset').value=speedOffsetChoice;
+  $('speed-status').textContent=!ready?'No supported BIN loaded, or speed patch bytes are unverified.':'';
+  $('speed-status').hidden=ready;
 }
 function applySpeed(enabled,offset){
   if(loading)return;
@@ -76,8 +77,31 @@ function applySpeed(enabled,offset){
   if(change.changes.length)record(change);
   updateChecksum();controls();
 }
-$('speed-form').addEventListener('submit',guarded(event=>{event.preventDefault();if($('speed-offset').value.trim()==='')throw Error('Enter a whole pulse offset');applySpeed(true,Number($('speed-offset').value))}));
-for(const enabled of [true,false])$('speed-'+(enabled?'enabled':'disabled')).addEventListener('change',guarded(()=>applySpeed(enabled,speedState(draft,identity).offset)));
+function readSpeedOffset(){
+  const input=$('speed-offset'),value=Number(input.value);
+  if(input.value.trim()===''||!Number.isInteger(value)||value< -20||value>20)throw Error('Enter a whole pulse offset from −20 to +20.');
+  return value;
+}
+function editSpeedOffset(){
+  speedOffsetChoice=readSpeedOffset();
+  const s=speedState(draft,identity);
+  if(s.editable&&s.offset!==0)applySpeed(s.enabled,speedOffsetChoice);
+}
+const speedGuarded=fn=>guarded(event=>{
+  try{return fn(event)}catch(e){renderSpeed();$('speed-status').hidden=false;$('speed-status').textContent=e.message;throw e;}
+});
+$('speed-offset').addEventListener('change',speedGuarded(editSpeedOffset));
+$('speed-form').addEventListener('submit',speedGuarded(event=>{event.preventDefault();editSpeedOffset()}));
+for(const enabled of [true,false]){
+  $('speed-disable-'+(enabled?'enabled':'disabled')).addEventListener('change',speedGuarded(()=>{
+    const s=speedState(draft,identity);applySpeed(!enabled,s.offset);
+  }));
+  $('speed-offset-'+(enabled?'enabled':'disabled')).addEventListener('change',speedGuarded(()=>{
+    const s=speedState(draft,identity),offset=enabled?readSpeedOffset():0;
+    if(enabled&&offset===0)throw Error('Choose a non-zero pulse offset before enabling. Zero means no adjustment.');
+    applySpeed(s.enabled,offset);
+  }));
+}
 function updateChecksum(){
   if(!original||!draft)return;
   const source=verifyStartupChecksum(original,identity);let result=verifyStartupChecksum(draft,identity);
@@ -90,7 +114,7 @@ function updateChecksum(){
 }
 async function report(){updateChecksum();const a=original.slice(),b=draft.slice(),changed=differences(a,b,base),snapshot={schema_version:1,source_name:filename,source_sha256:hash,registered_firmware:identity?.id||null,identity_match:matchMethod,speed_output:{...speedState(b,identity),unit:"pulses per reply",hardware_verified:false},features:featureStates(b,identity).map(f=>({id:f.id,state:f.state,legacy_threshold_patch:f.legacyPatch,hardware_verified:false})),source:inspect(a),origin,draft:inspect(b),changed_bytes:changed,source_checksum:verifyStartupChecksum(a,identity),draft_checksum:verifyStartupChecksum(b,identity),checksum_repaired:changed.some(c=>c.address===0xF7FC||c.address===0xF7FD),checksum_method:'Analyst-selected trailer compensation at 0xF7FC; startup range only',flash_ready:false};return {...snapshot,draft_sha256:await sha256(b)}}
 async function openBin(name,readBytes,source,expected=null){
-  const token=++generation;loading=true;matchMethod='none';$('feature-status').textContent='Opening BIN…';original=draft=identity=selected=null;maps=[];undo=[];redo=[];$('bin-status').textContent='Opening '+name+'…';$('tune-grid').replaceChildren();$('bin-facts').replaceChildren();$('tune-map').replaceChildren(new Option('Open a registered BIN first',''));$('compare-file').value='';$('compare-status').textContent='';$('tune-status').textContent='';$('edit-status').textContent='';$('checksum-status').textContent='No BIN checked.';$('checksum-status').dataset.status='unverified';$('checksum-detail').textContent='';$('cell-info').textContent='Select a cell to edit.';controls();
+  const token=++generation;loading=true;matchMethod='none';speedOffsetChoice=0;$('feature-status').textContent='Opening BIN…';original=draft=identity=selected=null;maps=[];undo=[];redo=[];$('bin-status').textContent='Opening '+name+'…';$('tune-grid').replaceChildren();$('bin-facts').replaceChildren();$('tune-map').replaceChildren(new Option('Open a registered BIN first',''));$('compare-file').value='';$('compare-status').textContent='';$('tune-status').textContent='';$('edit-status').textContent='';$('checksum-status').textContent='No BIN checked.';$('checksum-status').dataset.status='unverified';$('checksum-detail').textContent='';$('cell-info').textContent='Select a cell to edit.';controls();
   try{
     const bytes=new Uint8Array(await readBytes());
     if(![65536,59392].includes(bytes.length))throw Error('This tool accepts the two known BIN sizes: 65,536 or 59,392 bytes');
