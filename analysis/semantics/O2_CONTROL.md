@@ -2,7 +2,7 @@
 
 **O2 off does not select a different main fuel map in the registered late application.** It disables feedback eligibility and new O2 fault detection. The ordinary load/throttle fuel calculations and their other corrections continue. This conclusion comes from the setting's four code consumers and the downstream fuel calculation, not from an XDF label.
 
-The [Tools feature controls](../../tools/index.html#tune) expose the setting only for the four registered late-application BINs. The five early-application BINs have no configured feedback in their supplied calibration; their O2 row is disabled and read-only. Hardware behaviour has not been bench-tested.
+The [Tools feature controls](https://terrafirma2021.github.io/yamaha-xt660/tools/index.html#tune) expose the setting only for the four registered late-application BINs. The five early-application BINs have no configured feedback in their supplied calibration; their O2 row is disabled and read-only. Hardware behaviour has not been bench-tested.
 
 ## Direct master setting
 
