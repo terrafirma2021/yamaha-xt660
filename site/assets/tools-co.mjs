@@ -18,7 +18,6 @@ const guards=(address,hex)=>hex.match(/../g).map((v,i)=>[address+i,parseInt(v,16
 export function coDefinition(identity){
   const f=coLayouts[identity?.code_family];
   return {id:'co-range',name:'CO full-range override',mapBacked:true,
-    detail:'Enabled keeps the dashboard CO fuel correction at full strength across the normal running rev range. Disabled restores the stock fade-out. This is an additive fuel correction, not a fixed percentage; spark timing is unchanged.',
     ...(f?{
       bytes:Array.from({length:15},(_,i)=>({address:f.descriptor+6+i,on:255,off:i<13?255:0})),
       guards:[...guards(f.descriptor,'14001c000080'),...f.code.flatMap(([a,hex])=>guards(a,hex))]
