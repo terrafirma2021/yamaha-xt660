@@ -154,13 +154,22 @@ def late_layouts(image):
                                             consumers=['0xE40C','0xE536','0xF050','0xF12B'],
                                             axis_caveat='Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware.'))
             m['physical_role']+=' Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.'
+            m['software_units']=dict(full_scale=10000 if b==0x44bb else 1000,
+                                     meaning='Internal demand fraction of the selected 12/24-event scheduling window; not mechanical actuator position',
+                                     percent_formula='raw / 100' if b==0x44bb else 'raw / 10',
+                                     domain='decrement' if b in (0x4499,0x44bb) else 'requested demand before clamps')
+            m['physical_role']+=' Internal full scale is '+('10000 in the retained accumulator' if b==0x44bb else '1000 demand counts')+'; this defines a scheduling fraction, not an actuator opening percentage.'
         elif b==0x4519:
             m.update(inputs=['Selected speed code at RAM 0x0920','Filtered relative-throttle code at RAM 0x08F0'],
                      output='0x0D5C map target; selected target 0x0D5A / 0x0D5B; ADC7 feedback 0x08E4; PORTB bits 6 and 7',
-                     units='position-feedback target code (u8)',
-                     physical_role='The selected target is compared with ADC7 feedback and drives paired PORTB bits 6/7. Stored deadbands are +/-1 and +/-7 target-code counts. All 144 cells are 55 in every supplied later BIN. Startup, fixed-target, held-target and recovery paths can replace the map result. The software role is traced; the attached actuator, physical position scale and direction are not established.',
+                     units='ADC7 high-byte target code (ADC10 // 4)',
+                     physical_role='The selected target is compared with ADC7 feedback and drives paired PORTB bits 6/7. Feedback = ADC10 // 4, so target 55 represents 10-bit ADC codes 220..223. Stored deadbands are +/-1 and +/-7 target-code counts. All 144 cells and stored startup/fixed/stopped/mode targets are 55 in every supplied later BIN. The complete shared mode sequence and output timeout/retry are replay-checked: the supplied mode changes ignition, leaves its extra fuel gain disabled and keeps this target at 55. Actuator identity, sensor angle and PCB connection need hardware evidence; they are not encoded in this electrical scale.',
+                     software_units=dict(formula='ADC10 // 4',target_adc10_low='raw * 4',target_adc10_high='raw * 4 + 3',
+                                         domain='Left-aligned 10-bit conversion, high byte used by feedback comparison; not mechanical degrees'),
                      software_evidence=dict(report='analysis/firmware/late_auxiliary_validation.json',consumers=['0x939C','0x93DE','0x96EA','0xAED0','0xAFD3'],
-                                            throttle_source=['0x80A7','0x80DA','0x80FC'],feedback_source='0x6B29'))
+                                            throttle_source=['0x80A7','0x80DA','0x80FC'],feedback_source='0x6B29',
+                                            mode_report='analysis/firmware/late_mode_validation.json',mode_block=['0x8CF6','0x8FAD'],
+                                            output_inhibit=['0xA837','0xA8BD']))
     return maps,axes,loads,ins
 
 def hydrate(m,image):

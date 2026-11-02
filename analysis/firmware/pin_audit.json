@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "source_sha256": "44d08aa1f2291d75681a93f462271c376f3f02fe9ce2d3778eb037baef0c521a",
+  "source_sha256": "6df325245bd21af4f545a6f26f832666687c1a7f5183c09c350828a54d7fd600",
   "configuration_source_sha256": "d37ef91fcb2c5a2df95ff79c3db33148d363ef7b2e98cb7f168ab16119703683",
   "package": {
     "schema_version": 1,
@@ -9323,12 +9323,15 @@
           "signal": "PB6",
           "category": "internal",
           "status": "Decoded",
-          "role": "Port-B paired output; purpose unresolved",
-          "function": "Bits 6/7 are emitted through a shared PORTB write. Their observed software use does not establish an external accessory or UART route.",
+          "role": "Position-feedback controller output",
+          "function": "Paired PB6/PB7 outputs compare ADC7 feedback 0x08E4 with the selected target from map 0x451C and its overrides. The driver includes deadbands, pulsing and timeout/retry inhibition. All supplied later targets are 55. This proves the controller role, not an external actuator identity or board route; see FAMILY_DECODING.md.",
           "register": "PORTB bit 6",
           "evidence": [
             "0x4824",
             "0x4826",
+            "0x93DB",
+            "0xA856",
+            "0xAED0",
             "0xAF8D",
             "0xAF8F",
             "0xAF91",
@@ -9351,6 +9354,21 @@
               "address": "0x4826",
               "bytes": "5a03",
               "instruction": "STAA 0x0003"
+            },
+            {
+              "address": "0x93DB",
+              "bytes": "7a0d5c",
+              "instruction": "STAA 0xd5c"
+            },
+            {
+              "address": "0xA856",
+              "bytes": "1c0d5920",
+              "instruction": "BSET 0xd59,0x20"
+            },
+            {
+              "address": "0xAED0",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
             },
             {
               "address": "0xAF8D",
@@ -9433,6 +9451,21 @@
               "address": "0x4826",
               "bytes": "5a03",
               "instruction": "STAA 0x0003"
+            },
+            {
+              "address": "0xAED0",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
+            },
+            {
+              "address": "0x93DB",
+              "bytes": "7a0d5c",
+              "instruction": "STAA 0xd5c"
+            },
+            {
+              "address": "0xA856",
+              "bytes": "1c0d5920",
+              "instruction": "BSET 0xd59,0x20"
             }
           ],
           "ecu_connector_positions": [],
@@ -9446,12 +9479,15 @@
           "signal": "PB7",
           "category": "internal",
           "status": "Decoded",
-          "role": "Port-B paired output; purpose unresolved",
-          "function": "Bits 6/7 are emitted through a shared PORTB write. Their observed software use does not establish an external accessory or UART route.",
+          "role": "Position-feedback controller output",
+          "function": "Paired PB6/PB7 outputs compare ADC7 feedback 0x08E4 with the selected target from map 0x451C and its overrides. The driver includes deadbands, pulsing and timeout/retry inhibition. All supplied later targets are 55. This proves the controller role, not an external actuator identity or board route; see FAMILY_DECODING.md.",
           "register": "PORTB bit 7",
           "evidence": [
             "0x4824",
             "0x4826",
+            "0x93DB",
+            "0xA856",
+            "0xAED0",
             "0xAF8D",
             "0xAF8F",
             "0xAF91",
@@ -9474,6 +9510,21 @@
               "address": "0x4826",
               "bytes": "5a03",
               "instruction": "STAA 0x0003"
+            },
+            {
+              "address": "0x93DB",
+              "bytes": "7a0d5c",
+              "instruction": "STAA 0xd5c"
+            },
+            {
+              "address": "0xA856",
+              "bytes": "1c0d5920",
+              "instruction": "BSET 0xd59,0x20"
+            },
+            {
+              "address": "0xAED0",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
             },
             {
               "address": "0xAF8D",
@@ -9557,6 +9608,21 @@
               "address": "0x4826",
               "bytes": "5a03",
               "instruction": "STAA 0x0003"
+            },
+            {
+              "address": "0xAED0",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
+            },
+            {
+              "address": "0x93DB",
+              "bytes": "7a0d5c",
+              "instruction": "STAA 0xd5c"
+            },
+            {
+              "address": "0xA856",
+              "bytes": "1c0d5920",
+              "instruction": "BSET 0xd59,0x20"
             }
           ],
           "datasheet_pages": [
@@ -12358,8 +12424,8 @@
           "signal": "PAD7/AN7/ETRIG",
           "category": "sensor",
           "status": "Decoded",
-          "role": "Additional analog input; destination unresolved",
-          "function": "Channel selection and the handler are checked in the late BIN. Channel 7 is sampled in the normal late sequence, unlike the early sequence.",
+          "role": "Position-controller analog feedback",
+          "function": "Channel 7 is sampled normally. The controller uses the high byte of the left-aligned 10-bit result: feedback = ADC10 // 4. Target 55 represents ADC codes 220..223. This is an electrical code relationship; sensor angle, reference voltage and PCB connection remain unmeasured.",
           "register": "ATD channel 7; selector 0x0085; dispatch 0x61B6",
           "evidence": [
             "0x6136",
@@ -12368,7 +12434,10 @@
             "0x6142",
             "0x6147",
             "0x6199",
-            "0x6B29"
+            "0x6B29",
+            "0xAED0",
+            "0xAED3",
+            "0xAF3B"
           ],
           "ram": [
             "0x08E4"
@@ -12411,6 +12480,21 @@
               "address": "0x6B29",
               "bytes": "7a08e4",
               "instruction": "STAA 0x8e4"
+            },
+            {
+              "address": "0xAED0",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
+            },
+            {
+              "address": "0xAED3",
+              "bytes": "b10d5d",
+              "instruction": "CMPA 0xd5d"
+            },
+            {
+              "address": "0xAF3B",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
             }
           ],
           "ecu_connector_positions": [],
@@ -12454,6 +12538,21 @@
               "address": "0x6B29",
               "bytes": "7a08e4",
               "instruction": "STAA 0x8e4"
+            },
+            {
+              "address": "0xAED0",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
+            },
+            {
+              "address": "0xAED3",
+              "bytes": "b10d5d",
+              "instruction": "CMPA 0xd5d"
+            },
+            {
+              "address": "0xAF3B",
+              "bytes": "b608e4",
+              "instruction": "LDAA 0x8e4"
             }
           ],
           "datasheet_pages": [

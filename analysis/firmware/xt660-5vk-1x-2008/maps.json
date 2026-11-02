@@ -7295,7 +7295,7 @@
     "element_bytes": 1,
     "byte_order": "big",
     "kind": "2D_grid",
-    "units": "position-feedback target code (u8)",
+    "units": "ADC7 high-byte target code (ADC10 // 4)",
     "calls": [
       {
         "pointer_load": "0x93D0",
@@ -7412,7 +7412,13 @@
         ]
       }
     ],
-    "physical_role": "The selected target is compared with ADC7 feedback and drives paired PORTB bits 6/7. Stored deadbands are +/-1 and +/-7 target-code counts. All 144 cells are 55 in every supplied later BIN. Startup, fixed-target, held-target and recovery paths can replace the map result. The software role is traced; the attached actuator, physical position scale and direction are not established.",
+    "physical_role": "The selected target is compared with ADC7 feedback and drives paired PORTB bits 6/7. Feedback = ADC10 // 4, so target 55 represents 10-bit ADC codes 220..223. Stored deadbands are +/-1 and +/-7 target-code counts. All 144 cells and stored startup/fixed/stopped/mode targets are 55 in every supplied later BIN. The complete shared mode sequence and output timeout/retry are replay-checked: the supplied mode changes ignition, leaves its extra fuel gain disabled and keeps this target at 55. Actuator identity, sensor angle and PCB connection need hardware evidence; they are not encoded in this electrical scale.",
+    "software_units": {
+      "formula": "ADC10 // 4",
+      "target_adc10_low": "raw * 4",
+      "target_adc10_high": "raw * 4 + 3",
+      "domain": "Left-aligned 10-bit conversion, high byte used by feedback comparison; not mechanical degrees"
+    },
     "software_evidence": {
       "report": "analysis/firmware/late_auxiliary_validation.json",
       "consumers": [
@@ -7427,7 +7433,16 @@
         "0x80DA",
         "0x80FC"
       ],
-      "feedback_source": "0x6B29"
+      "feedback_source": "0x6B29",
+      "mode_report": "analysis/firmware/late_mode_validation.json",
+      "mode_block": [
+        "0x8CF6",
+        "0x8FAD"
+      ],
+      "output_inhibit": [
+        "0xA837",
+        "0xA8BD"
+      ]
     },
     "raw_values": [
       [
@@ -7704,7 +7719,7 @@
         ]
       }
     ],
-    "physical_role": "Initial demand copied to the current demand and retained for first-event reload. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "physical_role": "Initial demand copied to the current demand and retained for first-event reload. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes. Internal full scale is 1000 demand counts; this defines a scheduling fraction, not an actuator opening percentage.",
     "software_evidence": {
       "report": "analysis/firmware/late_auxiliary_validation.json",
       "gate": {
@@ -7720,6 +7735,12 @@
         "0xF12B"
       ],
       "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
+    "software_units": {
+      "full_scale": 1000,
+      "meaning": "Internal demand fraction of the selected 12/24-event scheduling window; not mechanical actuator position",
+      "percent_formula": "raw / 10",
+      "domain": "requested demand before clamps"
     },
     "raw_values": [
       [
@@ -7841,7 +7862,7 @@
         ]
       }
     ],
-    "physical_role": "Hold demand that ends the initial rundown and supplies the hold state. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "physical_role": "Hold demand that ends the initial rundown and supplies the hold state. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes. Internal full scale is 1000 demand counts; this defines a scheduling fraction, not an actuator opening percentage.",
     "software_evidence": {
       "report": "analysis/firmware/late_auxiliary_validation.json",
       "gate": {
@@ -7857,6 +7878,12 @@
         "0xF12B"
       ],
       "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
+    "software_units": {
+      "full_scale": 1000,
+      "meaning": "Internal demand fraction of the selected 12/24-event scheduling window; not mechanical actuator position",
+      "percent_formula": "raw / 10",
+      "domain": "requested demand before clamps"
     },
     "raw_values": [
       [
@@ -7978,7 +8005,7 @@
         ]
       }
     ],
-    "physical_role": "Rundown decrement copied to 0x0AC0 on state entry, then subtracted from current demand on qualified crank events. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "physical_role": "Rundown decrement copied to 0x0AC0 on state entry, then subtracted from current demand on qualified crank events. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes. Internal full scale is 1000 demand counts; this defines a scheduling fraction, not an actuator opening percentage.",
     "software_evidence": {
       "report": "analysis/firmware/late_auxiliary_validation.json",
       "gate": {
@@ -7994,6 +8021,12 @@
         "0xF12B"
       ],
       "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
+    "software_units": {
+      "full_scale": 1000,
+      "meaning": "Internal demand fraction of the selected 12/24-event scheduling window; not mechanical actuator position",
+      "percent_formula": "raw / 10",
+      "domain": "decrement"
     },
     "raw_values": [
       [
@@ -8115,7 +8148,7 @@
         ]
       }
     ],
-    "physical_role": "Decrement for retained demand 0x0ABE while PWM output is suspended. That accumulator stores ten times the ordinary demand. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "physical_role": "Decrement for retained demand 0x0ABE while PWM output is suspended. That accumulator stores ten times the ordinary demand. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes. Internal full scale is 10000 in the retained accumulator; this defines a scheduling fraction, not an actuator opening percentage.",
     "software_evidence": {
       "report": "analysis/firmware/late_auxiliary_validation.json",
       "gate": {
@@ -8131,6 +8164,12 @@
         "0xF12B"
       ],
       "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
+    "software_units": {
+      "full_scale": 10000,
+      "meaning": "Internal demand fraction of the selected 12/24-event scheduling window; not mechanical actuator position",
+      "percent_formula": "raw / 100",
+      "domain": "decrement"
     },
     "raw_values": [
       [

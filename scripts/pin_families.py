@@ -69,8 +69,8 @@ def late_pins(primary, rows):
     put(21, 'Starter-request input', 'PORTB bit 1 -> filtered 0x0898', [0x7EAF, 0x7EC1, 0xC263, 0xC27A, 0x4824, 0x4826], [0x898, 0x880], status='Candidate')
     put(24, 'Neutral input', 'PORTB bit 4 -> 0x0898 -> 0x088F bit 7', [0x7EAF, 0x7EC1, 0x7F0C, 0x7F19, 0x5D5E, 0x4824, 0x4826], [0x898, 0x88F], 21)
     for n in (26, 27):
-        put(n, 'Port-B paired output; purpose unresolved', f'PORTB bit {n-20}', [0xAF8D, 0xAF8F, 0xAF91, 0xAFB1, 0xAFB3, 0xAFB5, 0xAFCE, 0x4824, 0x4826], category='internal',
-            note='Bits 6/7 are emitted through a shared PORTB write. Their observed software use does not establish an external accessory or UART route.')
+        put(n, 'Position-feedback controller output', f'PORTB bit {n-20}', [0xAF8D, 0xAF8F, 0xAF91, 0xAFB1, 0xAFB3, 0xAFB5, 0xAFCE, 0x4824, 0x4826, 0xAED0, 0x93DB, 0xA856], category='internal',
+            note='Paired PB6/PB7 outputs compare ADC7 feedback 0x08E4 with the selected target from map 0x451C and its overrides. The driver includes deadbands, pulsing and timeout/retry inhibition. All supplied later targets are 55. This proves the controller role, not an external actuator identity or board route; see FAMILY_DECODING.md.')
     for n in (39, 40):
         put(n, 'Bank-select GPIO initialized low', f'PORTE bit {n-37}', [0x4840, 0x4842, 0x48A0, 0x48A2, 0x48A4, 0x4B0E, 0x4B10, 0x4B12],
             note='The late application clears PE2/PE3. Its secondary dispatch tables point to an RTS stub. The early four-state analog-bank cycling is not inherited.')
@@ -87,12 +87,12 @@ def late_pins(primary, rows):
         ('Fuel-system supply monitor', [0x64CC, 0x5D3C], [0xBF0, 0xB10], 9),
         ('Lean-angle / tip-over sensor', [0x6B1C, 0x5D28, 0x9BAF], [0x8E3], 8),
         ('Coolant temperature (ECT)', [0x69D0, 0x5D08], [0xB0C, 0x8DC], 6),
-        ('Additional analog input; destination unresolved', [0x6B29], [0x8E4], None),
+        ('Position-controller analog feedback', [0x6B29, 0xAED0, 0xAED3, 0xAF3B], [0x8E4], None),
     ]
     for ch, (role, extra, ram, diagnostic) in enumerate(sensor):
         put(59+ch, role, f'ATD channel {ch}; selector 0x0085; dispatch 0x61B6',
             [0x6136, 0x6139, 0x613B, 0x6142, 0x6147, 0x6199, adc[ch], *extra], ram, diagnostic, category='sensor',
-            note='Channel selection and the handler are checked in the late BIN. Channel 7 is sampled in the normal late sequence, unlike the early sequence.' if ch==7 else None)
+            note='Channel 7 is sampled normally. The controller uses the high byte of the left-aligned 10-bit result: feedback = ADC10 // 4. Target 55 represents ADC codes 220..223. This is an electrical code relationship; sensor angle, reference voltage and PCB connection remain unmeasured.' if ch==7 else None)
     put(69, 'Dashboard/immobilizer serial RX', 'SCI1 data 0x00D7', [0x4863, 0x4866, 0x4868, 0x486A, 0xC433], category='communication')
     put(70, 'Dashboard/immobilizer serial TX', 'SCI1 data 0x00D7', [0x4863, 0x4866, 0xC35E], category='communication')
     for n, role, port in [(71, 'SPI data input', 0x4FA0), (72, 'SPI data output', 0x4F98), (73, 'SPI clock', 0x4872)]:

@@ -56,11 +56,47 @@ There is also a reproducible arithmetic caveat in byte-axis helper `0xC122`: it 
 
 The surface at `0x451C` uses selected speed `0x0920` and filtered relative-throttle code `0x08F0`; the latter follows subtraction of the learned closed-throttle reference at `0x80A7` and filtering through `0x80FC`. These axes remain internal codes. **All 144 cells are 55 in each supplied later BIN.** Flat values do not make the surface an unused placeholder: lookup results flow into the target selector at `0x93DE`.
 
-The selector gives priority to a fixed target (`0x44E8 == 0x80`), startup target until the feedback reaches its narrow band, and a separate flag-selected target. It can then hold the previous target, substitute recovery target `0x0AD8`, or accept the map result. Tests use distinct synthetic target values to prove each route despite the identical stored fallback values. The recovery ramp at `0x8EE9` increments a saturating timer, adds the configured step to a saturating accumulator when due, adds one of two base targets, and caps the result at the current map target. Reaching that cap clears the recovery flag and accumulator. Both base selections, timer boundaries, saturation and release are replayed. Every upstream trigger for these mode flags is not established by this test.
+The selector gives priority to a fixed target (`0x44E8 == 0x80`), startup target until the feedback reaches its narrow band, and the stopped-state target (`0x0881:20`). It can then hold the previous target, substitute recovery target `0x0AD8`, or accept the map result. Tests use distinct synthetic target values to prove each route despite the identical stored fallback values. The recovery ramp at `0x8EE9` increments a saturating timer, adds the configured step to a saturating accumulator when due, adds one of two base targets, and caps the result at the current map target. Reaching that cap clears the recovery flag and accumulator. Both base selections, timer boundaries, saturation and release are replayed. The subsequent [mode-trigger report](late_mode_validation.json) covers the complete upstream mode-state block, startup release and output-inhibit logic described below.
 
 `0x96EA` builds saturated target bands of ±1 and ±7 using `0x45AC` and `0x45AD`. `0xAED0` compares ADC7 feedback `0x08E4` with those bands. Outside the narrow band, paired PORTB bits 6/7 select opposite output states; an inhibit flag or an in-band result selects both bits high. Wider-band entry and the cadence routine at `0xAFD3` control pulsing. Replay checks every 8-bit feedback value at six targets, direction changes, inhibition, both pulse-mask values, counter wrap and pulse-width saturation. Lower PORTB bits must remain intact.
 
-This identifies a position-feedback control algorithm. It does **not** identify an EXUP valve, idle actuator or other attached device, prove mechanical direction, or supply a calibrated position unit. Nor do the tests model the physical response to PORTB/PWM writes.
+### Shared mode entry, hold and recovery
+
+The entire block `0x8CF6–0x8FAD` is now checked against an independent state model, including boundaries and multi-call sequences. It belongs to the scheduled `0x7E9E` task; the decompiler's `candidate_unreferenced_8b55` label does not make the fall-through code unreachable. The inputs are filtered road-speed code `0x0AEE`, ratio classifier `0x089A`, and the high byte of filtered throttle coordinate `0x08F2`. This last input is distinct from the relative-throttle coordinate `0x08F0` used by the position map.
+
+Stored settings are identical across the four later images:
+
+| Phase | Condition / action |
+|---|---|
+| Qualification | Road-speed code is strictly between 43 and 52. Outside that window, an armed qualification is reset. Ratio class 3 must persist for 100 counting ticks. The alternative lane is configured for class 255; the normal classifier produces only 0–5. |
+| Trigger | Throttle code reaches 61 after qualification. The position target is held during qualification/confirmation. |
+| Confirmation | Throttle must reach 154 before 20 counting ticks expire. Timeout cancels the request. |
+| Active | Select ignition code 75, fuel-gain code 0 and position target 55. Exit when throttle falls below 154 or 130 counting ticks expire. |
+| Ignition recovery | Add one code every six service calls until reaching the current base-map code, then release the override. |
+| Position recovery | Add four codes every five service calls, capped by the current position-map target. Here the starting and final targets are both 55, so release occurs at the first due update without changing the target. |
+| Fuel recovery | Move the gain toward neutral code 128 by ten codes every six service calls. This state arithmetic remains present even though the supplied extra-fuel-gain consumer is disabled. |
+
+The speed-window bit does not continuously gate an already-active correction: loss of the window is handled through the qualification state. The tests preserve that distinction. Ratio class is a software classification, not a proven numbered gearbox gear. Road-speed and throttle thresholds above remain codes, not an asserted km/h or throttle-degree calibration.
+
+ROM `0x4123 = 0x80` enables the normal-ignition override at `0x7DA7`. ROM `0x4124 = 0xFF` disables the corresponding extra fuel multiplier. In a complete replay with base ignition code 115, ignition moves to 75, then recovers through 76…115; the selected position stays 55 throughout. Synthetic alternate-lane constants separately prove the position ramp can produce `31, 35, 39, 43, 47, 51, 55` when its starting target differs. This separates real stored behavior from merely present capabilities.
+
+The service divider is 2,500 timer ticks. Qualification/confirmation/active counters advance on every second service call; recovery counters advance on each call. Under the project's independently documented **nominal 500 kHz timer profile**, those correspond to 5 ms service calls and 10 ms counting ticks: 1 s qualification, a 200 ms confirmation window and a 1.3 s maximum active interval. These are nominal software timings, not measurements on an ECU.
+
+### Startup, stopped-state selection and output protection
+
+Initialization at `0x5F95` selects the startup target and sets `0x0D59:04`, unless fixed-target mode is selected. The latch clears only after the feedback reaches the narrow target band. The stopped-state flag `0x0881:20` is set at startup and in the missing-crank timeout path `0x60A8`; the valid-crank branch at `0xD814–0xD85E` clears it. Both the startup/feedback handoff and valid-crank release are replayed.
+
+The previously unexplained inhibit bit `0x0D59:20` comes from `0xA837–0xA8BD`. After 50 unchanged-direction service samples it inhibits drive. The first attempt pauses for 25 samples; a subsequent attempt uses 100 periods of 25 samples before retry. Reaching the narrow target band or changing direction resets the controller's counters/phase as shown by the feedback routine. This timeout task runs every eighth main service tick: nominally 40 ms per sample, giving 2 s before inhibition, a 1 s first pause and a 100 s later pause. These are the stored controller rules, not evidence that a motor is physically fitted.
+
+### Resolved internal/electrical scales and the hardware boundary
+
+The PWM demand has full scale **1000**, so its internal scheduling-window fraction is `demand / 1000`; a demand count represents 0.1% of that window. The suspended accumulator has ten times that scale, so its decrement count represents 0.01%. Clamping, event quantization and the 12-event path's halved decrement still apply. These fractions do not establish valve opening, airflow or mechanical travel. PWM initialization selects concatenated channels 0/1 and enables channel 1, whose conditional MCU-reference output is **PP1**.
+
+The position target's scale is also resolved electrically: normal conversion uses a left-aligned 10-bit ADC result, and `0x6B29` retains only its high byte. Thus `feedback = floor(ADC10 / 4)`. Target 55 represents codes **220–223**; its ±1 band accepts **216–227**, and its ±7 band accepts **192–251**. All 1,024 possible conversion codes are checked through feedback and startup-target release. A voltage conversion additionally requires the actual reference voltages; a mechanical angle additionally requires the sensor transfer and linkage. Neither is a constant that can be recovered from this comparison alone.
+
+The existing conditional [NXP MC9S12T64 reference](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf), PDF pages 60, 94–97 and 264–265, places PB6/PB7 at package positions 26/27, ADC7 at 66 and PP1 at 13. These are MCU-reference signals, **not measured ECU connector pins**. The [Yamaha 2007 R/X supplement](https://www.motomatrix.co.uk/yamaha-pdf/XT660X-R2007_Suppl_manual.pdf), PDF pages 54–55, 79 and 81, shows the injection circuits and a fast-idle plunger, but no matching paired-output position servo. That supports checking for unused shared-platform circuitry; it does not prove this board lacks a driver or establish the 2C1 board routing. No EXUP/idle/throttle actuator identity is assigned by elimination.
+
+The remaining hardware evidence is specific: identify the fitted MCU/package, trace PB6/PB7 and ADC7 through the driver/conditioning circuitry to any connector, and identify the connected sensor/actuator and its calibration. This work requires the relevant board/schematic or measurements; the software trigger and code-scale questions above no longer depend on it.
 
 ## Code coverage and decompiler limits
 
@@ -86,7 +122,7 @@ The subsequent [pressure/load pass](../semantics/PRESSURE_ESTIMATE.md) and [norm
 
 The lookup tests execute each image's actual CPU12 p-code against its cells at selected knots, clamp/fraction points and inline threshold boundaries. Synthetic step-table values check indexing even where the stored table is constant. These tests exercise recovered lookup arithmetic; they are not complete application simulations, physical CPU validation or engine tests.
 
-Run `decode_firmware_maps.py --check`, `audit_firmware_families.py --check`, `test_firmware_lookups.py`, `test_late_auxiliary_controls.py --check`, and the website validators. `run_family_analysis.ps1` rebuilds the later disassembly using the repository CPU12 processor and recorded seeds. The site shows separate grids for each BIN and retains model-specific wiring boundaries.
+Run `decode_firmware_maps.py --check`, `audit_firmware_families.py --check`, `test_firmware_lookups.py`, `test_late_auxiliary_controls.py --check`, `test_late_mode_triggers.py --check`, and the website validators. `run_family_analysis.ps1` rebuilds the later disassembly using the repository CPU12 processor and recorded seeds. The site shows separate grids for each BIN and retains model-specific wiring boundaries.
 
 ## Still open
 
