@@ -1,3 +1,4 @@
+import {displayValue,displayText} from './map-units.mjs';
 document.querySelectorAll('.calibration-grid').forEach(grid=>{
   const cells=[...grid.querySelectorAll('.map-cell')];
   const columns=Number(grid.dataset.columns);
@@ -6,7 +7,7 @@ document.querySelectorAll('.calibration-grid').forEach(grid=>{
   const corner=grid.querySelector('.grid-corner');
   const rows=Number(grid.dataset.rows);
   const view=grid.querySelector('.grid-view');
-  const maxDigits=Math.max(...cells.map(cell=>cell.textContent.length));
+  let maxDigits=Math.max(...cells.map(cell=>cell.textContent.length));
   const fit=()=>{
     const rowHeight=Math.max(12,Math.min(32,Math.floor((Math.min(820,Math.max(360,innerHeight*.72))-30)/rows)));
     const axisWidth=grid.clientWidth<600?48:64;
@@ -42,6 +43,27 @@ document.querySelectorAll('.calibration-grid').forEach(grid=>{
     grid.querySelectorAll('.curve-knot').forEach(dot=>dot.classList.toggle('selected',Number(dot.dataset.cell)===Number(cell.dataset.column)));
   };
   select(selected);
+  const units=grid.querySelector('.grid-units');
+  if(units){
+    const profile=JSON.parse(grid.querySelector('.grid-unit-data').textContent);
+    const labels=cells.map(cell=>cell.getAttribute('aria-label'));
+    const raw=cells.map(cell=>Number(cell.dataset.value));
+    const renderUnits=()=>{
+      const estimated=units.value==='estimated';
+      cells.forEach((cell,i)=>{
+        const text=displayText(displayValue(raw[i],profile,estimated));
+        const label=labels[i]+(estimated?' · Estimated base '+text+'° BTDC (unverified reference)':'');
+        cell.textContent=text;cell.title=label;cell.setAttribute('aria-label',label);
+      });
+      grid.querySelector('.grid-title span').textContent=estimated?'ESTIMATED BASE °BTDC':'RAW ECU VALUES';
+      grid.querySelector('.grid-low').textContent=displayText(displayValue(Math.min(...raw),profile,estimated));
+      grid.querySelector('.grid-high').textContent=displayText(displayValue(Math.max(...raw),profile,estimated));
+      grid.querySelector('caption').textContent=grid.dataset.rows+' rows, '+columns+' columns; '+(estimated?'estimated base degrees BTDC, unverified trigger reference.':'raw ECU codes.');
+      maxDigits=Math.max(...cells.map(cell=>cell.textContent.length));
+      select(selected);fit();
+    };
+    units.addEventListener('change',renderUnits);renderUnits();
+  }
   const plot=grid.querySelector('.curve-plot');
   if(plot){
     const data=JSON.parse(grid.querySelector('.curve-data').textContent);

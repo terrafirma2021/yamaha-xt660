@@ -187,7 +187,7 @@ for source in documents:
         assert count==1, ('Raw matrix missing',m['id'])
         position=rendered.index('</h1>')+len('</h1>')
         rendered=rendered[:position]+map_grid(m,temperature)+rendered[position:]
-        script=f'<script src="{rel("assets/map-grid.js",target)}?v={revision}" defer></script>'
+        script=f'<script type="module" src="{rel("assets/map-grid.js",target)}?v={revision}"></script>'
     parser=LinkRewriter(source,target);parser.feed(rendered)
     body=f'<div class="doc-toolbar"><a href="{rel("research/index.html",target)}">← Research library</a><a href="{REPO}/blob/main/{quote(source.relative_to(ROOT).as_posix())}">View source on GitHub ↗</a></div><article class="document">'+''.join(parser.parts)+'</article>'
     comparison_docs={'LOCAL_XDF_REVIEW.md','EXTERNAL_SCALE_CHECKS.md','WIDER_SCALING_RESEARCH.md','YAMAHA_SERVICE_TOOL.md','PIN_CONFIGURATION_REVIEW.md'}

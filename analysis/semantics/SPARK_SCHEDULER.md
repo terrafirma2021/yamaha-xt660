@@ -46,6 +46,14 @@ The existing `raw*90/256` cell conversion is the proportional angle term, not th
 
 Variant 9 selects cells `0x4F81`; other selector values use `0x4F64`. Both supply `A8B` in timer ticks. The selection and all knot/fraction cases are covered separately in [sensor/variant tests](sensor_variant_validation.json).
 
+## Provisional base-angle display
+
+The map pages and Tune workspace offer **Estimated base °BTDC** for the early-layout base ignition maps A/B/C and the alternate speed/coolant base map. The display uses `raw*90/256-12.5`, assuming capture event 6 is at **10° BTDC** and the nominal twelve-pitch geometry. The physical reference is **unverified**. This offset shifts every displayed cell equally; it does not change the slope or map shape.
+
+The static scheduler origin contributes `-64*90/256 = -22.5°`, so the proposed display offset is `10-22.5 = -12.5°`. The ECU's time correction and other consumers remain separate. For example, final code 64 and the nominal 1,400-rpm variant-9 correction of 113 ticks predict 9.3784° with the assumed 10° reference. Yamaha's early manual specifies **9.0° at 1,400 rpm**, not 10°. That comparison does not establish the trigger reference.
+
+This view is explicitly provisional and read-only in Tune. Raw codes remain available for inspection, editing, clipboard copy and XDF export. Angle differences use the slope alone, so unchanged cells display zero difference. The profile is not assigned to fuel, dwell, timer-correction or later-layout maps. It does not establish live spark timing or change firmware bytes.
+
 ## Charge start
 
 At `0x55B6`, the planner adds `A96` dwell to `A94` advance with **16-bit wrapping**, then works backward from `A32`. It selects a charge event in `925` and residual in `AA2`, subject to lead `DB0`. Its earlier-event loop has a bound, and the event-10 branch handles crossing the counter discontinuity. All those arithmetic branches are tested, including synthetic inputs outside plausible operation.

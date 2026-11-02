@@ -21,3 +21,6 @@
 .document .calibration-grid[data-view=fit].compact-overview .cell-grid thead th:not(.grid-corner){writing-mode:vertical-rl;transform:rotate(180deg);height:64px;padding:4px 0;text-overflow:clip;font-size:8px;line-height:1}
 
 .scale{background:var(--heat-gradient)}
+
+.grid-angle-note,.map-unit-note{padding:12px 14px;border-left:3px solid #ca8a04;background:color-mix(in srgb,#ca8a04 8%,transparent);line-height:1.55;font-size:.9rem;overflow-wrap:anywhere}
+.grid-title{flex-wrap:wrap;gap:8px}.grid-title span{flex:0 0 auto;overflow-wrap:normal;word-break:normal}

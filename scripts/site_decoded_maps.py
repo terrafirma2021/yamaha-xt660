@@ -14,9 +14,9 @@ def build(shell,write,repo):
             target=f'firmware/{key}/maps/{m["id"]}/index.html'
             evidence=m.get('consumer_traces') or m.get('calls') or m.get('evidence_addresses') or []
             body=f'<div class="page-heading"><div class="kicker">{esc(labels[key])}</div><h1>{esc(m["display_name"])}</h1><p>{m["data_address"]} · {m["rows"]} × {m["columns"]} · {m["element_bytes"]*8}-bit · {image["family"]} application</p></div><p><a href="../">← Maps for this BIN</a> · <a href="../../">Firmware record ↗</a></p><div class="notice">Values are extracted from this exact BIN. Physical-unit scaling is not independently verified for this image.</div>'
-            body+='<article class="document">'+grid(m)+'</article>'
+            body+='<article class="document">'+grid(m,family=image['family'])+'</article>'
             body+=f'<section class="document"><h2>Lookup and consumer evidence</h2><p>{esc(m.get("physical_role") or m.get("naming_note") or m["confidence"])}</p><p>Cell payload SHA-256: <code>{m["cells_sha256"]}</code></p><details><summary>Instruction addresses and dataflow</summary><pre>{esc(json.dumps(evidence,indent=2))}</pre></details><p><a href="{repo}/blob/main/{image["maps_path"]}">Complete layout, axes and raw values ↗</a> · <a href="{repo}/blob/main/analysis/firmware/{key}/decode_review.json">Image verification and remaining data ↗</a></p></section>'
-            write(target,shell(m['display_name'],body,target,'Maps','<script src="../../../../assets/map-grid.js" defer></script>'))
+            write(target,shell(m['display_name'],body,target,'Maps','<script type="module" src="../../../../assets/map-grid.js"></script>'))
             name=esc(m['display_name']);url=m['id']+'/'
             cards.append(f'<article class="map-card" data-search="{esc((m["display_name"]+" "+m["data_address"]+" "+m["kind"]).lower(),quote=True)}" data-kind="{m["kind"]}" data-status="Raw layout decoded"><div class="map-top"><code>{m["data_address"]}</code><span>{m["rows"]} × {m["columns"]} · {m["element_bytes"]*8}-bit</span></div><h2><a href="{url}">{name}</a></h2><a href="{url}" aria-label="Open {name}">{preview(m)}</a><p>Raw layout decoded · physical scaling open</p><a href="{url}">Open values &amp; evidence ↗</a></article>')
         kinds=sorted({m['kind'] for m in maps})

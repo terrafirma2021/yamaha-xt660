@@ -1,6 +1,7 @@
 """Read-only, byte-exact HTML heat grids for every recovered map layout."""
 from html import escape as esc
 import json
+from ignition_profiles import estimated_ignition
 
 # Bright blue/cyan/green/yellow/red ramp keeps one legible ink colour.
 # Shared by cells, SVG previews, legends and the homepage canvas.
@@ -90,7 +91,7 @@ def curve(m, temperature=None):
         f'<p class="curve-note">{note}</p><script type="application/json" class="curve-data">{json.dumps(data).replace("<",chr(92)+"u003c")}</script></div>')
 
 
-def grid(m, temperature=None):
+def grid(m, temperature=None, family='early'):
     values = [v for row in m['raw_values'] for v in row]
     lo, hi = min(values), max(values)
     rows = axis_labels(m,'row_axis',m['rows'])
@@ -104,11 +105,19 @@ def grid(m, temperature=None):
     if lo == hi:
         note += f' All {len(values)} cells contain {lo}; this map is constant.'
     legend_style=' style="background:'+colour(lo,lo,hi)[0]+'"' if lo==hi else ''
+    profile = estimated_ignition(m, family)
+    units = ''
+    if profile:
+        units = ('<label>Cell units <select class="grid-units"><option value="raw">Raw ECU codes</option>'
+                 '<option value="estimated" selected>Estimated base °BTDC</option></select></label>')
+    assumption = (f'<p class="grid-angle-note">{esc(profile["note"])} Raw codes remain available in the cell details and raw matrix.</p>'
+                  f'<script type="application/json" class="grid-unit-data">{json.dumps(profile).replace("<",chr(92)+"u003c")}</script>') if profile else ''
     parts = [f'<section class="calibration-grid" id="calibration-grid" data-map="{m["id"]}" data-columns="{m["columns"]}" data-rows="{m["rows"]}" data-view="fit">',
         f'<div class="grid-title"><h2>{"Curve & cells" if m["rows"]==1 else "Calibration grid"}</h2><span>RAW ECU VALUES</span></div>',
         curve(m,temperature),
         f'<p class="grid-source">{esc(axes)}</p>',
-        f'<div class="grid-tools"><label><input type="checkbox" class="grid-colours" checked> Colour cells</label><label>View <select class="grid-view"><option value="fit">Fit whole map</option><option value="detail">Larger cells</option></select></label><div class="grid-legend"><span>{lo}</span><i aria-hidden="true"{legend_style}></i><span>{hi}</span><span>{"Constant" if lo==hi else "Low → high"}</span></div></div>',
+        f'<div class="grid-tools">{units}<label><input type="checkbox" class="grid-colours" checked> Colour cells</label><label>View <select class="grid-view"><option value="fit">Fit whole map</option><option value="detail">Larger cells</option></select></label><div class="grid-legend"><span class="grid-low">{lo}</span><i aria-hidden="true"{legend_style}></i><span class="grid-high">{hi}</span><span>{"Constant" if lo==hi else "Low → high"}</span></div></div>',
+        assumption,
         '<p class="grid-overview-note" hidden>Whole-map overview. Select a cell to read its value and axes above the map, or choose Larger cells.</p>',
         f'<p class="grid-note">{esc(note)} Select a cell or use the arrow keys to inspect its address.</p>',
         f'<output class="grid-inspector" aria-live="polite">Row 1 · Column 1 · {rows[0]} / {cols[0]} · Raw {values[0]} · {m["data_address"]}</output>',
