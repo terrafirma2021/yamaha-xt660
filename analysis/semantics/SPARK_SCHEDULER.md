@@ -48,11 +48,30 @@ Variant 9 selects cells `0x4F81`; other selector values use `0x4F64`. Both suppl
 
 ## Provisional base-angle display
 
-The map pages and Tune workspace offer **Estimated base °BTDC** for the early-layout base ignition maps A/B/C and the alternate speed/coolant base map. The display uses `raw*90/256-12.5`, assuming capture event 6 is at **10° BTDC** and the nominal twelve-pitch geometry. The physical reference is **unverified**. This offset shifts every displayed cell equally; it does not change the slope or map shape.
+The map pages and Tune workspace offer **Estimated base °BTDC** for the three primary base ignition maps and the alternate speed/coolant base map in **both firmware families, across all nine registered BINs**. The display uses `raw*90/256-12.5`, assuming capture event 6 is at **10° BTDC** and the nominal twelve-pitch geometry. The physical reference is **unverified for both families**. This offset shifts every displayed cell equally; it does not change the slope or map shape.
 
 The static scheduler origin contributes `-64*90/256 = -22.5°`, so the proposed display offset is `10-22.5 = -12.5°`. The ECU's time correction and other consumers remain separate. For example, final code 64 and the nominal 1,400-rpm variant-9 correction of 113 ticks predict 9.3784° with the assumed 10° reference. Yamaha's early manual specifies **9.0° at 1,400 rpm**, not 10°. That comparison does not establish the trigger reference.
 
-This view is explicitly provisional and read-only in Tune. Raw codes remain available for inspection, editing, clipboard copy and XDF export. Angle differences use the slope alone, so unchanged cells display zero difference. The profile is not assigned to fuel, dwell, timer-correction or later-layout maps. It does not establish live spark timing or change firmware bytes.
+This view is explicitly provisional and read-only in Tune. Raw codes remain available for inspection, editing, clipboard copy and XDF export. Angle differences use the slope alone, so unchanged cells display zero difference. The profile is not assigned to fuel, dwell, timer-correction, threshold or bound maps. It does not establish live spark timing or change firmware bytes.
+
+### Coverage of the later application
+
+The [base-map replay](../firmware/ignition_display_validation.json), reproduced by [test_ignition_profiles.py](../../scripts/test_ignition_profiles.py), checks every stored cell in these four maps per BIN, selected fractional interpolation points, and isolated normal/alternate consumers followed by the final spark planner. It verifies 36 map instances and 18,630 stored cells across the nine BINs. The supported addresses are explicit; matching a map title alone never enables the profile.
+
+| Software stage | Early application | Later application |
+|---|---|---|
+| Primary base-map cells | `42AE`, `452E`, `47AE` | `38D2`, `3B52`, `3DD2` |
+| Selector, lookup and rounded base store | `8885–88AE` → `A83` | `7C4A–7C6C` → `A8D` |
+| Alternate base-map cells | `4A60` | `4084` |
+| Alternate lookup and rounded store | `B884–B88F` → `A88` | `B098–B0A3` → `A90` |
+| Normal base consumer | `8A19–8A86` | `7DA7–7DF0` |
+| Alternate base consumer after multiplier recovery | `899E–89F6` | `7D50–7D84` |
+| Multiplier / pressure bound / ROM upper cap | `A86` / `D05` / `4242` | `A8E` / `D1E` / `3865` |
+| Final timing byte | `A82` | `A8C` |
+
+Both grid callers round a Q8 lookup by adding `0080` and taking the high byte; this is rounding, not a 128-code timing offset. Under the tested ordinary conditions, the normal consumer computes `min(ROM cap, floor(max(base, pressure_bound) * multiplier / 128))`. The alternate path uses its own base and conditionally applies the pressure bound. Tests isolate that condition and the default multiplier, then vary multiplier/bound inputs separately. Mode overrides, recovery transitions, early-family retard subtraction and live sensor histories are not a claim of this focused test. They explain why the displayed base must remain distinct from final spark timing.
+
+The later selector uses RAM `88F:80` for the first map; otherwise `89A` is compared with ROM `3868` to choose the second or third. This differs from the early selector's direct variant/neutral-input check. The display does not replace either selector or infer a riding mode.
 
 ## Charge start
 

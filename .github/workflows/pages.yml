@@ -37,6 +37,7 @@ jobs:
           python3 scripts/audit_firmware_families.py --check
           python3 scripts/test_firmware_lookups.py
           python3 scripts/test_speed_sources.py --check
+          python3 scripts/test_ignition_profiles.py --check
           python3 scripts/test_pressure_sources.py --check
           python3 scripts/test_fuel_transfer.py --check
           python3 scripts/test_alternate_paths.py --check
