@@ -18,7 +18,7 @@ The count of 663 image-specific map records contains repeated layouts across rel
 - The early application has three 45 × 30 word fuel surfaces. The later application has two, at `0x1B40` and `0x2662`, selected through load and throttle processing. The original third surface is not inserted into the later catalogue.
 - Later base ignition surfaces are at `0x38D2`, `0x3B52` and `0x3DD2`, each 32 × 20 bytes. Calls at `0x7C66` consume the selected surface; neutral and ratio-selection tests immediately precede that call. Absolute BTDC still requires the crank reference.
 - Several transient corrections change from uniform-axis curves to explicit stored axes. Their later shapes come from the axis-index calls and the subsequent lookup arguments, rather than old addresses or XDF labels.
-- Four coolant-indexed word targets at `0x446A`, `0x448C`, `0x44AE` and `0x44D0` each have 11 points. A separate 12 × 12 surface starts at `0x451C`. Their raw consumers are recorded, but complete physical purpose and units remain open.
+- Four coolant-indexed word curves at `0x446A`, `0x448C`, `0x44AE` and `0x44D0` each have 11 points. They supply a crank-synchronous PWM state machine that is disabled by the stored configuration in all four later BINs. The separate 12 × 12 surface at `0x451C` supplies a position-feedback controller. Their software roles are detailed below; the attached devices and physical scales remain unverified.
 - The later coolant table is at `0x4713` and intake-temperature table at `0x46F2`. The ADC-coordinate transforms retain the familiar 29- and 33-point shapes. The later code also multiplies the internal temperature byte by 160 and takes the high byte (`0x69C7` and `0x6901`), then caps that result below 150. This proves a digital factor of 160/256 in that path; it does not independently prove a Celsius offset or analog circuit.
 - Later initialization copies three lookup blocks from ROM into RAM: `0x185A → 0x0E32` (27 bytes), `0x32C9 → 0x0DA1` (18 bytes), and `0x32DB → 0x0DB3` (18 bytes). These maps are included; subsequent calls through RAM are linked to the ROM sources. A runtime write can still change those copies.
 
@@ -29,6 +29,38 @@ The two 2C1-00 images change ten recovered map bodies relative to the original 2
 The 5VK-1X and 5VK-11 images have identical recovered map bodies. Their four differing bytes remain separate evidence: a scalar at `0x348D`, the embedded identifier, and metadata/checksum bytes. `0x348D` is read at `0x5033`; it is outside the preceding extracted curve. Calling the files interchangeable or factory stock would go beyond this result.
 
 The labelled immobilizer-off pairs have their own image records and unchanged source bytes. Modification labels are not a hardware behavior test. The later `0x4619` byte is copied into RAM `0x0E4D` at `0x58DF`; the second changed byte `0x4751` is retained in the residual-constant inventory, rather than silently classified as a map cell.
+
+## Five later control maps: traced roles and operating modes
+
+The [auxiliary-control replay report](late_auxiliary_validation.json) checks all four later images against independent integer expectations. Each executed instruction is compared with that image's original bytes. Tests use isolated RAM fixtures, including synthetic table values where the original flat surface would hide indexing mistakes. No source BIN is changed and no physical ECU is exercised.
+
+| Map data | Software role | Lookup output | Consumer |
+|---|---|---|---|
+| `0x446A` | Initial PWM demand | `0x0AB2` | Copied to current demand `0x0ABA` and retained initial demand `0x0AC8` |
+| `0x448C` | PWM hold demand | `0x0AB4` | Ends rundown; supplies the hold state |
+| `0x44AE` | PWM rundown step | `0x0AB6` | Copied to `0x0AC0` on state entry and subtracted on qualified crank events |
+| `0x44D0` | Suspended-demand decay step | `0x0AB8` | Subtracted from retained demand `0x0ABE`, which uses ten times the ordinary demand scale |
+| `0x451C` | Position-feedback target vs speed and relative throttle | `0x0D5C` | Target selector, deadbands, ADC7 feedback comparison and paired PORTB bits 6/7 |
+
+### Coolant curves and the disabled PWM path
+
+The four word curves use internal coolant code `0x0914`. Their block at `0x6A5D`, state machine at `0xE40C`, output update at `0xE536`, and PWM initialization require configuration `0x1841` / RAM `0x0E55` to equal `0x40`. **Every supplied later image stores `0x80` at `0x1841`.** The tests establish the dormant code's behavior by changing only the test's RAM fixture; the BIN configuration is preserved.
+
+State byte `0x0AB0` moves through delay (`0x80`), initialization (`0x40`), rundown (`0x20`), hold (`0x10`) and output-suspended (`0x08`) states. Internal speed thresholds copied from `0x445A` and `0x445C` provide hysteresis for suspension and resumption. When entering suspension from rundown, the retained demand is multiplied by ten with saturation; returning to rundown divides it by ten. Entering suspension from hold clears that retained demand. Delay saturation, state-entry blocking, both speed boundaries and these transitions are replayed.
+
+Qualified crank events subtract the whole step in the 24-event path or `floor(step / 2)` in the 12-event path, clamping at zero. The initial event reloads retained initial demand. The hold path reloads the hold curve. `0xF050` applies the minimum-nonzero and upper-demand thresholds, with nominal full demand 1000, then converts the complementary demand into a crank-event offset and fractional delay. It wraps the event index and avoids the missing-event positions. `0xF12B` converts the fractional remainder using the captured period and writes the PWM duty-register pair at `0x00BC` / `0x00BD`. These are internal scheduling/count relationships, not established physical actuator units.
+
+There is also a reproducible arithmetic caveat in byte-axis helper `0xC122`: it writes only the high byte of divisor scratch word `0x0E62–0x0E63`. The previous `0x0E63` value therefore affects fractional indices. For an interval width `d`, input distance `x` and old low byte `s`, the fraction comes from rounding `floor(x × 65536 × 256 / (d × 256 + s))` to an 8-bit fraction. The report checks all 256 coolant input codes with `s = 0, 127, 255`. This is preserved original instruction behavior; it is not silently replaced with ideal interpolation, and its actual runtime scratch history is not asserted here.
+
+### Position-feedback target and overrides
+
+The surface at `0x451C` uses selected speed `0x0920` and filtered relative-throttle code `0x08F0`; the latter follows subtraction of the learned closed-throttle reference at `0x80A7` and filtering through `0x80FC`. These axes remain internal codes. **All 144 cells are 55 in each supplied later BIN.** Flat values do not make the surface an unused placeholder: lookup results flow into the target selector at `0x93DE`.
+
+The selector gives priority to a fixed target (`0x44E8 == 0x80`), startup target until the feedback reaches its narrow band, and a separate flag-selected target. It can then hold the previous target, substitute recovery target `0x0AD8`, or accept the map result. Tests use distinct synthetic target values to prove each route despite the identical stored fallback values. The recovery ramp at `0x8EE9` increments a saturating timer, adds the configured step to a saturating accumulator when due, adds one of two base targets, and caps the result at the current map target. Reaching that cap clears the recovery flag and accumulator. Both base selections, timer boundaries, saturation and release are replayed. Every upstream trigger for these mode flags is not established by this test.
+
+`0x96EA` builds saturated target bands of ±1 and ±7 using `0x45AC` and `0x45AD`. `0xAED0` compares ADC7 feedback `0x08E4` with those bands. Outside the narrow band, paired PORTB bits 6/7 select opposite output states; an inhibit flag or an in-band result selects both bits high. Wider-band entry and the cadence routine at `0xAFD3` control pulsing. Replay checks every 8-bit feedback value at six targets, direction changes, inhibition, both pulse-mask values, counter wrap and pulse-width saturation. Lower PORTB bits must remain intact.
+
+This identifies a position-feedback control algorithm. It does **not** identify an EXUP valve, idle actuator or other attached device, prove mechanical direction, or supply a calibrated position unit. Nor do the tests model the physical response to PORTB/PWM writes.
 
 ## Code coverage and decompiler limits
 
@@ -54,7 +86,7 @@ The subsequent [pressure/load pass](../semantics/PRESSURE_ESTIMATE.md) and [norm
 
 The lookup tests execute each image's actual CPU12 p-code against its cells at selected knots, clamp/fraction points and inline threshold boundaries. Synthetic step-table values check indexing even where the stored table is constant. These tests exercise recovered lookup arithmetic; they are not complete application simulations, physical CPU validation or engine tests.
 
-Run `decode_firmware_maps.py --check`, `audit_firmware_families.py --check`, `test_firmware_lookups.py`, and the website validators. `run_family_analysis.ps1` rebuilds the later disassembly using the repository CPU12 processor and recorded seeds. The site shows separate grids for each BIN and retains model-specific wiring boundaries.
+Run `decode_firmware_maps.py --check`, `audit_firmware_families.py --check`, `test_firmware_lookups.py`, `test_late_auxiliary_controls.py --check`, and the website validators. `run_family_analysis.ps1` rebuilds the later disassembly using the repository CPU12 processor and recorded seeds. The site shows separate grids for each BIN and retains model-specific wiring boundaries.
 
 ## Still open
 

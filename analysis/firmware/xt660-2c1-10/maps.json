@@ -7286,7 +7286,7 @@
   },
   {
     "id": "table_451c",
-    "display_name": "Auxiliary control surface — speed and sensor input",
+    "display_name": "Position-feedback target — speed and relative throttle",
     "pointer_base": "0x4519",
     "data_address": "0x451C",
     "end_exclusive": "0x45AC",
@@ -7295,7 +7295,7 @@
     "element_bytes": 1,
     "byte_order": "big",
     "kind": "2D_grid",
-    "units": "raw ECU values",
+    "units": "position-feedback target code (u8)",
     "calls": [
       {
         "pointer_load": "0x93D0",
@@ -7303,8 +7303,11 @@
         "helper": "0xBCC4"
       }
     ],
-    "inputs": [],
-    "output": "See caller instruction evidence",
+    "inputs": [
+      "Selected speed code at RAM 0x0920",
+      "Filtered relative-throttle code at RAM 0x08F0"
+    ],
+    "output": "0x0D5C map target; selected target 0x0D5A / 0x0D5B; ADC7 feedback 0x08E4; PORTB bits 6 and 7",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
     "confidence": "Instruction-traced layout; physical units require separate verification",
@@ -7409,6 +7412,23 @@
         ]
       }
     ],
+    "physical_role": "The selected target is compared with ADC7 feedback and drives paired PORTB bits 6/7. Stored deadbands are +/-1 and +/-7 target-code counts. All 144 cells are 55 in every supplied later BIN. Startup, fixed-target, held-target and recovery paths can replace the map result. The software role is traced; the attached actuator, physical position scale and direction are not established.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_auxiliary_validation.json",
+      "consumers": [
+        "0x939C",
+        "0x93DE",
+        "0x96EA",
+        "0xAED0",
+        "0xAFD3"
+      ],
+      "throttle_source": [
+        "0x80A7",
+        "0x80DA",
+        "0x80FC"
+      ],
+      "feedback_source": "0x6B29"
+    },
     "raw_values": [
       [
         55,
@@ -7584,7 +7604,7 @@
   },
   {
     "id": "table_446a",
-    "display_name": "Coolant-indexed target 1",
+    "display_name": "Crank-synchronous PWM — initial demand",
     "pointer_base": "0x4455",
     "data_address": "0x446A",
     "end_exclusive": "0x4480",
@@ -7593,7 +7613,7 @@
     "element_bytes": 2,
     "byte_order": "big",
     "kind": "1D_stored_axis",
-    "units": "raw ECU values",
+    "units": "internal demand counts; nominal full scale 1000",
     "calls": [
       {
         "pointer_load": "0x6A88",
@@ -7601,8 +7621,10 @@
         "helper": "0xBE30"
       }
     ],
-    "inputs": [],
-    "output": "See caller instruction evidence",
+    "inputs": [
+      "Coolant code at RAM 0x0914"
+    ],
+    "output": "0x0AB2; state machine 0xE40C, PWM update 0xE536 and planner 0xF050",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
     "confidence": "Instruction-traced layout; physical units require separate verification",
@@ -7682,6 +7704,23 @@
         ]
       }
     ],
+    "physical_role": "Initial demand copied to the current demand and retained for first-event reload. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_auxiliary_validation.json",
+      "gate": {
+        "rom": "0x1841",
+        "ram": "0x0E55",
+        "required": 64,
+        "stored": 128
+      },
+      "consumers": [
+        "0xE40C",
+        "0xE536",
+        "0xF050",
+        "0xF12B"
+      ],
+      "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
     "raw_values": [
       [
         1000,
@@ -7702,7 +7741,7 @@
   },
   {
     "id": "table_448c",
-    "display_name": "Coolant-indexed target 2",
+    "display_name": "Crank-synchronous PWM — hold demand",
     "pointer_base": "0x4477",
     "data_address": "0x448C",
     "end_exclusive": "0x44A2",
@@ -7711,7 +7750,7 @@
     "element_bytes": 2,
     "byte_order": "big",
     "kind": "1D_stored_axis",
-    "units": "raw ECU values",
+    "units": "internal demand counts; nominal full scale 1000",
     "calls": [
       {
         "pointer_load": "0x6AB3",
@@ -7719,8 +7758,10 @@
         "helper": "0xBE30"
       }
     ],
-    "inputs": [],
-    "output": "See caller instruction evidence",
+    "inputs": [
+      "Coolant code at RAM 0x0914"
+    ],
+    "output": "0x0AB4; state machine 0xE40C, PWM update 0xE536 and planner 0xF050",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
     "confidence": "Instruction-traced layout; physical units require separate verification",
@@ -7800,6 +7841,23 @@
         ]
       }
     ],
+    "physical_role": "Hold demand that ends the initial rundown and supplies the hold state. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_auxiliary_validation.json",
+      "gate": {
+        "rom": "0x1841",
+        "ram": "0x0E55",
+        "required": 64,
+        "stored": 128
+      },
+      "consumers": [
+        "0xE40C",
+        "0xE536",
+        "0xF050",
+        "0xF12B"
+      ],
+      "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
     "raw_values": [
       [
         1000,
@@ -7820,7 +7878,7 @@
   },
   {
     "id": "table_44ae",
-    "display_name": "Coolant-indexed target 3",
+    "display_name": "Crank-synchronous PWM — rundown step",
     "pointer_base": "0x4499",
     "data_address": "0x44AE",
     "end_exclusive": "0x44C4",
@@ -7829,7 +7887,7 @@
     "element_bytes": 2,
     "byte_order": "big",
     "kind": "1D_stored_axis",
-    "units": "raw ECU values",
+    "units": "demand decrement per qualified event",
     "calls": [
       {
         "pointer_load": "0x6ADE",
@@ -7837,8 +7895,10 @@
         "helper": "0xBE30"
       }
     ],
-    "inputs": [],
-    "output": "See caller instruction evidence",
+    "inputs": [
+      "Coolant code at RAM 0x0914"
+    ],
+    "output": "0x0AB6; state machine 0xE40C, PWM update 0xE536 and planner 0xF050",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
     "confidence": "Instruction-traced layout; physical units require separate verification",
@@ -7918,6 +7978,23 @@
         ]
       }
     ],
+    "physical_role": "Rundown decrement copied to 0x0AC0 on state entry, then subtracted from current demand on qualified crank events. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_auxiliary_validation.json",
+      "gate": {
+        "rom": "0x1841",
+        "ram": "0x0E55",
+        "required": 64,
+        "stored": 128
+      },
+      "consumers": [
+        "0xE40C",
+        "0xE536",
+        "0xF050",
+        "0xF12B"
+      ],
+      "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
     "raw_values": [
       [
         1,
@@ -7938,7 +8015,7 @@
   },
   {
     "id": "table_44d0",
-    "display_name": "Coolant-indexed target 4",
+    "display_name": "Crank-synchronous PWM — suspended-demand decay step",
     "pointer_base": "0x44BB",
     "data_address": "0x44D0",
     "end_exclusive": "0x44E6",
@@ -7947,7 +8024,7 @@
     "element_bytes": 2,
     "byte_order": "big",
     "kind": "1D_stored_axis",
-    "units": "raw ECU values",
+    "units": "scaled-demand decrement per qualified event; 10 counts per demand count",
     "calls": [
       {
         "pointer_load": "0x6B09",
@@ -7955,8 +8032,10 @@
         "helper": "0xBE30"
       }
     ],
-    "inputs": [],
-    "output": "See caller instruction evidence",
+    "inputs": [
+      "Coolant code at RAM 0x0914"
+    ],
+    "output": "0x0AB8; state machine 0xE40C, PWM update 0xE536 and planner 0xF050",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
     "confidence": "Instruction-traced layout; physical units require separate verification",
@@ -8036,6 +8115,23 @@
         ]
       }
     ],
+    "physical_role": "Decrement for retained demand 0x0ABE while PWM output is suspended. That accumulator stores ten times the ordinary demand. This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established. Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_auxiliary_validation.json",
+      "gate": {
+        "rom": "0x1841",
+        "ram": "0x0E55",
+        "required": 64,
+        "stored": 128
+      },
+      "consumers": [
+        "0xE40C",
+        "0xE536",
+        "0xF050",
+        "0xF12B"
+      ],
+      "axis_caveat": "Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware."
+    },
     "raw_values": [
       [
         3,

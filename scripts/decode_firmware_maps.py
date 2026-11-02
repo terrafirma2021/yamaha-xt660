@@ -87,11 +87,11 @@ def late_layouts(image):
         (0x3b4f,32,20,1,0x3892,0x386a,'Base ignition timing — normal ratio range'),
         (0x3dcf,32,20,1,0x3892,0x386a,'Base ignition timing — upper ratio range'),
         (0x4081,10,15,1,0x407a,0x406a,'Alternate base ignition timing'),
-        (0x4519,12,12,1,0x4504,0x44ec,'Auxiliary control surface — speed and sensor input'),
+        (0x4519,12,12,1,0x4504,0x44ec,'Position-feedback target — speed and relative throttle'),
     ]:add(b,nr,nc,w,name,ra=ra,ca=ca,offset=21 if w==2 else 3)
     for b,nc,ca,name in [
-        (0x4455,11,0x445e,'Coolant-indexed target 1'),(0x4477,11,0x4480,'Coolant-indexed target 2'),
-        (0x4499,11,0x44a2,'Coolant-indexed target 3'),(0x44bb,11,0x44c4,'Coolant-indexed target 4'),
+        (0x4455,11,0x445e,'Crank-synchronous PWM — initial demand'),(0x4477,11,0x4480,'Crank-synchronous PWM — hold demand'),
+        (0x4499,11,0x44a2,'Crank-synchronous PWM — rundown step'),(0x44bb,11,0x44c4,'Crank-synchronous PWM — suspended-demand decay step'),
         (0x45a9,7,0x45b7,'Intake-temperature control target'),(0x3807,17,0x380a,'Runtime correction target'),
         (0x3539,8,0x352c,'Transient correction — speed'),
         (0x34ab,8,0x349e,'Transient response — neutral'),(0x34b3,8,0x349e,'Transient response — normal ratio'),(0x34bb,8,0x349e,'Transient response — upper ratio'),
@@ -140,6 +140,27 @@ def late_layouts(image):
             pc=int(call['call'],16);i=next(k for k,r in enumerate(listing) if int(r['address'],16)==pc)
             traces.append(dict(call=call['call'],instructions=[dict(address=hx(int(r['address'],16)),bytes=r['bytes'],instruction=r['instruction']) for r in listing[max(0,i-4):i+5]]))
         m['consumer_traces']=traces
+        pwm={
+            0x4455:('0x0AB2','Initial demand copied to the current demand and retained for first-event reload.', 'internal demand counts; nominal full scale 1000'),
+            0x4477:('0x0AB4','Hold demand that ends the initial rundown and supplies the hold state.', 'internal demand counts; nominal full scale 1000'),
+            0x4499:('0x0AB6','Rundown decrement copied to 0x0AC0 on state entry, then subtracted from current demand on qualified crank events.', 'demand decrement per qualified event'),
+            0x44bb:('0x0AB8','Decrement for retained demand 0x0ABE while PWM output is suspended. That accumulator stores ten times the ordinary demand.', 'scaled-demand decrement per qualified event; 10 counts per demand count'),
+        }
+        if b in pwm:
+            dest,role,units=pwm[b]
+            m.update(inputs=['Coolant code at RAM 0x0914'],output=f'{dest}; state machine 0xE40C, PWM update 0xE536 and planner 0xF050',units=units,
+                     physical_role=role+' This path requires configuration 0x1841 / RAM 0x0E55 = 0x40; all four supplied later BINs store 0x80, so it is disabled in their stored configuration. The 12-event path halves decrements with integer truncation; the 24-event path uses the full decrement. PWM registers are reached, but the attached actuator and physical output units are not established.',
+                     software_evidence=dict(report='analysis/firmware/late_auxiliary_validation.json',gate=dict(rom='0x1841',ram='0x0E55',required=64,stored=128),
+                                            consumers=['0xE40C','0xE536','0xF050','0xF12B'],
+                                            axis_caveat='Helper 0xC122 retains scratch byte 0x0E63 in its divisor; fractional indices can depend on that prior byte. Replay covers 0, 127 and 255 without altering source firmware.'))
+            m['physical_role']+=' Fractional lookup indices also depend on prior scratch byte 0x0E63; see the family decoding notes.'
+        elif b==0x4519:
+            m.update(inputs=['Selected speed code at RAM 0x0920','Filtered relative-throttle code at RAM 0x08F0'],
+                     output='0x0D5C map target; selected target 0x0D5A / 0x0D5B; ADC7 feedback 0x08E4; PORTB bits 6 and 7',
+                     units='position-feedback target code (u8)',
+                     physical_role='The selected target is compared with ADC7 feedback and drives paired PORTB bits 6/7. Stored deadbands are +/-1 and +/-7 target-code counts. All 144 cells are 55 in every supplied later BIN. Startup, fixed-target, held-target and recovery paths can replace the map result. The software role is traced; the attached actuator, physical position scale and direction are not established.',
+                     software_evidence=dict(report='analysis/firmware/late_auxiliary_validation.json',consumers=['0x939C','0x93DE','0x96EA','0xAED0','0xAFD3'],
+                                            throttle_source=['0x80A7','0x80DA','0x80FC'],feedback_source='0x6B29'))
     return maps,axes,loads,ins
 
 def hydrate(m,image):
