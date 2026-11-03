@@ -6,6 +6,7 @@ import re
 from html import escape as esc
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
+from bs4.dammit import EntitySubstitution
 from bs4.formatter import HTMLFormatter
 from site_routes import SECTIONS
 
@@ -15,7 +16,7 @@ class OrderedFormatter(HTMLFormatter):
         return tag.attrs.items()
 
 
-FORMAT = OrderedFormatter()
+FORMAT = OrderedFormatter(entity_substitution=EntitySubstitution.substitute_xml)
 
 
 def fragment(markup):

@@ -5,6 +5,12 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 from site_routes import routes, SECTIONS
+from site_static import FORMAT
+
+# Rendering must preserve code examples as text, including literal tag-like values.
+example=BeautifulSoup('<pre>&lt;register&gt; &amp; value</pre>','html.parser')
+roundtrip=BeautifulSoup(example.decode(formatter=FORMAT),'html.parser')
+assert roundtrip.pre.get_text()=='<register> & value' and roundtrip.pre.find() is None
 
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'_site'
