@@ -1,6 +1,6 @@
 """Check previously unspecified early-map entry and fault paths against CPU12.
 
-The four early-family BINs share these instructions. Later-family entry gates
+The five early-family BINs share these instructions. Later-family entry gates
 are not inferred from them. Synthetic fixtures change RAM, never BIN files.
 """
 import argparse
@@ -127,5 +127,5 @@ def build():
 if __name__=='__main__':
     ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');args=ap.parse_args();result=build()
     if args.check:assert json.loads(REPORT.read_text())==result,'Map entry report is stale'
-    else:REPORT.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8')
+    else:REPORT.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
     print('Map entries:',result['cases'],'cases passed')

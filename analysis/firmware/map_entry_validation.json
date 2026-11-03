@@ -1643,7 +1643,7 @@
       ]
     }
   ],
-  "test_script_sha256": "73c6c0f0d6adae9bbe56b54cc8414dd085f68993b223421da6dddbb15b52c861",
+  "test_script_sha256": "a268ddf1b1a19229318b0a7b8b5007b486834667192a21d158f935cdd28362d3",
   "dependencies": {
     "test_input_coordinates.py": "b7ceb4f7cb32c786113ba5c2b59e52cc2bb08e78d7541200ad6049ebc262ff92",
     "test_speed_sources.py": "711736c4eaf176eab614270464ab1373ca513da27c60502f045d299dad56c365",

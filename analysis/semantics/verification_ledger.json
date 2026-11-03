@@ -7753,7 +7753,7 @@
     },
     {
       "path": "analysis/firmware/map_entry_validation.json",
-      "sha256": "f8e9eb93d47eb6f16734d291d094f246561c704beebc9f25aba91cfa934377b2",
+      "sha256": "719c2ca89e19cf447bca24b7260c6c47962c622eed0fea7454b2e2a8a29b02f6",
       "recorded_result": "passed",
       "recorded_cases": 11520,
       "scope": [
