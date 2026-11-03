@@ -119,7 +119,7 @@ def grid(m, temperature=None, family='early'):
         f'<div class="grid-tools">{units}<label><input type="checkbox" class="grid-colours" checked> Colour cells</label><label>View <select class="grid-view"><option value="fit">Fit whole map</option><option value="detail">Larger cells</option></select></label><div class="grid-legend"><span class="grid-low">{lo}</span><i aria-hidden="true"{legend_style}></i><span class="grid-high">{hi}</span><span>{"Constant" if lo==hi else "Low → high"}</span></div></div>',
         assumption,
         '<p class="grid-overview-note" hidden>Whole-map overview. Select a cell to read its value and axes above the map, or choose Larger cells.</p>',
-        f'<p class="grid-note">{esc(note)} Select a cell or use the arrow keys to inspect its address.</p>',
+        f'<p class="grid-note">{esc(note)} <span class="grid-interaction-hint">Select a cell or use the arrow keys to inspect its address.</span></p>',
         f'<output class="grid-inspector" aria-live="polite">Row 1 · Column 1 · {rows[0]} / {cols[0]} · Raw {values[0]} · {m["data_address"]}</output>',
         '<div class="grid-scroll" tabindex="0" role="region" aria-label="Calibration values, whole map"><table class="cell-grid">',
         f'<caption class="grid-sr-only">{esc(m["display_name"])}: {m["rows"]} rows, {m["columns"]} columns; raw values.</caption>',

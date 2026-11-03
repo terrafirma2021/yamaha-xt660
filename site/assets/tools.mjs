@@ -52,6 +52,7 @@ const catalogPromise=fetch(new URL('firmware/catalog.json',root)).then(r=>{if(!r
 // Capture a rejection immediately; the file handler displays it when needed.
 catalogPromise.then(catalog=>{
   repositoryImages=catalog.images;
+  document.documentElement.classList.add('tools-ready');
   $('repo-bin').replaceChildren(...repositoryImages.map(i=>new Option(i.label+' · '+i.variant,i.id)));
   const requested=new URL(location.href).searchParams.get('firmware')||$('vehicle-context')?.dataset.firmware||$('image-select')?.value;
   if(repositoryImages.some(i=>i.id===requested))$('repo-bin').value=requested;

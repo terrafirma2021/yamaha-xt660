@@ -98,7 +98,7 @@
       });
       document.querySelectorAll('[data-firmware-card]').forEach(el=>{el.hidden=!document.getElementById('all-firmware')?.checked&&!profile.firmware_ids.includes(el.dataset.firmwareCard);});
       const libraryStatus=document.getElementById('library-status');if(libraryStatus)libraryStatus.textContent=profile.firmware_ids.length?`${profile.firmware_ids.length} records associated with this profile. Association may be filename-based; see each record.`:'No firmware assigned to this profile. The full dataset remains available below.';
-      document.documentElement.classList.remove('scope-pending');
+      panel.classList.add('vehicle-ready');
       document.dispatchEvent(new CustomEvent('vehiclechange',{detail:{profile:profile.id,firmware:image?.id||null}}));
     }
     function change(p,i){
@@ -116,9 +116,9 @@
     controls.image.addEventListener('change',()=>change(profile,controls.image.value));
     document.getElementById('all-firmware')?.addEventListener('change',()=>render());
     document.addEventListener('click',event=>{
-      const a=event.target.closest('a');if(!a)return;
+      const a=event.target.closest('a');if(!a||event.defaultPrevented)return;
       if(a.dataset.bike){event.preventDefault();change(modelDefault(a.dataset.bike));return;}
-      const u=new URL(a.href);if(u.origin!==root.origin||!u.pathname.startsWith(root.pathname))return;
+      const u=new URL(a.getAttribute('href'),document.baseURI);if(u.origin!==root.origin||!u.pathname.startsWith(root.pathname))return;
       if(!u.pathname.endsWith('/')&&!u.pathname.endsWith('.html'))return;
       if(u.pathname===location.pathname&&u.hash)return;
       // Generated context links already identify their target. Global navigation is scoped here.
@@ -128,10 +128,9 @@
     window.addEventListener('popstate',()=>{readState();render();});
     readState();render();
   }catch(error){
-    status.textContent='The vehicle catalogue could not be loaded. Reload this page. The original study below is explicitly scoped to the 2005 XT660X dump.';
-    // A failed catalogue load must not show primary data under another profile.
-    document.querySelectorAll('[data-study]').forEach(el=>el.hidden=true);
-    document.documentElement.classList.remove('scope-pending');
+    // The selected profile and exact-family content are already built into HTML.
+    // Preserve that reference and the plain links if optional enhancement fails.
+    panel.classList.remove('vehicle-ready');
     console.error(error);
   }
 })();

@@ -13,3 +13,4 @@ function filterFiles(){
 }
 [searchFiles,locationFiles].forEach(control=>control.addEventListener('input',filterFiles));
 filterFiles();
+document.documentElement.classList.add('coverage-ready');

@@ -50,6 +50,7 @@ jobs:
           python3 scripts/verify_pages.py
           python3 scripts/verify_decoded_pages.py
           python3 scripts/verify_site_routes.py
+          python3 scripts/test_static_site.py
           node scripts/test_tools.mjs
           node scripts/test_flashing.mjs
           node scripts/test_map_workspace.mjs

@@ -14,3 +14,4 @@ function filterMaps(){
 }
 [search,statusFilter,kindFilter].forEach(control=>control.addEventListener('input',filterMaps));
 filterMaps();
+document.documentElement.classList.add('maps-ready');

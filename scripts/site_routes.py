@@ -23,9 +23,12 @@ def routes(data):
 def build(root,site,write):
     data=json.loads((root/'dataset/vehicles.json').read_text(encoding='utf-8'))
     records=routes(data)
+    images={i['id']:i for i in json.loads((site/'firmware/catalog.json').read_text())['images']}
     write('vehicles/routes.json',json.dumps(records,indent=2)+'\n')
     for record in records:
         for section,source in SECTIONS.items():
+            if section=='maps' and not images[record['firmware']].get('shared_map_count'):
+                source='firmware/'+record['firmware']+'/maps/index.html'
             target=record['path']+('' if section=='overview' else section+'/')+'index.html'
             markup=(site/source).read_text(encoding='utf-8')
             def adjust(match):

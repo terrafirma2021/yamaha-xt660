@@ -114,3 +114,5 @@ document.querySelectorAll('.calibration-grid').forEach(grid=>{
     grid.classList.toggle('no-colours',!event.target.checked);
   });
 });
+
+document.documentElement.classList.add('grids-ready');

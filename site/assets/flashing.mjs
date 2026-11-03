@@ -36,6 +36,7 @@ function renderSelection() {
 }
 document.addEventListener('vehiclechange',event=>{selection=event.detail;ready.then(renderSelection).catch(fail);});
 ready.then(()=>{
+  document.documentElement.classList.add('flashing-ready');
   $('flash-repo-bin').replaceChildren(...catalog.images.map(i=>new Option(i.label+' · '+i.variant,i.id)));
   $('flash-repo-bin').disabled=false;$('flash-repo-open').disabled=false;renderSelection();
 }).catch(fail);

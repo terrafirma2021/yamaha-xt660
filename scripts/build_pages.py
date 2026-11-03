@@ -14,6 +14,7 @@ from site_firmware import build_library
 from site_routes import build as build_bike_routes
 from site_tools import build as build_tools
 from site_flashing import build as build_flashing
+from site_static import build as build_static
 from site_decoded_maps import build as build_decoded_maps
 from firmware_catalog import build as build_firmware_catalog
 from site_map_grids import grid as map_grid, preview as map_preview, palette_css
@@ -50,10 +51,10 @@ def rel(target, current):
 def nav(current, active):
     links = [('Overview', 'index.html'), ('Firmware', 'firmware/index.html'), ('Maps', 'maps/index.html'), ('Flashing', 'flashing/index.html'), ('Tune', 'tune/index.html'), ('Wiring', 'wiring/index.html'), ('MCU pins', 'pins/index.html'), ('Research', 'research/index.html')]
     return '<header id="sitebar"><a class="brand" href="'+rel('index.html', current)+'"><span class="brand-mark"><img class="yamaha-logo" src="'+rel('assets/yamaha-motor-logo.png',current)+'" width="1042" height="360" alt="Yamaha Motor — Revs Your Heart"></span><span class="brand-model">ECU RESEARCH<small>XT660R / XT660X / XT660Z</small></span></a><nav aria-label="Main navigation">'+''.join(
-        f'<a href="{rel(url,current)}"'+(' aria-current="page"' if label==active else '')+f'>{label}</a>' for label,url in links)+f'<a href="{REPO}">GitHub ↗</a><button id="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></nav></header>'
+        f'<a href="{rel(url,current)}"'+(' aria-current="page"' if label==active else '')+f'>{label}</a>' for label,url in links)+f'<a href="{REPO}">GitHub ↗</a><details class="css-theme"><summary>Theme</summary><fieldset><legend>Colour theme</legend><label><input type="radio" name="css-theme" id="theme-system" checked>System</label><label><input type="radio" name="css-theme" id="theme-light">Light</label><label><input type="radio" name="css-theme" id="theme-dark">Dark</label></fieldset></details><button id="theme-toggle" hidden type="button" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></nav></header>'
 
 def theme_head(current):
-    return f'<script>document.documentElement.classList.add("scope-pending")</script><link rel="stylesheet" href="{rel("assets/vehicles.css",current)}?v={revision}"><script src="{rel("assets/vehicles.js",current)}?v={revision}" defer></script><link rel="stylesheet" href="{rel("assets/firmware.css",current)}?v={revision}"><link rel="stylesheet" href="{rel("assets/map-grid.css",current)}?v={revision}"><link rel="icon" href="{rel("assets/favicon.svg",current)}" type="image/svg+xml"><script src="{rel("assets/theme.js",current)}?v={revision}"></script><link rel="stylesheet" href="{rel("assets/theme.css",current)}?v={revision}">'
+    return f'<link rel="stylesheet" href="{rel("assets/vehicles.css",current)}?v={revision}"><script src="{rel("assets/vehicles.js",current)}?v={revision}" defer></script><link rel="stylesheet" href="{rel("assets/firmware.css",current)}?v={revision}"><link rel="stylesheet" href="{rel("assets/map-grid.css",current)}?v={revision}"><link rel="icon" href="{rel("assets/favicon.svg",current)}" type="image/svg+xml"><script src="{rel("assets/theme.js",current)}?v={revision}"></script><link rel="stylesheet" href="{rel("assets/theme.css",current)}?v={revision}"><link rel="stylesheet" href="{rel("assets/static.css",current)}?v={revision}">'
 
 def shell(title, body, current, active, script=''):
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Yamaha XT660 ECU research: firmware library, calibration maps, boot code, sensors and MCU pins."><title>{esc(title)} · Yamaha XT660 ECU Research</title><link rel="stylesheet" href="{rel('assets/site.css',current)}?v={revision}">{theme_head(current)}</head><body>{nav(current,active)}{vehicle_context(current,rel)}<main class="site-main">{body}</main><footer class="site-footer"><span>YAMAHA XT660 / ECU RESEARCH · <a href="{rel('coverage/index.html',current)}">Content coverage</a></span><span>Revision <a href="{REPO}/commit/{revision}">{revision}</a> · <a href="{rel("docs/repository/site/ASSET_CREDITS.html",current)}">Credits &amp; independence</a><br>Independent project. Not affiliated with Yamaha Motor.</span></footer>{script}</body></html>'''
@@ -195,6 +196,7 @@ for source in documents:
         scope='hardware' if source.name in ('MCU_PIN_OVERVIEW.md','ECU_CONNECTOR.md') else 'primary'
         body=f'<section data-study="{scope}"><p class="scope-primary-label">Scope: original owner application / explicitly byte-matched companion. Existing code, scaling and hardware qualifications remain in force.</p>'+body+'</section>'
     write(target,shell(title,body,target,'Research',script))
-build_bike_routes(ROOT,DEST,write)
+static_records=build_bike_routes(ROOT,DEST,write)
+build_static(ROOT,DEST,static_records)
 write('.nojekyll','')
 print(f'Built project website: home, {len(maps)} maps, pin explorer and {len(documents)} research documents.')
