@@ -16,7 +16,7 @@ Inputs: u8 0x08F5 intake temperature.
 
 Output: u8 0x0A10; subsequently widened and offset by 0x0180.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: IAT factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438; consumer adds 384 before scaling.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -92,16 +92,23 @@ factor in transient contribution; not the same scaling as normal IAT correction
 uniform_input conversion: `temperature_celsius_candidate`; requires `yamaha_temperature_candidate`.
 Converted values: -20, -15, -10, -5, 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100.
 
+Conditional candidate profile. Ideal final knot can exceed clamped input span.
+
 ### Every input axis
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | uniform_input | u8 0x08F5 intake temperature | Intake temperature code | Confirm the IAT circuit/temperature transfer before assigning Celsius. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: IAT factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438; consumer adds 384 before scaling [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Cell interpretation: transient_iat_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm the IAT circuit/temperature transfer before assigning Celsius.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

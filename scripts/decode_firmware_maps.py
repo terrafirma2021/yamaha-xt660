@@ -207,7 +207,9 @@ def build(check=False):
         end=0xf779 if family=='early' else 0xf770
         assert image[start:end]==reference[start:end] and image[0xf7a0:0xf7ee]==reference[0xf7a0:0xf7ee],entry['id']
         maps=[hydrate(m,image) for m in (primary if family=='early' else late_maps)]
+        from map_review import per_image_input_findings
         for m in maps:
+            m['input_findings']=per_image_input_findings(m,family)
             m['ready_for_tuning_export']=False
             m['physical_unit_status']='Not independently verified for this BIN; physical references and hardware remain conditional'
         path=OUT/entry['id']/'maps.json';save(path,maps,check)

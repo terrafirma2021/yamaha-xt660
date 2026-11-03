@@ -77,17 +77,24 @@ Stock activation: Normal state path is disabled: ROM 0x3130 is 0xFF; 0x8DF9 requ
 uniform_input conversion: `speed_rpm`; requires `nominal_xt_timer`, `nominal_xt_crank`.
 Converted values: 1600, 2400, 3200, 4000, 4800, 5600, 6400, 7200, 8000, 8800, 9600, 10400, 11200.
 
+Ideal knot positions derived from the uniform header; final endpoint may lie beyond the clamped input span.
+
 ### Every input axis
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | uniform_input | u16 0x0900 selected speed | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Ratio code 0x0898 > ROM 0x31EA (stock 5); consuming normalization state disabled by stock ROM 0x3130 = 0xFF [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: normalization_hold_s. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

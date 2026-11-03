@@ -8,7 +8,7 @@ import json
 import csv
 from pathlib import Path
 from sensor_profiles import PROFILE, DEFINITION, celsius
-from map_review import input_review, remaining_questions
+from map_review import input_review, remaining_questions, resolved_findings, HISTORY_CURVES, LOAD_DELTA_INACTIVE
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -78,6 +78,8 @@ def build():
             evidence=['0xD871','0xDBAA','0x53F4','0x73F7']),
     }
     conversions = {
+        'tps_history_delta_counts': dict(unit='relative TPS count change', formula='raw-128', requires=[],
+            meaning='Early-family clipped change in filtered relative TPS over four serviced samples, not a time-normalized angular rate.'),
         'temperature_celsius_candidate': dict(unit='candidate degC', formula='raw*0.625-30',
             requires=[PROFILE], meaning='Inferred temperature profile; consistent with sensor resistances and TDM fallback values, but XT660 manual coolant fallback differs. See TEMPERATURE_PROFILE.md.'),
         'timer_ms': dict(unit='ms', formula='raw*1000/timer_hz', nominal_formula='raw*0.002',
@@ -232,6 +234,12 @@ def build():
                 raw_pre_scale=1,raw_ideal_knots=knots,values=[celsius(v) for v in knots],
                 raw_clamped_range=[m['input_min_raw'],m['input_min_raw']+m['input_span_raw']],
                 caveat='Conditional candidate profile. Ideal final knot can exceed clamped input span.',requires=[PROFILE]))
+        if m['id'] in HISTORY_CURVES:
+            knots=[m['input_min_raw']+k*m['index_divisor']/m['index_factor_raw'] for k in range(m['columns'])]
+            rec['axis_conversions'].append(dict(axis='uniform_input',conversion='tps_history_delta_counts',
+                raw_pre_scale=1,raw_ideal_knots=knots,values=[v-128 for v in knots],requires=[],
+                raw_clamped_range=[m['input_min_raw'],m['input_min_raw']+m['input_span_raw']],
+                caveat='Input is clipped to 0..255 before lookup; four serviced samples, not a guaranteed wall-clock interval. Ideal final knot may exceed clamped input span.'))
         if m['id'] in ['fuel_normalization_load','fuel_normalization_throttle']:
             rec['decoded_context']='The selected rounded lookup becomes CD1; CD0=clamp(CD1+CD4-128,0,255). CE2=normalization(CD0,CD5,ROM[1ACE]) is a Q8 multiplier shared by 0952/0954/0956/0958 into CE4/CE6/CE8/CEA. Increasing a nonzero code at fixed gain/reference reduces the ideal multiplier; code zero instead bypasses to unity. See NORMALIZATION.md for exact rounding and exceptions.'
             rec['consumer_evidence']=['0x7EE4','0x7EF3','0x7F0B','0x7F50','0x7FA8','0x7FAB','0x7FD5']
@@ -256,11 +264,14 @@ def build():
             rec['stock_activation']='Used in secondary-quantity arithmetic; variant 9 skips the normal secondary injector scheduling entry. Diagnostic paths are separate.'
         if m['id'] in ['step_grid_35b0','step_grid_363c']:
             rec['stock_activation']='Every stock cell is zero, rejecting this normal feedback-eligibility gate.'
+        if m['id'].startswith('delta_0989_gain_'):
+            rec['stock_activation']=LOAD_DELTA_INACTIVE
         if m['id'] in joint_transient:
             rec['status']='joint arithmetic decoded; standalone physical cell unit not assigned'
             rec['decoded_context']='Selected response R (34D0/34DA/34E4 or 355D/3567/3571) and coolant C (34FD) participate in extra_transient_ticks(P,C,I,R,T). See map_models.py and MAP_CONSUMERS.md; assigning milliseconds to R or C alone would depend on the other factors.'
             rec['consumer_evidence']=['0x9220','0x9232','0x9274','0x9495','0x94BA']
         rec['axis_interpretations']=input_review(m)
+        rec['resolved_items']=resolved_findings(m,rec)
         rec['open_items']=remaining_questions(m,rec)
         m['unresolved']=rec['open_items']
         records.append(rec)
@@ -351,11 +362,14 @@ def build():
         if record.get('stock_activation'):extra += ['Stock activation: '+record['stock_activation'],'']
         if record.get('consumer_evidence'):extra += ['Consumer instruction addresses: '+', '.join('`'+x+'`' for x in record['consumer_evidence'])+'.','']
         for axis in record['axis_conversions']:
-            extra += [f"{axis['axis']} conversion: `{axis['conversion']}`; requires "+', '.join('`'+x+'`' for x in axis['requires'])+'.',
+            extra += [f"{axis['axis']} conversion: `{axis['conversion']}`; "+('requires '+', '.join('`'+x+'`' for x in axis['requires']) if axis['requires'] else 'no physical-reference assumption')+'.',
                       'Converted values: '+', '.join(f'{v:g}' for v in axis['values'])+'.','']
+            if axis.get('caveat'):extra += [axis['caveat'],'']
         extra += ['### Every input axis','', '| Axis | Traced source | Interpretation | Physical scale |', '|---|---|---|---|']
         for axis in record['axis_interpretations']:
             extra.append(f"| {axis['axis']} | {axis['source']} | {axis['meaning']} | {axis['open_requirement'] or axis['physical_status']} |")
+        extra += ['', '### Resolved in the code', '']
+        extra += ['- '+item['claim']+' ['+item['method']+'](../semantics/'+item['evidence']+').' for item in record['resolved_items']]
         extra += ['', '### What remains for this map', '']
         extra += ['- '+item for item in record['open_items']]+['']
         extra += ['See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.','']

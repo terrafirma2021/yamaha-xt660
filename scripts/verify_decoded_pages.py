@@ -1,5 +1,6 @@
 """Validate per-image routes and every rendered cell against its own BIN."""
 import json
+from html import escape
 from html.parser import HTMLParser
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
@@ -21,6 +22,7 @@ for item in json.loads((ROOT/'analysis/firmware/decode_catalog.json').read_text(
     for m in json.loads((ROOT/item['maps_path']).read_text(encoding='utf-8')):
         markup=(folder/m['id']/'index.html').read_text(encoding='utf-8');p=Cells();p.feed(markup)
         assert m['display_name'].replace('&','&amp;') in markup
+        for finding in m.get('input_findings',[]):assert escape(finding) in markup,(item['id'],m['id'],'missing finding')
         assert len(p.cells)==m['rows']*m['columns']
         for n,c in enumerate(p.cells):
             a=int(m['data_address'],16)+n*m['element_bytes'];v=int.from_bytes(image[a:a+m['element_bytes']],'big')

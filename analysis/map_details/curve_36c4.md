@@ -16,7 +16,7 @@ Inputs: u8 0x08F4 coolant.
 
 Output: u8 0x09B4 compared with 100-ms-task counter 0x09B5.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Adaptive eligibility block 0xA564–0xA63A requires counter 0x09B5 >= looked-up delay 0x09B4 along with both nonzero grids and the other qualification/fault gates; see INPUT_COORDINATES.md.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -74,17 +74,24 @@ Required profiles: `nominal_xt_timer`. These are assumptions, not measured hardw
 uniform_input conversion: `temperature_celsius_candidate`; requires `yamaha_temperature_candidate`.
 Converted values: -20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120.
 
+Conditional candidate profile. Ideal final knot can exceed clamped input span.
+
 ### Every input axis
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | uniform_input | u8 0x08F4 coolant | Effective coolant temperature code | Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Adaptive eligibility block 0xA564–0xA63A requires counter 0x09B5 >= looked-up delay 0x09B4 along with both nonzero grids and the other qualification/fault gates; see INPUT_COORDINATES.md [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: feedback_delay_100ms_s. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

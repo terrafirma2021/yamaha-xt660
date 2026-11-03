@@ -16,7 +16,7 @@ Inputs: u16 RAM 0x0900: selected speed code; u16 RAM 0x08E8.
 
 Output: u8 RAM 0x09AE; column/row bins at 0x09B0/0x09B1.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Both adaptive grids must be nonzero in 0xA564–0xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells.
 
 Interpolation: none; strict > threshold selects upper bin; equality stays in lower bin.
 
@@ -105,14 +105,21 @@ Converted values: 800, 1200, 1600, 2050, 2400, 2800, 3200, 3600, 4500.
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | row_axis | u16 RAM 0x0900: selected speed code | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
-| column_axis | u16 RAM 0x08E8 | Relative throttle coordinate | Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle. |
+| column_axis | u16 RAM 0x08E8 | Relative throttle coordinate | Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked. |
+
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Both adaptive grids must be nonzero in 0xA564–0xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: eligibility. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

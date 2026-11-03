@@ -4,6 +4,7 @@ Addresses and layouts are evidence; physical units remain separate hypotheses.
 No firmware patching or automatic tuning-definition export is performed.
 """
 import json
+from map_review import SELECTIONS
 
 
 def extend(maps, axes, image):
@@ -153,7 +154,7 @@ def extend(maps, axes, image):
       'fuel_normalization_throttle':(['u16 0x0900 selected speed','u16 0x08E8 throttle code'],'u8 0x0CD3','Fuel normalization input; selected when ROM 0x3114 does not equal 0x80'),
       'fuel_normalization_gain':(['u8 0x0CD0 combined normalization code','u16 0x0C90 load code'],'u8 0x0CD5','Dimensionless gain in the denominator of common fuel multiplier 0x0CE2'),
       'main_quantity_A':(['u16 0x0900 selected speed','u16 0x0C90 load code'],'0x0952 or 0x0954','Primary fuel quantity surface A; see semantics/FUEL.md'),
-      'main_quantity_B':(['u16 0x0900 selected speed','u16 0x08E8 throttle code; fault substitution ROM 0x4E62'],'0x0956 or 0x0958','Fuel quantity surface B; see semantics/FUEL.md'),
+      'main_quantity_B':(['u16 0x0900 selected speed','u16 0x08E8 throttle code; ROM 0x4E62 substitution only when both 0x08AF fault groups 0x0C and 0x30 are nonzero'],'0x0956 or 0x0958','Fuel quantity surface B; see semantics/FUEL.md'),
       'main_quantity_C':(['u16 0x0900 selected speed','u16 0x0C90 load code'],'0x0952 or 0x0954','Primary fuel quantity surface C; see semantics/FUEL.md'),
       'modulo24_surface':(['u16 0x08E8 throttle code (row)','u16 0x0900 selected speed (column)'],'u8 0x0A1B; code 11 becomes 10 and codes >=23 become 22; transferred through 0x0A1E to 0x0A1C','Injection event-phase target; reference-rotated modulo-24 interpolation, not pulse duration or absolute BTDC'),
       'correction_surface_A':(['u16 0x0900 selected speed','u16 0x08E8 throttle code'],'u8 0x0CEC','Secondary injector quantity multiplier; cell 128 is unity'),
@@ -195,6 +196,7 @@ def extend(maps, axes, image):
             choices=['curve_34d0','curve_34da','curve_34e4'] if first else ['curve_355d','curve_3567','curve_3571']
             threshold='0x34CF (stock 1)' if first else '0x355C (stock 5)'
             m['selection']=['Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)',f'Outside neutral-input branch: ratio code 0x0898 <= ROM {threshold}',f'Outside neutral-input branch: ratio code 0x0898 > ROM {threshold}'][choices.index(key)]
+        if key in SELECTIONS:m['selection']=SELECTIONS[key]
         m.setdefault('evidence_addresses',[])
         m['unresolved']=['Engineering-unit conversions and complete downstream transformation',
                          'Hardware/bench confirmation and safe operating limits']

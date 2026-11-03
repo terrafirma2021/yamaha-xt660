@@ -16,7 +16,7 @@ Inputs: u16 0x08E8 throttle code (row); u16 0x0900 selected speed (column).
 
 Output: u8 0x0A1B; code 11 becomes 10 and codes >=23 become 22; transferred through 0x0A1E to 0x0A1C.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Evaluated at 0x7B8C before the startup/normal fuel branch. Result is clamped (11 to 10, >=23 to 22) then passed through the phase limiter and event dispatcher.
 
 Interpolation: See the helper and axis evidence below; standard grid paths use Q8 indices..
 
@@ -101,16 +101,23 @@ Converted values: 800, 1400, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 100
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
-| row_axis | u16 0x08E8 throttle code (row) | Relative throttle coordinate | Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle. |
+| row_axis | u16 0x08E8 throttle code (row) | Relative throttle coordinate | Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked. |
 | column_axis | u16 0x0900 selected speed (column) | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
+
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Evaluated at 0x7B8C before the startup/normal fuel branch. Result is clamped (11 to 10, >=23 to 22) then passed through the phase limiter and event dispatcher [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: injection_event_code. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.
+- Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.
 - Establish event-code phase relative to the physical crank cycle, including special scheduling modes.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

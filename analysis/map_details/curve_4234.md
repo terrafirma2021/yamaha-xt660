@@ -16,7 +16,7 @@ Inputs: u8 0x08DA supply-derived.
 
 Output: u16 0x095E = high byte * 8.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Evaluated in the fuel update at 0x74B8 and the periodic 0xB166 task, using the high byte of filtered supply 0x08DA; rounded result times eight supplies compensation 0x095E.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -95,13 +95,18 @@ Required profiles: `nominal_xt_timer`. These are assumptions, not measured hardw
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
-| uniform_input | u8 0x08DA supply-derived | Supply-derived code | Confirm the voltage divider/reference and filtering before assigning volts. |
+| uniform_input | u8 0x08DA supply-derived | Supply-derived code | Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked. |
+
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Evaluated in the fuel update at 0x74B8 and the periodic 0xB166 task, using the high byte of filtered supply 0x08DA; rounded result times eight supplies compensation 0x095E [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Effective ADC-high-byte supply code substitutes 154 on its fault bit. A signed Q8 tracking filter feeds injector compensation; startup copies the source directly. Dwell uses the effective byte before that filter. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: injector_compensation_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
-- Confirm the voltage divider/reference and filtering before assigning volts.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

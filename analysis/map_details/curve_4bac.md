@@ -16,7 +16,7 @@ Inputs: u16 0x08F2 pressure-derived estimate.
 
 Output: u8 0x0D05.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Evaluated at 0xB8D3 into lower bound 0x0D05 for the selected base ignition value; normal/alternate selection and later scheduling are separate.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -82,12 +82,17 @@ Consumer instruction addresses: `0x89A9`, `0x8A2F`.
 |---|---|---|---|
 | uniform_input | u16 0x08F2 pressure-derived estimate | Pressure-derived estimate | Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Evaluated at 0xB8D3 into lower bound 0x0D05 for the selected base ignition value; normal/alternate selection and later scheduling are separate [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families. [Byte-checked instruction replay](../semantics/PRESSURE_ESTIMATE.md).
+- Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
 - Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.
 - Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

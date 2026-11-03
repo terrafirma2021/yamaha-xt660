@@ -125,15 +125,21 @@ Converted values: 600, 800, 900, 1000, 1100, 1200, 1300, 1400, 1600, 1800, 2000,
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | row_axis | u16 0x0902 selected speed | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
-| column_axis | u16 0x08E8 throttle code; conditional 0xD000 substitution | Relative throttle coordinate | Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle. |
+| column_axis | u16 0x08E8 throttle code; conditional 0xD000 substitution | Relative throttle coordinate | Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked. |
+
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 <= ROM 0x4245 (stock 5) [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.
+- Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.
 - Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.
-- Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

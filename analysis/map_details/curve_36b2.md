@@ -16,7 +16,7 @@ Inputs: u16 0x0900 selected speed.
 
 Output: u16 0x09A8 = high byte << 8; added to 0x097E at a state transition.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Transition-triggered increment when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA704.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -73,17 +73,24 @@ Magnitude of a transition-triggered adjustment to centered RAM 0x097E. Not a bou
 uniform_input conversion: `speed_rpm`; requires `nominal_xt_timer`, `nominal_xt_crank`.
 Converted values: 1200, 2000, 2800, 3600, 4400, 5200, 6000.
 
+Ideal knot positions derived from the uniform header; final endpoint may lie beyond the clamped input span.
+
 ### Every input axis
 
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | uniform_input | u16 0x0900 selected speed | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Transition-triggered increment when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA704 [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: adaptive_step_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

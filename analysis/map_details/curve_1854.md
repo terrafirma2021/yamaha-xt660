@@ -102,6 +102,12 @@ Consumer instruction addresses: `0x9609`, `0x965E`.
 |---|---|---|---|
 | uniform_input | u16 0x08F2 pressure-derived estimate | Pressure-derived estimate | Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families. [Byte-checked instruction replay](../semantics/PRESSURE_ESTIMATE.md).
+- Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.

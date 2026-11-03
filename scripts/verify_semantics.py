@@ -3,7 +3,7 @@ import hashlib
 import json
 import re
 from audit_external_scaling import build as external_scaling_audit
-from map_review import input_review, remaining_questions
+from map_review import input_review, remaining_questions, resolved_findings, HISTORY_CURVES
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -119,6 +119,10 @@ for record in physical['maps']:
     m=by_id[record['id']]
     assert record['axis_interpretations']==input_review(m)
     assert record['open_items']==m['unresolved']==remaining_questions(m,record)
+    assert record['resolved_items']==resolved_findings(m,record)
+    assert not m['selection'].startswith('See caller evidence')
+    for item in record['resolved_items']:
+        assert (OUT/item['evidence']).is_file(),(m['id'],item)
     assert len(record['axis_interpretations'])==(1 if m['kind'].startswith('1D_') else 2)
     if record['cell_conversion']=='temperature_celsius_candidate':
         assert record['converted_cell_values']==[[v*.625-30 for v in row] for row in by_id[record['id']]['raw_values']]
@@ -128,6 +132,20 @@ for record in physical['maps']:
             knots=axis.get('raw_ideal_knots')
             if knots is None:knots=by_id[record['id']][axis['axis']]['raw_values']
             assert axis['values']==[v*.625-30 for v in knots]
+        if axis['conversion']=='tps_history_delta_counts':
+            assert m['id'] in HISTORY_CURVES and not axis['requires']
+            assert axis['values']==[v-128 for v in axis['raw_ideal_knots']]
+firmware_catalog=json.loads((ROOT/'analysis/firmware/catalog.json').read_text())
+for filename,script,family,count in [('input_coordinate_validation.json','test_input_coordinates.py',None,154368),
+                                     ('map_entry_validation.json','test_map_entry_paths.py','early',11520)]:
+    report=json.loads((ROOT/'analysis/firmware'/filename).read_text())
+    assert report['result']=='passed' and report['cases']==count
+    assert report['test_script_sha256']==digest(ROOT/'scripts'/script)
+    for name,expected in report['dependencies'].items():assert digest(ROOT/'scripts'/name)==expected
+    expected={i['id']:i['sha256'] for i in firmware_catalog['images'] if family is None or i['code_family']==family}
+    assert {i['id']:i['firmware_sha256'] for i in report['images']}==expected
+    if family is None:
+        assert all(i['stock_load_delta_deadband']==255 and i['stock_history_mask']==7 for i in report['images'])
 fixed_path=ROOT/'firmware/XT660X 2005 startup-checksum-fixed.bin'
 fixed=fixed_path.read_bytes()
 fix=json.loads((OUT/'checksum_fix.json').read_text())

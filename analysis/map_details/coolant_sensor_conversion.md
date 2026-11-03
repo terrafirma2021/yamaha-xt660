@@ -124,10 +124,14 @@ Required profiles: `yamaha_temperature_candidate`. These are assumptions, not me
 |---|---|---|---|
 | column_axis | 10-bit ADC channel 6 | ADC count | Not required: internal code/count |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Measured conversion is computed at 0x7115-0x7136 on each handler call. Effective 08F4 takes fallback ROM 4E64 (144) only when 08A0 bit 0x04 is clear and 08B0 bit 0x80 is set; otherwise it takes measured 08F6. This handler does not select a temperature table by D87 [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Cell interpretation: temperature_celsius_candidate. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.
-- Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

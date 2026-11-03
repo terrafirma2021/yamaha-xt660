@@ -11,7 +11,7 @@
     },
     {
       "script": "scripts/verify_semantics.py",
-      "sha256": "ec0538e7cd04a7a474c6af35004a710570497f0b6d8e54c237c69df03c40c9de",
+      "sha256": "134d1ea3b565d99295af8fa0f63037818237c1930583a8d4f8a67c0da7741387",
       "result": "passed"
     },
     {
@@ -2841,11 +2841,32 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0B80 bit 0 clear: normal load fuel path; see semantics/MAP_SELECTORS.md",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: timer_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/main_quantity_A.md",
@@ -2875,19 +2896,45 @@
         },
         {
           "axis": "column_axis",
-          "source": "u16 0x08E8 throttle code; fault substitution ROM 0x4E62",
+          "source": "u16 0x08E8 throttle code; ROM 0x4E62 substitution only when both 0x08AF fault groups 0x0C and 0x30 are nonzero",
           "domain": "throttle",
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Throttle quantity lookup at 0x7E33/0x7E57; 0x0A16 bit 2 chooses destination 0x0956 or 0x0958. ROM 0x4E62 replaces the axis only when both 0x08AF fault groups 0x0C and 0x30 are nonzero. Final fuel-mode weighting is separate",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: timer_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/main_quantity_B.md",
@@ -2925,11 +2972,32 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0B80 bit 0 set: completed four-stage road-speed sequence; stock zero timeout prevents completion from cleared state; see semantics/MAP_SELECTORS.md",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: timer_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/main_quantity_C.md",
@@ -2964,15 +3032,36 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/main_u8_A.md",
@@ -3007,15 +3096,36 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 <= ROM 0x4245 (stock 5)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/main_u8_B.md",
@@ -3050,15 +3160,36 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 > ROM 0x4245 (stock 5); not emitted by the recovered normal classifier",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/main_u8_C.md",
@@ -3084,7 +3215,7 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
         },
         {
           "axis": "column_axis",
@@ -3096,12 +3227,34 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0x7B8C before the startup/normal fuel branch. Result is clamped (11 to 10, >=23 to 22) then passed through the phase limiter and event dispatcher",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: injection_event_code. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Establish event-code phase relative to the physical crank cycle, including special scheduling modes.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/modulo24_surface.md",
@@ -3136,14 +3289,36 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0x864E–0x8690 for the secondary quantity. Variant 9 skips the normal secondary injector scheduling entry",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
+        "Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/correction_surface_A.md",
@@ -3178,14 +3353,35 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xA405–0xA447; consuming normalization state at 0x8DF9 requires ROM 0x3130 == 128. Stock 255 disables it and restores centered offset 128",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: normalization_offset_codes. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/correction_surface_B.md",
@@ -3223,11 +3419,32 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xB3C3 into 0x0972, multiplied by pressure factor 0x0971 and saturated into 0x0970 for the load fuel path",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/correction_surface_C.md",
@@ -3266,12 +3483,29 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Computed at 0xB886 into 0x0A88; selected as the alternate base when 0x0885 bit 0x20 is set",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/correction_surface_D.md",
@@ -3309,11 +3543,32 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Both tables are evaluated; ROM 0x3114 == 0x80 selects load (not selected in stock) at 0x7EE4; this is an equality comparison, not a bit test",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: normalization_input_code. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/fuel_normalization_load.md",
@@ -3348,14 +3603,35 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Both tables are evaluated; ROM 0x3114 != 0x80 selects throttle (selected in stock, value 0) at 0x7EE4; this is an equality comparison, not a bit test",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: normalization_input_code. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/fuel_normalization_throttle.md",
@@ -3390,9 +3666,25 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated after the selected code and CD4 offset are clamped into CD0 at 0x7F0B; both load/throttle selection branches share this denominator gain",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: normalization_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/fuel_normalization_gain.md",
@@ -3421,10 +3713,26 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Startup flag 0x0881:10 skips this gate. Otherwise 0x09A1:10 bypasses the delay; without that bypass ROM 0x18B5 == 128 inhibits it. Counter 0x0CAF reaching the looked-up threshold sets 0x09A1:40; this block does not clear the latched bit",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: feedback_delay_s. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_18b6.md",
@@ -3453,10 +3761,21 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Used by one-shot initialization at 0x715A–0x716C and the startup fuel branch at 0x7BBA (0x0881:10 set). The startup branch retains Q8 precision",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: startup_base_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_1996.md",
@@ -3484,9 +3803,21 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: post_start_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_32ef.md",
@@ -3514,9 +3845,21 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: post_start_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3301.md",
@@ -3541,13 +3884,29 @@
           "meaning": "Supply-derived code",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the voltage divider/reference and filtering before assigning volts."
+          "open_requirement": "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated in the fuel update at 0x74B8 and the periodic 0xB166 task, using the high byte of filtered supply 0x08DA; rounded result times eight supplies compensation 0x095E",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Effective ADC-high-byte supply code substitutes 154 on its fault bit. A signed Q8 tracking filter feeds injector compensation; startup copies the source directly. Dwell uses the effective byte before that filter.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: injector_compensation_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
-        "Confirm the voltage divider/reference and filtering before assigning volts.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_4234.md",
@@ -3573,9 +3932,25 @@
           "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Startup fuel branch (0x0881:10) evaluates pressure multiplier from 0x08F2",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_19c6.md",
@@ -3598,12 +3973,28 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Startup fuel branch (0x0881:10) uses 0x08CE; either TPS fault bit in 0x08AF:0C forces this lookup input to zero",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_19ba.md",
@@ -3632,10 +4023,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Startup fuel branch (0x0881:10) evaluates speed multiplier from 0x0900",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_19a8.md",
@@ -3664,10 +4071,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0x800C before the fuel-mode dispatcher at 0x8031; supplies 0x09A0 for the centered correction gain",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: q8_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_34b0.md",
@@ -3696,11 +4119,28 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0x8F91 into threshold 0x0A05 after filtered relative TPS is capped to byte 0x08EC; qualification tests follow at 0x8FAA",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: relative_tps_counts. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3494.md",
@@ -3726,9 +4166,26 @@
           "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Pressure factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_353a.md",
@@ -3756,9 +4213,21 @@
           "open_requirement": "Confirm the IAT circuit/temperature transfer before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: IAT factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438; consumer adds 384 before scaling",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: transient_iat_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_351d.md",
@@ -3778,16 +4247,32 @@
           "axis": "uniform_input",
           "source": "u8 0x08ED throttle-derived delta",
           "domain": "throttle_delta",
-          "meaning": "Internal throttle-delta code",
+          "meaning": "Filtered TPS change over four serviced samples",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate."
+          "open_requirement": "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
         }
       ],
       "open_items": [
-        "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_34d0.md",
@@ -3807,16 +4292,32 @@
           "axis": "uniform_input",
           "source": "u8 0x08ED throttle-derived delta",
           "domain": "throttle_delta",
-          "meaning": "Internal throttle-delta code",
+          "meaning": "Filtered TPS change over four serviced samples",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate."
+          "open_requirement": "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 <= ROM 0x34CF (stock 1)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
         }
       ],
       "open_items": [
-        "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_34da.md",
@@ -3836,16 +4337,32 @@
           "axis": "uniform_input",
           "source": "u8 0x08ED throttle-derived delta",
           "domain": "throttle_delta",
-          "meaning": "Internal throttle-delta code",
+          "meaning": "Filtered TPS change over four serviced samples",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate."
+          "open_requirement": "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 > ROM 0x34CF (stock 1)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
         }
       ],
       "open_items": [
-        "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_34e4.md",
@@ -3868,12 +4385,29 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Throttle factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_34ee.md",
@@ -3893,16 +4427,32 @@
           "axis": "uniform_input",
           "source": "u8 0x08ED throttle-derived delta",
           "domain": "throttle_delta",
-          "meaning": "Internal throttle-delta code",
+          "meaning": "Filtered TPS change over four serviced samples",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate."
+          "open_requirement": "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
         }
       ],
       "open_items": [
-        "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_355d.md",
@@ -3922,16 +4472,32 @@
           "axis": "uniform_input",
           "source": "u8 0x08ED throttle-derived delta",
           "domain": "throttle_delta",
-          "meaning": "Internal throttle-delta code",
+          "meaning": "Filtered TPS change over four serviced samples",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate."
+          "open_requirement": "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 <= ROM 0x355C (stock 5)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
         }
       ],
       "open_items": [
-        "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3567.md",
@@ -3951,16 +4517,32 @@
           "axis": "uniform_input",
           "source": "u8 0x08ED throttle-derived delta",
           "domain": "throttle_delta",
-          "meaning": "Internal throttle-delta code",
+          "meaning": "Filtered TPS change over four serviced samples",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate."
+          "open_requirement": "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Outside neutral-input branch: ratio code 0x0898 > ROM 0x355C (stock 5)",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
         }
       ],
       "open_items": [
-        "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3571.md",
@@ -3989,10 +4571,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Ratio code 0x0898 <= ROM 0x31EA (stock 5); consuming normalization state disabled by stock ROM 0x3130 = 0xFF",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: normalization_hold_s. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_31ec.md",
@@ -4021,10 +4619,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Ratio code 0x0898 > ROM 0x31EA (stock 5); consuming normalization state disabled by stock ROM 0x3130 = 0xFF",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: normalization_hold_s. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3200.md",
@@ -4053,10 +4667,26 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Adaptive eligibility block 0xA564–0xA63A requires counter 0x09B5 >= looked-up delay 0x09B4 along with both nonzero grids and the other qualification/fault gates; see INPUT_COORDINATES.md",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: feedback_delay_100ms_s. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_36c4.md",
@@ -4085,10 +4715,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Transition-triggered decrement when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA6D3",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: adaptive_step_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_36a4.md",
@@ -4117,10 +4763,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Transition-triggered increment when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA704",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: adaptive_step_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_36b2.md",
@@ -4148,9 +4810,20 @@
           "open_requirement": "Confirm the IAT circuit/temperature transfer before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Periodic 0xB166 task publishes IAT factor 0x0979; normal and startup fuel consumers use different stage scaling",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: fuel_iat_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3220.md",
@@ -4178,9 +4851,20 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Periodic 0xB166 task publishes positive-delta coolant gain 0x098F; selected by the sign of the qualified transient change",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: q8_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3345.md",
@@ -4208,9 +4892,20 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Periodic 0xB166 task publishes negative-delta coolant gain 0x0990; selected by the sign of the qualified transient change",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: q8_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3357.md",
@@ -4237,6 +4932,23 @@
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xB27B after inclusive throttle/speed/load gates, clear 08AF:3C / 089F:80 / 0881:10 and counter B3A > ROM 1871 (or an already-saturated counter). CB6 keeps filtering its retained target when gates reject. ROM 186F != 128 selects this estimator; see semantics/PRESSURE_ESTIMATE.md",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: load_offset_codes. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
@@ -4268,9 +4980,25 @@
           "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xB381 into 0x0971, combined with correction_surface_C to form the load fuel-path gain 0x0970",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_323c.md",
@@ -4296,9 +5024,25 @@
           "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xB3DB into 0x0978 for the throttle fuel path",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_32e0.md",
@@ -4326,10 +5070,22 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xB895 into 0x0A89; consumer at 0x96BA compares it with capped filtered relative TPS 0x08EC, not a spark-angle value",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: relative_tps_counts. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
         "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_4a33.md",
@@ -4357,9 +5113,20 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Periodic lookup at 0xB89E publishes coolant enrichment 0x097B for the normal fuel gain",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: coolant_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3315.md",
@@ -4387,9 +5154,20 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Periodic lookup at 0xB8AA publishes coolant enrichment 0x097C for the normal fuel gain",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: coolant_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_3327.md",
@@ -4417,10 +5195,21 @@
           "open_requirement": "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Periodic lookup at 0xB8B9 publishes coolant factor 0x0A0F for the joint transient pulse calculation",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer arithmetic differential tests"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_34fd.md",
@@ -4448,11 +5237,27 @@
           "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Evaluated at 0xB8D3 into lower bound 0x0D05 for the selected base ignition value; normal/alternate selection and later scheduling are separate",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/curve_4bac.md",
@@ -4481,11 +5286,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 set; variant 0x0D87 == 9 and RAM 0x0896 bit 0x10 clear",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0985_gain_1.md",
@@ -4514,11 +5339,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 set; otherwise RAM 0x0898 <= ROM 0x3369",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0985_gain_2.md",
@@ -4547,11 +5392,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 set; otherwise RAM 0x0898 > ROM 0x3369",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0985_gain_3.md",
@@ -4580,11 +5445,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 clear; variant 0x0D87 == 9 and RAM 0x0896 bit 0x10 clear",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0985_gain_4.md",
@@ -4613,11 +5498,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 clear; otherwise RAM 0x0898 <= ROM 0x336A",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0985_gain_5.md",
@@ -4646,11 +5551,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 clear; otherwise RAM 0x0898 > ROM 0x336A",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0985_gain_6.md",
@@ -4679,11 +5604,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0989 bit 7 set; variant 0x0D87 == 9 and RAM 0x0896 bit 0x10 clear",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0989_gain_1.md",
@@ -4712,11 +5657,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0989 bit 7 set; otherwise RAM 0x0898 <= ROM 0x33F5",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0989_gain_2.md",
@@ -4745,11 +5710,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0989 bit 7 set; otherwise RAM 0x0898 > ROM 0x33F5",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0989_gain_3.md",
@@ -4778,11 +5763,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0989 bit 7 clear; variant 0x0D87 == 9 and RAM 0x0896 bit 0x10 clear",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0989_gain_4.md",
@@ -4811,11 +5816,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0989 bit 7 clear; otherwise RAM 0x0898 <= ROM 0x33F6",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0989_gain_5.md",
@@ -4844,11 +5869,31 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0989 bit 7 clear; otherwise RAM 0x0898 > ROM 0x33F6",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/delta_0989_gain_6.md",
@@ -4883,14 +5928,40 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Both PAIR grids must be nonzero for the normal counter gate at 0x9CAE–0x9D61. Variant, coolant, post-start, centered-state and neutral/ratio gates apply; diagnostic bypass and fallback command branches are separate",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: eligibility. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/step_grid_4c44.md",
@@ -4928,11 +5999,37 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Both PAIR grids must be nonzero for the normal counter gate at 0x9CAE–0x9D61. Variant, coolant, post-start, centered-state and neutral/ratio gates apply; diagnostic bypass and fallback command branches are separate",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: eligibility. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/step_grid_4d48.md",
@@ -4967,14 +6064,40 @@
           "meaning": "Relative throttle coordinate",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle."
+          "open_requirement": "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Both adaptive grids must be nonzero in 0xA564–0xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: eligibility. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+        "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/step_grid_35b0.md",
@@ -5012,11 +6135,37 @@
           "open_requirement": "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Both adaptive grids must be nonzero in 0xA564–0xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Immediate eligibility/fault branches and threshold boundaries are replay-checked against all five early-family BINs. Tests use synthetic state fixtures, including deliberately active grids.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: eligibility. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-        "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/step_grid_363c.md",
@@ -5045,10 +6194,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0D87 != 9",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: timer_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/timing_speed_4f64.md",
@@ -5077,10 +6242,26 @@
           "open_requirement": "Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM."
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x0D87 == 9",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: timer_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/timing_speed_4f81.md",
@@ -5115,14 +6296,35 @@
           "meaning": "Supply-derived code",
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
-          "open_requirement": "Confirm the voltage divider/reference and filtering before assigning volts."
+          "open_requirement": "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM 0x088D bit 0x40 overrides lookup result with ROM 0x4BAB",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Effective ADC-high-byte supply code substitutes 154 on its fault bit. A signed Q8 tracking filter feeds injector compensation; startup copies the source directly. Dwell uses the effective byte before that filter.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional.",
+          "evidence": "INPUT_COORDINATES.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: dwell_ms. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Confirm the voltage divider/reference and filtering before assigning volts.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+        "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/dwell_supply_speed.md",
@@ -5150,9 +6352,20 @@
           "open_requirement": null
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Measured conversion is computed at 0x7115-0x7136 on each handler call. Effective 08F4 takes fallback ROM 4E64 (144) only when 08A0 bit 0x04 is clear and 08B0 bit 0x80 is set; otherwise it takes measured 08F6. This handler does not select a temperature table by D87",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: temperature_celsius_candidate. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/coolant_sensor_conversion.md",
@@ -5180,9 +6393,20 @@
           "open_requirement": null
         }
       ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: Lookup runs when 08A0 bit 0x04 is set or 08B0 bit 0x40 is clear; otherwise 08F5 takes ROM 4E65 (80). This handler does not select a temperature table by D87",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Cell interpretation: temperature_celsius_candidate. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
+        }
+      ],
       "open_items": [
         "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-        "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "dossier": "analysis/map_details/intake_temperature_conversion.md",
@@ -5206,6 +6430,23 @@
           "raw_coordinate_status": "Traced in catalogue",
           "physical_status": "Open",
           "open_requirement": "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa."
+        }
+      ],
+      "resolved_items": [
+        {
+          "claim": "Lookup inputs, destination and immediate selection: RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md",
+          "evidence": "MAP_SELECTORS.md",
+          "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families.",
+          "evidence": "PRESSURE_ESTIMATE.md",
+          "method": "Byte-checked instruction replay"
+        },
+        {
+          "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
+          "evidence": "MAP_CONSUMERS.md",
+          "method": "Consumer derivation; see scoped test coverage"
         }
       ],
       "open_items": [
@@ -6498,6 +7739,32 @@
       "audit_action": "Report/source provenance checked; fixtures not re-executed by ledger build"
     },
     {
+      "path": "analysis/firmware/input_coordinate_validation.json",
+      "sha256": "16018e64f68800359653153a89f40f515f2581965d3d406512a47b2554a9fb8f",
+      "recorded_result": "passed",
+      "recorded_cases": 154368,
+      "scope": [
+        "Instruction replay, not a live ECU/interrupt timing test",
+        "No sensor voltage/angle/temperature transfer is inferred",
+        "Task period in physical time remains conditional on clock"
+      ],
+      "evidence_scope": null,
+      "audit_action": "Report/source provenance checked; fixtures not re-executed by ledger build"
+    },
+    {
+      "path": "analysis/firmware/map_entry_validation.json",
+      "sha256": "f8e9eb93d47eb6f16734d291d094f246561c704beebc9f25aba91cfa934377b2",
+      "recorded_result": "passed",
+      "recorded_cases": 11520,
+      "scope": [
+        "Early application family only",
+        "Boundary/branch fixtures, not all combinations or concurrent ECU execution",
+        "No physical pin-level or sensor-unit verification"
+      ],
+      "evidence_scope": null,
+      "audit_action": "Report/source provenance checked; fixtures not re-executed by ledger build"
+    },
+    {
       "path": "analysis/semantics/connector_path_validation.json",
       "sha256": "cac99bd7f2608ca3494f4f4549ea69e698c672c68a2cb08e6a3ec2908d7d68cf",
       "recorded_result": "passed",
@@ -6586,7 +7853,7 @@
     },
     {
       "path": "analysis/semantics/units_variant_validation.json",
-      "sha256": "a543de43f6fa1430113cfb5b5ac02e3b52971bbc8f58508f4ae1465af2ff63bc",
+      "sha256": "0ef8d306caac356de07c1855e9628315cdd3edb30172b23f50edfc227d8b5076",
       "recorded_result": "passed",
       "recorded_cases": 284905,
       "scope": "Isolated instruction execution with RAM-backed peripherals. Physical units, oscillator rate, sensor circuitry, crank/TDC geometry and hardware outputs are not validated by these tests.",
@@ -6611,12 +7878,12 @@
     "connector_routes_physically_verified": 0
   },
   "input_sha256": {
-    "analysis/maps.json": "9842ae50767ec4eaa1d93780d7ecebcf370094cf5c4c9f25f06454d9529bbd4a",
-    "analysis/semantics/physical_units.json": "15e6e761d2eb36daf2cdc2977bb487ce9a294b2b24774482b543855b43f34e26",
+    "analysis/maps.json": "91d1106cd5b4403fea4b74679b70768b033e7614a9b002922a1af4dbca9ea4b4",
+    "analysis/semantics/physical_units.json": "b1c70f59cac8b92d2a8d368e7ec3192e7f3217d9ca72a71d0e631de3e60c952d",
     "analysis/semantics/mcu_pin_overview.json": "1a686bdeb49a9a085be1016fe505bf1c6e27553ba4063ea435a8a9ea859e0698",
     "analysis/semantics/package_datasheet_review.json": "1f5f1d8a7c7b2d2acaf66dc4da1385a65e1f1a3fc9c426c7c4e555353414ce4a",
     "analysis/semantics/code_pin_review.json": "e981937623b50e6a32f326614fe602a590c1d480eb366081e7329e8525605204",
-    "scripts/map_review.py": "1bca11a483bd579358657104789127c86a7b0356f53eb8f04041ca321e0ae1c3",
-    "scripts/build_verification_ledger.py": "2f972df369800ca89ca62695d3172793f5a5e96374dba0092fb1d3d52ddff254"
+    "scripts/map_review.py": "ed27d78c54fafdf3e6bf2f3d15c1c03bf69d5f6fbe42f9a4813a29cd8346c135",
+    "scripts/build_verification_ledger.py": "7dcdd9177ff88a6031fa37bb41e36590724e4589f7d54f60d162bbeca1ef3f98"
   }
 }

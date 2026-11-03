@@ -16,7 +16,7 @@ Inputs: u16 0x0900 selected speed; u16 0x08E8 throttle code.
 
 Output: u8 0x0CEC.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Evaluated at 0x864E–0x8690 for the secondary quantity. Variant 9 skips the normal secondary injector scheduling entry.
 
 Interpolation: See the helper and axis evidence below; standard grid paths use Q8 indices..
 
@@ -106,14 +106,21 @@ Converted values: 0, 1300, 1500, 2000, 2500, 3000, 4000, 5000, 5500, 6000, 7000,
 | Axis | Traced source | Interpretation | Physical scale |
 |---|---|---|---|
 | row_axis | u16 0x0900 selected speed | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
-| column_axis | u16 0x08E8 throttle code | Relative throttle coordinate | Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle. |
+| column_axis | u16 0x08E8 throttle code | Relative throttle coordinate | Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked. |
+
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Evaluated at 0x864E–0x8690 for the secondary quantity. Variant 9 skips the normal secondary injector scheduling entry [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.
+- Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

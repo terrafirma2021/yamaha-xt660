@@ -1593,7 +1593,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Normal load-based fuel quantity",
@@ -1601,6 +1600,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "A is the normal load path; C requires completion of the four-stage road-speed sequence at 0xAD1C–0xAF20. Stock timeout 0x3710 = 0 prevents completion from cleared detector state. B uses filtered throttle. Values precede final pulse corrections.",
     "cells_sha256": "b2d98072023c9649cb6bb5d73fd741d255823cafd68dbd6661f619e81f0a9b5b",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -3181,18 +3181,17 @@
     ],
     "inputs": [
       "u16 0x0900 selected speed",
-      "u16 0x08E8 throttle code; fault substitution ROM 0x4E62"
+      "u16 0x08E8 throttle code; ROM 0x4E62 substitution only when both 0x08AF fault groups 0x0C and 0x30 are nonzero"
     ],
     "output": "0x0956 or 0x0958",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Throttle quantity lookup at 0x7E33/0x7E57; 0x0A16 bit 2 chooses destination 0x0956 or 0x0958. ROM 0x4E62 replaces the axis only when both 0x08AF fault groups 0x0C and 0x30 are nonzero. Final fuel-mode weighting is separate",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-based fuel quantity",
@@ -3200,6 +3199,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "A is the normal load path; C requires completion of the four-stage road-speed sequence at 0xAD1C–0xAF20. Stock timeout 0x3710 = 0 prevents completion from cleared detector state. B uses filtered throttle. Values precede final pulse corrections.",
     "cells_sha256": "b6b3fef86db5570c249149be898a7aa24f1439d849f056071a1ec79a7e5b8f7e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -4796,7 +4796,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate load-based fuel quantity",
@@ -4804,6 +4803,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "A is the normal load path; C requires completion of the four-stage road-speed sequence at 0xAD1C–0xAF20. Stock timeout 0x3710 = 0 prevents completion from cleared detector state. B uses filtered throttle. Values precede final pulse corrections.",
     "cells_sha256": "c67345007c3cce2c357afb32ce4c68c617b4c98ab69b78cd289e2426aafadd1d",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -5629,9 +5629,8 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Base ignition timing — neutral",
@@ -5639,6 +5638,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Neutral-input branch means variant 9 with filtered PB4 low (0x0896 bit 4 clear). Otherwise stock threshold 5 chooses B for ratio codes 0–5, C for codes above 5. The recovered normal classifier produces only 0–5; fault 42 forces 5. Absolute BTDC remains unresolved.",
     "cells_sha256": "95989094d452c9b0a6d2009d6850a319f9ff6504b988ad412bd40717ac4972be",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -6464,9 +6464,8 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Base ignition timing — standard",
@@ -6474,6 +6473,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Neutral-input branch means variant 9 with filtered PB4 low (0x0896 bit 4 clear). Otherwise stock threshold 5 chooses B for ratio codes 0–5, C for codes above 5. The recovered normal classifier produces only 0–5; fault 42 forces 5. Absolute BTDC remains unresolved.",
     "cells_sha256": "3385099bbee2cf3b2571cbfd8765e9559cf5c8b26abad4ea0afd830283337b56",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7299,9 +7299,8 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Base ignition timing — alternate",
@@ -7309,6 +7308,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Neutral-input branch means variant 9 with filtered PB4 low (0x0896 bit 4 clear). Otherwise stock threshold 5 chooses B for ratio codes 0–5, C for codes above 5. The recovered normal classifier produces only 0–5; fault 42 forces 5. Absolute BTDC remains unresolved.",
     "cells_sha256": "3385099bbee2cf3b2571cbfd8765e9559cf5c8b26abad4ea0afd830283337b56",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7546,14 +7546,14 @@
     "output": "u8 0x0A1B; code 11 becomes 10 and codes >=23 become 22; transferred through 0x0A1E to 0x0A1C",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x7B8C before the startup/normal fuel branch. Result is clamped (11 to 10, >=23 to 22) then passed through the phase limiter and event dispatcher",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish event-code phase relative to the physical crank cycle, including special scheduling modes.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Injection event-phase target",
@@ -7561,6 +7561,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "e55a5c27736a8761c8e96acec072102325e08cb2d0dbb4d4702cfe38f8ab0709",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7856,13 +7857,13 @@
     "output": "u8 0x0CEC",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x864E–0x8690 for the secondary quantity. Variant 9 skips the normal secondary injector scheduling entry",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
+      "Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Secondary injector quantity multiplier",
@@ -7870,6 +7871,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "d1fd1ebc2dac0d7c98be6b73032a5cd17713e96005d17db804480c5af195b291",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8113,13 +8115,12 @@
     "output": "u8 0x09D8, latched to 0x09D6 and selected into 0x0CD4",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xA405–0xA447; consuming normalization state at 0x8DF9 requires ROM 0x3130 == 128. Stock 255 disables it and restores centered offset 128",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization offset",
@@ -8127,6 +8128,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "This normal correction state is disabled in the supplied image by ROM 0x3130 = 0xFF. Selection numbers do not imply named riding modes.",
     "cells_sha256": "82e7494381f9fe5994bdbce729cdbe0eaff9b2a4b488853cc79ce4bc12e96ad3",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8323,13 +8325,12 @@
     "output": "u8 0x0972; multiplied by 0x0971, scaled and saturated into 0x0970",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB3C3 into 0x0972, multiplied by pressure factor 0x0971 and saturated into 0x0970 for the load fuel path",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel correction gain vs speed and load",
@@ -8337,6 +8338,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "1b34669db94decae583e183ee2ffeb07cf504b9f52fae0056c5cf343325157e4",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8596,14 +8598,14 @@
     "output": "u8 0x0A88 selected as a base by 0x0885 bit 0x20",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Computed at 0xB886 into 0x0A88; selected as the alternate base when 0x0885 bit 0x20 is set",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate base ignition timing vs speed and coolant",
@@ -8611,6 +8613,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "d667e972ea87cc6c086ea36ec6c08552fb05ac35f0e90c3f19be3d7aa753161d",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8693,7 +8696,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-based fuel normalization input",
@@ -8701,6 +8703,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "9b099aee8e27b471926e1567f3c94a967dc1eb3d27008935055c58427acd8e9e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8782,8 +8785,7 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-based fuel normalization input",
@@ -8791,6 +8793,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "9b099aee8e27b471926e1567f3c94a967dc1eb3d27008935055c58427acd8e9e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8871,7 +8874,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization denominator gain",
@@ -8879,6 +8881,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "8d65a89d33fc69d31f85fd8ed396d6dd5672cd59f80bd2ced560d4bbaeb43222",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8931,12 +8934,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup flag 0x0881:10 skips this gate. Otherwise 0x09A1:10 bypasses the delay; without that bypass ROM 0x18B5 == 128 inhibits it. Counter 0x0CAF reaching the looked-up threshold sets 0x09A1:40; this block does not clear the latched bit",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Feedback startup delay vs coolant",
@@ -8944,6 +8946,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5ac0a8c0584f05981ecd0c5dec962d195fe0207d6ce17f0ee6385bdc251cfa2e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9002,12 +9005,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Used by one-shot initialization at 0x715A–0x716C and the startup fuel branch at 0x7BBA (0x0881:10 set). The startup branch retains Q8 precision",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel base quantity vs coolant",
@@ -9015,6 +9017,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "d829a56b1f7bbd492af9acbd892e75fb242eb85405270d40ca9af0cf5eeb9ca6",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9073,11 +9076,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment — fast-decay state",
@@ -9085,6 +9088,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Fast/slow describe the relative decay with stock decrement bytes 123/2. They are alternative enrichment states, not two terms to add; wall-clock decay time remains mode-dependent.",
     "cells_sha256": "524671dcd235fa1167d3972351aa69e47a05d942a9d0541f73dda50c0cd607c5",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9143,11 +9147,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment — slow-decay state",
@@ -9155,6 +9159,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Fast/slow describe the relative decay with stock decrement bytes 123/2. They are alternative enrichment states, not two terms to add; wall-clock decay time remains mode-dependent.",
     "cells_sha256": "55d3a4814089fcf049380bb2fa653f85610fa581a4e1694e145f15a58bbda160",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9205,12 +9210,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated in the fuel update at 0x74B8 and the periodic 0xB166 task, using the high byte of filtered supply 0x08DA; rounded result times eight supplies compensation 0x095E",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
-      "Confirm the voltage divider/reference and filtering before assigning volts.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Injector pulse compensation vs supply",
@@ -9218,6 +9222,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "An additive supply-dependent pulse correction is established. Injector dead time remains a candidate physical interpretation, so it is not the primary name.",
     "cells_sha256": "7fc2df8dd7e695729418058502fc3c9029a333b1149438ece3c758f9c14f8f2e",
+    "input_findings": [
+      "Axis uses the high byte of the Q8 filtered supply word. Fault replacement is 154; startup copies the effective source directly. Filter and fault branches are replay-checked; volts still require the divider/reference."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9263,11 +9270,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup fuel branch (0x0881:10) evaluates pressure multiplier from 0x08F2",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel multiplier vs pressure estimate",
@@ -9275,6 +9281,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5a6044f6289e77c4dc46f3db71e014aa208ddeda24dd49f5d2deb9b63c9b1e22",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9318,11 +9325,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup fuel branch (0x0881:10) uses 0x08CE; either TPS fault bit in 0x08AF:0C forces this lookup input to zero",
     "evidence_addresses": [],
     "unresolved": [
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel multiplier vs throttle",
@@ -9330,6 +9336,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "29c2def8bcf9aa76abaaf6d98c3a4998c332adb3e7a7ae18d122b0f887b08c8f",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9378,12 +9385,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup fuel branch (0x0881:10) evaluates speed multiplier from 0x0900",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel multiplier vs engine speed",
@@ -9391,6 +9397,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "d10fad951d1a2c20e01a3dbf9d7f90e9555e387aaaf7cd4989c78b1e9cd50214",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9443,12 +9450,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x800C before the fuel-mode dispatcher at 0x8031; supplies 0x09A0 for the centered correction gain",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Centered fuel-correction gain vs engine speed",
@@ -9456,6 +9462,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "ea5a52dc24a2e64b8ea98a5de69e6817b00f5467ed9ba1d360e1b0df6952f2e1",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9503,13 +9510,13 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x8F91 into threshold 0x0A05 after filtered relative TPS is capped to byte 0x08EC; qualification tests follow at 0x8FAA",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Relative-throttle qualification threshold vs speed",
@@ -9517,6 +9524,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "4001ba71acef633247a0806147b959216c7013b82c0d88630e72e4d6bee6efed",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9568,11 +9576,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Pressure factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs pressure estimate",
@@ -9580,6 +9588,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "52e79b11711faf8d7d7abec3ab3369797364d9a2689c3060d3e2853563de7905",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9648,11 +9657,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "IAT factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438; consumer adds 384 before scaling",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs intake temperature",
@@ -9660,6 +9669,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5ef8aad4fe4f48b9ac63229bc517077fc93944c631c641c60166c898b9aa35d2",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9707,9 +9717,8 @@
     "selection": "Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 — neutral",
@@ -9717,6 +9726,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "0448497c4ee03f458d27a2f8b2f13601ef7fd7b7cc7341d2f4aed7e594579984",
+    "input_findings": [
+      "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9764,9 +9776,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 <= ROM 0x34CF (stock 1)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 — lower speed-ratio range",
@@ -9774,6 +9785,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "91249390b65e4f8a231f34cb9af7fb6a197ca0535da30d87c47dae4eeba3c6d3",
+    "input_findings": [
+      "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9821,9 +9835,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 > ROM 0x34CF (stock 1)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 — higher speed-ratio range",
@@ -9831,6 +9844,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "491cccd2f88c559912b1319d41d9d69395ebc67d781cd904ea6b52a6cb5a423a",
+    "input_findings": [
+      "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9883,11 +9899,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Throttle factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438",
     "evidence_addresses": [],
     "unresolved": [
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs throttle",
@@ -9895,6 +9911,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "1f726293631cc9fc3d8c31af993602beff1089ff3df8be379e2d7fd7b47f7669",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9942,9 +9959,8 @@
     "selection": "Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 — neutral",
@@ -9952,6 +9968,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "3a7329187ef9d48b86311abe3d189fe2a8dad783b38b5ffcd9328a4123edfed5",
+    "input_findings": [
+      "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9999,9 +10018,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 <= ROM 0x355C (stock 5)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 — standard",
@@ -10009,6 +10027,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "86ee084c933e0af9e271ca60785ed7c93a6567384180d0d1950fa31c821f5682",
+    "input_findings": [
+      "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10056,9 +10077,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 > ROM 0x355C (stock 5)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 — alternate",
@@ -10066,6 +10086,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "86ee084c933e0af9e271ca60785ed7c93a6567384180d0d1950fa31c821f5682",
+    "input_findings": [
+      "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10121,7 +10144,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization recovery hold — standard",
@@ -10129,6 +10151,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "The selector at 0xA448 splits ratio code 0x0898 at ROM 0x31EA (stock 5): normal 0–5 selects 0x31EC; extended above 5 selects 0x3200. The consuming normalization state is disabled in this image by ROM 0x3130 = 0xFF.",
     "cells_sha256": "dd46c3eebb1884ff3b5258c0a2fc9398e560a29e0780d4b53869b6254aa46a96",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10184,7 +10207,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization recovery hold — alternate",
@@ -10192,6 +10214,7 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "The selector at 0xA448 splits ratio code 0x0898 at ROM 0x31EA (stock 5): normal 0–5 selects 0x31EC; extended above 5 selects 0x3200. The consuming normalization state is disabled in this image by ROM 0x3130 = 0xFF.",
     "cells_sha256": "dd46c3eebb1884ff3b5258c0a2fc9398e560a29e0780d4b53869b6254aa46a96",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10244,12 +10267,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Adaptive eligibility block 0xA564–0xA63A requires counter 0x09B5 >= looked-up delay 0x09B4 along with both nonzero grids and the other qualification/fault gates; see INPUT_COORDINATES.md",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Feedback eligibility delay vs coolant",
@@ -10257,6 +10279,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5322fecfc92a5e3248a297a3df3eddfb9bd9049504272e4f572b87fa36d4b3bd",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10301,12 +10324,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Transition-triggered decrement when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA6D3",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive fuel correction — decrement step",
@@ -10314,6 +10336,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "12a552b1c1b28ed6ca45d87d75e9d2ce7764ed42bc3f9586e2228d02e9879ea0",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10358,12 +10381,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Transition-triggered increment when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA704",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive fuel correction — increment step",
@@ -10371,6 +10393,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "12a552b1c1b28ed6ca45d87d75e9d2ce7764ed42bc3f9586e2228d02e9879ea0",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10433,11 +10456,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic 0xB166 task publishes IAT factor 0x0979; normal and startup fuel consumers use different stage scaling",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel multiplier vs intake temperature",
@@ -10445,6 +10467,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "79f9c96f4a58b6608a49465d7cc9772f4bc70bfa76f5242991d0914ef6652f1e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10497,11 +10520,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic 0xB166 task publishes positive-delta coolant gain 0x098F; selected by the sign of the qualified transient change",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Positive transient fuel gain vs coolant",
@@ -10509,6 +10531,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "ef65e331c3fe81e7a87140380c587791c4d5066d3922f14d378bbed9fa08c416",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10561,11 +10584,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic 0xB166 task publishes negative-delta coolant gain 0x0990; selected by the sign of the qualified transient change",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Negative transient fuel gain vs coolant",
@@ -10573,6 +10595,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "1dd0ca1828485df96b3844d2054629feb7c6727ce2271be2338a8d18b1270469",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10643,6 +10666,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5e8a75acf27058e40ae1cfaa631b30e6fd9280e10431ab9eb1cbdf626dcf295e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10701,11 +10725,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB381 into 0x0971, combined with correction_surface_C to form the load fuel-path gain 0x0970",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-path fuel multiplier vs pressure estimate",
@@ -10713,6 +10736,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "4e523421a5164dd2d973d67348900e42d35745ab5c90f048e731586b8df6f971",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10758,11 +10782,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB3DB into 0x0978 for the throttle fuel path",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-path fuel multiplier vs pressure estimate",
@@ -10770,6 +10793,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5a6044f6289e77c4dc46f3db71e014aa208ddeda24dd49f5d2deb9b63c9b1e22",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10822,12 +10846,12 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB895 into 0x0A89; consumer at 0x96BA compares it with capped filtered relative TPS 0x08EC, not a spark-angle value",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate ignition mode — throttle threshold vs coolant",
@@ -10835,6 +10859,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "bb8b46d8b46a7639dbb02cffd8c1e5ab062577bc8273804f8676bee0d52f0afd",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10887,11 +10912,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic lookup at 0xB89E publishes coolant enrichment 0x097B for the normal fuel gain",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Coolant enrichment — load-based fuel path",
@@ -10899,6 +10923,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "0e036b721cec6e2d9d2aff63d764b10c2f0216c66f8e30215bb0638b76975875",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10951,11 +10976,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic lookup at 0xB8AA publishes coolant enrichment 0x097C for the normal fuel gain",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Coolant enrichment — throttle-based fuel path",
@@ -10963,6 +10987,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "0e036b721cec6e2d9d2aff63d764b10c2f0216c66f8e30215bb0638b76975875",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11029,12 +11054,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic lookup at 0xB8B9 publishes coolant factor 0x0A0F for the joint transient pulse calculation",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel pulse contribution vs coolant",
@@ -11042,6 +11066,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "7310d864fca0d8f605d9609d3cf12330d353e791dc2cf942a8f7985689e2212d",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11100,13 +11125,12 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB8D3 into lower bound 0x0D05 for the selected base ignition value; normal/alternate selection and later scheduling are separate",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Spark timing bound vs pressure estimate",
@@ -11114,6 +11138,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "0709980d4a65a99b1fb414be947660d4d6f952eec5745f288c49c4f0ba4d6667",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11204,8 +11229,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain — nonnegative, neutral",
@@ -11213,6 +11236,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "2e901967ae8504004bd61d1e5cd885390d300937a6f4d8531d8d3f6bc8d22ce7",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11303,8 +11329,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain — nonnegative, standard",
@@ -11312,6 +11336,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11402,8 +11429,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain — nonnegative, alternate",
@@ -11411,6 +11436,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11501,8 +11529,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain — negative, neutral",
@@ -11510,6 +11536,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "cc5f75055ebf12732df30ced1ee1f164d926e45d09b042ed74be1a6421b65df4",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11600,8 +11629,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain — negative, standard",
@@ -11609,6 +11636,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "dfc5d5046f3393afa9adf5c50c69d3e7cb72ffe7afd459063315c3c168b88a6c",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11699,8 +11729,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain — negative, alternate",
@@ -11708,6 +11736,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "dfc5d5046f3393afa9adf5c50c69d3e7cb72ffe7afd459063315c3c168b88a6c",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11798,8 +11829,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain — nonnegative, neutral",
@@ -11807,6 +11836,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11897,8 +11929,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain — nonnegative, standard",
@@ -11906,6 +11936,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11996,8 +12029,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain — nonnegative, alternate",
@@ -12005,6 +12036,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12095,8 +12129,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain — negative, neutral",
@@ -12104,6 +12136,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "b8eebe14ecda87a603f58aab5c2f8709d18f2a5889cb3d65e33eb3298f59f068",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12194,8 +12229,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain — negative, standard",
@@ -12203,6 +12236,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "b8eebe14ecda87a603f58aab5c2f8709d18f2a5889cb3d65e33eb3298f59f068",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12293,8 +12329,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain — negative, alternate",
@@ -12302,6 +12336,9 @@
     "naming_basis": "analysis/semantics/MAP_SELECTORS.md",
     "naming_note": "Directions refer to internal coordinate deltas, including deadband encoding, not calibrated physical rates. Neutral-input branch requires variant 9 and filtered PB4 low; otherwise normal/extended split at stock ratio code 5. These codes are not established gear numbers.",
     "cells_sha256": "b8eebe14ecda87a603f58aab5c2f8709d18f2a5889cb3d65e33eb3298f59f068",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12634,12 +12671,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both PAIR grids must be nonzero for the normal counter gate at 0x9CAE–0x9D61. Variant, coolant, post-start, centered-state and neutral/ratio gates apply; diagnostic bypass and fallback command branches are separate",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Air-induction enable vs speed and throttle",
@@ -12647,6 +12683,7 @@
     "naming_basis": "analysis/semantics/EXTENDED_MAPS.md",
     "naming_note": "Logical eligibility gate: zero inhibits the path; nonzero permits further tests. It is not a physical percentage or a complete enable decision. Both stock adaptive-feedback grids contain only zero.",
     "cells_sha256": "cc92e90b4a6217422af2e629a57341fb3d104b00951cebfa82e9de0e7f0b5b95",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12979,12 +13016,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both PAIR grids must be nonzero for the normal counter gate at 0x9CAE–0x9D61. Variant, coolant, post-start, centered-state and neutral/ratio gates apply; diagnostic bypass and fallback command branches are separate",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Air-induction enable vs speed and load",
@@ -12992,6 +13028,7 @@
     "naming_basis": "analysis/semantics/EXTENDED_MAPS.md",
     "naming_note": "Logical eligibility gate: zero inhibits the path; nonzero permits further tests. It is not a physical percentage or a complete enable decision. Both stock adaptive-feedback grids contain only zero.",
     "cells_sha256": "5780af3e31d514b4e9a0615dc672e08845a087ad5e8b605b0064ada75c9ca244",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13194,12 +13231,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both adaptive grids must be nonzero in 0xA564–0xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive feedback enable vs speed and throttle",
@@ -13207,6 +13243,7 @@
     "naming_basis": "analysis/semantics/EXTENDED_MAPS.md",
     "naming_note": "Logical eligibility gate: zero inhibits the path; nonzero permits further tests. It is not a physical percentage or a complete enable decision. Both stock adaptive-feedback grids contain only zero.",
     "cells_sha256": "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13409,12 +13446,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both adaptive grids must be nonzero in 0xA564–0xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive feedback enable vs speed and load",
@@ -13422,6 +13458,7 @@
     "naming_basis": "analysis/semantics/EXTENDED_MAPS.md",
     "naming_note": "Logical eligibility gate: zero inhibits the path; nonzero permits further tests. It is not a physical percentage or a complete enable decision. Both stock adaptive-feedback grids contain only zero.",
     "cells_sha256": "cd00e292c5970d3c5e2f0ffa5171e555bc46bfc4faddfb4a418b6840b86e79a3",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13523,7 +13560,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Spark time correction — other variants",
@@ -13531,6 +13567,7 @@
     "naming_basis": "analysis/semantics/SPARK_SCHEDULER.md",
     "naming_note": "Role follows the recovered time/charge scheduler. Timer units depend on the nominal clock profile. A dwell contribution is not the final complete dwell duration, and a time correction is not absolute BTDC.",
     "cells_sha256": "015a758dc1f5822ac30cbe9a8dcfaedeed110904515a5e186857b263d1017cac",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13632,7 +13669,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Spark time correction — XT variant 9",
@@ -13640,6 +13676,7 @@
     "naming_basis": "analysis/semantics/SPARK_SCHEDULER.md",
     "naming_note": "Role follows the recovered time/charge scheduler. Timer units depend on the nominal clock profile. A dwell contribution is not the final complete dwell duration, and a time correction is not absolute BTDC.",
     "cells_sha256": "c8147d7479e041e4c3f0d3a5d8085d30eb31832fcb5c799a36e5aae0479c9012",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13881,8 +13918,7 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the voltage divider/reference and filtering before assigning volts.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Ignition dwell contribution vs speed and supply",
@@ -13890,6 +13926,9 @@
     "naming_basis": "analysis/semantics/SPARK_SCHEDULER.md",
     "naming_note": "Role follows the recovered time/charge scheduler. Timer units depend on the nominal clock profile. A dwell contribution is not the final complete dwell duration, and a time correction is not absolute BTDC.",
     "cells_sha256": "c2e48040409fa3a6d6190cd9e258cf68cd150da01593640c9db1a9a276793a95",
+    "input_findings": [
+      "Supply axis uses the effective ADC-high-byte code before the injector-compensation filter. Its fault replacement is 154. Volts still require the divider/reference."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13994,7 +14033,6 @@
     },
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Coolant sensor conversion",
@@ -14002,6 +14040,7 @@
     "naming_basis": "analysis/semantics/TEMPERATURE_PROFILE.md",
     "naming_note": "Sensor identity is corroborated. The internal-code-to-Celsius profile remains conditional on the sensor circuit and ECU identification.",
     "cells_sha256": "54d917c30f4e3796a86143c170ef78efa64234c162e6bf9bc6e927a7416de75f",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14113,7 +14152,6 @@
     },
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Intake air temperature sensor conversion",
@@ -14121,6 +14159,7 @@
     "naming_basis": "analysis/semantics/TEMPERATURE_PROFILE.md",
     "naming_note": "Sensor identity is corroborated. The internal-code-to-Celsius profile remains conditional on the sensor circuit and ECU identification.",
     "cells_sha256": "122324baf9fc9e2500b897b297732864522cbfce24cf82b8aba05e8975d5279f",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14202,6 +14241,7 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "75c3b77f108d963ed10a044d32a7da14febc872fefa5e565c81f3617906b22fb",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   }
 ]

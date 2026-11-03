@@ -81,6 +81,7 @@ def build():
             'conditional_profiles': sorted(requires),
             'consumer_test_coverage': 'See scoped software reports; no exhaustive per-map path coverage certificate',
             'axis_interpretations': u['axis_interpretations'],
+            'resolved_items': u['resolved_items'],
             'open_items': u['open_items'],
             'dossier': 'analysis/map_details/' + m['id'] + '.md',
             'tuning_signoff': 'Open',
@@ -104,7 +105,9 @@ def build():
             'continuity_verified': s['continuity_verified'],
             'signoff': 'Open: connector face/OEM identity and physical route unverified',
         })
-    report_paths = [ROOT / 'analysis/full/validation.json', ROOT/'analysis/firmware/pin_configuration_validation.json', *sorted(OUT.glob('*_validation.json'))]
+    report_paths = [ROOT / 'analysis/full/validation.json', ROOT/'analysis/firmware/pin_configuration_validation.json',
+                    ROOT/'analysis/firmware/input_coordinate_validation.json', ROOT/'analysis/firmware/map_entry_validation.json',
+                    *sorted(OUT.glob('*_validation.json'))]
     for path in report_paths:
         r = json.loads(path.read_text())
         assert r['result'] == 'passed'
@@ -112,7 +115,7 @@ def build():
             'path': path.relative_to(ROOT).as_posix(), 'sha256': sha(path),
             'recorded_result': r['result'],
             'recorded_cases': r.get('cases', r.get('total_cases', r.get('checks_including_helper_knots'))),
-            'scope': r.get('limitations', r.get('scope', r.get('differential_reference'))),
+            'scope': r.get('limits', r.get('limitations', r.get('scope', r.get('differential_reference')))),
             'evidence_scope': r.get('evidence_scope'),
             'audit_action': 'Report/source provenance checked; fixtures not re-executed by ledger build',
         })

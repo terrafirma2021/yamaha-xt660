@@ -89,10 +89,15 @@ multiplicative factor in the denominator, not a direct fuel multiplier
 | row_axis | u8 0x0CD0 combined normalization code | Combined normalization code | Not required: internal code/count |
 | column_axis | u16 0x0C90 load code | Processed load coordinate | Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Evaluated after the selected code and CD4 offset are clamped into CD0 at 0x7F0B; both load/throttle selection branches share this denominator gain [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Sample selection, filtering, normalization and alternate estimator paths have byte-checked instruction replay in both families. [Byte-checked instruction replay](../semantics/PRESSURE_ESTIMATE.md).
+- Cell interpretation: normalization_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.
-- Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

@@ -104,12 +104,17 @@ Converted values: 800, 1000, 1200, 1400, 1600, 1800, 2000, 2200, 2400, 2600, 280
 |---|---|---|---|
 | column_axis | u16 RAM 0x0900: selected speed code | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: RAM 0x0985 bit 7 clear; otherwise RAM 0x0898 <= ROM 0x336A [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: transient_delta_slope_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.
-- Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

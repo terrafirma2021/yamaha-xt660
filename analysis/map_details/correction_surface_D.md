@@ -16,7 +16,7 @@ Inputs: u8 high byte of 0x0900 selected speed; u8 0x08F4 coolant.
 
 Output: u8 0x0A88 selected as a base by 0x0885 bit 0x20.
 
-Selection: See caller evidence; full mode/override conditions not yet exhaustively documented.
+Selection: Computed at 0xB886 into 0x0A88; selected as the alternate base when 0x0885 bit 0x20 is set.
 
 Interpolation: See the helper and axis evidence below; standard grid paths use Q8 indices..
 
@@ -109,13 +109,19 @@ Converted values: -20, -10, 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120
 | row_axis | u8 high byte of 0x0900 selected speed | Speed coordinate | Confirm the timer clock and CPS pattern per crank revolution before treating the axis as RPM. |
 | column_axis | u8 0x08F4 coolant | Effective coolant temperature code | Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius. |
 
+### Resolved in the code
+
+- Lookup inputs, destination and immediate selection: Computed at 0xB886 into 0x0A88; selected as the alternate base when 0x0885 bit 0x20 is set [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
+
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
 - Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.
 - Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.
-- Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.
+- Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

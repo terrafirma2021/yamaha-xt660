@@ -276,6 +276,7 @@
       ]
     ],
     "cells_sha256": "1cfcb314eb8f5776a3966f1612513f811369710d73537b609c8c28a4a9d133b0",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -1897,6 +1898,7 @@
       ]
     ],
     "cells_sha256": "0b70d98e1f776797c8c86e70965127d993b86addab67f7547768ca40782b5211",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -3518,6 +3520,7 @@
       ]
     ],
     "cells_sha256": "2a9d28cf2af867ddf8065fc7a0fd39cb20f645c9977a0159be54156ac03392ce",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -3636,6 +3639,7 @@
       ]
     ],
     "cells_sha256": "9b099aee8e27b471926e1567f3c94a967dc1eb3d27008935055c58427acd8e9e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -3754,6 +3758,7 @@
       ]
     ],
     "cells_sha256": "9b099aee8e27b471926e1567f3c94a967dc1eb3d27008935055c58427acd8e9e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -3872,6 +3877,7 @@
       ]
     ],
     "cells_sha256": "8d65a89d33fc69d31f85fd8ed396d6dd5672cd59f80bd2ced560d4bbaeb43222",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -4157,6 +4163,7 @@
       ]
     ],
     "cells_sha256": "82e7494381f9fe5994bdbce729cdbe0eaff9b2a4b488853cc79ce4bc12e96ad3",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -4395,6 +4402,7 @@
       ]
     ],
     "cells_sha256": "1b34669db94decae583e183ee2ffeb07cf504b9f52fae0056c5cf343325157e4",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -5257,6 +5265,7 @@
       ]
     ],
     "cells_sha256": "7ca954036bba8523ceb17308fa7043d940679b22a9f11f59d20e54f51943bcdc",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -6119,6 +6128,7 @@
       ]
     ],
     "cells_sha256": "191270de520c18e38147c76a7db4e7d5acaa38aa71861e910d869d9ea3e12d35",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -6981,6 +6991,7 @@
       ]
     ],
     "cells_sha256": "191270de520c18e38147c76a7db4e7d5acaa38aa71861e910d869d9ea3e12d35",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7282,6 +7293,7 @@
       ]
     ],
     "cells_sha256": "ae0ab469e9a61c2970e3d9982a50e162c6b6e20d5b73a5288692d310539643e8",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7615,6 +7627,7 @@
       ]
     ],
     "cells_sha256": "8c74dfa9397516c7f0a08d9ca9ba66bf0b3095401062e66791f40daadcb4ea20",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7758,6 +7771,7 @@
       ]
     ],
     "cells_sha256": "306a20970313665160f0b1622f4bb6d8b60cd6ffc5608c2d5bd2b9f722e6f62d",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7901,6 +7915,7 @@
       ]
     ],
     "cells_sha256": "977db194ad0419481469a969640aeecc5b226c972ea35da82141750ec8d97b5e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8044,6 +8059,7 @@
       ]
     ],
     "cells_sha256": "d99cd4c13187ad62535151c95824f699abd2d0935d30225ef3a8b4e9c76081cb",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8187,6 +8203,7 @@
       ]
     ],
     "cells_sha256": "5749c8df19288b9536f0acd224d80ac57d06f25b4b734bdd7270edd14b978086",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8297,6 +8314,7 @@
       ]
     ],
     "cells_sha256": "e7ecebbc590bc88b3761fa6cd03d749f87463dabb67021a5c6768c25ec68b3f2",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8427,6 +8445,7 @@
       ]
     ],
     "cells_sha256": "545d9f8792993f889fc3774c3d9082a2e59e7f903089c3cfd08db22ce015d451",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8539,6 +8558,7 @@
       ]
     ],
     "cells_sha256": "5d5c717bcf5008538df90f0d980ca679bb2db08b75cffb79c3009ae507d40635",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8651,6 +8671,9 @@
       ]
     ],
     "cells_sha256": "987fc65ebdac1571fea887126a02525b3324fb81bd33d6db058230bfdbf11ade",
+    "input_findings": [
+      "The later family retains history-change word 0x08F8, clipped to 0..1151, alongside byte 0x08FA capped at 255. This map uses an indexed axis stage; the early family raw-minus-128 map-axis conversion must not be copied onto its indices."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8763,6 +8786,9 @@
       ]
     ],
     "cells_sha256": "3c2aaf55ceada6bf7262eb2b31b58e1a83e1be49026e3685256e4409932f2230",
+    "input_findings": [
+      "The later family retains history-change word 0x08F8, clipped to 0..1151, alongside byte 0x08FA capped at 255. This map uses an indexed axis stage; the early family raw-minus-128 map-axis conversion must not be copied onto its indices."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8875,6 +8901,9 @@
       ]
     ],
     "cells_sha256": "5889ffb5cc524f17899d4ca20be3466e3a99db3d516188633a2bafe0a3d423cc",
+    "input_findings": [
+      "The later family retains history-change word 0x08F8, clipped to 0..1151, alongside byte 0x08FA capped at 255. This map uses an indexed axis stage; the early family raw-minus-128 map-axis conversion must not be copied onto its indices."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8989,6 +9018,7 @@
       ]
     ],
     "cells_sha256": "1f726293631cc9fc3d8c31af993602beff1089ff3df8be379e2d7fd7b47f7669",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9101,6 +9131,7 @@
       ]
     ],
     "cells_sha256": "5d5c717bcf5008538df90f0d980ca679bb2db08b75cffb79c3009ae507d40635",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9213,6 +9244,9 @@
       ]
     ],
     "cells_sha256": "c6a18ee0e4816d80497123584f41d0c9cc37afaecbe078896ca98a2501428c1d",
+    "input_findings": [
+      "The later family retains history-change word 0x08F8, clipped to 0..1151, alongside byte 0x08FA capped at 255. This map uses an indexed axis stage; the early family raw-minus-128 map-axis conversion must not be copied onto its indices."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9325,6 +9359,9 @@
       ]
     ],
     "cells_sha256": "d89d205a86f3eb5b37840949d5102da46b402bf901258408a9828e5c73a3cfd6",
+    "input_findings": [
+      "The later family retains history-change word 0x08F8, clipped to 0..1151, alongside byte 0x08FA capped at 255. This map uses an indexed axis stage; the early family raw-minus-128 map-axis conversion must not be copied onto its indices."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9437,6 +9474,9 @@
       ]
     ],
     "cells_sha256": "d89d205a86f3eb5b37840949d5102da46b402bf901258408a9828e5c73a3cfd6",
+    "input_findings": [
+      "The later family retains history-change word 0x08F8, clipped to 0..1151, alongside byte 0x08FA capped at 255. This map uses an indexed axis stage; the early family raw-minus-128 map-axis conversion must not be copied onto its indices."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9551,6 +9591,7 @@
       ]
     ],
     "cells_sha256": "772cf1ba4b8ab2f9fe58256385d386b273e07f7087286740c3ea018d93013ea2",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9708,6 +9749,7 @@
       ]
     ],
     "cells_sha256": "3addfb141cd7c9c4c6543a82191a3707ac29c7a041217782e61d4d91c691aee8",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9811,6 +9853,7 @@
       ]
     ],
     "cells_sha256": "5ac0a8c0584f05981ecd0c5dec962d195fe0207d6ce17f0ee6385bdc251cfa2e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9969,6 +10012,7 @@
       ]
     ],
     "cells_sha256": "8b530406e985b40b456c14cb175481f0e17809240bbec14bf4c637dac1e4211b",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10119,6 +10163,9 @@
       ]
     ],
     "cells_sha256": "7fc2df8dd7e695729418058502fc3c9029a333b1149438ece3c758f9c14f8f2e",
+    "input_findings": [
+      "Axis uses the high byte of the Q8 filtered supply word. Fault replacement is 154; startup copies the effective source directly. Filter and fault branches are replay-checked; volts still require the divider/reference."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10215,6 +10262,7 @@
       ]
     ],
     "cells_sha256": "5a6044f6289e77c4dc46f3db71e014aa208ddeda24dd49f5d2deb9b63c9b1e22",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10309,6 +10357,7 @@
       ]
     ],
     "cells_sha256": "29c2def8bcf9aa76abaaf6d98c3a4998c332adb3e7a7ae18d122b0f887b08c8f",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10408,6 +10457,7 @@
       ]
     ],
     "cells_sha256": "d10fad951d1a2c20e01a3dbf9d7f90e9555e387aaaf7cd4989c78b1e9cd50214",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10511,6 +10561,7 @@
       ]
     ],
     "cells_sha256": "ea5a52dc24a2e64b8ea98a5de69e6817b00f5467ed9ba1d360e1b0df6952f2e1",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10609,6 +10660,7 @@
       ]
     ],
     "cells_sha256": "3857ba410aea5b561d53b4e1bdb23dcbf34e7b9aa3340465147c22c8295d6a11",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10760,6 +10812,7 @@
       ]
     ],
     "cells_sha256": "52e79b11711faf8d7d7abec3ab3369797364d9a2689c3060d3e2853563de7905",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10928,6 +10981,7 @@
       ]
     ],
     "cells_sha256": "5ef8aad4fe4f48b9ac63229bc517077fc93944c631c641c60166c898b9aa35d2",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11029,6 +11083,7 @@
       ]
     ],
     "cells_sha256": "dd46c3eebb1884ff3b5258c0a2fc9398e560a29e0780d4b53869b6254aa46a96",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11130,6 +11185,7 @@
       ]
     ],
     "cells_sha256": "dd46c3eebb1884ff3b5258c0a2fc9398e560a29e0780d4b53869b6254aa46a96",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11233,6 +11289,7 @@
       ]
     ],
     "cells_sha256": "5322fecfc92a5e3248a297a3df3eddfb9bd9049504272e4f572b87fa36d4b3bd",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11328,6 +11385,7 @@
       ]
     ],
     "cells_sha256": "08360b0e6b073dec7624e130ab8779b97d4334f7ca0952a8bcc0dbdd7ef185f5",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11423,6 +11481,7 @@
       ]
     ],
     "cells_sha256": "08360b0e6b073dec7624e130ab8779b97d4334f7ca0952a8bcc0dbdd7ef185f5",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11536,6 +11595,7 @@
       ]
     ],
     "cells_sha256": "79f9c96f4a58b6608a49465d7cc9772f4bc70bfa76f5242991d0914ef6652f1e",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11639,6 +11699,7 @@
       ]
     ],
     "cells_sha256": "ef65e331c3fe81e7a87140380c587791c4d5066d3922f14d378bbed9fa08c416",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11742,6 +11803,7 @@
       ]
     ],
     "cells_sha256": "1dd0ca1828485df96b3844d2054629feb7c6727ce2271be2338a8d18b1270469",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11851,6 +11913,7 @@
       ]
     ],
     "cells_sha256": "4e523421a5164dd2d973d67348900e42d35745ab5c90f048e731586b8df6f971",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11947,6 +12010,7 @@
       ]
     ],
     "cells_sha256": "5a6044f6289e77c4dc46f3db71e014aa208ddeda24dd49f5d2deb9b63c9b1e22",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12050,6 +12114,7 @@
       ]
     ],
     "cells_sha256": "bb8b46d8b46a7639dbb02cffd8c1e5ab062577bc8273804f8676bee0d52f0afd",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12153,6 +12218,7 @@
       ]
     ],
     "cells_sha256": "9eb0b52299c0d2f1000184a0bea9d24e9808af8b924a4682f0c1486c709dfd09",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12270,6 +12336,7 @@
       ]
     ],
     "cells_sha256": "7310d864fca0d8f605d9609d3cf12330d353e791dc2cf942a8f7985689e2212d",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12379,6 +12446,7 @@
       ]
     ],
     "cells_sha256": "916cbd58a91129d208182248b1230b73141847f1d018bc296775553ff4700dd7",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12519,6 +12587,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12659,6 +12730,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12799,6 +12873,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -12939,6 +13016,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13079,6 +13159,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13219,6 +13302,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "All supplied BINs store load-change deadband 255 (early 0x3344; later 0x330C). The preceding magnitude is capped at 127, so the qualified delta is always neutral and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13359,6 +13445,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13499,6 +13588,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13639,6 +13731,9 @@
       ]
     ],
     "cells_sha256": "015275e61fa0d0751c1d9f45541c7804c895404455470710ade3786f282f2da0",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13779,6 +13874,9 @@
       ]
     ],
     "cells_sha256": "0fd63cde2b73ab7506664e6996ea27cbfdf6523a0b038ed92873f1377d8635dc",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -13919,6 +14017,9 @@
       ]
     ],
     "cells_sha256": "950d5bf96b90c486aeacf5f366e6fafbb77d30cdb88c2f3a6780a29feea6d424",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14059,6 +14160,9 @@
       ]
     ],
     "cells_sha256": "950d5bf96b90c486aeacf5f366e6fafbb77d30cdb88c2f3a6780a29feea6d424",
+    "input_findings": [
+      "Qualified throttle change is a centered high-byte difference with magnitude cap 127, deadband, stale-state and high-throttle gates. Input formation is replay-checked in this BIN; it is not a physical rate."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14213,6 +14317,7 @@
       ]
     ],
     "cells_sha256": "c8147d7479e041e4c3f0d3a5d8085d30eb31832fcb5c799a36e5aae0479c9012",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14502,6 +14607,9 @@
       ]
     ],
     "cells_sha256": "c2e48040409fa3a6d6190cd9e258cf68cd150da01593640c9db1a9a276793a95",
+    "input_findings": [
+      "Supply axis uses the effective ADC-high-byte code before the injector-compensation filter. Its fault replacement is 154. Volts still require the divider/reference."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14654,6 +14762,7 @@
       ]
     ],
     "cells_sha256": "54d917c30f4e3796a86143c170ef78efa64234c162e6bf9bc6e927a7416de75f",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14924,6 +15033,7 @@
       ]
     ],
     "cells_sha256": "122324baf9fc9e2500b897b297732864522cbfce24cf82b8aba05e8975d5279f",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -15041,6 +15151,7 @@
       ]
     ],
     "cells_sha256": "75c3b77f108d963ed10a044d32a7da14febc872fefa5e565c81f3617906b22fb",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -15207,6 +15318,7 @@
       ]
     ],
     "cells_sha256": "422417a8d24cf64f8fb603781aa5e7c7df353cd3d6b33111659f27f269323a24",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -15373,6 +15485,7 @@
       ]
     ],
     "cells_sha256": "c200cd27316d8d1ba26f138a5c5c381500ea755230ab48583cc77e28b71f4ab5",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -15687,6 +15800,7 @@
       ]
     ],
     "cells_sha256": "cc92e90b4a6217422af2e629a57341fb3d104b00951cebfa82e9de0e7f0b5b95",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -16001,6 +16115,7 @@
       ]
     ],
     "cells_sha256": "5780af3e31d514b4e9a0615dc672e08845a087ad5e8b605b0064ada75c9ca244",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -16185,6 +16300,7 @@
       ]
     ],
     "cells_sha256": "280100215b032a7475707a752f5c323e90a0fafa6c6dc82aff3bef6c9b68195a",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -16369,6 +16485,7 @@
       ]
     ],
     "cells_sha256": "80f93e8c7d0e1e083e6aab0b073011d858d092951eb4bb2d595cd43173e04704",
+    "input_findings": [],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   }
 ]

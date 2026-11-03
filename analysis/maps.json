@@ -1593,7 +1593,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Normal load-based fuel quantity",
@@ -3179,18 +3178,17 @@
     ],
     "inputs": [
       "u16 0x0900 selected speed",
-      "u16 0x08E8 throttle code; fault substitution ROM 0x4E62"
+      "u16 0x08E8 throttle code; ROM 0x4E62 substitution only when both 0x08AF fault groups 0x0C and 0x30 are nonzero"
     ],
     "output": "0x0956 or 0x0958",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Throttle quantity lookup at 0x7E33/0x7E57; 0x0A16 bit 2 chooses destination 0x0956 or 0x0958. ROM 0x4E62 replaces the axis only when both 0x08AF fault groups 0x0C and 0x30 are nonzero. Final fuel-mode weighting is separate",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-based fuel quantity",
@@ -4792,7 +4790,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate load-based fuel quantity",
@@ -5623,9 +5620,8 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Base ignition timing \u2014 neutral",
@@ -6456,9 +6452,8 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Base ignition timing \u2014 standard",
@@ -7289,9 +7284,8 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Base ignition timing \u2014 alternate",
@@ -7534,14 +7528,14 @@
     "output": "u8 0x0A1B; code 11 becomes 10 and codes >=23 become 22; transferred through 0x0A1E to 0x0A1C",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x7B8C before the startup/normal fuel branch. Result is clamped (11 to 10, >=23 to 22) then passed through the phase limiter and event dispatcher",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish event-code phase relative to the physical crank cycle, including special scheduling modes.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Injection event-phase target",
@@ -7842,13 +7836,13 @@
     "output": "u8 0x0CEC",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x864E\u20130x8690 for the secondary quantity. Variant 9 skips the normal secondary injector scheduling entry",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
+      "Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Secondary injector quantity multiplier",
@@ -8097,13 +8091,12 @@
     "output": "u8 0x09D8, latched to 0x09D6 and selected into 0x0CD4",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xA405\u20130xA447; consuming normalization state at 0x8DF9 requires ROM 0x3130 == 128. Stock 255 disables it and restores centered offset 128",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization offset",
@@ -8305,13 +8298,12 @@
     "output": "u8 0x0972; multiplied by 0x0971, scaled and saturated into 0x0970",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB3C3 into 0x0972, multiplied by pressure factor 0x0971 and saturated into 0x0970 for the load fuel path",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel correction gain vs speed and load",
@@ -8576,14 +8568,14 @@
     "output": "u8 0x0A88 selected as a base by 0x0885 bit 0x20",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Computed at 0xB886 into 0x0A88; selected as the alternate base when 0x0885 bit 0x20 is set",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate base ignition timing vs speed and coolant",
@@ -8671,7 +8663,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-based fuel normalization input",
@@ -8758,8 +8749,7 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-based fuel normalization input",
@@ -8845,7 +8835,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization denominator gain",
@@ -8903,12 +8892,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup flag 0x0881:10 skips this gate. Otherwise 0x09A1:10 bypasses the delay; without that bypass ROM 0x18B5 == 128 inhibits it. Counter 0x0CAF reaching the looked-up threshold sets 0x09A1:40; this block does not clear the latched bit",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Feedback startup delay vs coolant",
@@ -8972,12 +8960,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Used by one-shot initialization at 0x715A\u20130x716C and the startup fuel branch at 0x7BBA (0x0881:10 set). The startup branch retains Q8 precision",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel base quantity vs coolant",
@@ -9041,11 +9028,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment \u2014 fast-decay state",
@@ -9109,11 +9096,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment \u2014 slow-decay state",
@@ -9169,12 +9156,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated in the fuel update at 0x74B8 and the periodic 0xB166 task, using the high byte of filtered supply 0x08DA; rounded result times eight supplies compensation 0x095E",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
-      "Confirm the voltage divider/reference and filtering before assigning volts.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Injector pulse compensation vs supply",
@@ -9225,11 +9211,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup fuel branch (0x0881:10) evaluates pressure multiplier from 0x08F2",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel multiplier vs pressure estimate",
@@ -9278,11 +9263,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup fuel branch (0x0881:10) uses 0x08CE; either TPS fault bit in 0x08AF:0C forces this lookup input to zero",
     "evidence_addresses": [],
     "unresolved": [
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel multiplier vs throttle",
@@ -9336,12 +9320,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Startup fuel branch (0x0881:10) evaluates speed multiplier from 0x0900",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Startup fuel multiplier vs engine speed",
@@ -9399,12 +9382,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x800C before the fuel-mode dispatcher at 0x8031; supplies 0x09A0 for the centered correction gain",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Centered fuel-correction gain vs engine speed",
@@ -9457,13 +9439,13 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0x8F91 into threshold 0x0A05 after filtered relative TPS is capped to byte 0x08EC; qualification tests follow at 0x8FAA",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Relative-throttle qualification threshold vs speed",
@@ -9520,11 +9502,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Pressure factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs pressure estimate",
@@ -9598,11 +9580,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "IAT factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438; consumer adds 384 before scaling",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs intake temperature",
@@ -9655,9 +9637,8 @@
     "selection": "Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 \u2014 neutral",
@@ -9710,9 +9691,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 <= ROM 0x34CF (stock 1)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 \u2014 lower speed-ratio range",
@@ -9765,9 +9745,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 > ROM 0x34CF (stock 1)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 \u2014 higher speed-ratio range",
@@ -9825,11 +9804,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Throttle factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438",
     "evidence_addresses": [],
     "unresolved": [
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs throttle",
@@ -9882,9 +9861,8 @@
     "selection": "Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 \u2014 neutral",
@@ -9937,9 +9915,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 <= ROM 0x355C (stock 5)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 \u2014 standard",
@@ -9992,9 +9969,8 @@
     "selection": "Outside neutral-input branch: ratio code 0x0898 > ROM 0x355C (stock 5)",
     "evidence_addresses": [],
     "unresolved": [
-      "Finish the delta/deadband and sample-cadence transfer before assigning a physical throttle rate.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 \u2014 alternate",
@@ -10055,7 +10031,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization recovery hold \u2014 standard",
@@ -10116,7 +10091,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel normalization recovery hold \u2014 alternate",
@@ -10174,12 +10148,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Adaptive eligibility block 0xA564\u20130xA63A requires counter 0x09B5 >= looked-up delay 0x09B4 along with both nonzero grids and the other qualification/fault gates; see INPUT_COORDINATES.md",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Feedback eligibility delay vs coolant",
@@ -10229,12 +10202,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Transition-triggered decrement when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA6D3",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive fuel correction \u2014 decrement step",
@@ -10284,12 +10256,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Transition-triggered increment when the feedback state 0x09A2:01 changes; updates centered correction 0x097E at 0xA704",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive fuel correction \u2014 increment step",
@@ -10357,11 +10328,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic 0xB166 task publishes IAT factor 0x0979; normal and startup fuel consumers use different stage scaling",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Fuel multiplier vs intake temperature",
@@ -10419,11 +10389,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic 0xB166 task publishes positive-delta coolant gain 0x098F; selected by the sign of the qualified transient change",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Positive transient fuel gain vs coolant",
@@ -10481,11 +10450,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic 0xB166 task publishes negative-delta coolant gain 0x0990; selected by the sign of the qualified transient change",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Negative transient fuel gain vs coolant",
@@ -10617,11 +10585,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB381 into 0x0971, combined with correction_surface_C to form the load fuel-path gain 0x0970",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-path fuel multiplier vs pressure estimate",
@@ -10672,11 +10639,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB3DB into 0x0978 for the throttle fuel path",
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-path fuel multiplier vs pressure estimate",
@@ -10734,12 +10700,12 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB895 into 0x0A89; consumer at 0x96BA compares it with capped filtered relative TPS 0x08EC, not a spark-angle value",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate ignition mode \u2014 throttle threshold vs coolant",
@@ -10797,11 +10763,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic lookup at 0xB89E publishes coolant enrichment 0x097B for the normal fuel gain",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Coolant enrichment \u2014 load-based fuel path",
@@ -10859,11 +10824,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic lookup at 0xB8AA publishes coolant enrichment 0x097C for the normal fuel gain",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Coolant enrichment \u2014 throttle-based fuel path",
@@ -10935,12 +10899,11 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Periodic lookup at 0xB8B9 publishes coolant factor 0x0A0F for the joint transient pulse calculation",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "The cell is one factor in a joint transient pulse calculation; no independent millisecond unit is established.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel pulse contribution vs coolant",
@@ -11004,13 +10967,12 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Evaluated at 0xB8D3 into lower bound 0x0D05 for the selected base ignition value; normal/alternate selection and later scheduling are separate",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Spark timing bound vs pressure estimate",
@@ -11106,8 +11068,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain \u2014 nonnegative, neutral",
@@ -11203,8 +11163,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain \u2014 nonnegative, standard",
@@ -11300,8 +11258,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain \u2014 nonnegative, alternate",
@@ -11397,8 +11353,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain \u2014 negative, neutral",
@@ -11494,8 +11448,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain \u2014 negative, standard",
@@ -11591,8 +11543,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Throttle-delta fuel gain \u2014 negative, alternate",
@@ -11688,8 +11638,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain \u2014 nonnegative, neutral",
@@ -11785,8 +11733,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain \u2014 nonnegative, standard",
@@ -11882,8 +11828,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain \u2014 nonnegative, alternate",
@@ -11979,8 +11923,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain \u2014 negative, neutral",
@@ -12076,8 +12018,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain \u2014 negative, standard",
@@ -12173,8 +12113,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Convert the internal signed delta and its sampling/deadband to a physical rate before naming a rate-based gain.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Load-delta fuel gain \u2014 negative, alternate",
@@ -12512,12 +12450,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both PAIR grids must be nonzero for the normal counter gate at 0x9CAE\u20130x9D61. Variant, coolant, post-start, centered-state and neutral/ratio gates apply; diagnostic bypass and fallback command branches are separate",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Air-induction enable vs speed and throttle",
@@ -12855,12 +12792,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both PAIR grids must be nonzero for the normal counter gate at 0x9CAE\u20130x9D61. Variant, coolant, post-start, centered-state and neutral/ratio gates apply; diagnostic bypass and fallback command branches are separate",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Air-induction enable vs speed and load",
@@ -13068,12 +13004,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both adaptive grids must be nonzero in 0xA564\u20130xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the learned-closed reference and sensor/mechanical transfer before assigning degrees or percent throttle.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
+      "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive feedback enable vs speed and throttle",
@@ -13281,12 +13216,11 @@
         "status": "present but not compared by this lookup"
       }
     },
-    "selection": "See caller evidence; full mode/override conditions not yet exhaustively documented",
+    "selection": "Both adaptive grids must be nonzero in 0xA564\u20130xA63A, together with delay, coolant, pressure hysteresis, post-start, transient, neutral and fault gates. Every supplied early BIN has zero cells",
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Stock and configurable sampling, filtering and signed normalization are replay-checked in both firmware families. Confirm sensor/circuit transfer and absolute pressure reference before assigning kPa.",
-      "Finish the entry, override and fault-path conditions for this lookup; the current selection description is incomplete.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Adaptive feedback enable vs speed and load",
@@ -13393,7 +13327,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Spark time correction \u2014 other variants",
@@ -13500,7 +13433,6 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Spark time correction \u2014 XT variant 9",
@@ -13747,8 +13679,7 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Confirm the voltage divider/reference and filtering before assigning volts.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
+      "Confirm the voltage divider and ADC reference before assigning volts; filtering and fault replacement are replay-checked.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Ignition dwell contribution vs speed and supply",
@@ -13858,7 +13789,6 @@
     },
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Coolant sensor conversion",
@@ -13975,7 +13905,6 @@
     },
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Selection is traced for the documented branches; complete all downstream override/fault paths before tuning sign-off.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Intake air temperature sensor conversion",
