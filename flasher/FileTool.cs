@@ -104,6 +104,33 @@ namespace Xt660 {
             string hash=Hash(bytes);
             return References.FirstOrDefault(r=>r.Definition.bin_sha256==hash)??References.FirstOrDefault(r=>Matches(bytes,r));
         }
+        // Compare CPU application addresses, independently of a file's prefix/boot capture.
+        // The real boot is read from the ECU and never filled from a donor BIN.
+        public bool MatchesApplication(byte[] data,Reference reference) {
+            int sourceBase=Base(data),targetBase=reference.Definition.base_address;
+            var candidate=(byte[])reference.Bytes.Clone();
+            Buffer.BlockCopy(data,0x1800-sourceBase,candidate,0x1800-targetBase,0xE000);
+            return Matches(candidate,reference);
+        }
+        public Reference IdentifyApplication(byte[] bytes) {
+            return References.FirstOrDefault(r=>MatchesApplication(bytes,r));
+        }
+        public byte[] KnownBoot() {
+            var boots=References.Select(r=>r.Bytes.Skip(0xF800-r.Definition.base_address).ToArray()).Where(b=>b.Any(v=>v!=255)).ToList();
+            if(boots.Count==0||boots.Any(b=>!b.SequenceEqual(boots[0])))throw new InvalidDataException("No unique reviewed boot profile in this bundle.");
+            return (byte[])boots[0].Clone();
+        }
+        public byte[] PrepareWrite(byte[] bytes) {
+            Base(bytes);
+            if(IdentifyApplication(bytes)==null)throw new InvalidDataException("BIN code or patch layout is not supported. Use the matching BIN and XDF.");
+            var boot=bytes.Skip(0xF800-Base(bytes)).ToArray();
+            if(!boot.All(v=>v==255)&&!boot.SequenceEqual(KnownBoot()))throw new InvalidDataException("BIN contains a different boot. Boot replacement is not supported.");
+            var copy=(byte[])bytes.Clone();int offset=0xF7FC-Base(copy);
+            int word=((copy[offset]<<8)+copy[offset+1]+0xAA55-Sum(copy))&65535;
+            copy[offset]=(byte)(word>>8);copy[offset+1]=(byte)word;
+            if(Sum(copy)!=0xAA55)throw new InvalidDataException("Automatic checksum verification failed.");
+            return copy;
+        }
         public FileCheck Inspect(byte[] bytes,string name) {
             int b=Base(bytes),sum=Sum(bytes);var r=Identify(bytes);
             return new FileCheck {filename=name,sha256=Hash(bytes),bytes=bytes.Length,base_address=b,matched=r!=null,
@@ -126,41 +153,31 @@ namespace Xt660 {
             if(!File.ReadAllBytes(target).SequenceEqual(fixedBytes))throw new IOException("Saved file verification failed");
         }
     }
-    public sealed class MainWindow : Form {
-        readonly Library library; readonly TextBox report; readonly Button save,compare;
-        byte[] opened; string path;
-        public MainWindow(Library lib) {
-            library=lib;Text="XT660 File Tool";MinimumSize=new Size(720,480);Size=new Size(840,610);StartPosition=FormStartPosition.CenterScreen;
-            Font=new Font("Segoe UI",10);BackColor=Color.FromArgb(245,246,249);
-            var layout=new TableLayoutPanel {Dock=DockStyle.Fill,Padding=new Padding(24),ColumnCount=1,RowCount=4};
-            layout.RowStyles.Add(new RowStyle(SizeType.Absolute,50));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,54));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,52));
-            layout.Controls.Add(new Label {Text="XT660  /  BIN files",Font=new Font("Segoe UI",20,FontStyle.Bold),Dock=DockStyle.Fill});
-            var buttons=new FlowLayoutPanel {Dock=DockStyle.Fill,WrapContents=false};
-            var open=new Button {Text="Open BIN",AutoSize=true,Height=36};save=new Button {Text="Save checksum copy",AutoSize=true,Height=36,Enabled=false};compare=new Button {Text="Compare file",AutoSize=true,Height=36,Enabled=false};
-            buttons.Controls.AddRange(new Control[]{open,save,compare});layout.Controls.Add(buttons);
-            report=new TextBox {Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical,Dock=DockStyle.Fill,Font=new Font("Consolas",10),BackColor=Color.White,Text="Open a BIN to check its identity and startup checksum.\r\n\r\nEdit maps and features in TunerPro using the matching XDF.\r\nThen open the saved file here and save a checksum-corrected copy."};layout.Controls.Add(report);
-            layout.Controls.Add(new Label {Text="File tools preview. ECU connection, reading and flashing are not implemented.\r\nNo COM port is opened and no bytes are sent to an ECU.",Dock=DockStyle.Fill,Padding=new Padding(0,10,0,0),ForeColor=Color.DimGray});Controls.Add(layout);
-            open.Click+=(s,e)=>Run(()=>{using(var d=new OpenFileDialog {Filter="BIN files|*.bin|All files|*.*",InitialDirectory=Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"bins")})if(d.ShowDialog()==DialogResult.OK){var candidate=File.ReadAllBytes(d.FileName);var check=library.Inspect(candidate,d.FileName);opened=candidate;path=d.FileName;save.Enabled=check.matched;compare.Enabled=true;report.Text=Format(check);}});
-            save.Click+=(s,e)=>Run(()=>{using(var d=new SaveFileDialog {Filter="BIN files|*.bin",FileName=Path.GetFileNameWithoutExtension(path)+"-checksum-fixed.bin",InitialDirectory=Path.GetDirectoryName(path)})if(d.ShowDialog()==DialogResult.OK){library.SaveCopy(opened,path,d.FileName);report.Text+="\r\nSaved and verified: "+d.FileName+"\r\nStartup checksum: 0xAA55. Original file unchanged.\r\n";}});
-            compare.Click+=(s,e)=>Run(()=>{using(var d=new OpenFileDialog {Filter="BIN files|*.bin|All files|*.*"})if(d.ShowDialog()==DialogResult.OK){var other=File.ReadAllBytes(d.FileName);report.Text+="\r\n"+Compare(opened,other)+"\r\n";}});
-        }
-        void Run(Action action) {try{action();}catch(Exception ex){MessageBox.Show(this,ex.Message,"File check",MessageBoxButtons.OK,MessageBoxIcon.Error);}}
-        static string Format(FileCheck c) {return c.filename+"\r\n\r\n"+c.identity+" / "+c.variant+"\r\n"+c.bytes+" bytes; CPU base 0x"+c.base_address.ToString("X4")+"\r\nStartup checksum: "+c.checksum+(c.matched?" (expected 0xAA55)":" (profile unverified)")+"\r\nBoot: "+c.boot+"\r\n\r\nSHA-256\r\n"+c.sha256+"\r\n\r\n"+(c.matched?"Recognised map / feature layout. This does not confirm physical ECU fitment.":"Unknown code or incomplete patch. Automatic correction is unavailable.");}
-        public static string Compare(byte[] a,byte[] b) {if(a.Length!=b.Length)return "Files have different lengths; not equal.";int count=a.Select((v,i)=>v!=b[i]?1:0).Sum();return count==0?"Files match byte-for-byte.":count+" bytes differ.";}
-    }
     public static class Program {
         [STAThread] public static int Main(string[] args) {
             try {
                 var lib=new Library(AppDomain.CurrentDomain.BaseDirectory);
                 if(args.Length>0) {
                     if(args[0]=="--verify-bundle"&&args.Length==1){Console.WriteLine("Verified "+lib.References.Count+" BIN/XDF pairs");return 0;}
+                    if(args[0]=="--verify-resources"&&args.Length==1){
+                        using(var body=Theme.Body(12))using(var display=Theme.Display(32)){
+                            if(!body.FontFamily.Name.Contains("Barlow")||!display.FontFamily.Name.Contains("Condensed"))throw new InvalidDataException("Embedded fonts missing");
+                            var assembly=System.Reflection.Assembly.GetExecutingAssembly();
+                            using(var stream=assembly.GetManifestResourceStream("Xt660.Connections.json"))using(var reader=new StreamReader(stream)){
+                                var pins=new JavaScriptSerializer().Deserialize<PinData>(reader.ReadToEnd());
+                                if(pins.families.Count!=2||pins.families["early"].slots.Length!=26||pins.families["late"].slots.Length!=34)throw new InvalidDataException("Connector drawings missing");
+                            }
+                            using(var stream=assembly.GetManifestResourceStream("Xt660.Logo.png"))using(var logo=Image.FromStream(stream))if(logo.Width<1)throw new InvalidDataException("Logo missing");
+                            Console.WriteLine("Verified Yamaha logo, "+body.FontFamily.Name+", "+display.FontFamily.Name+", and both connector drawings.");return 0;
+                        }
+                    }
                     if(args[0]=="--inspect"&&args.Length==2){Console.WriteLine(new JavaScriptSerializer().Serialize(lib.Inspect(File.ReadAllBytes(args[1]),args[1])));return 0;}
                     if(args[0]=="--fix"&&args.Length==3){lib.SaveCopy(File.ReadAllBytes(args[1]),args[1],args[2]);Console.WriteLine("Saved checksum 0xAA55");return 0;}
                     if(args[0]=="--compare"&&args.Length==3){var a=File.ReadAllBytes(args[1]);var b=File.ReadAllBytes(args[2]);Console.WriteLine(MainWindow.Compare(a,b));return a.SequenceEqual(b)?0:2;}
                     throw new ArgumentException("Use --verify-bundle, --inspect FILE, --fix INPUT OUTPUT or --compare A B");
                 }
                 Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new MainWindow(lib));return 0;
-            } catch(Exception ex) {if(args.Length>0)Console.Error.WriteLine(ex.Message);else MessageBox.Show(ex.Message,"XT660 File Tool",MessageBoxButtons.OK,MessageBoxIcon.Error);return 1;}
+            } catch(Exception ex) {if(args.Length>0)Console.Error.WriteLine(ex.Message);else MessageBox.Show(ex.Message,"XT660 Flash Tool",MessageBoxButtons.OK,MessageBoxIcon.Error);return 1;}
         }
     }
 }

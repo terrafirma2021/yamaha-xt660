@@ -12,9 +12,9 @@ All 71 stored map bodies and stored axes match across the owner image, corrected
 
 The [dataset guide](dataset/README.md) explains the 21 preserved sources, 110 applicability profiles, including 89 Fowlers model/market records and manufacturer references. XT660X, XT660R and XT660Z Ténéré have separate entries; TDM900 material is retained only as supporting research, outside the motorcycle selector. Later revisions do not inherit the original maps or connector claims.
 
-## Browser tools
+## Downloads
 
-[Download the Windows bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.1.0): all nine registered BINs, matching TunerPro XDFs and a checksum/file-comparison EXE. Definitions include raw maps and reversible feature patches; [regenerate them](definitions/README.md) when findings change. The [website](https://terrafirma2021.github.io/yamaha-xt660/) contains read-only maps, pins and research. **Live ECU reading and flashing are not implemented.** Desktop source and build instructions are in [flasher/](flasher/README.md).
+[Download the Windows bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.0): nine registered BINs, matching TunerPro XDFs and the XT660 Flash Tool. The desktop app connects through a USB KKL COM port, reads verified backups and writes matched application firmware with automatic checksum correction and readback. It includes the 26-pin and 34-pin connector diagrams. **The serial implementation is software-tested; physical ECU/adapter validation is pending.** [Desktop source and instructions](flasher/README.md). Edit maps and feature patches in TunerPro; [regenerate XDFs](definitions/README.md) when findings change. The website remains a read-only reference.
 
 ## Original application study
 

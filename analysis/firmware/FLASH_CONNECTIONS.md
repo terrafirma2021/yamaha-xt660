@@ -1,6 +1,6 @@
 # Flashing connector references
 
-The **Flashing** page provides connection references, backups and file checks. **XDF** provides generated TunerPro downloads. Live connection, ECU reading, writing and readback remain unavailable.
+The website provides bench connection references. The [Windows Flash Tool](../../flasher/README.md) includes these two connector redraws and the USB KKL wiring, selected by 26-pin or 34-pin type. It implements serial reading and application writing; physical bench validation remains pending.
 
 ## Two independently supplied references
 
@@ -47,6 +47,6 @@ The recovered flashing tool requests 9,600 baud / 8N1. The [serial-port audit](P
 
 ## File checks and reproducibility
 
-Flashing inspects unchanged repository BINs and local files, recognises bounded map/feature modifications, reports the startup checksum and boot coverage, and compares files byte-for-byte. An explicit save action can create a separate checksum-corrected copy for a recognised layout matching the selected firmware. Unknown code changes and missing boot bytes do not become a verified image because the file has the expected size. A passing checksum does not enable live writing.
+The desktop writer checks the loaded BIN against the registered layouts, reads the connected ECU twice, saves a verified backup, matches application code, preserves the real boot and corrects the startup checksum before writing. Every programmed block and the complete final readback are checked. Unknown code or boot versions block writing. A passing checksum does not establish physical connector compatibility.
 
 `scripts/site_flashing.py` builds both connector grids from `pin_audit.json`, preserving manual coordinates and hashing the original references. It emits `flashing/connections.json`. `scripts/test_flashing.mjs` checks both layouts, every matched profile, all nine files, edited-file recognition, unknown changes and unchanged-byte inspection. `scripts/verify_site_routes.py` checks the separate pages and every model-specific route. The `/tools/` page links to XDF downloads and flashing.

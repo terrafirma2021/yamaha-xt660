@@ -2,7 +2,7 @@
 
 The [XDF library](https://terrafirma2021.github.io/yamaha-xt660/xdf/) provides a generated definition for each registered BIN. Editing takes place in TunerPro. The website provides read-only research, XDF downloads and bench connection references.
 
-Download an XDF together with its matching BIN, open the BIN in TunerPro and select the XDF. Save edits to a separate file. The Windows file tool in the [release bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.1.0) can identify a supported edited layout, check its startup sum and save a checksum-corrected copy. It leaves the opened file unchanged. Live ECU reading and writing remain unavailable.
+Download an XDF with its matching BIN, open both in TunerPro and save edits to a separate BIN. The [Windows Flash Tool](../../flasher/README.md) loads the edited file through Write ECU, validates its layout, corrects the startup checksum and checks compatibility against the connected ECU before programming. The input file and ECU boot are preserved. Serial operations are implemented and software-tested; physical bench validation remains pending.
 
 ## Generated from the research
 

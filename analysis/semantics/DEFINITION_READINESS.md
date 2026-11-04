@@ -2,7 +2,7 @@
 
 The [operating-sequence review](OPERATING_SEQUENCES.md) closes the previously listed linked-sequence replay tasks for the early map set and post-start lifecycle in both families. It adds bounded pressure interleaving tests across all nine BINs. It does not establish absolute physical references, exhaustive whole-ECU behaviour or safe edited ranges.
 
-The repository now includes a static research site, ready-made TunerPro definitions and flashing file checks, backed by image-specific evidence. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
+The repository now includes a static research site, ready-made TunerPro definitions and a desktop serial flasher, backed by image-specific evidence. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
 
 The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separately, including source review and outstanding sign-off requirements. A final **Verified** state must identify its exact claim; verified bytes or a matched MCU register do not imply a verified physical tuning definition.
 
@@ -21,7 +21,7 @@ The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separ
 | Reverse conversion and rounding policy | Raw XDF cell encodings are defined; estimated ignition displays in the research remain explicitly conditional |
 | Valid physical adjustment ranges | Not inferred from the limits of a byte or word |
 | Checksum algorithm and covered ranges | [ROM and serial algorithms](CHECKSUMS.md) recovered; [startup-corrected copy](CHECKSUM.md) tested. Flashing file preparation corrects and rechecks the startup sum; hardware programming validation is separate. |
-| Flash format, programming procedure, boot requirements | [XT boot protocol and offline read assembly](../firmware/FLASH_TOOLING.md) recovered. Five BINs have populated boot; four have FF placeholders. Browser live read/write is not implemented or hardware-validated. |
+| Flash format, programming procedure, boot requirements | [XT boot protocol and offline read assembly](../firmware/FLASH_TOOLING.md) recovered. Five BINs have populated boot; four have FF placeholders. Desktop session/read/application-write/readback is implemented and software-tested; hardware validation is pending. |
 
 `ready_for_tuning_export` is false for every current entry. This does not mean the offsets are guesses. It means the whole definition is not yet validated for engineering-unit edits and flash use.
 
@@ -40,14 +40,14 @@ The XDF library publishes generated definitions for every registered BIN. The [g
 
 `ready_for_tuning_export=false` means the full engineering-unit definition lacks physical/hardware sign-off. It does not mean raw XDF export is absent or that all raw addresses are uncertain. Feature patches have instruction tests, but those tests are not live ECU validation.
 
-The website provides connection references; the Windows tool provides file inspection. The offline boot reader builds and verifies addressed blocks, but no live session or ECU read/write is implemented. [Flash tooling](../firmware/FLASH_TOOLING.md) separates recovered bytes from pending transport, timing and recovery work.
+The website provides connection references. The Windows tool implements COM connection, two-pass backups, matched application writes, automatic checksum correction and readback. Its byte-stream tests cover both echo modes and all nine BIN layouts; no ECU/adapter has been bench-tested. [Flash tooling](../firmware/FLASH_TOOLING.md) separates the implementation from pending physical timing, wiring and recovery evidence.
 
 ## Remaining work we can do from the repository
 
 1. Extend the later transient-input lifecycle through output eligibility and timer edges. The [nine newly recovered curves](LATE_TRANSIENT_MAPS.md) now have actual-helper and pulse-arithmetic tests; the early linked-sequence tests do not cover that later lifecycle.
 2. Trace residual calibration fields and indirect structures beyond known lookup helpers. Remaining layout bytes are 884 in the early family and 1,267 in the later family; these are not all unknown maps.
 3. Reconcile scattered scalar findings into the focused catalogue, with precise byte ranges and consumer references.
-4. Reconstruct the remaining boot session, retries, watchdog and recovery state machine, then exercise it with a simulated serial peer before live integration.
+4. Extend instruction-level boot peripheral and interruption/recovery modelling beyond the implemented desktop client and serial-peer fixture. Erase/program retries remain disabled.
 
 Physical work remains distinct: identify the fitted chip/clock, measure CPS phase against TDC and coil firing, establish temperature/pressure/TPS electrical transfer, confirm connector orientation/continuity and perform recoverable read/write/readback bench trials. The existing documents narrow these questions but do not provide all their answers. No additional user measurements are needed to continue the software tasks above.
 
