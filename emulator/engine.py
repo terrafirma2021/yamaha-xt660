@@ -1,5 +1,6 @@
 """Run unchanged firmware against explicit external storage, sensors and peers."""
 import re
+import uuid
 from collections import deque
 from crank import events, hex_memory
 from runner import prepare, registered_image
@@ -26,7 +27,7 @@ class Engine:
             storage, self.storage_origin = factory_storage(executable, image, wsl)
         else:
             self.storage_origin = {'origin': 'User-supplied external storage image'}
-        self.session = Session(executable, wsl, image+'-engine.log')
+        self.session = Session(executable, wsl, image+'-engine-'+uuid.uuid4().hex[:8]+'.log')
         try:
             command = setup + storage_commands(storage, registered)
             command += 'set memory xtboot_0_cfg 9 224\nset memory xtboot_0_cfg 13 16\n'
@@ -34,6 +35,7 @@ class Engine:
             result = self.session.command(command)
             if f'Stop at 0x{self.loop:06x}: (104)' not in result:
                 raise RuntimeError('Firmware did not reach its main loop')
+            self.cycles = int(re.findall(r'BUS_CYCLES=(\d+)',result)[-1])
             self.session.command('set memory xtboot_0_cfg 25 1')
         except BaseException:
             self.close()
@@ -51,13 +53,20 @@ class Engine:
     def step(self, instructions=20000):
         if type(instructions) is not int or not 1 <= instructions <= 1000000:
             raise ValueError('Use 1..1000000 instructions per step')
-        text = self.session.command(f'set memory xtboot_0_cfg 25 0\nset memory xtboot_0_cfg 25 1\nstep {instructions}\ninfo hardware xtboot')
+        text = self.session.command(f'set memory xtboot_0_cfg 25 0\nset memory xtboot_0_cfg 25 1\nstep {instructions}')
         stops = re.findall(r'Stop at 0x([0-9a-f]+): \((\d+)\)', text)
         if not stops or stops[-1][1] != '109':
             raise RuntimeError('Unexpected firmware stop: '+str(stops))
+        self.cycles += int(re.findall(r'stepped (\d+) ticks',text)[-1])
         rows = events(text)
         self.trace.extend(rows)
         return rows
+
+    def wait_cycles(self, cycles):
+        """Run instructions until a minimum simulated bus-clock delay elapsed."""
+        deadline = self.cycles + cycles
+        while self.cycles < deadline:
+            self.step(min(100000,max(1,(deadline-self.cycles)//4)))
 
     def set_adc(self, channel, value):
         if type(channel) is not int or not 0 <= channel < 8 or type(value) is not int or not 0 <= value <= 1023:
@@ -81,7 +90,23 @@ class Engine:
         self.crank_pitch = pitch
 
     def stop_crank(self):
-        self.session.command('set memory xtboot_0_cfg 24 0')
+        self.session.command('set memory xtboot_0_cfg 24 0\nset memory xtboot_0_cfg 37 0\nset memory xtboot_0_cfg 35 0')
+
+    def drive(self, pitch=None, road=False):
+        """External rotating-engine fixture. No firmware variables are altered."""
+        if pitch is None:
+            self.stop_crank()
+            self.session.command('set memory xtboot_0_cfg 36 0')
+            return
+        if type(pitch) is not int or not 400 <= pitch <= 4000:
+            raise ValueError('Use a tooth interval of 400..4000 timer ticks')
+        self.session.command(f'set memory xtboot_0_cfg 35 {pitch*32}\n'
+                             f'set memory xtboot_0_cfg 36 {pitch*32*3 if road else 0}')
+        self.crank_pitch = pitch
+
+    def start_drive(self, pitch=2800):
+        self.crank(pitch, patterns=372)
+        self.session.command('set memory xtboot_0_cfg 37 1')
 
     def exchange(self, byte, channel=1, count=5, budget=500000):
         if type(byte) is not int or not 0 <= byte <= 255 or channel not in (0,1):
@@ -90,13 +115,14 @@ class Engine:
         self.step(10000)
         self.session.command(f'set memory xtboot_0_cfg {26+channel} {byte}')
         received = []
-        for _ in range((budget+4999)//5000):
-            received.extend(e['value'] for e in self.step(5000)
+        for remaining in range(budget,0,-25000):
+            received.extend(e['value'] for e in self.step(min(25000,remaining))
                             if e['kind']=='serial_tx' and e['channel']==channel)
             if len(received) >= count:
                 break
         row = dict(channel=channel, request=f'{byte:02X}', reply=' '.join(f'{v:02X}' for v in received))
         self.transcript.append(row)
+        del self.transcript[:-256]
         if len(received) != count:
             raise RuntimeError('Serial reply length mismatch: '+str(row))
         if channel == 1 and count == 5 and sum(received[:4]) & 255 != received[4]:
@@ -133,6 +159,8 @@ class Engine:
         word = lambda a: memory[a]*256+memory[a+1]
         counts = {k.lower():int(v) for k,v in re.findall(r'\b([A-Z][A-Z0-9_]+)=(\d+)\b',text)
                   if k not in ('TIMER_OUT','CCF','IRQ_VECTOR')}
+        if counts['bus_cycles'] != self.cycles:
+            raise RuntimeError('Host cycle accounting differs from the MCU model')
         return dict(image=self.image, adc=list(self.adc), counts=counts, crank_pitch=self.crank_pitch,
                     authentication_required=self.authentication_required,
                     synchronized=bool(memory[0xbfe if self.early else 0xc20]&128),

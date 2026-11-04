@@ -7,10 +7,6 @@
       900
     ],
     [
-      1100,
-      900
-    ],
-    [
       390,
       844
     ]
@@ -20,31 +16,30 @@
     "light"
   ],
   "checks": [
-    "complete-BIN selector",
-    "load and reset",
-    "authentication accepted; repeat control disabled",
-    "immo-off BIN detected; authentication unavailable",
-    "eight ADC inputs",
-    "sensor change queued during Run",
-    "out-of-range ADC rejected",
-    "crank pitch adjustment",
-    "crank input and output transitions",
-    "Run/Pause/Step",
-    "pulse loss",
-    "meter serial replies",
-    "firmware byte-integrity check",
-    "CSV download",
-    "512-byte storage fixture download",
-    "reload retains engine state and selected pitch",
-    "theme persistence",
-    "no browser script errors",
-    "desktop controls fit without scrolling",
-    "mobile layout has no horizontal overflow; all sections and footer reachable"
+    "Running ECU, in-gear road pulses and throttle response via serial",
+    "Hot coolant sets TEMP lamp from reply; running sensor fault sets ECU warning; stopped engine reports code 21; neutral pulses return to zero",
+    "Restore clears active fault through firmware; run switch stops rotation",
+    "Desktop light theme and no horizontal overflow",
+    "Theme persists on reload; narrow viewport no horizontal overflow and footer reachable",
+    "Diagnostic entry and d:61 / d:62 navigation use ECU replies",
+    "d:62 clear updates the received history count to zero",
+    "Incorrect synthetic key rejected; starter stays disabled",
+    "Switching BIN actually loads the selected firmware; immo-off skips authentication",
+    "BIN integrity verification; CSV trace and 512-byte external-storage downloads",
+    "Next fault cycles presets; Restore returns healthy inputs; Step/poll and candidate temperature display",
+    "One click enters diagnostics from key off through timed serial button holds",
+    "Previous/Next select actual diagnostic IDs; Run test triggers ECU warning and Stop test releases run switch",
+    "Exit diagnostics cycles ignition and restores normal serial instrument replies",
+    "Diagnostic toolbar, entry/exit and navigation fit desktop and 390 px mobile layouts; dark/light themes"
   ],
-  "scope": "UI function and appearance only; physical units and hardware not validated",
+  "browser_errors": [],
+  "scope": "Local simulator UI and serial-peer controls; no physical ECU or real instrument cluster tested.",
   "sources": {
-    "emulator/web/dashboard.css": "9c62ef4157d123bdc6739e6d2a82c1603280161452e4c611d7b2fd962abbaccb",
-    "emulator/web/dashboard.html": "81f314df204b5ddf7d7cb20b520080f6b31305ead14cf525ba9ad4695f477fcf",
-    "emulator/web/dashboard.js": "92e03f7eee3816d6d85d0ef89a270b5274ff1b83f918a8b018b647941b182dc4"
+    "emulator/web/dashboard.html": "6db96d614b255fda36ecdd7c858568bbbc9c7fb3d1c037d1e98baf1ff95b4392",
+    "emulator/web/dashboard.css": "02d8a785e88d57c93cc39e27c40aa1c7e5ce9a1b883cd316ae300653726f1c47",
+    "emulator/web/dashboard.js": "0c9e40804f1061397a8e68caa33cb050b89913a22c3b60994f1c185f763143e7",
+    "emulator/dashboard.py": "b52e1d12cec46acbabffc799a12f940f36e2e252cec893a421d447c1290da2fc",
+    "emulator/cockpit.py": "ae4552eeef8ffb66c20f1e4e34880868adf5e31bbab33718d386fdd601a0290a",
+    "emulator/meter.py": "c8fa025fb521392442a4f3b24070863417e464fef813a903345c0068d594bfd3"
   }
 }

@@ -7,6 +7,8 @@
 #include "utils.h"
 #include "m68hc12cl.h"
 #include "simcl.h"
+#include "newcmdcl.h"
+#include "fiocl.h"
 
 class xt_cpu;
 class xt_boot_hw: public cl_hw {
@@ -32,13 +34,17 @@ public:
   unsigned long long bus_cycles;
   unsigned pulse_left, pulse_count, trace_count, observed_outputs;
   bool pulse_low;
+  unsigned vss_left, vss_count;
+  unsigned coil_feedback_left;
+  unsigned observed_pa, observed_pp;
+  bool vss_low;
   struct serial_state {
     unsigned tx_left, tx_value, tx_pending, rx_left, idle_left, armed, sent, received, dropped;
     bool tx_queued, idle_eligible;
     std::deque<unsigned> rx;
   } sci[2];
   struct flash_state { unsigned status, protection, address, data, written, command, left, programs, erases; } flash[2];
-  unsigned cfg_size(void) { return 35; }
+  unsigned cfg_size(void) { return 42; }
   void flash_store(unsigned address, unsigned value);
   void flash_register(unsigned address, t_mem *value);
   void flash_tick(unsigned cycles);
@@ -52,6 +58,7 @@ public:
 
   void advance(unsigned cycles);
   void pulse_tick(void);
+  void vss_tick(void);
   void trace(const char *kind, unsigned channel, unsigned value);
   void observe_outputs(void);
   void timer_tick(unsigned cycles);
@@ -164,6 +171,7 @@ void xt_boot_hw::reset(void) {
   regs[0x3a]->set(0xf1); // PLLCTL reset value
   regs[0x76]->set(0xff); regs[0x77]->set(0xff);
   regs[0x83]->set(0x20); regs[0x84]->set(5);
+  for (unsigned a=0xb4; a<=0xc3; ++a) regs[a]->set(255); // PWM period/duty reset
   regs[0x1f]->set(0xf2); // HPRIO reset: external IRQ highest
   adc_left= adc_slot= adc_done= adc_armed= adc_period= 0;
   adc_sample_left= adc_sample= adc_sequences= adc_conversions= 0;
@@ -177,6 +185,9 @@ void xt_boot_hw::reset(void) {
   spi_queued=false;
   ee_selected=ee_enabled=false; ee_command=ee_bytes=ee_data=ee_busy=ee_reads=ee_writes=0;
   bus_cycles=0; pulse_left=pulse_count=trace_count=observed_outputs=0; pulse_low=false;
+  vss_left=vss_count=0; vss_low=false;
+  coil_feedback_left=0;
+  observed_pa=observed_pp=0;
   regs[0xdb]->set(0x20); // SPTEF
   regs[0xd4]->set(0xc0); // SCI1 idle; no external serial traffic
   cfg_set(17,255); cfg_set(18,0); // Unconnected/pulled-high MISO, no EEPROM invented.
@@ -192,6 +203,7 @@ void xt_boot_hw::reset(void) {
     cfg_set(30+n,0); cfg_set(32+n,0);
   }
   cfg_set(34,0);
+  for (unsigned n=35;n<42;++n) cfg_set(n,0);
   for (unsigned n=0;n<2;++n) {
     flash[n]=flash_state(); flash[n].status=0xc0;
     flash[n].protection=uc->rom->get(n ? 0xff0c:0xff0d);
@@ -210,7 +222,7 @@ bool xt_boot_hw::supported(unsigned a) {
   // Explicitly supported registers only; other device accesses stop execution.
   return a<=3 || a==8 || a==9 || a==0x12 || a==0xc4 || a==0x1e || a==0x1f || (a>=0x20 && a<=0x27)
     || (a>=0x82 && a<=0x86) || a==0x8b || a==0x8d || a==0x8f
-    || (a>=0x90 && a<=0x9f)
+    || (a>=0x90 && a<=0x9f) || (a>=0xac && a<=0xc3)
     || a==0xe0 || a==0xe1 || a==0xe2 || a==0xe8 || a==0xe9 || a==0xea
     || a==0xf0 || a==0xf1 || a==0xf2
     || (a>=0x32 && a<=0x35) || (a>=0x37 && a<=0x3c) || a==0x3f
@@ -283,6 +295,10 @@ void xt_boot_hw::write(cl_memory_cell *cell, t_mem *v) {
   unsigned old= cell->get();
   if (a>=0x100 && a<=0x106) { flash_register(a,v); return; }
   if (a==0xc4 && *v) { unsupported(a,"PWM channel enable"); *v=old; return; }
+  // T64 PWM registers, datasheet pp.347-350: disabled counters do not run;
+  // any counter write clears it, and period/duty writes latch immediately.
+  // Enabled PWM remains explicitly unsupported, never silently simulated.
+  if (a>=0xac && a<=0xb3) { *v=0; return; }
   if (a==0x12 && *v!=0x11 && *v!=1) { unsupported(a,"alternate CALRAM mapping"); *v=old; return; }
   if (a==0xf0 && cfg_get(18)==2) ee_select((*v&8)!=0);
   if (a==0x32 || a==0x33) {
@@ -406,10 +422,11 @@ int xt_boot_hw::tick(int cycles) {
   if (fault) return 0;
   // A driven waveform / trace uses individual bus ticks. CPU register accesses
   // and interrupt delivery still occur at instruction boundaries.
-  if (cfg_get(24) || cfg_get(25)) {
+  if (cfg_get(24) || cfg_get(25) || cfg_get(36) || cfg_get(41)) {
     for (int n=0;n<cycles && !fault;++n) {
       advance(1);
       pulse_tick();
+      vss_tick();
       observe_outputs();
     }
   } else advance(cycles);
@@ -448,8 +465,22 @@ void xt_boot_hw::trace(const char *kind, unsigned channel, unsigned value) {
          bus_cycles,kind,channel,value,unsigned(uc->instPC));
 }
 void xt_boot_hw::observe_outputs(void) {
+  unsigned pa=gpio(0), pp=gpio(0xf0);
+  if ((pa^observed_pa)&regs[2]->get()&4) trace("port_a",2,(pa>>2)&1);
+  for (unsigned n=0;n<8;++n)
+    if ((pp^observed_pp)&regs[0xf2]->get()&0x17&(1u<<n)) trace("port_p",n,(pp>>n)&1);
+  observed_pa=pa; observed_pp=pp;
   unsigned pins=gpio(0xe0), changed=(pins^observed_outputs)&regs[0x40]->get();
   for (unsigned n=0;n<8;++n) if (changed&(1<<n)) trace("output",n,(pins>>n)&1);
+  if (coil_feedback_left && !--coil_feedback_left) {
+    cfg_set(12,cfg_get(12)|32u); timer_tick(0);
+  }
+  if (cfg_get(41) && (changed&8) && !(pins&8)) {
+    // External ignition-driver acknowledgement pulse after coil release.
+    // Feed the input pin, allowing the ECT to set its own capture flag.
+    cfg_set(12,cfg_get(12)&~32u); coil_feedback_left=128;
+    trace("input",5,0); timer_tick(0);
+  }
   observed_outputs=pins;
 }
 void xt_boot_hw::pulse_tick(void) {
@@ -459,12 +490,28 @@ void xt_boot_hw::pulse_tick(void) {
   trace("input",1,pulse_low ? 0 : 1);
   timer_tick(0); // Capture the edge at this counter value, without an extra tick.
   if (pulse_low) { ++pulse_count; pulse_left=cfg_get(20); }
-  else if (pulse_count>=cfg_get(23)) cfg_set(24,0);
+  else if (!cfg_get(37) && pulse_count>=cfg_get(23)) cfg_set(24,0);
   else {
+    // Apply a live external tooth interval at a completed pulse, preserving
+    // the gap index and phase. No MCU memory or output state is written.
+    if (cfg_get(35)) {
+      cfg_set(19,cfg_get(35)); cfg_set(20,cfg_get(35)/2);
+      cfg_set(35,0);
+    }
     unsigned interval=cfg_get(19);
     if (cfg_get(21) && ((pulse_count+1)%cfg_get(21)==0)) interval*=cfg_get(22);
     pulse_left=interval-cfg_get(20);
   }
+}
+void xt_boot_hw::vss_tick(void) {
+  if (!cfg_get(36)) return;
+  if (vss_left && --vss_left) return;
+  vss_low=!vss_low;
+  cfg_set(12,vss_low ? cfg_get(12)&~4u : cfg_get(12)|4u);
+  if (vss_low) { ++vss_count; cfg_set(38,vss_count); }
+  trace("input",2,vss_low ? 0 : 1);
+  timer_tick(0);
+  vss_left=cfg_get(36)/2;
 }
 void xt_boot_hw::print_info(cl_console_base *con) {
   con->dd_printf("XT660 partial peripherals; not a full engine model\n");
@@ -481,6 +528,7 @@ void xt_boot_hw::print_info(cl_console_base *con) {
     n,sci[n].sent,n,sci[n].received,n,sci[n].dropped,n,word(0xc8+n*8)&8191);
   con->dd_printf("EEPROM_READS=%u EEPROM_WRITES=%u EEPROM_BUSY=%u\n",ee_reads,ee_writes,ee_busy);
   con->dd_printf("BUS_CYCLES=%llu PULSES=%u PULSE_RUNNING=%u\n",bus_cycles,pulse_count,unsigned(cfg_get(24)));
+  con->dd_printf("VSS_PULSES=%u VSS_INTERVAL=%u\n",vss_count,unsigned(cfg_get(36)));
 }
 
 
@@ -496,6 +544,13 @@ const char *xt_boot_hw::cfg_help(t_addr a) {
   if (a==24) return "PT1 fixture: 1 starts, 0 stops; no firmware/RAM edits";
   if (a==25) return "Emit bounded input/capture/output/IRQ event trace";
   if (a==34) return "Enable simulated flash commands (source BIN never modified)";
+  if (a==35) return "Pending PT1 interval: 0 or 12800..128000 bus cycles, applied between pulses";
+  if (a==36) return "PT2 external speed input: 0 stops, otherwise 1000..16000000 bus cycles per pulse";
+  if (a==37) return "Continuous external PT1 fixture; 0 retains finite pulse count";
+  if (a==38) return "External PT2 falling-edge count (read-only)";
+  if (a==39) return "External intake pressure ripple amplitude in ADC counts; 0 disables";
+  if (a==40) return "External relay fixture: ADC4 supply follows PA2 command; 0 independent";
+  if (a==41) return "External coil-driver acknowledgement on PT5 after PT3 release";
   if (a==26 || a==27) return "Queue an external 8N1 byte for SCI0 / SCI1 (0..255)";
   if (a==28 || a==29) return "External SCI0 / SCI1 peer baud divisor in bus-clock units";
   if (a==30 || a==31) return "Completed SCI0 / SCI1 transmit byte count (read-only)";
@@ -505,7 +560,22 @@ const char *xt_boot_hw::cfg_help(t_addr a) {
 }
 t_mem xt_boot_hw::conf_op(cl_memory_cell *cell, t_addr a, t_mem *v) {
   if (v && a) {
-    if (a>=30 && a<=33) { *v=cell->get(); return cell->get(); }
+    if ((a>=30 && a<=33) || a==38) { *v=cell->get(); return cell->get(); }
+    if (a>=35) {
+      unsigned limit=a==35 ? 128000 : a==36 ? 16000000 : a==39 ? 255 : 1;
+      unsigned minimum=a==35 ? 12800 : a==36 ? 1000 : 0;
+      if (*v>limit || (*v && *v<minimum)) { *v=cell->get(); return cell->get(); }
+      if (a==36 && !*v) {
+        vss_left=0; vss_low=false;
+        cfg_set(12,cfg_get(12)|4u); timer_tick(0);
+      }
+      if (a==36 && *v && !cell->get()) {
+        vss_left=*v; vss_low=false;
+        cfg_set(12,cfg_get(12)|4u); timer_tick(0);
+      }
+      if (a==41) { coil_feedback_left=0; cfg_set(12,cfg_get(12)|32u); timer_tick(0); }
+      return cell->get();
+    }
     unsigned max= a<=8 ? 1023 : (a==28 || a==29) ? 8191 : (a==26 || a==27) ? 255 : a==18 ? 2 : (a==24 || a==25 || a==34) ? 1 :
                   (a==19 || a==20) ? 1000000 : a==21 ? 64 : a==22 ? 8 : a==23 ? 4096 : 255;
     if (*v>max) {
@@ -584,6 +654,14 @@ void xt_boot_hw::adc_tick(unsigned cycles) {
         unsigned channel=regs[0x85]->get()&7;
         if (regs[0x85]->get()&0x10) channel=(channel+adc_done)&7;
         adc_sample=cfg_get(channel+1);
+        if (channel==4 && cfg_get(40) && !(gpio(0)&4)) adc_sample=0;
+        if (channel==1 && cfg_get(39) && cfg_get(24)) {
+          // Deliberate external intake waveform: a triangular pressure dip
+          // once per two crank revolutions. It is not a combustion model.
+          unsigned phase=pulse_count%22;
+          unsigned dip=cfg_get(39)*(phase<11 ? phase : 22-phase)/11;
+          adc_sample=adc_sample>dip ? adc_sample-dip : 0;
+        }
         adc_sample_left=0;
       } else adc_sample_left-=elapsed;
     }
@@ -908,10 +986,23 @@ public:
   cl_uc *mk_controller(void) { return new xt_cpu(this); }
 };
 
+class xt_app: public cl_app {
+public:
+  int run_nogo(void) {
+    // The stock interactive console polls idle input every 100 ms. Our local
+    // request/reply bridge needs 1 ms responsiveness. This changes host sleep
+    // only: paused MCU time and all simulated instruction clocks are unchanged.
+    commander->check();
+    int done=commander->input_avail() ? commander->proc_input() : (msleep(1),0);
+    if (sim->uc) sim->uc->touch();
+    return done;
+  }
+};
+
 // Application lifecycle follows uCsim's sm68hc12.cc (Daniel Drotos, GPL-2.0+).
 int main(int argc, char **argv) {
   app_start_at=dnow(); cpus=cpus_m68hc12;
-  application=new cl_app(); application->set_name("xt660_boot");
+  application=new xt_app(); application->set_name("xt660_boot");
   application->init(argc, argv);
   cl_sim *sim=new xt_sim(application);
   if (sim->init()) sim->state|=SIM_QUIT;

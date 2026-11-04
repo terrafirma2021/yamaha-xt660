@@ -1,0 +1,8 @@
+{
+  "asset": "cockpit.png",
+  "kind": "Generated race-cockpit illustration",
+  "generator": "OpenAI image generation",
+  "description": "Rider-eye R1-inspired race cockpit with blue tank, black carbon fairings, clip-on handlebars, gold fork adjusters and a blank central TFT. Instruments and controls are separate HTML/CSS elements.",
+  "not_a_photograph_of": "XT660 hardware or an identified ECU installation",
+  "sha256": "fc63d52c6b9b3f77cb0b195f18975baa16f4b9a6544d0949157efda072fb5a72"
+}

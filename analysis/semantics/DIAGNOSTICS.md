@@ -74,6 +74,8 @@ Zero entries are unmapped/reserved. Persistent/history bitmaps are accumulated s
 
 The late application's O2 fault-24/31/32 paths, fault bitmap, serial reply packing and master enable setting are now traced separately in [O2 control and fuel-map behaviour](O2_CONTROL.md). Disabling that master setting prevents new O2 faults but deliberately preserves existing diagnostic history.
 
-Addresses apply to the supplied image (SHA-256 `5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280`); CPU addresses equal file offsets. Addresses are hexadecimal; diagnostic menu numbers are decimal unless prefixed with `0x`.
+The late menu has 22 stored entries at `46C2`, count `46C1`, copied to `0D73` by `56D5`. The reviewed stock configuration skips 49 and 54, leaving 20 selectable items. The additional **d:63** dispatch compares the selector with `0D87` at `5DDE`, calls `5F3D`, masks current fault byte `08B2` with `16` at `5F51–5F56`, and translates set bits through fault table `4695`. It displays active O2 faults 24, 31 and 32, or zero when none are present. It is separate from d:61 stored history and d:62 clearing. The [emulator diagnostic checks](../../emulator/README.md) exercise the actual button protocol and family-specific output pins without altering firmware.
+
+Unless explicitly marked as late application, addresses apply to the supplied image (SHA-256 `5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280`); CPU addresses equal file offsets. Addresses are hexadecimal; diagnostic menu numbers are decimal unless prefixed with `0x`.
 
 See [byte-backed protocol excerpts](protocol_evidence.tsv) and [verification and reproduction](PROTOCOL_VERIFICATION.md).

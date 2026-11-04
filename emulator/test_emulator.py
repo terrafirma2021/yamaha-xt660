@@ -13,6 +13,7 @@ from test_peripherals import test_peripherals, test_interrupts, test_firmware_ad
 from test_serial_storage import test_load_store_flags, test_move_updates, test_serial, test_storage, test_transfer_and_disassembly
 from test_engine import test_engine, test_dashboard_http
 from test_flash import test_flash_registers, test_boot_programming
+from test_bike_inputs import check as test_bike_inputs
 
 
 def core_cases():
@@ -255,6 +256,7 @@ def main():
         report['runtime']=test_runtime(args.ucsim,args.wsl)
         report['bit_branches']=test_bit_branches(args.ucsim,args.wsl)
         report['pulse_fixture_checks']=test_pulse_fixture(args.ucsim,args.wsl)
+        report['bike_input_checks']=test_bike_inputs(args.ucsim,args.wsl)
         report['crank']=test_crank(args.ucsim,args.wsl)
         report['output_gate_checks']=test_output_gates(args.ucsim,args.wsl)
         report['serial_checks']=test_serial(args.ucsim,args.wsl)

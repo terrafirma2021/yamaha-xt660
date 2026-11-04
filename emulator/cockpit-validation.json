@@ -1,0 +1,241 @@
+{
+  "cockpit": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "authentication": "Key accepted",
+      "idle_code": 34,
+      "sustained_idle_wot_idle_replies": [
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ],
+        [
+          134,
+          0,
+          0,
+          57,
+          191
+        ],
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ]
+      ],
+      "in_gear_reply": [
+        70,
+        8,
+        0,
+        57,
+        135
+      ],
+      "hot_code": 137,
+      "flash_bytes_unchanged": 59392,
+      "checks": [
+        "key-on",
+        "starter and firing",
+        "throttle",
+        "VSS input through serial",
+        "neutral stops road pulses",
+        "run switch stops engine",
+        "coolant via serial"
+      ]
+    },
+    {
+      "image": "xt660-5vk-1x-2008",
+      "authentication": "Key accepted",
+      "idle_code": 34,
+      "sustained_idle_wot_idle_replies": [
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ],
+        [
+          134,
+          0,
+          0,
+          57,
+          191
+        ],
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ]
+      ],
+      "in_gear_reply": [
+        70,
+        8,
+        0,
+        57,
+        135
+      ],
+      "hot_code": 137,
+      "flash_bytes_unchanged": 59392,
+      "checks": [
+        "key-on",
+        "starter and firing",
+        "throttle",
+        "VSS input through serial",
+        "neutral stops road pulses",
+        "run switch stops engine",
+        "coolant via serial"
+      ]
+    },
+    {
+      "image": "xt660-2c1-10",
+      "authentication": "Key accepted",
+      "idle_code": 34,
+      "sustained_idle_wot_idle_replies": [
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ],
+        [
+          134,
+          0,
+          0,
+          57,
+          191
+        ],
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ]
+      ],
+      "in_gear_reply": [
+        70,
+        8,
+        0,
+        57,
+        135
+      ],
+      "hot_code": 137,
+      "flash_bytes_unchanged": 59392,
+      "checks": [
+        "key-on",
+        "starter and firing",
+        "throttle",
+        "VSS input through serial",
+        "neutral stops road pulses",
+        "run switch stops engine",
+        "coolant via serial"
+      ]
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "authentication": "Disabled in BIN",
+      "idle_code": 34,
+      "sustained_idle_wot_idle_replies": [
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ],
+        [
+          134,
+          0,
+          0,
+          57,
+          191
+        ],
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ]
+      ],
+      "in_gear_reply": [
+        70,
+        8,
+        0,
+        57,
+        135
+      ],
+      "hot_code": 137,
+      "flash_bytes_unchanged": 59392,
+      "checks": [
+        "key-on",
+        "starter and firing",
+        "throttle",
+        "VSS input through serial",
+        "neutral stops road pulses",
+        "run switch stops engine",
+        "coolant via serial"
+      ]
+    },
+    {
+      "image": "xt660-5vk-11",
+      "authentication": "Key accepted",
+      "idle_code": 34,
+      "sustained_idle_wot_idle_replies": [
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ],
+        [
+          134,
+          0,
+          0,
+          57,
+          191
+        ],
+        [
+          37,
+          0,
+          0,
+          57,
+          94
+        ]
+      ],
+      "in_gear_reply": [
+        70,
+        8,
+        0,
+        57,
+        135
+      ],
+      "hot_code": 137,
+      "flash_bytes_unchanged": 59392,
+      "checks": [
+        "key-on",
+        "starter and firing",
+        "throttle",
+        "VSS input through serial",
+        "neutral stops road pulses",
+        "run switch stops engine",
+        "coolant via serial"
+      ]
+    }
+  ],
+  "source_hashes": {
+    "cockpit.py": "ae4552eeef8ffb66c20f1e4e34880868adf5e31bbab33718d386fdd601a0290a",
+    "meter.py": "c8fa025fb521392442a4f3b24070863417e464fef813a903345c0068d594bfd3",
+    "engine.py": "7e211d418942ecb0aee843724ed5151f108ec98b5e92f254e9c12624a18323c9",
+    "native/xt660_boot.cc": "124d0ca365e62c3c5eed3c99c38932fd0564346af7b14e68352ce85e5193b764",
+    "test_cockpit.py": "1ee08c7e251532006b5e7b826d6b70272c45a4fd621396ea56533a0e57a620c9"
+  }
+}

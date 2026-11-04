@@ -1,0 +1,56 @@
+{
+  "faults": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "active_codes": [
+        15,
+        21
+      ],
+      "history_after_key_cycle": [
+        15,
+        21
+      ],
+      "stored_count": 2,
+      "count_after_clear": 0,
+      "storage_changed": true,
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10",
+      "active_codes": [
+        15,
+        21
+      ],
+      "history_after_key_cycle": [
+        15,
+        21
+      ],
+      "stored_count": 2,
+      "count_after_clear": 0,
+      "storage_changed": true,
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "active_codes": [
+        15,
+        21
+      ],
+      "history_after_key_cycle": [
+        15,
+        21
+      ],
+      "stored_count": 2,
+      "count_after_clear": 0,
+      "storage_changed": true,
+      "flash_bytes_unchanged": 59392
+    }
+  ],
+  "source_hashes": {
+    "cockpit.py": "ae4552eeef8ffb66c20f1e4e34880868adf5e31bbab33718d386fdd601a0290a",
+    "meter.py": "c8fa025fb521392442a4f3b24070863417e464fef813a903345c0068d594bfd3",
+    "engine.py": "7e211d418942ecb0aee843724ed5151f108ec98b5e92f254e9c12624a18323c9",
+    "native/xt660_boot.cc": "124d0ca365e62c3c5eed3c99c38932fd0564346af7b14e68352ce85e5193b764",
+    "test_cockpit_faults.py": "d4e21c7c583bb7b258e16c5ff64050af12ae5e1f66ec62883de42aa5ccd3b76c"
+  }
+}

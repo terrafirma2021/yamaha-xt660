@@ -1,0 +1,26 @@
+{
+  "pressure": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "healthy_waveform": true,
+      "stuck_pressure_fault_bit": true,
+      "warning_via_serial": true,
+      "disconnected_pressure_serial_code": 13,
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10",
+      "healthy_waveform": true,
+      "stuck_pressure_fault_bit": true,
+      "warning_via_serial": true,
+      "disconnected_pressure_serial_code": 13,
+      "flash_bytes_unchanged": 59392
+    }
+  ],
+  "source_hashes": {
+    "cockpit.py": "ae4552eeef8ffb66c20f1e4e34880868adf5e31bbab33718d386fdd601a0290a",
+    "engine.py": "7e211d418942ecb0aee843724ed5151f108ec98b5e92f254e9c12624a18323c9",
+    "native/xt660_boot.cc": "124d0ca365e62c3c5eed3c99c38932fd0564346af7b14e68352ce85e5193b764",
+    "test_pressure_faults.py": "71a062844c0f1f36d1273da84353adbbb5d038036c9e12583c147691df764bba"
+  }
+}

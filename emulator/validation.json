@@ -317,6 +317,14 @@
     "disassembly": 8
   },
   "pulse_fixture_checks": 12,
+  "bike_input_checks": {
+    "register_checks": 8,
+    "road_input_and_capture_edges": [
+      1000,
+      2000,
+      3000
+    ]
+  },
   "crank": [
     {
       "image": "xt660-2004-2006-companion",
@@ -1070,10 +1078,12 @@
   "source_hashes": {
     "emulator/boot_service.py": "ae06f3fc7760a8771bba31d9c167f733b48ac14e3b56d2d39fed34b9a8b8858b",
     "emulator/build.py": "08beccf2808b635da4b0c03c15ee03fdf6efea765b6660e4b75c3fba6a674d6e",
+    "emulator/cockpit.py": "ae4552eeef8ffb66c20f1e4e34880868adf5e31bbab33718d386fdd601a0290a",
     "emulator/crank.py": "a7ca7ba170e8a96e3e060a33eb32f0b46fad515b2b23df74af89d5010ef7e58d",
-    "emulator/dashboard.py": "23a5b78b876f0286a3a78bd82cccd645067108bf7be8da1e0a0aaf7a5ce4bf54",
-    "emulator/engine.py": "2762f9436f8d86c3cf38ba02fe7503f0c9ea0e90b4f4e020f902d7b021c34810",
-    "emulator/native/xt660_boot.cc": "9de1b916102870afef9775659f0834a8f20d5d71b8f2a8cb904d0e65d543d91e",
+    "emulator/dashboard.py": "b52e1d12cec46acbabffc799a12f940f36e2e252cec893a421d447c1290da2fc",
+    "emulator/engine.py": "7e211d418942ecb0aee843724ed5151f108ec98b5e92f254e9c12624a18323c9",
+    "emulator/meter.py": "c8fa025fb521392442a4f3b24070863417e464fef813a903345c0068d594bfd3",
+    "emulator/native/xt660_boot.cc": "124d0ca365e62c3c5eed3c99c38932fd0564346af7b14e68352ce85e5193b764",
     "emulator/patches/hc12-bit-disassembly.patch": "184b114b3f22a4d1ad3285a51f48c93b674896275b2e82dfbdea8d123899421e",
     "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",
     "emulator/patches/hc12-fetch-order.patch": "6f2f32f997b8023271bd0f9735ab89055acdacf0732d609b519e4e3d5396bdce",
@@ -1093,11 +1103,16 @@
     "emulator/sensors.py": "65fd435b85b925c0ea303d91ed6d5af4d77fe62f2c39653a2f7c836e6d2dde5b",
     "emulator/session.py": "4503ef4ec17edff43c8f12676785794ccff7512def25711a1a82c58d6d5d7021",
     "emulator/storage.py": "2cb84d0381bdd6afdaaa25b3035c266743e18b636305c6384b3d07b9717783d1",
+    "emulator/test_bike_inputs.py": "588441051f29d748f5414a24ac06f8dd4f8b96efba0a84bae16c2db8c741d222",
+    "emulator/test_cockpit.py": "1ee08c7e251532006b5e7b826d6b70272c45a4fd621396ea56533a0e57a620c9",
+    "emulator/test_cockpit_faults.py": "d4e21c7c583bb7b258e16c5ff64050af12ae5e1f66ec62883de42aa5ccd3b76c",
     "emulator/test_crank.py": "4f9df8ae6da20c7f63d07ea294aa0694977d770a724b9c11be6198e28ae74304",
-    "emulator/test_emulator.py": "f4b033b4827089b338b45e68b742f337dccb5bbd9bb4796ee430e98c71f7a0f1",
+    "emulator/test_diagnostics.py": "a52e4a814b6487f7ab7064a2d78d1ec7dc6e79e2db119c2ecfbdf479679eecb5",
+    "emulator/test_emulator.py": "a222a293cbb02bb29437db5dd4b24c8f327513bf34565088179a62f59d886ec6",
     "emulator/test_engine.py": "741477d73f94bc86399dd1aa4479d391281a912c9ddf4f741a2473d0d254ebe5",
     "emulator/test_flash.py": "21167f4c3f1f80823f6b5a95092bcd595e722ffe4076a016075bcc5e4caa1363",
     "emulator/test_peripherals.py": "104670900163c743413f53a891baf5de9fed52c89ce572c15684bb390ecc7252",
+    "emulator/test_pressure_faults.py": "71a062844c0f1f36d1273da84353adbbb5d038036c9e12583c147691df764bba",
     "emulator/test_runtime_devices.py": "2f98df55095240fa205dbe09013c80605959bf220c9bc50ca2a1b9fc023fdd87",
     "emulator/test_serial_storage.py": "9192f57c6c500b75efd2fff0686138cbd7b4e185c534facc2badfa99ef0949d4"
   }

@@ -2,7 +2,7 @@
 
 Run the registered BINs on a locally patched µCsim HC12 core. The five complete images execute from reset with modeled ADC, GPIO, timers, interrupts, SPI storage and both serial interfaces. The four images without boot code are rejected; donor boot bytes are never inserted.
 
-The local dashboard provides raw sensor inputs, synthetic crank pulses, coil/injector traces, authentication and meter exchanges, Run/Pause/Step, trace export and a firmware-integrity check. It is separate from the reference website and never opens a COM port.
+The local cockpit has key, run/stop, starter, N/1 and throttle controls. Its instruments consume checked SCI1 meter replies. Sensor faults, diagnostic buttons, raw inputs, coil/injector traces and trace export are available alongside the cockpit. It is separate from the reference website and never opens a COM port.
 
 ## Build and start
 
@@ -19,7 +19,7 @@ Choose a directory writable by your account. On Windows, build inside WSL, then 
 python emulator/dashboard.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-Open **http://127.0.0.1:8766/**. Load a BIN, authenticate the fixture if enabled, send crank revolutions and press Run. Sensor inputs can change while running. Pause stops instruction batches; Stop crank removes the external pulses. Use Step to watch the firmware detect pulse loss. Loading another BIN resets the simulated ECU.
+Open **http://127.0.0.1:8766/**. Select an ECU, turn the key, leave the red run switch on and press Start. Key-on runs authentication only when enabled by that BIN. N/1 changes the external neutral input; the throttle changes its ADC input and the simplified rotating-engine fixture. Pause stops instruction batches; it does not turn the key off. Bench controls contain the raw inputs, serial transcript, step, trace and integrity checks. Switching ECU selects a fresh storage fixture; key cycles within a selected ECU retain its external storage in this server session.
 
 The server binds only to loopback. It uses bundled HTML/CSS/JavaScript, a per-session request token and same-origin checks. It has no upload, arbitrary debugger-command or physical-port endpoint. Close it with Ctrl+C.
 
@@ -31,7 +31,21 @@ The server binds only to loopback. It uses bundled HTML/CSS/JavaScript, a per-se
 - SCI1 exercises the challenge/response sequence and normal `FE` / `01` meter requests, with reply checksum checks. Corrupt authentication responses are tested separately.
 - PT1 receives ten ordinary tooth intervals and one double interval per synthetic revolution. This follows the recovered gap detector, not a measured rotor trace. The firmware selects the /32 timer prescaler. Both families synchronise, generate PT3 coil and PT6 injector transitions, and detect pulse loss.
 
-Inputs remain **raw ADC counts and timer ticks**. The oscillator, analogue conditioning and mechanical TDC reference are not established by running code. The UI does not invent RPM, °C, throttle percentage or absolute ignition advance. Output transitions are electrical command states in the MCU model, not combustion, torque or actual coil current. PT7 is displayed as a secondary code-path output without claiming a second XT cylinder.
+The dash consumes real five-byte replies, validated before display, through `meter.py`. B0 is the engine code, B1 the received road-pulse delta, B2 the fault/status byte and B3 the coolant or diagnostic data. The normal frame contains no gear field: N/1 follows the neutral-switch fixture. Fault injection changes ADC inputs; the firmware qualifies and transmits the resulting fault. Received codes in the sidebar are session observations, separate from ECU history.
+
+RPM is explicitly **nominal**, using B0 × 190 / 5.12 under the existing 16 MHz profile. Road speed is displayed as **pulses per reply**, not invented km/h. Coolant defaults to the exact received code. Optional `reply − 30 °C` remains a candidate with an unverified offset. The TEMP indicator compares the received code with 136; it is a dashboard threshold, not a read of the fan relay. Throttle percentage means control travel across the fixture's ADC range, not calibrated throttle angle.
+
+The rotating-engine fixture ramps tooth intervals, supplies an intake-pressure ripple and models the fuel-relay supply feedback. It sustains rotation only after observing coil and injector outputs, and stops after sustained loss of either. Startup includes a stationary 32-million-bus-cycle settling interval. First gear supplies four road pulses per synthetic crank revolution solely as a demonstration fixture; this is **not a measured XT sensor/gear ratio**. These external signals enter the MCU model; no ECU runtime variables or flash bytes are patched. The model does not calculate combustion, torque, acceleration, wheel speed or physical temperatures.
+
+The [recovered pressure calculations](../analysis/semantics/PRESSURE_ESTIMATE.md) run inside the original firmware. The external intake model supplies ADC1 with a pressure dip once per two crank revolutions: opening the throttle reduces the dip, increasing speed increases it, and stopping restores the selected ambient input. Its ambient count, waveform, phase and pumping coefficients are demonstration parameters, not recovered kPa calibration or a volumetric-efficiency map. The firmware still detects a disconnected pressure input and checks pressure variation. ADC4 follows the PA2 relay command; a separate PT5 input pulse acknowledges PT3 coil release through the actual timer-capture path. Neither supply nor ignition fault flags are forced clear.
+
+**Enter diagnostics** performs key-off/key-on, holds SELECT + RESET for at least eight simulated seconds, releases them, then holds them for at least two seconds to confirm dIAG. It sends FE/CD/CA/CB/CC exchanges and waits for the firmware's replies; it never sets diagnostic RAM flags. These minimum holds follow the [Yamaha service manual, diagnostic procedure](https://www.manualslib.com/manual/1068449/Yamaha-Xt660r-2004.html?page=350#manual). The peer's 16 ms request spacing is a chosen simulation cadence under the nominal 16 MHz clock, not a measured motorcycle-meter cadence. Host execution may take longer than simulated time.
+
+**Previous / Next** send released-button and press sequences. The ECU controls selection, skips and wraparound: 19 items in the early BIN and 20 in the later BIN. **Run test / Stop test** operate the simulated run switch. Coil, injector, PAIR and fuel-relay tests produce five pulses at one-second intervals; fan and headlight tests produce five cycles at five-second intervals. The warning lamp follows actual serial replies. PAIR is PP1 in the early application and PP0 in the later application.
+
+**d:61 History** and **d:62 Count** navigate using the same button commands. Clear history in d:62 models the supply-monitor low/high transition used by the run-switch procedure. Actual EEPROM writes remain firmware operations; active faults can remain or recur. Later d:63 displays active O2 faults (24/31/32), not stored history. **Exit diagnostics** cycles the simulated key and reconnects in normal meter mode.
+
+The cockpit art is a generated backdrop; the instruments and controls are HTML/CSS. All assets are local. The R1-inspired artwork does not imply an R1 ECU or protocol.
 
 ## Flash-client integration
 
@@ -50,6 +64,20 @@ python scripts/build_release.py
 ```
 
 Tests write detailed logs under ignored `.runs/`. [validation.json](validation.json) records the integrated firmware and controller checks; [desktop-validation.json](desktop-validation.json) records the C# integration separately. [dashboard-validation.json](dashboard-validation.json) records the browser checks. None is a hardware certificate.
+
+Cockpit checks are separate from the shorter core regression:
+
+```sh
+python3 emulator/test_cockpit.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python3 emulator/test_cockpit_faults.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python3 emulator/test_pressure_faults.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python3 emulator/test_diagnostics.py --image xt660-2004-2006-companion --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python3 emulator/test_diagnostics.py --image xt660-2c1-10 --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+```
+
+[cockpit-validation.json](cockpit-validation.json) records sustained idle/full-throttle/idle runs, controls and unchanged flash across the five complete BINs. [cockpit-fault-validation.json](cockpit-fault-validation.json) records active faults, history after a key cycle, d:61/d:62 communication and firmware-controlled EEPROM clearing in both families.
+
+[pressure-fault-validation.json](pressure-fault-validation.json) checks healthy ripple, stuck pressure and disconnected pressure without disabling fault detection. Diagnostic reports for the [early](diagnostic-validation-xt660-2004-2006-companion.json) and [later](diagnostic-validation-xt660-2c1-10.json) BINs record both holds, every selectable item in both directions, actual output edges for all six actuator tests, warning replies, normal-mode exit and unchanged flash.
 
 ## Debugging and automation
 
@@ -87,13 +115,19 @@ Debugger fixture controls are separate from MCU registers:
 | `[26..29]` | SCI0/1 incoming bytes and external-peer clock divisors |
 | `[30..33]` | SCI transmit counts and last bytes |
 | `[34]` | Enable simulated flash commands; off in normal engine runs |
+| `[35..38]` | Pending PT1 interval, PT2 road-pulse interval, continuous crank, road-pulse count |
+| `[39]` | External intake-pressure ripple amplitude; zero disables |
+| `[40]` | External ADC4 supply follows PA2 fuel-relay command; zero leaves it independent |
+| `[41]` | External ignition-driver acknowledgement on PT5 after PT3 release |
 | `eeprom[0..511]` | Persistent external-storage fixture bytes |
 
 ## Model boundaries
 
-The conditional MCU reference is [MC9S12T64 Rev 1.1.1](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf). The model covers the firmware-used 8N1 SCI paths, SPI master transfers and observed storage protocol, ADC sequencing/formatting, GPIO directions/latches, ECT compare/basic capture, RTI, PLL status, watchdog servicing and maskable interrupts. Flash checks cover bank selection, sector erase, word programming, protection, errors and busy-bank access.
+The conditional MCU reference is [MC9S12T64 Rev 1.1.1](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf). The model covers the firmware-used 8N1 SCI paths, SPI master transfers and observed storage protocol, ADC sequencing/formatting, GPIO directions/latches, ECT compare/basic capture, RTI, PLL status, watchdog servicing and maskable interrupts. Disabled PWM counter/period/duty registers follow pages 347–350, including write-to-clear counters; later diagnostic entry accesses these without enabling PWM. Flash checks cover bank selection, sector erase, word programming, protection, errors and busy-bank access.
 
 It is a functional model with instruction-boundary peripheral updates. PLL acquisition, storage busy and flash busy durations are deterministic fixtures. Exception-entry timing, analogue settling and oscillator frequency are not calibrated. Unsupported modes stop explicitly: banked CALL/RTC, advanced ECT buffering/pulse accumulators, external ADC triggering, SCI parity/9-bit/break and unused PWM modes. Watchdog reset requests stop with a reason rather than restarting the MCU. It is not a model of every silicon function or every physical fault.
+
+The separate XT host application polls idle console input at 1 ms rather than 100 ms. This affects host responsiveness only; paused MCU time and instruction clocks do not advance.
 
 Local core fixes cover decrement width, indexed addressing, flags, bit branches, MOV auto-index updates/disassembly, CCR X-mask transfers, loop decoding, ticks and step-over metadata. Builds pin µCsim commit `59a14ff99efe7e92474faf4c4ddf57b5e4ff0631`, verify known patch states and preserve unrecognised local edits. **No upstream submissions have been made.**
 

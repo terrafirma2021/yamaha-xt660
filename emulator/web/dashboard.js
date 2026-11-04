@@ -1,33 +1,43 @@
-'use strict';
-const $=id=>document.getElementById(id), token=document.querySelector('meta[name=session]').content;
-const names=['Throttle','Intake pressure','O₂ input','Intake temperature','Supply monitor','Lean sensor','Coolant temperature','Auxiliary input'];
-let loaded=false,busy=false,running=false,authAllowed=false,timer=null,queue=Promise.resolve();
-const controls=['run','step','crank','stopCrank','authenticate','meter','verify','pitch'];
+ 'use strict';
+const $=id=>document.getElementById(id),token=document.querySelector('meta[name=session]').content;
+let state=null,busy=false,paused=false,timer=null,queue=Promise.resolve(),ticking=false;
+const names=['Throttle','Intake pressure','O₂ input','Intake temperature','Supply monitor','Lean sensor','Coolant','Auxiliary'];
+for(let n=0;n<40;n++)$('tach').append(document.createElement('i'));
 for(let n=0;n<8;n++){
-  const row=document.createElement('div');row.className='sensor';
-  const label=document.createElement('label');label.htmlFor='adc'+n;label.textContent=names[n];
-  const slider=document.createElement('input');Object.assign(slider,{id:'adc'+n,type:'range',min:0,max:1023,value:512,disabled:true});
-  slider.setAttribute('aria-label',names[n]+' ADC');
-  const value=document.createElement('input');Object.assign(value,{id:'value'+n,type:'number',min:0,max:1023,value:512,disabled:true});value.setAttribute('aria-label',names[n]+' value');
-  slider.oninput=()=>{value.value=slider.value;};
-  slider.onchange=()=>act('adc',{channel:n,value:Number(slider.value)});
-  value.onchange=()=>{if(value.checkValidity())act('adc',{channel:n,value:Number(value.value)});else value.reportValidity();};
-  row.append(label,slider,value);$('sensors').append(row);
+ const row=document.createElement('div');row.className='sensor';
+ const label=document.createElement('label');label.htmlFor='adc'+n;label.textContent=names[n];
+ const slider=document.createElement('input');Object.assign(slider,{id:'adc'+n,type:'range',min:0,max:1023,value:512,disabled:true});slider.setAttribute('aria-label',names[n]+' ADC');
+ const value=document.createElement('input');Object.assign(value,{id:'value'+n,type:'number',min:0,max:1023,value:512,disabled:true});value.setAttribute('aria-label',names[n]+' raw value');
+ slider.oninput=()=>value.value=slider.value;
+ const send=v=>n===6?control('coolant',v):act('adc',{channel:n,value:v});
+ slider.onchange=()=>send(Number(slider.value));value.onchange=()=>value.checkValidity()?send(Number(value.value)):value.reportValidity();
+ row.append(label,slider,value);$('sensors').append(row);
 }
 function lock(){
-  $('load').disabled=busy||running;$('image').disabled=busy||running;
-  for(const id of controls)$(id).disabled=!loaded||(busy&&!(id==='run'&&running))||(running&&id!=='run');
-  $('authenticate').disabled||=!authAllowed;
-  for(let n=0;n<8;n++)for(const prefix of ['adc','value'])$(prefix+n).disabled=!loaded;
-  $('run').textContent=running?'Pause':'Run';$('running').textContent=running?'Running in instruction batches':'Paused';
-  for(const id of ['traceLink','storageLink'])$(id).setAttribute('aria-disabled',String(!loaded||busy));
+ const b=state?.bike,powered=!!b?.powered;
+ $('load').disabled=busy;$('image').disabled=busy;$('key').disabled=busy||!b?.selected;
+ for(const id of ['runSwitch','neutral','inGear','throttle','releaseThrottle','faultSelect','nextFault','restore','coolantNormal','coolantHot','pause','step','verify'])$(id).disabled=!powered;
+ $('starter').disabled=!powered||!b.run||b.rotating||b.starting||b.authentication==='Key rejected'||busy;
+ $('step').disabled||=!paused||busy;$('verify').disabled||=busy;
+ for(let n=0;n<8;n++)for(const prefix of ['adc','value'])$(prefix+n).disabled=!powered;
+ $('wrongKey').disabled=powered;
+ const diag=b?.meter.mode==='diagnostic';
+ $('diagnostics').disabled=!b?.selected||busy;
+ for(const id of ['diagPrev','diagNext','history','count'])$(id).disabled=!diag||busy;
+ $('clearHistory').disabled=!diag||b?.meter.diagnostic_id!==62||busy;
+ const actuator=diag&&b?.meter.diagnostic_kind==='actuator';
+ $('runTest').hidden=$('stopTest').hidden=!actuator;
+ $('runTest').disabled=!actuator||busy;$('stopTest').disabled=!actuator||!b?.run||busy;
+ $('clearHistory').hidden=!diag||b?.meter.diagnostic_id!==62;
+ $('starter').disabled||=b?.meter.mode!=='normal';
+ for(const id of ['traceLink','storageLink'])$(id).setAttribute('aria-disabled',String(!powered||busy));
 }
 function wave(trace){
   const svg=$('wave'),ns='http://www.w3.org/2000/svg';svg.replaceChildren();
-  const rows=trace.filter(e=>e.kind==='output'&&[3,6,7].includes(e.channel));
+  const rows=trace.filter(e=>e.kind==='output'&&[3,6].includes(e.channel));
   if(!rows.length){const text=document.createElementNS(ns,'text');text.setAttribute('x',24);text.setAttribute('y',80);text.textContent='No output transitions in this trace window.';svg.append(text);return;}
   const start=rows[0].cycle,end=rows.at(-1).cycle,span=Math.max(1,end-start),x=t=>20+(t-start)*600/span;
-  for(const [idx,ch] of [3,6,7].entries()){
+  for(const [idx,ch] of [3,6].entries()){
     const events=rows.filter(e=>e.channel===ch),base=45+idx*45;
     const line=document.createElementNS(ns,'line');for(const [k,v] of Object.entries({x1:20,x2:620,y1:base,y2:base}))line.setAttribute(k,v);svg.append(line);
     if(!events.length)continue;
@@ -36,43 +46,82 @@ function wave(trace){
     const path=document.createElementNS(ns,'path');path.setAttribute('d',d);path.setAttribute('stroke',['var(--coil)','var(--injector)','var(--secondary)'][idx]);svg.append(path);
   }
 }
+
 function render(s){
-  loaded=s.loaded;
-  if(!$('image').options.length)for(const image of s.images){const o=document.createElement('option');o.value=image.id;o.textContent=image.label;$('image').append(o);}
-  if(s.error)throw Error(s.error);
-  if(loaded){
-    $('image').value=s.image;
-    if(document.activeElement!==$('pitch')){$('pitch').value=s.crank_pitch;$('pitchLabel').textContent=s.crank_pitch+' ticks';}
-    $('sync').textContent=s.synchronized?'Synchronized':'Waiting';$('pitchValue').textContent=s.pitch_ticks&&s.pitch_ticks!==65535?s.pitch_ticks:'—';
-    authAllowed=s.authentication_required&&!s.authentication_complete;
-    $('auth').textContent=!s.authentication_required?'Disabled in BIN':s.authentication_complete?'Accepted':s.authentication_inhibit?'Inhibited':'Pending';
-    $('faults').textContent=s.faults.map(x=>x.toString(16).padStart(2,'0').toUpperCase()).join(' ');
-    $('cycles').textContent=(s.counts.bus_cycles??0).toLocaleString()+' bus cycles';
-    for(let n=0;n<8;n++)for(const prefix of ['adc','value']){const input=$(prefix+n);if(document.activeElement!==input)input.value=s.adc[n];}
-    for(const [id,ch] of [['coil',3],['injector',6],['secondary',7]])$(id).textContent=s.output_transitions[ch];
-    wave(s.trace);$('serial').textContent=s.transcript.length?s.transcript.map(r=>`TX ${r.request}  →  RX ${r.reply}`).join('\n'):'No exchanges yet.';$('serial').scrollTop=$('serial').scrollHeight;
-  }
-  lock();
+ state=s;const b=s.bike,m=b.meter,powered=b.powered;
+ if(!$('image').options.length)for(const v of s.images){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('image').append(o);}
+ if(b.selected&&document.activeElement!==$('image'))$('image').value=b.selected;
+ if(!$('faultSelect').options.length)for(const v of b.faults){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('faultSelect').append(o);}
+ if(document.activeElement!==$('faultSelect'))$('faultSelect').value=b.fault;
+ $('display').classList.toggle('off',!powered);
+ $('key').setAttribute('aria-pressed',String(powered));$('key').setAttribute('aria-label','Turn ignition key '+(powered?'off':'on'));$('keyLabel').textContent=powered?'KEY ON':'KEY OFF';
+ $('runSwitch').setAttribute('aria-pressed',String(b.run));$('runLabel').textContent=b.run?'ON':'STOP';
+ $('neutral').setAttribute('aria-pressed',String(!b.gear));$('inGear').setAttribute('aria-pressed',String(!!b.gear));
+ $('gear').textContent=powered?(b.gear?'1':'N'):'—';$('gear').parentElement.classList.toggle('engaged',!!b.gear);
+ $('gear').title='Neutral-switch fixture; not a field in the normal K-line reply';
+ if(document.activeElement!==$('throttle'))$('throttle').value=b.throttle;$('throttleValue').textContent=b.throttle+'%';
+ $('auth').textContent=b.authentication;$('frames').textContent=m.frames;
+ $('engineState').textContent=!powered?'IGNITION OFF':!b.run?'ENGINE STOP':b.starting?'STARTING':b.rotating?'ENGINE RUNNING':'ENGINE STOPPED';
+ $('sessionHint').textContent=!powered?'Key on. Run on. Press start.':b.authentication==='Key rejected'?'Key rejected. Cycle ignition to try again.':b.starting?'Cranking. Waiting for ECU outputs.':b.rotating?'Engine running. Open the throttle.':'Press start when you’re ready.';
+ $('simState').textContent=powered?(paused?'Paused':'Running'):'Stopped';$('pause').textContent=paused?'Resume simulation':'Pause simulation';
+ $('sessionLight').classList.toggle('on',powered&&!paused);$('link').textContent=!powered?'KEY OFF':m.connected?(paused?'K-LINE / PAUSED':'K-LINE / CONNECTED'):'WAITING FOR ECU';
+ $('heartbeat').classList.toggle('active',m.connected&&m.frames%2===0);
+ $('speed').textContent=m.connected?m.speed_pulses:'—';
+ $('speedLabel').textContent='VSS PULSES / REPLY';$('rpmLabel').textContent='RPM · NOMINAL';
+ $('rpm').textContent=m.connected?Math.round(m.engine_code*190/5.12).toLocaleString():'—';
+ $('rpm').title='Received engine code × 190 / 5.12, nominal 16 MHz profile';
+ for(const [i,bar] of [...$('tach').children].entries())bar.classList.toggle('active',m.connected&&i<m.engine_code*190/5.12/200);
+ $('temperature').textContent=m.connected?($('celsius').checked?'~'+(m.coolant_code-30):m.coolant_code):'—';$('temperatureUnit').textContent=$('celsius').checked?'°C EST.':'CODE';
+ $('hotLamp').classList.toggle('hot',m.connected&&m.coolant_code>=136);$('hotLamp').title='Dash warning threshold: received coolant code ≥ 136';
+ $('faultLamp').classList.toggle('on',!!m.warning);
+ $('faultText').textContent=!powered?'Turn the key to connect':!m.connected?'Waiting for a valid meter reply':m.fault?'FAULT '+m.fault+' · '+m.fault_name:m.warning?'ECU warning lamp on':'No active fault code';
+ $('faultText').classList.toggle('alert',!!m.fault);
+ const diag=m.mode!=='normal';
+ $('display').classList.toggle('diagnostic',diag);
+ $('sessionTitle').textContent=diag?'Diagnostics':'Engine';
+ $('diagnostics').textContent=diag?'Exit diagnostics':'Enter diagnostics';$('diagControls').hidden=!diag;
+ const entryText=m.mode==='hold-confirm'?'Confirm dIAG · holding SELECT + RESET':m.mode==='menu-ready'?'dIAG selected · releasing buttons':'Key on · holding SELECT + RESET';
+ $('diagState').textContent=m.mode==='diagnostic'?'d:'+String(m.diagnostic_id??'—')+' · '+String(m.diagnostic_value??'—'):entryText+' · '+m.entry_seconds+' s simulated';
+ $('diagNumber').textContent=m.diagnostic_id==null?'d:—':'d:'+String(m.diagnostic_id).padStart(2,'0');$('diagName').textContent=m.diagnostic_name;$('diagValue').textContent=m.diagnostic_value??'—';
+ $('diagHelp').textContent=m.mode!=='diagnostic'?'Entry and confirmation are automatic. The ECU advances its own hold counters.':m.diagnostic_kind==='actuator'?'Run test cycles the simulated run switch. The ECU controls the output pulses and warning lamp.':m.diagnostic_kind==='erase'?'Clear history performs the run-switch sequence. Active faults may remain.':m.diagnostic_kind==='history'?(m.diagnostic_id===63?'The ECU cycles active oxygen-sensor fault codes.':'The ECU cycles stored fault codes automatically.'):'Previous and Next send the dashboard button commands. Values come from the ECU.';
+ if(diag){$('speed').textContent=m.mode==='diagnostic'?$('diagNumber').textContent:'dIAG';$('rpm').textContent=m.diagnostic_value??'—';$('speedLabel').textContent='DIAGNOSTIC';$('rpmLabel').textContent='ECU REPLY';$('rpm').title='Diagnostic data byte returned by the ECU';$('temperature').textContent='—';$('hotLamp').classList.remove('hot');$('faultText').textContent=m.mode==='diagnostic'?m.diagnostic_name:$('diagState').textContent;$('sessionHint').textContent=m.mode==='diagnostic'?'Use the dash buttons to select a diagnostic item.':'Waiting for the ECU’s diagnostic hold sequence.';}
+ $('faultHistory').textContent=m.seen.length?'Codes received this key cycle: '+m.seen.join(', '):'No fault codes received.';
+ $('serial').textContent=s.transcript?.length?s.transcript.map(r=>'TX '+r.request+'  →  RX '+r.reply).join('\n'):'No replies.';$('serial').scrollTop=$('serial').scrollHeight;
+ $('cycles').textContent=(s.counts?.bus_cycles??0).toLocaleString();wave(s.trace??[]);
+ if(s.adc)for(let n=0;n<8;n++)for(const prefix of ['adc','value'])if(document.activeElement!==$(prefix+n))$(prefix+n).value=s.adc[n];
+ $('status').textContent=!b.selected?'Choose an ECU, then turn the key.':!powered?'ECU selected · key off':paused?'Simulation paused':'ECU running · dash connected via SCI1';
+ lock();
 }
-function pause(){running=false;clearTimeout(timer);lock();}
 function act(action,data={}){queue=queue.then(()=>execute(action,data));return queue;}
 async function execute(action,data){
-  busy=true;lock();$('error').hidden=true;$('status').textContent=action==='load'?'Starting firmware…':'Executing…';
-  try{
-    const response=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','X-XT660-Token':token},body:JSON.stringify({action,...data})});
-    const state=await response.json();if(!response.ok)throw Error(state.error);render(state);
-    $('status').textContent=action==='verify'?'Firmware matches the registered BIN.':'Firmware loaded · simulation only';
-  }catch(error){pause();$('error').textContent=error.message;$('error').hidden=false;$('status').textContent='Stopped — check the error.';}
-  finally{busy=false;lock();}
+ busy=true;lock();
+ try{const response=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','X-XT660-Token':token},body:JSON.stringify({action,...data})});const s=await response.json();if(!response.ok)throw Error(s.error);render(s);$('error').hidden=true;if(action==='verify')$('status').textContent='All flash bytes match the registered BIN.';return true;}
+ catch(e){paused=true;clearTimeout(timer);$('error').textContent=e.message;$('error').hidden=false;return false;}
+ finally{busy=false;lock();}
 }
-async function tick(){if(!running)return;await act('step');if(running)timer=setTimeout(tick,100);}
-$('load').onclick=()=>act('load',{image:$('image').value});$('step').onclick=()=>act('step');
-$('run').onclick=()=>{if(running)pause();else{running=true;lock();tick();}};
-$('pitch').oninput=()=>$('pitchLabel').textContent=$('pitch').value+' ticks';
-$('crank').onclick=()=>act('crank',{pitch:Number($('pitch').value)});$('stopCrank').onclick=()=>act('stop-crank');
-for(const id of ['authenticate','meter','verify'])$(id).onclick=()=>act(id);
-function theme(value){document.documentElement.dataset.theme=value;$('theme').textContent=value==='dark'?'Light mode':'Dark mode';try{localStorage.setItem('xt660-emulator-theme',value);}catch{}}
-$('theme').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');
-try{theme(localStorage.getItem('xt660-emulator-theme')||'dark');}catch{}
-fetch('/api/state').then(r=>r.json()).then(s=>{render(s);if(s.loaded)$('status').textContent='Firmware loaded · simulation paused';}).catch(e=>{$('error').hidden=false;$('error').textContent=e.message;});
+async function tick(){if(paused||!state?.bike.powered||ticking)return;ticking=true;await act('tick');ticking=false;if(!paused&&state?.bike.powered)timer=setTimeout(tick,80);}
+function resume(){paused=false;clearTimeout(timer);if(state)render(state);tick();}
+function pause(){paused=true;clearTimeout(timer);if(state)render(state);}
+const control=(name,value)=>act('control',{name,value});
+$('load').onclick=async()=>{const image=$('image').value;pause();await act('load',{image});};
+$('key').onclick=async()=>{const enabled=!state.bike.powered;pause();if(await act('key',{enabled,wrong_key:$('wrongKey').checked}))if(enabled)resume();};
+$('runSwitch').onclick=()=>control('run',!state.bike.run);
+$('starter').onclick=async()=>{if(await act('start'))resume();};
+$('neutral').onclick=()=>control('gear',0);$('inGear').onclick=()=>control('gear',1);
+$('throttle').oninput=()=>$('throttleValue').textContent=$('throttle').value+'%';$('throttle').onchange=()=>control('throttle',Number($('throttle').value));
+$('releaseThrottle').onclick=()=>control('throttle',0);
+$('faultSelect').onchange=()=>control('fault',$('faultSelect').value);
+$('nextFault').onclick=()=>{const options=state.bike.faults;control('fault',options[(options.findIndex(x=>x.id===state.bike.fault)+1)%options.length].id);};
+$('restore').onclick=()=>control('fault','none');$('coolantNormal').onclick=()=>control('coolant',512);$('coolantHot').onclick=()=>control('coolant',80);
+$('pause').onclick=()=>paused?resume():pause();$('step').onclick=()=>act('tick');$('verify').onclick=()=>act('verify');
+$('celsius').onchange=()=>render(state);
+ $('diagnostics').onclick=async()=>{pause();if(await act('diagnostics',{enabled:state.bike.meter.mode==='normal'}))resume();};
+ $('diagPrev').onclick=()=>act('diagnostic-next',{direction:-1});$('diagNext').onclick=()=>act('diagnostic-next',{direction:1});
+ $('history').onclick=()=>act('diagnostic-item',{number:61});$('count').onclick=()=>act('diagnostic-item',{number:62});
+ $('clearHistory').onclick=()=>act('clear-history');
+ $('runTest').onclick=async()=>{if(await act('diagnostic-test',{enabled:true}))resume();};
+ $('stopTest').onclick=()=>act('diagnostic-test',{enabled:false});
+function theme(v){document.documentElement.dataset.theme=v;$('theme').textContent=v==='dark'?'Light mode':'Dark mode';try{localStorage.setItem('xt660-emulator-theme',v);}catch{}}
+$('theme').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');try{theme(localStorage.getItem('xt660-emulator-theme')||'dark');}catch{}
+fetch('/api/state').then(r=>r.json()).then(s=>{paused=true;render(s);}).catch(e=>{$('error').hidden=false;$('error').textContent=e.message;});
 window.addEventListener('pagehide',pause);

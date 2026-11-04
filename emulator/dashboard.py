@@ -7,7 +7,7 @@ import secrets
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from engine import Engine
+from cockpit import Cockpit
 from runner import ROOT, registered_image
 
 HERE = Path(__file__).resolve().parent
@@ -27,17 +27,21 @@ def available_images():
 class Dashboard:
     def __init__(self, executable, wsl=False):
         self.executable, self.wsl = executable, wsl
-        self.engine = None
+        self.cockpit = Cockpit(executable,wsl)
         self.lock = threading.Lock()
         self.token = secrets.token_urlsafe(32)
         self.images = available_images()
         self.error = ''
 
+    @property
+    def engine(self):
+        return self.cockpit.engine
+
     def state(self):
         if self.engine is None:
-            return dict(loaded=False, images=self.images, error=self.error)
+            return dict(loaded=False, images=self.images, error=self.error, bike=self.cockpit.state())
         state = self.engine.snapshot()
-        state.update(loaded=True, images=self.images, error=self.error,
+        state.update(loaded=True, images=self.images, error=self.error, bike=self.cockpit.state(),
                      storage=self.engine.storage_origin,
                      trace=list(self.engine.trace)[-600:], transcript=self.engine.transcript[-30:])
         return state
@@ -47,11 +51,29 @@ class Dashboard:
         if action == 'load':
             if data.get('image') not in {r['id'] for r in self.images}:
                 raise ValueError('Select a complete registered BIN')
-            if self.engine:
-                self.engine.close()
-                self.engine = None
             self.error = ''
-            self.engine = Engine(self.executable, data['image'], self.wsl)
+            self.cockpit.select(data['image'])
+        elif action == 'key':
+            self.cockpit.power(data.get('enabled'),data.get('wrong_key',False))
+            self.error = ''
+        elif action == 'control':
+            self.cockpit.control(data.get('name'),data.get('value'))
+        elif action == 'start':
+            self.cockpit.start()
+        elif action == 'tick':
+            self.cockpit.tick()
+        elif action == 'diagnostics':
+            self.cockpit.diagnostics(data.get('enabled'))
+        elif action == 'diagnostic-item':
+            self.cockpit.diagnostic_item(data.get('number'))
+        elif action == 'diagnostic-test':
+            self.cockpit.diagnostic_test(data.get('enabled'))
+        elif action == 'diagnostic-next':
+            if not self.engine:
+                raise ValueError('Key is off')
+            self.cockpit.diagnostic_next(data.get('direction'))
+        elif action == 'clear-history':
+            self.cockpit.clear_history()
         else:
             if self.engine is None:
                 raise ValueError('Load a BIN first')
@@ -77,8 +99,7 @@ class Dashboard:
     def close(self):
         with self.lock:
             if self.engine:
-                self.engine.close()
-                self.engine = None
+                self.cockpit.power(False)
 
 
 def make_server(dashboard, port):
@@ -91,14 +112,18 @@ def make_server(dashboard, port):
                 content = json.dumps(content).encode('utf-8')
             elif isinstance(content, str):
                 content = content.encode('utf-8')
-            self.send_response(status)
-            self.send_header('Content-Type', mime)
-            self.send_header('Content-Length', str(len(content)))
-            self.send_header('Cache-Control', 'no-store')
-            self.send_header('X-Content-Type-Options', 'nosniff')
-            self.send_header('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'")
-            self.end_headers()
-            self.wfile.write(content)
+            try:
+                self.send_response(status)
+                self.send_header('Content-Type', mime)
+                self.send_header('Content-Length', str(len(content)))
+                self.send_header('Cache-Control', 'no-store')
+                self.send_header('X-Content-Type-Options', 'nosniff')
+                self.send_header('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'")
+                self.end_headers()
+                self.wfile.write(content)
+            except ConnectionError:
+                # A closed/reloaded browser is not an ECU execution failure.
+                self.close_connection = True
 
         def local(self):
             return self.headers.get('Host') == f'127.0.0.1:{self.server.server_port}'
@@ -115,6 +140,8 @@ def make_server(dashboard, port):
                 return self.reply(200, content, mime)
             if self.path == '/logo.png':
                 return self.reply(200,(ROOT/'site/assets/yamaha-motor-logo.png').read_bytes(),'image/png')
+            if self.path == '/cockpit.png':
+                return self.reply(200,(HERE/'web/cockpit.png').read_bytes(),'image/png')
             with dashboard.lock:
                 try:
                     if self.path == '/api/state':

@@ -1,0 +1,339 @@
+{
+  "image": "xt660-2004-2006-companion",
+  "holds": [
+    {
+      "stage": "menu",
+      "cycles": 128000938
+    },
+    {
+      "stage": "confirm",
+      "cycles": 32769135
+    }
+  ],
+  "menu_forward_and_reverse": [
+    1,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    20,
+    21,
+    30,
+    36,
+    48,
+    50,
+    51,
+    52,
+    60,
+    61,
+    62,
+    70
+  ],
+  "actuators": [
+    {
+      "number": 30,
+      "kind": "output",
+      "channel": 3,
+      "transitions": [
+        {
+          "cycle": 16320468,
+          "level": 1
+        },
+        {
+          "cycle": 16400468,
+          "level": 0
+        },
+        {
+          "cycle": 32320852,
+          "level": 1
+        },
+        {
+          "cycle": 32400852,
+          "level": 0
+        },
+        {
+          "cycle": 48320724,
+          "level": 1
+        },
+        {
+          "cycle": 48400724,
+          "level": 0
+        },
+        {
+          "cycle": 64320660,
+          "level": 1
+        },
+        {
+          "cycle": 64400660,
+          "level": 0
+        },
+        {
+          "cycle": 80320564,
+          "level": 1
+        },
+        {
+          "cycle": 80400564,
+          "level": 0
+        }
+      ],
+      "period_seconds_nominal": 1,
+      "warning_replies": 25
+    },
+    {
+      "number": 36,
+      "kind": "output",
+      "channel": 6,
+      "transitions": [
+        {
+          "cycle": 16245615,
+          "level": 0
+        },
+        {
+          "cycle": 16285615,
+          "level": 1
+        },
+        {
+          "cycle": 32246095,
+          "level": 0
+        },
+        {
+          "cycle": 32286095,
+          "level": 1
+        },
+        {
+          "cycle": 48245871,
+          "level": 0
+        },
+        {
+          "cycle": 48285871,
+          "level": 1
+        },
+        {
+          "cycle": 64245679,
+          "level": 0
+        },
+        {
+          "cycle": 64285679,
+          "level": 1
+        },
+        {
+          "cycle": 80245903,
+          "level": 0
+        },
+        {
+          "cycle": 80285903,
+          "level": 1
+        }
+      ],
+      "period_seconds_nominal": 1,
+      "warning_replies": 25
+    },
+    {
+      "number": 48,
+      "kind": "port_p",
+      "channel": 1,
+      "transitions": [
+        {
+          "cycle": 16172473,
+          "level": 1
+        },
+        {
+          "cycle": 24172295,
+          "level": 0
+        },
+        {
+          "cycle": 32172284,
+          "level": 1
+        },
+        {
+          "cycle": 40172136,
+          "level": 0
+        },
+        {
+          "cycle": 48172433,
+          "level": 1
+        },
+        {
+          "cycle": 56172235,
+          "level": 0
+        },
+        {
+          "cycle": 64172202,
+          "level": 1
+        },
+        {
+          "cycle": 72172320,
+          "level": 0
+        },
+        {
+          "cycle": 80172204,
+          "level": 1
+        },
+        {
+          "cycle": 88172153,
+          "level": 0
+        }
+      ],
+      "period_seconds_nominal": 1,
+      "warning_replies": 25
+    },
+    {
+      "number": 50,
+      "kind": "port_a",
+      "channel": 2,
+      "transitions": [
+        {
+          "cycle": 16427431,
+          "level": 0
+        },
+        {
+          "cycle": 24427649,
+          "level": 1
+        },
+        {
+          "cycle": 32427648,
+          "level": 0
+        },
+        {
+          "cycle": 40427393,
+          "level": 1
+        },
+        {
+          "cycle": 48427764,
+          "level": 0
+        },
+        {
+          "cycle": 56427568,
+          "level": 1
+        },
+        {
+          "cycle": 64427543,
+          "level": 0
+        },
+        {
+          "cycle": 72427299,
+          "level": 1
+        },
+        {
+          "cycle": 80427732,
+          "level": 0
+        },
+        {
+          "cycle": 88427594,
+          "level": 1
+        }
+      ],
+      "period_seconds_nominal": 1,
+      "warning_replies": 25
+    },
+    {
+      "number": 51,
+      "kind": "port_p",
+      "channel": 2,
+      "transitions": [
+        {
+          "cycle": 16356512,
+          "level": 1
+        },
+        {
+          "cycle": 48356424,
+          "level": 0
+        },
+        {
+          "cycle": 96356426,
+          "level": 1
+        },
+        {
+          "cycle": 128356257,
+          "level": 0
+        },
+        {
+          "cycle": 176356756,
+          "level": 1
+        },
+        {
+          "cycle": 208356540,
+          "level": 0
+        },
+        {
+          "cycle": 256356544,
+          "level": 1
+        },
+        {
+          "cycle": 288356419,
+          "level": 0
+        },
+        {
+          "cycle": 336356417,
+          "level": 1
+        },
+        {
+          "cycle": 368356380,
+          "level": 0
+        }
+      ],
+      "period_seconds_nominal": 5,
+      "warning_replies": 49
+    },
+    {
+      "number": 52,
+      "kind": "port_p",
+      "channel": 4,
+      "transitions": [
+        {
+          "cycle": 16368924,
+          "level": 1
+        },
+        {
+          "cycle": 48368935,
+          "level": 0
+        },
+        {
+          "cycle": 96368822,
+          "level": 1
+        },
+        {
+          "cycle": 128368848,
+          "level": 0
+        },
+        {
+          "cycle": 176368707,
+          "level": 1
+        },
+        {
+          "cycle": 208368848,
+          "level": 0
+        },
+        {
+          "cycle": 256368701,
+          "level": 1
+        },
+        {
+          "cycle": 288368813,
+          "level": 0
+        },
+        {
+          "cycle": 336368670,
+          "level": 1
+        },
+        {
+          "cycle": 368368796,
+          "level": 0
+        }
+      ],
+      "period_seconds_nominal": 5,
+      "warning_replies": 50
+    }
+  ],
+  "normal_mode_after_exit": true,
+  "flash_bytes_unchanged": 59392,
+  "source_hashes": {
+    "cockpit.py": "ae4552eeef8ffb66c20f1e4e34880868adf5e31bbab33718d386fdd601a0290a",
+    "meter.py": "c8fa025fb521392442a4f3b24070863417e464fef813a903345c0068d594bfd3",
+    "engine.py": "7e211d418942ecb0aee843724ed5151f108ec98b5e92f254e9c12624a18323c9",
+    "native/xt660_boot.cc": "124d0ca365e62c3c5eed3c99c38932fd0564346af7b14e68352ce85e5193b764",
+    "test_diagnostics.py": "a52e4a814b6487f7ab7064a2d78d1ec7dc6e79e2db119c2ecfbdf479679eecb5"
+  }
+}
