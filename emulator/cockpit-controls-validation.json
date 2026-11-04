@@ -2,11 +2,11 @@
   "status": "passed",
   "date": "2026-11-04",
   "runtime": "Local Chrome / Playwright with actual emulator server",
-  "scope": "Top-down ignition artwork, lock rotation and rocker geometry/input; angles are illustrative; no hardware validation",
+  "scope": "Rocker correction: rigid face, correct end-surface normals and equal projected size in Run/Stop. No firmware changes or hardware validation.",
   "firmware": "xt660-2c1-10",
   "viewports": [
     [
-      1366,
+      1600,
       1000
     ],
     [
@@ -19,30 +19,38 @@
     "light"
   ],
   "inventory": [
-    "Key top edge centred over barrel in both positions",
-    "Rocker centre pivot, opposite ends depressed; fixed recess does not move",
-    "Key/run/start controls still operate actual emulator; round trip",
-    "Mobile hit areas and both themes",
-    "Reduced motion",
-    "Failed command restores acknowledged position"
+    "Run: lower I end depressed, upper O end raised",
+    "Stop: upper O end depressed, lower I end raised",
+    "No change in body length/width or fixed housing",
+    "Pointer end selection and keyboard toggling match actual ECU state",
+    "Reduced motion, rejected request recovery, mobile hit areas"
   ],
   "checks": [
-    "Upper rocker end selects Stop; lower end selects Run; both settle at opposite 32-degree angles",
-    "Actual ECU key-on, Run and Start reach ENGINE RUNNING",
-    "Keyboard Space toggles Stop and Run",
-    "Failed rocker request returns to acknowledged Run position",
-    "Rocker housing stays fixed across both positions",
-    "Key, lock core and rocker respect reduced motion",
-    "390px layout: separate rocker/starter hit areas, lower-end Run selection and actual engine start, no horizontal overflow",
-    "Key-off returns key and lock slot to initial position; starter stays disabled",
-    "Failed key command restores both key and lock core to OFF",
-    "Top-view key and lock slot rotate together by 55 degrees around the barrel centre; intermediate and final positions inspected"
+    {
+      "check": "Run and Stop retain the same projected face width/height and fixed housing; opposite raised ends inspected after animation settles",
+      "run": {
+        "x": 1092.172119140625,
+        "y": 628.7296752929688,
+        "width": 60.6727294921875,
+        "height": 68.41839599609375
+      },
+      "stop": {
+        "x": 1091.5926513671875,
+        "y": 629.3831787109375,
+        "width": 60.6727294921875,
+        "height": 68.41839599609375
+      }
+    },
+    "Lower I end selects Run and permits Start; upper O end selects Stop and stops the simulated engine; renderer matches backend state",
+    "Keyboard Space changes the acknowledged Run/Stop state",
+    "Rejected request restores Run position and keeps acknowledged state",
+    "Reduced-motion preference disables rocker transition",
+    "390px mobile: both rocker ends work separately; no horizontal overflow; light/dark appearance inspected"
   ],
   "browser_errors": [],
   "sources": {
+    "emulator/web/dashboard.css": "62e77260c9d39278fafbdc678497c2b0bf700a95f8f0457bec11aa9cbb69729c",
     "emulator/web/dashboard.html": "e7b72261a514e19d7c12f60e31468ecd2256563fdfa76323b6146c8810a695be",
-    "emulator/web/dashboard.css": "8a3b3a5d53f3c12bcd0e01eb524097cabaa440f12cd1a6dd187c37873f863657",
-    "emulator/web/dashboard.js": "d85969ce02b87d69dac65285aec6fd4dc3045d010e9c7b9b9c8ead4816f1c03f",
-    "emulator/web/ignition-key.png": "27e48bcfd34d857fc7de894e043fec1aed83731dacd751b0418777086b39b1c6"
+    "emulator/web/dashboard.js": "d85969ce02b87d69dac65285aec6fd4dc3045d010e9c7b9b9c8ead4816f1c03f"
   }
 }

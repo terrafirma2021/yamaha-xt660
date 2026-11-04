@@ -78,22 +78,21 @@ select{max-width:100%;min-width:0}
 .key[data-turning=off] .key-photo{transform:rotate(90deg)}
 .key:hover:not(:disabled) .key-photo{filter:brightness(1.1) drop-shadow(.1cqw .2cqw .13cqw #000a)}
 /* Fixed recess hides the backdrop's rocker; the red part pivots across its centre. */
-.run-switch{left:90.95%;top:65.3%;width:4.35%;height:9.3%;transform:translate(-50%,-50%) rotate(20deg);border-radius:.65cqw;perspective:14cqw;perspective-origin:50% -70%}
+.run-switch{left:90.95%;top:65.3%;width:4.35%;height:9.3%;transform:translate(-50%,-50%) rotate(20deg);border-radius:.65cqw;perspective:100cqw;perspective-origin:50% 50%}
 .rocker-well{position:absolute;inset:0;border-radius:.65cqw;background:linear-gradient(100deg,#07080b,#202127 45%,#050609);box-shadow:inset .12cqw .12cqw .25cqw #000,0 .12cqw .2cqw #000c;pointer-events:none}
-.rocker-pivot{position:absolute;inset:.35cqw .35cqw;transform-style:preserve-3d;transform-origin:50% 50%;transform:translateZ(.3cqw) rotateX(-32deg);transition:transform .22s cubic-bezier(.25,.7,.25,1);pointer-events:none}
-.rocker-face{position:absolute;inset:0;overflow:hidden;border-radius:.35cqw;background:#b01524;box-shadow:inset .08cqw 0 .08cqw #ff9ca47a,inset -.09cqw 0 .1cqw #480610}
-.rocker-face::before{content:"";position:absolute;left:50%;top:50%;width:6.8cqw;height:8cqw;background:url('/cockpit.png') no-repeat -87.55cqw -39.533cqw/100cqw auto;transform:translate(-50%,-50%) rotate(-20deg)}
-.rocker-face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(#ffb0ba50,transparent 38%,#38030d50);transition:transform .22s;box-shadow:inset 0 .1cqw .1cqw #f68b98b0,inset 0 -.1cqw .1cqw #4e0815}
+.rocker-pivot{position:absolute;inset:.55cqw .35cqw;transform-style:preserve-3d;transform-origin:50% 50%;transform:rotateX(-22deg);transition:transform .22s cubic-bezier(.25,.7,.25,1);pointer-events:none}
+.rocker-face{position:absolute;inset:0;overflow:hidden;border-radius:.3cqw;background:linear-gradient(90deg,#ff7a8638,transparent 13%,transparent 85%,#39050d55),linear-gradient(#d53548,#9b1022 26%,#bb1d31 43%,#ed5362 57%,#c0273b 70%,#a8172a);box-shadow:inset .08cqw 0 .1cqw #ff9ca499,inset -.09cqw 0 .1cqw #480610,inset 0 .1cqw .1cqw #ffa6af70}
+.rocker-face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(transparent 35%,#26020970);opacity:.75;transition:opacity .22s}
 .rocker-stop-mark,.rocker-run-mark{position:absolute;left:50%;z-index:1;transform:translateX(-50%);opacity:.82}
 .rocker-stop-mark{top:14%;width:.7cqw;height:.7cqw;border:.12cqw solid #ffe4e3;border-radius:50%}
 .rocker-run-mark{bottom:14%;width:.13cqw;height:.75cqw;background:#ffe4e3;border-radius:.05cqw}
-.rocker-end{position:absolute;left:0;width:100%;height:.7cqw;background:linear-gradient(#b92936,#550713);border-radius:.2cqw;transform-origin:50% 0;transform:rotateX(-90deg)}
-.rocker-top{top:0}
-.rocker-bottom{top:100%;background:linear-gradient(#a82430,#440610)}
-.run-switch[aria-pressed=false] .rocker-pivot,.run-switch[data-turning=stop] .rocker-pivot{transform:translateZ(.3cqw) rotateX(32deg)}
-.run-switch[data-turning=run] .rocker-pivot{transform:translateZ(.3cqw) rotateX(-32deg)}
-.run-switch[aria-pressed=false] .rocker-face::after,.run-switch[data-turning=stop] .rocker-face::after{transform:rotate(180deg)}
-.run-switch[data-turning=run] .rocker-face::after{transform:none}
+.rocker-end{position:absolute;left:0;width:100%;height:1.15cqw;background:linear-gradient(#7c0c1c,#c12437);border-radius:.15cqw;transform-origin:50% 0;backface-visibility:hidden}
+.rocker-top{top:0;transform:rotateX(90deg) translateY(-100%)}
+.rocker-bottom{top:100%;transform:rotateX(-90deg);background:linear-gradient(#b82034,#650b17)}
+.run-switch[aria-pressed=false] .rocker-pivot,.run-switch[data-turning=stop] .rocker-pivot{transform:rotateX(22deg)}
+.run-switch[data-turning=run] .rocker-pivot{transform:rotateX(-22deg)}
+.run-switch[aria-pressed=false] .rocker-face::after,.run-switch[data-turning=stop] .rocker-face::after{background:linear-gradient(#26020970,transparent 65%)}
+.run-switch[data-turning=run] .rocker-face::after{background:linear-gradient(transparent 35%,#26020970)}
 .starter{left:85.9%;top:70.6%;width:6.1%;height:8.8%;border-radius:50%}
 .starter-plunger{position:absolute;left:23%;top:26%;width:54%;aspect-ratio:1;border-radius:50%;background:url('/cockpit.png') no-repeat -87.303cqw -48.592cqw/100cqw auto;transition:transform .1s,filter .1s;pointer-events:none}
 .starter:active:not(:disabled) .starter-plunger,.starter[aria-pressed=true] .starter-plunger{transform:scale(.92);filter:brightness(.65)}
