@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-04",
+  "application": "TunerPro 5.0.9786.0",
+  "method": "User performed native imports, cell edits, table saves, BIN saves and clipboard copy. Assistant compared the saved files and copied values against the registered source. Hashes and exact byte differences retain the observations without adding modified BINs to the source dataset.",
+  "captures": [
+    {
+      "scope": "User-saved native TunerPro 5.0.9786 first-cell edit; all 1,350 cells copied by the user from that native table match the saved BIN. Full-file comparison, all 8,275 BIN map values and browser re-import/checksum functions checked. Other native table imports and image bases have not been verified.",
+      "identity": "xt660x-2005-checksum-fixed",
+      "sha256": {
+        "original": "972ac93e76cb632470092d88c2a57e910daae69c02d6cdef52f1cad72f6909e7",
+        "edited": "e889e8449ee4bafdf3a2b77d2a04a5fb757a8665d75cedda4b4af0df643cbf67",
+        "xdf": "f0893e3a4bbbb438ce38c1ffe740c63b42cb647e24f9cb396913825cf6a7fed5",
+        "corrected": "e7812f381bd5ce601ef87e1f6bfd4e007a909eb687f8901a54fc1441d3e68a92"
+      },
+      "bytes": 65536,
+      "compared_cells": 8275,
+      "changed_cells": [
+        {
+          "map": "main_quantity_A",
+          "row": 1,
+          "column": 1,
+          "before": 915,
+          "after": 916
+        }
+      ],
+      "byte_changes": [
+        {
+          "address": 7015,
+          "file_offset": 7015,
+          "before": 147,
+          "after": 148
+        }
+      ],
+      "protected_bytes_unchanged": true,
+      "browser_map_variant_accepted": true,
+      "original_checksum": {
+        "status": "pass",
+        "actual": "0xAA55",
+        "expected": "0xAA55",
+        "range": "0x1800–0xF7FF",
+        "family": "early",
+        "scope": "Application startup checksum only; hardware and flash readiness are not verified"
+      },
+      "edited_checksum": {
+        "status": "fail",
+        "actual": "0xAA56",
+        "expected": "0xAA55",
+        "range": "0x1800–0xF7FF",
+        "family": "early",
+        "scope": "Application startup checksum only; hardware and flash readiness are not verified"
+      },
+      "corrected_checksum": {
+        "status": "pass",
+        "actual": "0xAA55",
+        "expected": "0xAA55",
+        "range": "0x1800–0xF7FF",
+        "family": "early",
+        "scope": "Application startup checksum only; hardware and flash readiness are not verified",
+        "compensation_address": "0xF7FC",
+        "compensation_before": "0xFF7F",
+        "compensation_after": "0xFF7E",
+        "changed": true,
+        "method": "Analyst-selected trailer compensation; not an identified factory checksum field"
+      },
+      "correction_changes": [
+        {
+          "address": 63485,
+          "file_offset": 63485,
+          "before": 127,
+          "after": 126
+        }
+      ],
+      "native_grid": {
+        "map": "main_quantity_A",
+        "rows": 45,
+        "columns": 30,
+        "compared_cells": 1350,
+        "mismatches": 0,
+        "source": "User-pasted native TunerPro table values on 2026-11-04",
+        "normalized_tsv_sha256": "cfbe0d470ad970e44a30076e4727a9109fcca7ec752b11ec84e20fdb8624c442"
+      }
+    },
+    {
+      "scope": "User-saved native TunerPro 5.0.9786 first-cell edit in an 8-bit later-family table and 59,392-byte BIN. Full-file comparison, all 7,050 BIN map values and browser re-import/checksum functions checked. Native clipboard comparison was performed for the separate early 16-bit table only.",
+      "identity": "xt660-2c1-10",
+      "sha256": {
+        "original": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+        "edited": "01399e8db7df7e88271289db3d127f6b1b677b003d57b13767402c4837d57e20",
+        "xdf": "163167232d52bc31962c8f10c22ba6c4ca760b52757af0f0e52c6873aaf9db8d",
+        "corrected": "ea1d69f6c055dc0977c152739225706cb6d0bea1878fa54af6546534b4d7d6bd"
+      },
+      "bytes": 59392,
+      "compared_cells": 7050,
+      "changed_cells": [
+        {
+          "map": "table_18ee",
+          "row": 1,
+          "column": 1,
+          "before": 3,
+          "after": 4
+        }
+      ],
+      "byte_changes": [
+        {
+          "address": 6382,
+          "file_offset": 238,
+          "before": 3,
+          "after": 4
+        }
+      ],
+      "protected_bytes_unchanged": true,
+      "browser_map_variant_accepted": true,
+      "original_checksum": {
+        "status": "pass",
+        "actual": "0xAA55",
+        "expected": "0xAA55",
+        "range": "0x1800–0xF7FF",
+        "family": "late",
+        "scope": "Application startup checksum only; hardware and flash readiness are not verified"
+      },
+      "edited_checksum": {
+        "status": "fail",
+        "actual": "0xAB55",
+        "expected": "0xAA55",
+        "range": "0x1800–0xF7FF",
+        "family": "late",
+        "scope": "Application startup checksum only; hardware and flash readiness are not verified"
+      },
+      "corrected_checksum": {
+        "status": "pass",
+        "actual": "0xAA55",
+        "expected": "0xAA55",
+        "range": "0x1800–0xF7FF",
+        "family": "late",
+        "scope": "Application startup checksum only; hardware and flash readiness are not verified",
+        "compensation_address": "0xF7FC",
+        "compensation_before": "0xFFFF",
+        "compensation_after": "0xFEFF",
+        "changed": true,
+        "method": "Analyst-selected trailer compensation; not an identified factory checksum field"
+      },
+      "correction_changes": [
+        {
+          "address": 63484,
+          "file_offset": 57340,
+          "before": 255,
+          "after": 254
+        }
+      ]
+    }
+  ]
+}

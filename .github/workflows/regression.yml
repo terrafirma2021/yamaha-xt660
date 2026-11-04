@@ -52,6 +52,7 @@ jobs:
           node scripts/test_flashing.mjs
           node scripts/test_map_workspace.mjs
           python3 scripts/test_xdf_export.py
+          node scripts/test_tunerpro_capture.mjs
           python3 scripts/test_feature_patches.py
           python3 scripts/test_speed_patch.py
           node scripts/test_speed_tools.mjs

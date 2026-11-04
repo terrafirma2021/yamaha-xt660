@@ -36,7 +36,7 @@ The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separ
 
 ## Implemented tools and their limits
 
-The browser editor binds a BIN to its own catalogue, provides block edits, interpolation, smoothing, undo/redo, comparison and draft saving, and corrects the startup checksum. Raw XDF export is implemented and independently parsed against every source cell, axis label and image base. Native TunerPro import is still an integration check to perform; XML validation alone is not that check.
+The browser editor binds a BIN to its own catalogue, provides block edits, interpolation, smoothing, undo/redo, comparison and draft saving, and corrects the startup checksum. Raw XDF export is implemented and independently parsed against every source cell, axis label and image base. Native TunerPro 5.0.9786 import has now been checked for the early 65,536-byte definition: all 1,350 cells copied from its main fuel table match the BIN, and a saved 915 → 916 edit changes only the expected byte. A second native save checked an 8-bit later table in the 59,392-byte format: 3 → 4 changed only file offset 0x00EE (CPU address 0x18EE). This covers representative edits in both file formats and both cell widths; it is not a native inspection of every table. The [capture record](../firmware/tunerpro_capture.json) preserves exact hashes and differences; XML validation alone is not a native check.
 
 `ready_for_tuning_export=false` means the full engineering-unit definition lacks physical/hardware sign-off. It does not mean raw XDF export is absent or that all raw addresses are uncertain. Feature patches have instruction tests, but those tests are not live ECU validation.
 
@@ -48,7 +48,6 @@ Flashing currently provides connection references and file inspection. The offli
 2. Trace residual calibration fields and indirect structures beyond known lookup helpers. Remaining layout bytes are 884 in the early family and 1,267 in the later family; these are not all unknown maps.
 3. Reconcile scattered scalar findings into the focused catalogue, with precise byte ranges and consumer references.
 4. Reconstruct the remaining boot session, retries, watchdog and recovery state machine, then exercise it with a simulated serial peer before live integration.
-5. Test native XDF import and round-trip edits in the intended editor; extend parser, interrupted-transfer and revision-mismatch cases as needed.
 
 Physical work remains distinct: identify the fitted chip/clock, measure CPS phase against TDC and coil firing, establish temperature/pressure/TPS electrical transfer, confirm connector orientation/continuity and perform recoverable read/write/readback bench trials. The existing documents narrow these questions but do not provide all their answers. No additional user measurements are needed to continue the software tasks above.
 
