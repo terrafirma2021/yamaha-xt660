@@ -4,10 +4,39 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
+import re
 
 ROOT = Path(__file__).resolve().parent
 COMMIT = '59a14ff99efe7e92474faf4c4ddf57b5e4ff0631'
 URL = 'https://github.com/danieldrotos/ucsim.git'
+
+
+def apply_local_patches(directory):
+    # Later fixes can overlap earlier hunks: reverse-checking each patch against
+    # the final tree is not an idempotent test. Build the expected files from the
+    # pinned commit, accepting only a pristine or known intermediate local state.
+    patches=sorted((ROOT/'patches').glob('*.patch'))
+    paths=sorted({name for patch in patches for name in
+                  re.findall(r'^\+\+\+ b/(.+)$',patch.read_text(encoding='utf-8'),re.M)})
+    states={name:set() for name in paths}
+    with tempfile.TemporaryDirectory(prefix='xt660-patches-') as temporary:
+        staged=Path(temporary)
+        for name in paths:
+            data=subprocess.check_output(['git','show',f'{COMMIT}:{name}'],cwd=directory)
+            target=staged/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+            states[name].add(data)
+        for patch in patches:
+            subprocess.run(['git','apply',str(patch)],cwd=staged,check=True)
+            for name in paths:
+                states[name].add((staged/name).read_bytes())
+        for name in paths:
+            if (directory/name).read_bytes() not in states[name]:
+                raise RuntimeError(f'Unrecognised local changes in {name}; use a new build directory')
+        for name in paths:
+            final=(staged/name).read_bytes()
+            if (directory/name).read_bytes()!=final:
+                (directory/name).write_bytes(final)
 
 
 def main():
@@ -25,12 +54,7 @@ def main():
     head = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=directory, text=True).strip()
     if head != COMMIT:
         ap.error(f'Expected uCsim {COMMIT}; found {head}. Use a separate build directory.')
-    for patch in sorted((ROOT / 'patches').glob('*.patch')):
-        applied = subprocess.run(['git', 'apply', '--reverse', '--check', str(patch)],
-                                 cwd=directory, capture_output=True).returncode == 0
-        if not applied:
-            subprocess.run(['git', 'apply', '--check', str(patch)], cwd=directory, check=True)
-            subprocess.run(['git', 'apply', str(patch)], cwd=directory, check=True)
+    apply_local_patches(directory)
     with (directory / 'xt660-build.log').open('w') as log:
         def run(*cmd):
             print(' '.join(map(str, cmd)), flush=True)

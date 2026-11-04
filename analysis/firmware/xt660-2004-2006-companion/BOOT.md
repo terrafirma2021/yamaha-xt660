@@ -27,7 +27,7 @@ F8A0 checks a completed-message flag, selects a handler through the 16-word tabl
 | FA35 / FAE1 | Compares staged blocks, invokes a flash operation helper and checks status |
 | FB63 | Additional flash-operation path with command/status handling |
 | FBFE / FC1F | Copy executable templates into RAM at 0C00 and call them |
-| FC5D / FCC0 | ROM-resident templates intended for execution after copying to RAM; relocation and peripheral effects are not execution-tested |
+| FC5D / FCC0 | Templates copied to 0C00 RAM; application erase and both-bank word programming now execute in the MCU model |
 | FD1C | Diagnostic path with a full 1800–FFFF word sum and RAM write/read tests, followed by a terminal loop |
 | FD92 | Periodic timer flag service, watchdog writes and receive timeout cleanup |
 | FDC3 | SCI0 transmit/receive interrupt handler |
@@ -44,6 +44,6 @@ The receive path checks a running additive sum, stores command/status/length dat
 - [Function list](boot/functions.tsv) and [Ghidra pseudocode](boot/decompiled.c): 19 boot-rooted entries. Ghidra can expand the conditional application handoff in reset pseudocode; it is not recovered original source or buildable C.
 - [Verification](boot/verification.json): source, exporter, processor and artifact hashes.
 
-The instruction byte check does not verify all CPU flags, RAM relocation, asynchronous serial interrupts, flash commands or watchdog side effects. Existing application execution counts apply to the original application fixtures, not an end-to-end run of this companion with its boot. Hardware validation, exact oscillator and mechanical TDC remain open.
+The static byte check alone does not establish execution. The separate [emulator](../../../emulator/README.md) now runs reset, actual SCI0 boot requests, RAM relocation and application erase/program/readback with flash-controller checks. `0D` erases `1800–F7FF`; `0E` programs staged blocks with bank selection. These are software-model results. Physical hardware, oscillator and mechanical TDC validation remain open.
 
 To regenerate, use Ghidra 12.1.4 with the repository's corrected `XT660-CPU12:BE:16:default` processor. Import this short BIN with BinaryLoader base address `0x1800`, disable automatic analysis, and run [AnalyzeCompanionBoot.java](../../../scripts/AnalyzeCompanionBoot.java) with this directory's `boot` folder as its output argument. Then run `python scripts/normalize_analysis_text.py`, `python scripts/firmware_catalog.py` and `python scripts/firmware_catalog.py --check`. Use a separate scratch Ghidra project; the primary annotated archive stays intact.

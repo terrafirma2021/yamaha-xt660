@@ -1,0 +1,23 @@
+{
+  "status": "passed",
+  "image": "xt660-2004-2006-companion",
+  "scope": "Actual C# BootClient and FlashService, actual firmware CPU execution, modeled peripherals, Python byte bridge; no COM port or physical ECU",
+  "backup_reads": 2,
+  "bytes_per_read": 59392,
+  "application_blocks_programmed": 28,
+  "block_bytes": 2048,
+  "erase_command": "0D",
+  "program_command": "0E",
+  "checks": [
+    "two full reads equal source BIN",
+    "backup on disk equals source BIN",
+    "map edit and automatic AA55 checksum correction",
+    "application erase and all 28 blocks programmed",
+    "per-block readback",
+    "complete final readback including unchanged boot"
+  ],
+  "test_executable_sha256": "bc57a86be65e5862d07060d91e6edcc4e1384d5088cc1331f8912df2020d0690",
+  "native_model_sha256": "9de1b916102870afef9775659f0834a8f20d5d71b8f2a8cb904d0e65d543d91e",
+  "ucsim_executable_sha256": "45f222da87c24023a3b655b0d37fb5f21fba15418c0e3335ab6780892ef0e80a",
+  "notes": "Production deadlines remain unchanged; instruction-emulated transport uses timeoutScale=100. Final debugger MOV rendering and CCR transfer fixes are additionally covered in validation.json."
+}

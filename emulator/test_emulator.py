@@ -10,6 +10,9 @@ from runner import ROOT, RUNS, execute, prepare, registered_image
 from test_runtime_devices import test_timer_spi, test_watchdog, test_runtime, test_runtime_guards
 from test_crank import test_bit_branches, test_pulse_fixture, test_crank, test_output_gates
 from test_peripherals import test_peripherals, test_interrupts, test_firmware_adc, test_sensor_demo
+from test_serial_storage import test_load_store_flags, test_move_updates, test_serial, test_storage, test_transfer_and_disassembly
+from test_engine import test_engine, test_dashboard_http
+from test_flash import test_flash_registers, test_boot_programming
 
 
 def core_cases():
@@ -236,6 +239,9 @@ def main():
     ap.add_argument('--core-only',action='store_true')
     args=ap.parse_args()
     report={'core_fixtures':test_core(args.ucsim,args.wsl)}
+    report['load_store_flags']=test_load_store_flags(args.ucsim,args.wsl)
+    report['move_updates']=test_move_updates(args.ucsim,args.wsl)
+    report['transfer_and_disassembly']=test_transfer_and_disassembly(args.ucsim,args.wsl)
     if not args.core_only:
         report['debugger_and_device']=test_debugger_and_device(args.ucsim,args.wsl)
         report['images']=test_boot(args.ucsim,args.wsl)
@@ -251,8 +257,14 @@ def main():
         report['pulse_fixture_checks']=test_pulse_fixture(args.ucsim,args.wsl)
         report['crank']=test_crank(args.ucsim,args.wsl)
         report['output_gate_checks']=test_output_gates(args.ucsim,args.wsl)
+        report['serial_checks']=test_serial(args.ucsim,args.wsl)
+        report['storage']=test_storage(args.ucsim,args.wsl)
+        report['engine']=test_engine(args.ucsim,args.wsl)
+        report['dashboard_http']=test_dashboard_http()
+        report['flash_registers']=test_flash_registers(args.ucsim,args.wsl)
+        report['boot_programming']=test_boot_programming(args.ucsim,args.wsl)
     report['ucsim_commit']='59a14ff99efe7e92474faf4c4ddf57b5e4ff0631'
-    report['scope']='CPU/peripheral fixtures, main-loop runs and synthetic crank/capture/ignition/loss checks with disconnected SPI storage and idle serial; not full engine or physical ECU validation'
+    report['scope']='Unchanged firmware with modeled peripherals, firmware-generated storage defaults, synthetic authentication, serial peers, crank and output/loss checks. Functional emulator; not physical ECU or combustion validation.'
     report['source_hashes']={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
                             for p in sorted((ROOT/'emulator').rglob('*'))
                             if p.is_file() and not any(x.startswith('.') or x=='__pycache__' for x in p.relative_to(ROOT/'emulator').parts)

@@ -1,0 +1,12 @@
+--- a/src/sims/m68hc12.src/dis.cc
++++ b/src/sims/m68hc12.src/dis.cc
+@@ -130,6 +130,9 @@
+ 		  work.appendf("$%02x", p);
+ 		}
+ 	    }
++	  // MOV format offsets include the 18 prefix, unlike generic formats.
++	  if ((strncmp(b, "MOVB", 4)==0) || (strncmp(b, "MOVW", 4)==0))
++	    --addr;
+ 	  if (strcmp(fmt.c_str(), "IMID") == 0)
+ 	    {
+ 	      t_addr a= (addr+=2);

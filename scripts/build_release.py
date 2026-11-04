@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'dist'
-PACKAGE = OUT / 'yamaha-xt660-windows-v0.2.1'
+PACKAGE = OUT / 'yamaha-xt660-windows-v0.2.2'
 README = '''YAMAHA XT660 — Windows Flash Tool, BINs and XDFs
 
 XT660.FileTool.exe
@@ -26,7 +26,10 @@ Keep ECU power and USB connected until completion. No engine running.
 
 This is a bench-test prerelease, not a hardware-qualified flashing tool.
 Session entry, reads, writes and failure handling are software-tested against
-the recovered XT boot format. Real ECU/adapter operation is not yet tested.
+the recovered XT boot format and actual firmware in the MCU emulator.
+The bank-aware writer uses 09 for lower-bank-only changes, or application
+erase 0D and all 28 blocks through RAM programming 0E for upper-bank changes.
+Real ECU/adapter operation is not yet tested.
 Unknown code layouts, incompatible ECU applications and unknown boot versions
 block writing. No automatic erase/program retry is performed.
 

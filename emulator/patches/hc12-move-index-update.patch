@@ -1,0 +1,116 @@
+--- a/src/sims/m68hc12.src/m68hc12cl.h
++++ b/src/sims/m68hc12.src/m68hc12cl.h
+@@ -110,7 +110,7 @@
+   virtual int xb_type(u8_t p);
+   virtual bool xb_indirect(u8_t p);
+   virtual bool xb_PC(u8_t p);
+-  virtual t_addr naddr(t_addr *addr, u8_t *pg, u32_t use_PC= 0);
++  virtual t_addr naddr(t_addr *addr, u8_t *pg, u32_t use_PC= 0, bool writeback= false);
+   virtual u8_t xbop8();
+   virtual u16_t xbop16();
+   virtual class cl_memory_cell &xb(void);
+--- a/src/sims/m68hc12.src/m68hc12.cc
++++ b/src/sims/m68hc12.src/m68hc12.cc
+@@ -325,7 +325,7 @@
+ }
+ 
+ t_addr
+-CL12::naddr(t_addr *addr /* of xb */, u8_t *pg, u32_t use_PC)
++CL12::naddr(t_addr *addr /* of xb */, u8_t *pg, u32_t use_PC, bool writeback)
+ {
+   u8_t p, h, l;
+   i8_t n;
+@@ -437,13 +437,13 @@
+       if (p&0x10)
+         {
+           // Post-update uses the original effective address.
+-          if (!addr) post_idx_reg->W((u16_t)(ival+n));
++          if (!addr || writeback) post_idx_reg->W((u16_t)(ival+n));
+         }
+       else
+         {
+           // Pre-update uses and stores the adjusted address.
+           ival= (u16_t)(ival+n);
+-          if (!addr) post_idx_reg->W(ival);
++          if (!addr || writeback) post_idx_reg->W(ival);
+         }
+       xb_tick_shift= 0;
+       return ival;
+--- a/src/sims/m68hc12.src/imov.cc
++++ b/src/sims/m68hc12.src/imov.cc
+@@ -146,7 +146,7 @@
+   int xt= xb_type(xb);
+   if ((xt==1) || (xt==3) || (xt==4))
+     {
+-      t_addr a= naddr(&aof_xb, NULL, PC);
++      t_addr a= naddr(&aof_xb, NULL, PC, true);
+       if (xb_PC(xb))
+ 	a+= 2;
+       rom->write(a, ih);
+@@ -165,7 +165,7 @@
+   int xt= xb_type(xb);
+   if ((xt==1) || (xt==3) || (xt==4))
+     {
+-      t_addr a= naddr(&aof_xb, NULL, PC);
++      t_addr a= naddr(&aof_xb, NULL, PC, true);
+       if (xb_PC(xb))
+ 	a+= 1;
+       rom->write(a, i);
+@@ -186,7 +186,7 @@
+     {
+       u8_t h, l;
+       u16_t ea= eh*256+el;
+-      t_addr a= naddr(&aof_xb, NULL, PC);
++      t_addr a= naddr(&aof_xb, NULL, PC, true);
+       if (xb_PC(xb))
+ 	a+= 2;
+       h= rom->read(ea);
+@@ -211,7 +211,7 @@
+     {
+       u8_t v;
+       u16_t ea= eh*256+el;
+-      t_addr a= naddr(&aof_xb, NULL, PC);
++      t_addr a= naddr(&aof_xb, NULL, PC, true);
+       if (xb_PC(xb))
+ 	a+= 2;
+       v= rom->read(ea);
+@@ -235,8 +235,8 @@
+       if ((xtdst==1) || (xtdst==3) || (xtdst==4))
+ 	{
+ 	  u8_t v;
+-	  u16_t asrc= naddr(&aof_xbsrc, NULL, PC);
+-	  u16_t adst= naddr(&aof_xbdst, NULL, PC);
++	  u16_t asrc= naddr(&aof_xbsrc, NULL, PC, true);
++	  u16_t adst= naddr(&aof_xbdst, NULL, PC, true);
+ 	  if (xb_PC(xbsrc))
+ 	    asrc+= -1;
+ 	  if (xb_PC(xbdst))
+@@ -265,8 +265,8 @@
+       if ((xtdst==1) || (xtdst==3) || (xtdst==4))
+ 	{
+ 	  u8_t v;
+-	  u16_t asrc= naddr(&aof_xbsrc, NULL, PC);
+-	  u16_t adst= naddr(&aof_xbdst, NULL, PC);
++	  u16_t asrc= naddr(&aof_xbsrc, NULL, PC, true);
++	  u16_t adst= naddr(&aof_xbdst, NULL, PC, true);
+ 	  if (xb_PC(xbsrc))
+ 	    asrc+= -1;
+ 	  if (xb_PC(xbdst))
+@@ -362,7 +362,7 @@
+     {
+       u8_t h, l;
+       u16_t ea= eh*256+el;
+-      u16_t a= naddr(&aof_xb, NULL, PC);
++      u16_t a= naddr(&aof_xb, NULL, PC, true);
+       if (xb_PC(xb))
+ 	a+= -2;
+       h= rom->read(a);
+@@ -387,7 +387,7 @@
+     {
+       u8_t v;
+       u16_t ea= eh*256+el;
+-      u16_t a= naddr(&aof_xb, NULL, PC);
++      u16_t a= naddr(&aof_xb, NULL, PC, true);
+       if (xb_PC(xb))
+ 	a+= -2;
+       v= rom->read(a);

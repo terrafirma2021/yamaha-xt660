@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
-PACKAGE=ROOT/'dist/yamaha-xt660-windows-v0.2.1'
+PACKAGE=ROOT/'dist/yamaha-xt660-windows-v0.2.2'
 EXE=PACKAGE/'XT660.FileTool.exe'
 
 

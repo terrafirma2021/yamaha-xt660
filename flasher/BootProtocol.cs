@@ -31,11 +31,11 @@ namespace Xt660 {
         public void Dispose(){port.Dispose();}
     }
     public sealed class BootClient : IDisposable {
-        readonly IBytePort port;readonly Action<int> delay;readonly object gate=new object();
-        bool? echo;bool failed,entered,armed;bool disposed;
+        readonly IBytePort port;readonly Action<int> delay;readonly object gate=new object();readonly int timeoutScale;
+        bool? echo;bool failed,entered,armed,applicationErased;bool disposed;
         public bool Connected {get{return entered&&!failed&&!disposed;}}
         public bool CableEcho {get{return echo==true;}}
-        public BootClient(IBytePort port,Action<int> delay=null){this.port=port;this.delay=delay??Thread.Sleep;}
+        public BootClient(IBytePort port,Action<int> delay=null,int timeoutScale=1){if(timeoutScale<1||timeoutScale>1000)throw new ArgumentOutOfRangeException("timeoutScale");this.port=port;this.delay=delay??Thread.Sleep;this.timeoutScale=timeoutScale;}
         public static byte[] Frame(byte command,byte parameter,byte[] payload) {
             if(command>15||payload.Length+5>0x805)throw new ArgumentException("Invalid boot frame.");
             int length=payload.Length+5;var bytes=new byte[length];
@@ -56,6 +56,7 @@ namespace Xt660 {
             return bytes;
         }
         byte[] Exchange(byte[] request,int payloadLength,int timeout,CancellationToken cancel) {
+            timeout=checked(timeout*timeoutScale); // Tests allow slow instruction emulation; desktop default is unchanged.
             lock(gate) {
                 if(failed||disposed)throw new IOException("Connection is no longer usable. Reconnect the ECU.");
                 try {
@@ -115,15 +116,25 @@ namespace Xt660 {
             // Firmware F9C8 accepts 0820=5AA5 only in service-loop state 0022=5A.
             // This is the same RAM gate sent by the original XT writer.
             Exchange(Frame(5,1,new byte[]{8,0x20,0x5A,0xA5}),0,3000,cancel);
-            armed=true;
+            armed=true;applicationErased=false;
+        }
+        public void EraseApplication() {
+            if(!Connected||!armed)throw new InvalidOperationException("Programming has not been prepared.");
+            // F800 boot remains intact: command 0D copies its sector-erase routine
+            // into RAM and erases only 1800-F7FF, switching flash banks at 8000.
+            Exchange(Frame(13,0,new byte[0]),0,15000,CancellationToken.None);
+            applicationErased=true;
         }
         public void ProgramBlock(int address,byte[] data) {
             if(!Connected)throw new IOException("Connect to the ECU first.");
             if(!armed)throw new InvalidOperationException("Programming has not been prepared.");
             if(data.Length!=2048||address<0x1800||address+2048>0xF800||address%2048!=0)
                 throw new ArgumentException("Only aligned application blocks from 1800 through F7FF may be written.");
-            // Once sent, wait for completion. Never cancel/retry an erase or program command.
-            Exchange(Frame(9,(byte)(address>>8),data),0,15000,CancellationToken.None);
+            if(address>=0x8000&&!applicationErased)throw new InvalidOperationException("Upper flash bank requires application erase and RAM-resident programming.");
+            // Command 09 selects bank 1 only. Command 0E executes from RAM and
+            // selects the target bank, but requires an already-erased application.
+            // Once sent, never cancel/retry an erase or program command.
+            Exchange(Frame((byte)(applicationErased?14:9),(byte)(address>>8),data),0,15000,CancellationToken.None);
         }
         public void Dispose(){disposed=true;entered=false;port.Dispose();}
     }
@@ -165,6 +176,14 @@ namespace Xt660 {
                 if(!desired.Skip(offset).Take(2048).SequenceEqual(baseline.Skip(offset).Take(2048)))changed.Add(offset);
             if(changed.Count>0) {
                 client.PrepareProgramming(CancellationToken.None);
+                if(changed.Any(offset=>offset+0x1800>=0x8000)) {
+                    // A checksum compensation word at F7FC commonly requires this
+                    // path. Preserve/rewrite the WHOLE application after erasing it.
+                    ProgrammingStarted=true;
+                    progress(new FlashProgress("Erasing application; boot preserved",0));
+                    client.EraseApplication();
+                    changed=Enumerable.Range(0,0xE000/2048).Select(n=>n*2048).ToList();
+                }
                 for(int n=0;n<changed.Count;n++) {
                     int offset=changed[n];ProgrammingStarted=true;
                     progress(new FlashProgress("Writing "+(offset+0x1800).ToString("X4")+"–"+(offset+0x1FFF).ToString("X4"),n*100/changed.Count));

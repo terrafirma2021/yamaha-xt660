@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace Xt660.Tests {
     public sealed class FakeEcu : IBytePort {
-        public byte[] Memory;public bool Echo;public int Fragment=17,Programs,Requests,Reads;
+        public byte[] Memory;public bool Echo;public int Fragment=17,Programs,Requests,Reads,Erases;
         public bool Session,Service,Armed,Disposed;public string Fault;public int CorruptReadAfter=-1;
         readonly Queue<byte> received=new Queue<byte>();
         public FakeEcu(byte[] memory,bool echo){Memory=(byte[])memory.Clone();Echo=echo;}
@@ -36,12 +36,17 @@ namespace Xt660.Tests {
                 case 5:
                     if(!Service||!frame.SequenceEqual(new byte[]{5,1,0,9,8,0x20,0x5A,0xA5,0xCA}))throw new Exception("Invalid programming gate");
                     Armed=true;break;
+                case 13:
+                    if(!Armed||frame.Length!=5)throw new Exception("Unsafe erase request");
+                    Erases++;if(Fault=="erase-status")status=0x20;else for(int n=0;n<0xE000;n++)Memory[n]=255;break;
                 case 9:
+                case 14:
                     int start=frame[1]*256-0x1800;
                     if(!Armed||frame.Length!=2053||start<0||start+2048>0xE000||start%2048!=0)throw new Exception("Unsafe program request");
+                    if(command==9&&frame[1]>=0x80)throw new Exception("Command 09 cannot program upper bank");
                     Programs++;
                     if(Fault=="write-status")status=0x20;
-                    else {for(int n=0;n<2048;n++)Memory[start+n]=255;Array.Copy(frame,4,Memory,start,2048);if(Fault=="write-readback")Memory[start]^=1;}
+                    else {if(command==9)for(int n=0;n<2048;n++)Memory[start+n]=255;for(int n=0;n<2048;n++)Memory[start+n]&=frame[4+n];if(Fault=="write-readback")Memory[start]^=1;}
                     break;
                 default:throw new Exception("Unexpected command "+command);
             }
@@ -98,15 +103,15 @@ namespace Xt660.Tests {
                             Check(ecu.Memory.Take(0xE000).SequenceEqual(expected.Skip(0x1800-Library.Base(expected)).Take(0xE000)),"Application programmed "+reference.Definition.id);
                             Check(ecu.Memory.Skip(0xE000).SequenceEqual(boot)&&Library.Sum(ecu.Memory)==0xAA55,"Boot preserved / checksum "+reference.Definition.id);
                             Check(input[map]==(byte)(reference.Bytes[map]^1),"Input preserved");
-                            Check(ecu.Programs>=1&&ecu.Programs<=2,"Only changed blocks written");
+                            Check((ecu.Erases==1&&ecu.Programs==28)||(ecu.Erases==0&&ecu.Programs>=1&&ecu.Programs<=2),"Bank-aware programming plan");
                             int previous=ecu.Programs;service.Write(expected,temp);Check(ecu.Programs==previous,"Already matching file has no erase");
                         }
                     }
-                    foreach(string fault in new[]{"write-status","write-readback"}){
+                    foreach(string fault in new[]{"erase-status","write-status","write-readback"}){
                         var input=(byte[])baseline.Clone();input[0x1B66-0x1800]^=1;
                         var ecu=new FakeEcu(baseline,true){Fault=fault};using(var client=new BootClient(ecu,delegate{})){
                             client.Connect(boot,CancellationToken.None);var service=new FlashService(lib,client,null);
-                            Fails(()=>service.Write(input,temp),"Fail on "+fault);Check(ecu.Programs==1,"No destructive retry");Check(File.Exists(service.BackupPath),"Backup before first write");
+                            Fails(()=>service.Write(input,temp),"Fail on "+fault);Check(ecu.Programs==(fault=="erase-status"?0:1),"No destructive retry");Check(ecu.Erases==1,"No repeated erase");Check(File.Exists(service.BackupPath),"Backup before first write");
                         }
                     }
                     var badBoot=(byte[])baseline.Clone();badBoot[0xE100]^=1;
@@ -129,7 +134,7 @@ namespace Xt660.Tests {
                             string blocked=Path.Combine(temp,"not-a-directory");File.WriteAllText(blocked,"test");
                             Fails(()=>service.Write(baseline,blocked),"Backup disk failure");Check(ecu.Programs==0&&!ecu.Armed,"No write without saved backup");
                             client.PrepareProgramming(CancellationToken.None);
-                            foreach(int address in new[]{0,0x17FF,0x1801,0xF800,0xFFFF})Fails(()=>client.ProgramBlock(address,new byte[2048]),"Reject program address "+address);
+                            foreach(int address in new[]{0,0x17FF,0x1801,0x8000,0xF800,0xFFFF})Fails(()=>client.ProgramBlock(address,new byte[2048]),"Reject program address "+address);
                             var stop=new CancellationToken(true);int requests=ecu.Requests;
                             Fails(()=>client.ReadImage(null,stop),"Cancellation");Check(ecu.Requests==requests,"Cancelled read sends nothing");
                         }

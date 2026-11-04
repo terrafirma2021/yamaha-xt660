@@ -14,9 +14,9 @@ The [dataset guide](dataset/README.md) explains the 21 preserved sources, 110 ap
 
 ## Downloads
 
-[Download the Windows bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.1): nine registered BINs, matching TunerPro XDFs and the XT660 Flash Tool. The desktop app connects through a USB KKL COM port, reads verified backups and writes matched application firmware with automatic checksum correction and readback. It includes the 26-pin and 34-pin connector diagrams. **The serial implementation is software-tested; physical ECU/adapter validation is pending.** [Desktop source and instructions](flasher/README.md). Edit maps and feature patches in TunerPro; [regenerate XDFs](definitions/README.md) when findings change. The website remains a read-only reference.
+[Download the Windows bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.2): nine registered BINs, matching TunerPro XDFs and the XT660 Flash Tool. The desktop app connects through a USB KKL COM port, reads verified backups and writes matched application firmware with automatic checksum correction and readback. It includes the 26-pin and 34-pin connector diagrams. **The serial implementation is software-tested; physical ECU/adapter validation is pending.** [Desktop source and instructions](flasher/README.md). Edit maps and feature patches in TunerPro; [regenerate XDFs](definitions/README.md) when findings change. The website remains a read-only reference.
 
-The [local emulator](emulator/README.md) runs all five complete BINs from reset through startup, the main loop and synthetic crank synchronisation. It records capture and output events; the supplied later immo-off BIN produces coil-command pulses. Tests also cover pulse loss, ADC, timers, SPI and interrupts. Full engine operation, valid persistent state and serial peers remain unfinished. This development tool is separate from the flash-tool release.
+The [local emulator](emulator/README.md) runs unchanged complete BINs with sensor inputs, crank pulses, persistent-storage fixtures, authentication and serial communication. Its local dashboard shows firmware coil/injector outputs; the boot model also exercises the desktop client's backup, checksum, programming and readback flow. Physical sensor scaling and hardware qualification remain separate.
 
 ## Original application study
 

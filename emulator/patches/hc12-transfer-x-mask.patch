@@ -1,0 +1,27 @@
+--- a/src/sims/m68hc12.src/imov.cc
++++ b/src/sims/m68hc12.src/imov.cc
+@@ -30,6 +30,7 @@
+ int
+ CL12::exec_b7(void)
+ {
++  const bool old_x= (rF & flagX)!=0;
+   u8_t pb= fetch();
+   u8_t ls= pb&0x7, ms=(pb>>4)&0x7, ws, wd;
+   class cl_memory_cell *cs, *cd;
+@@ -84,13 +85,10 @@
+ 	  //cd->W(src);
+ 	}
+     }
+-  if (cd == &cF)
+-    {
+-      u8_t ox= rF&flagX, nx=src&flagX;
+-      src&= ~flagX;
+-      src|= (ox|nx);
+-    }
+   cd->W(src);
++  // Software may clear X, but cannot set it after it has been cleared.
++  // This also covers EXG with CCR as the source operand.
++  if (!old_x) cF.W(rF & ~flagX);
+   return resGO;
+ }
+ 

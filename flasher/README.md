@@ -4,7 +4,7 @@
 
 - **Connect** opens the selected COM port, prompts for ECU power and sends the recovered session and service-mode frames.
 - **Read ECU** reads CPU `1800–FFFF` twice and saves a 59,392-byte BIN only when both reads match. Its original checksum is reported; backup bytes are never corrected.
-- **Write ECU** loads a recognised BIN, validates and automatically corrects the startup checksum, asks for confirmation, reads the connected ECU twice, saves the backup, matches the application, programs changed 2 KiB blocks and verifies readback. The original input file is unchanged.
+- **Write ECU** loads a recognised BIN, validates and automatically corrects the startup checksum, asks for confirmation, reads the connected ECU twice, saves the backup, matches the application, uses the matching bank-aware programming plan and verifies readback. The original input file is unchanged.
 - **Pinouts** is a page inside the main window showing the website's 26-pin and 34-pin connector redraws and KKL wiring. No year selection or source photographs are included. K-line is yellow.
 
 **Bench-test prerelease:** the serial implementation and error handling are software-tested. No physical ECU/adapter transaction has been performed here. Software completion does not mean hardware qualification. Connector-view limitations remain beside the diagrams.
@@ -23,6 +23,8 @@ Each response requires the expected command, status, length and packet checksum.
 
 The [protocol evidence](../analysis/firmware/FLASH_TOOLING.md) links the original YamahaFlasher native instructions to the ECU boot handlers. `BootProtocol.cs` is a new implementation of that XT boot format, not a generic KWP/UDS flasher. The transport uses the [.NET SerialPort API](https://learn.microsoft.com/en-us/dotnet/api/system.io.ports.serialport?view=netframework-4.8.1), binary reads/writes, bounded timeouts and no hardware flow control.
 
+When an upper-bank block changes (including the usual checksum word at F7FC), command `0D` erases the application and command `0E` rewrites all 28 blocks from RAM. Lower-bank-only changes use `09`. The boot is preserved in both cases. The [MCU emulator](../emulator/README.md) executes these routines from the unchanged firmware; it exposed and corrected the previous assumption that `09` could program both banks.
+
 ## Build and check
 
 ```powershell
@@ -32,7 +34,7 @@ python scripts/build_release.py
 python scripts/test_desktop.py
 ```
 
-The protocol test executable uses an independent byte-stream ECU fixture; it never opens a COM port. Tests cover both echo modes, fragmented replies, all nine input layouts, backup failures, mismatched reads, incompatible applications/boots, protected address bounds, checksum correction, changed-block writes, per-block and complete readback, negative replies and no destructive retries. The file tests cover the compiled release executable and all 427 XDF patch presets. Native TunerPro feature-patch application remains untested at the owner's request.
+The protocol test executable uses an independent byte-stream ECU fixture; it never opens a COM port. Tests cover both echo modes, fragmented replies, all nine input layouts, backup failures, mismatched reads, incompatible applications/boots, protected address bounds, checksum correction, changed-block writes, per-block and complete readback, negative replies and no destructive retries. A separate `scripts/test_desktop_emulator.ps1 -Ucsim <Linux executable>` run connects the actual client to unchanged firmware in the WSL MCU model. It checks the complete backup/write/readback path without a COM port. The file tests cover the compiled release executable and all 427 XDF patch presets. Native TunerPro feature-patch application remains untested at the owner's request.
 
 The release includes nine unchanged source BINs, nine XDFs, the EXE, a manifest, font licences and SHA-256 hashes. Yamaha branding, Barlow/Barlow Condensed fonts and both connector drawings are embedded in the EXE. Build output is ignored by Git. Third-party flashing executables are not redistributed. `build_flasher_resources.py` obtains both connector drawings from the same source data as the website.
 

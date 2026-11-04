@@ -160,8 +160,8 @@ def test_runtime(executable,wsl):
 def test_runtime_guards(executable,wsl):
     rows=[]
     for name,code,reason in [
-        ('SCI transmit',[0x86,0x55,0x5a,0xcf],'SCI transmit'),
-        ('SCI transmit interrupt',[0x86,0x80,0x5a,0xcb],'SCI interrupt/break/wakeup'),
+        ('SCI nine-bit framing',[0x86,0x10,0x5a,0xca],'SCI parity/9-bit/loop framing'),
+        ('SCI transmit break',[0x86,0x01,0x5a,0xcb],'SCI transmit break'),
         ('SPI slave',[0x86,0x40,0x5a,0xd8],'SPI slave'),
         ('COP invalid service',[0x86,0x12,0x5a,0x3f],'COP reset request'),
         ('COP early window service',[0x86,0x81,0x5a,0x3c,0x86,0x55,0x5a,0x3f],'COP reset request'),

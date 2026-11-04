@@ -1,0 +1,50 @@
+{
+  "status": "passed",
+  "runtime": "Playwright with local Chrome",
+  "viewports": [
+    [
+      1366,
+      900
+    ],
+    [
+      1100,
+      900
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "checks": [
+    "complete-BIN selector",
+    "load and reset",
+    "authentication accepted; repeat control disabled",
+    "immo-off BIN detected; authentication unavailable",
+    "eight ADC inputs",
+    "sensor change queued during Run",
+    "out-of-range ADC rejected",
+    "crank pitch adjustment",
+    "crank input and output transitions",
+    "Run/Pause/Step",
+    "pulse loss",
+    "meter serial replies",
+    "firmware byte-integrity check",
+    "CSV download",
+    "512-byte storage fixture download",
+    "reload retains engine state and selected pitch",
+    "theme persistence",
+    "no browser script errors",
+    "desktop controls fit without scrolling",
+    "mobile layout has no horizontal overflow; all sections and footer reachable"
+  ],
+  "scope": "UI function and appearance only; physical units and hardware not validated",
+  "sources": {
+    "emulator/web/dashboard.css": "9c62ef4157d123bdc6739e6d2a82c1603280161452e4c611d7b2fd962abbaccb",
+    "emulator/web/dashboard.html": "81f314df204b5ddf7d7cb20b520080f6b31305ead14cf525ba9ad4695f477fcf",
+    "emulator/web/dashboard.js": "92e03f7eee3816d6d85d0ef89a270b5274ff1b83f918a8b018b647941b182dc4"
+  }
+}

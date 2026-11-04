@@ -1,58 +1,63 @@
-# XT660 emulator
+# XT660 firmware emulator
 
-Run the real BIN from reset through startup, the main loop and synthetic crank inputs, with adjustable ADC inputs and instruction-level debugging. **Full engine operation is not emulated yet.**
+Run the registered BINs on a locally patched µCsim HC12 core. The five complete images execute from reset with modeled ADC, GPIO, timers, interrupts, SPI storage and both serial interfaces. The four images without boot code are rejected; donor boot bytes are never inserted.
 
-The five complete BINs reach their own main loop without changing their firmware bytes. The `--runtime` fixture has no crank pulses; `--crank` adds a synthetic waveform. Both have no serial peer, and SPI returns `FF` from a disconnected, pulled-high bus. This does not establish valid persistent settings, successful authentication or a running engine. Images with absent boot code are rejected; no donor bytes are inserted. See [validation.json](validation.json) for checks and their scope.
+The local dashboard provides raw sensor inputs, synthetic crank pulses, coil/injector traces, authentication and meter exchanges, Run/Pause/Step, trace export and a firmware-integrity check. It is separate from the reference website and never opens a COM port.
 
-## Build and run
+## Build and start
 
-Linux or WSL, with Python 3, Git, GNU make, g++, autoconf, bison, flex and the ncurses development libraries. Building does not install system packages. From the repository root:
+Linux/WSL needs Python 3, Git, make, g++, autoconf, bison, flex and ncurses development libraries. The build does not install system packages. From this repository:
 
 ```sh
 python3 emulator/build.py --directory /root/xt660-ucsim
-python3 emulator/run.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
-python3 emulator/test_emulator.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python3 emulator/dashboard.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-Choose a build directory writable by your account; `/root/xt660-ucsim` is an example for a root WSL account. The build pins [µCsim 0.9.12](https://github.com/danieldrotos/ucsim/tree/ucsim-0.9.12), applies our local core fixes and links a separate XT660 target. Generated files stay in the chosen build directory and ignored `.runs/` folder.
-
-On Windows, build using WSL. The launcher and checks can run from PowerShell:
+Choose a directory writable by your account. On Windows, build inside WSL, then launch from PowerShell:
 
 ```powershell
-python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python emulator/dashboard.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-Use `--image xt660-2c1-10` to select another registered image. Source hashes and image address offsets are checked before execution. This tool never connects to a motorcycle or writes a source BIN.
+Open **http://127.0.0.1:8766/**. Load a BIN, authenticate the fixture if enabled, send crank revolutions and press Run. Sensor inputs can change while running. Pause stops instruction batches; Stop crank removes the external pulses. Use Step to watch the firmware detect pulse loss. Loading another BIN resets the simulated ECU.
 
-## Run the main loop
+The server binds only to loopback. It uses bundled HTML/CSS/JavaScript, a per-session request token and same-origin checks. It has no upload, arbitrary debugger-command or physical-port endpoint. Close it with Ctrl+C.
+
+## What is being executed
+
+- Startup and application instructions come from hash-checked source BINs. Normal engine runs leave every one of the 59,392 flash bytes unchanged.
+- The storage defaults are produced by executing each BIN's own factory initializer in an isolated session. All five produce the same 512-byte fixture, SHA-256 `93f11ba1d85ba762b87ee17ba9e9434e1bb8c81d6df23b238892f94f77fb68f6`. This is not an EEPROM read from a motorcycle.
+- A separate synthetic registration record supplies `ABC` three times and trailer `5AA5` at external-storage offsets `50–5A`. Authentication runs through actual SCI receive interrupts, main-loop calculations and replies. No runtime flags or authentication branches are patched. The supplied immo-off BIN correctly skips authentication.
+- SCI1 exercises the challenge/response sequence and normal `FE` / `01` meter requests, with reply checksum checks. Corrupt authentication responses are tested separately.
+- PT1 receives ten ordinary tooth intervals and one double interval per synthetic revolution. This follows the recovered gap detector, not a measured rotor trace. The firmware selects the /32 timer prescaler. Both families synchronise, generate PT3 coil and PT6 injector transitions, and detect pulse loss.
+
+Inputs remain **raw ADC counts and timer ticks**. The oscillator, analogue conditioning and mechanical TDC reference are not established by running code. The UI does not invent RPM, °C, throttle percentage or absolute ignition advance. Output transitions are electrical command states in the MCU model, not combustion, torque or actual coil current. PT7 is displayed as a secondary code-path output without claiming a second XT cylinder.
+
+## Flash-client integration
+
+`boot_service.py` runs the actual boot instructions and RAM-copied flash routines. It injects SCI0 bytes at the modeled divisor and collects the actual transmitted reply. It does not replace boot handlers with Python functions.
+
+Execution exposed a bank-selection problem in the former desktop write plan. Command `09` fixes BKSEL to bank 1 and rejects an upper-bank target. Command `0D` copies the erase loop to RAM and erases **1800–F7FF**, preserving **F800–FFFF**. Command `0E` programs an already-erased 2 KiB block from RAM and selects its bank from the target address. The revised desktop client uses `0D` plus all 28 application blocks through `0E` whenever an upper-bank block changes. Lower-bank-only changes can still use `09`.
+
+The C# integration bridge substitutes only the byte transport. The real `BootClient` and `FlashService` perform two full reads, an immutable disk backup, a map edit with checksum correction, programming, per-block readback and complete final readback. Simulation gets longer host timeouts; the production client's baud and timeouts are unchanged. Physical cable/ECU operation remains untested.
 
 ```powershell
-python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu --runtime --loops 1000 --image xt660-2c1-10
+python emulator/test_emulator.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+./flasher/build.ps1
+python scripts/build_release.py
+./scripts/test_desktop_protocol.ps1
+./scripts/test_desktop_emulator.ps1 -Ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-The bounded run starts at the hardware reset vector and stops after the requested number of main-loop entries. It reports ADC conversions, timer interrupts, watchdog services and SPI transfers. It only supplies external pin fixtures: PA5–7 high, PS4 high, eight ADC inputs at 512, and pulled-high SPI MISO. Other external inputs are low. `--adc` accepts eight replacement raw values; `--steps` sets an instruction limit. No application RAM flags, checksum code or authentication branches are patched.
+Tests write detailed logs under ignored `.runs/`. [validation.json](validation.json) records the integrated firmware and controller checks; [desktop-validation.json](desktop-validation.json) records the C# integration separately. [dashboard-validation.json](dashboard-validation.json) records the browser checks. None is a hardware certificate.
 
-The companion's main loop is `0x538B`; the other complete images use `0x4BC5`. The regression run checks 1,000 entries per image, periodic interrupt delivery, watchdog servicing and all 59,392 flash bytes after execution. Separate fixtures test timer compare/capture behaviour, SPI timing/queues, and watchdog timeout detection.
-
-## Crank input and output trace
+## Debugging and automation
 
 ```powershell
-python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu --crank --image xt660-2c1-10-immo-off --pitch 1600
+python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu --console --image xt660-2c1-10
 ```
 
-This starts the unchanged firmware, drives PT1 with twelve synthetic patterns, records capture/interrupt/output events, then removes the pulses to test loss of synchronisation. The input repeats ten ordinary intervals and one double interval, following the [existing CPS trace](../analysis/semantics/CRANK_REFERENCE.md). It is not a measured rotor waveform. `--pitch` is in timer ticks, **not RPM**; the byte-checked startup instructions select a /32 timer prescaler. `--patterns` accepts 4–24 patterns and `--uniform` removes the long gap. ADC inputs remain adjustable with `--adc`.
-
-All five complete BINs acquire synchronisation, normalise the gap and report the supplied 1,600-tick pitch and 4,800-tick three-pitch interval. The early companion also passes at 800 and 2,400 ticks. Uniform input does not synchronise in the early and later control cases. After pulse loss, both families clear synchronisation and replace the period with `FFFF`. The nine crank runs check every flash byte after execution.
-
-The supplied `xt660-2c1-10-immo-off` image generates eight PT3 charge/release pairs at one-pattern cadence in the default fixture. This exercises its fixed-event ignition path; it does not establish physical BTDC, coil polarity, current or every ignition mode. The four other complete images retain their authentication inhibit with no serial peer attached.
-
-PT6/PT7 injector transitions remain absent in this fixture. A debugger check follows the later injector gate at `F256` to its return at `F260` while the current lean-sensor fault is set (`08B3:10`). The early charge-gate check follows `EE2D → EE77` with authentication inhibit `0D08:01`. No RAM flags or firmware branches are changed to force outputs. Valid persistent state, sensor histories and authenticated communication remain separate work.
-
-The command prints the report and paths to a detailed log and CSV under ignored `emulator/.runs/`. CSV rows contain bus-cycle timestamp, event kind, channel, value and the current instruction. PT3 is the coil command, PT6 the primary injector and PT7 the secondary code path. Pin/compare events are timestamped on bus ticks; CPU accesses and interrupt entry remain instruction-boundary approximations. No wall-clock or physical timing calibration is implied.
-
-## Debugger
-
-Add `--console` to open the debugger at reset. The launcher places a breakpoint at that image's application entry. Commands include:
+The console starts at reset with a breakpoint at that BIN's application entry. Tested commands include:
 
 ```text
 run
@@ -66,48 +71,32 @@ info hardware xtboot
 quit
 ```
 
-Conditional breakpoints, read/write watchpoints, hit counts, instruction stepping and stepping over JSR are tested. Debugging is at assembly level. [µCsim command reference](https://www.ucsim.hu/cmd.html).
+Conditional breakpoints, hit counts, read/write watchpoints and JSR step-over work at assembly level. [µCsim commands](https://www.ucsim.hu/cmd.html). Python's `Engine` API exposes bounded instruction stepping, ADC/GPIO fixtures, crank generation, serial exchange, RAM snapshots, storage export and immutable-flash verification.
 
-## Sensor routine demo
+The older `run.py --runtime`, `--crank` and `--sensors` modes remain reproducible isolated fixtures. They use disconnected SPI/idle serial unless their fixture says otherwise; use the dashboard or `Engine` for initialized storage and an authenticated peer.
 
-Run the selected BIN's unchanged ADC setup/read routines and print their RAM results:
+Debugger fixture controls are separate from MCU registers:
 
-```powershell
-python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu --sensors --image xt660-2c1-10 --adc 100 200 300 400 500 600 700 800
-```
+| Control | Meaning |
+| --- | --- |
+| `adc0` … `adc7` | 10-bit input counts, 0–1023 |
+| `xtboot_0_cfg[9..14]` | External PA/PB/PE/PT/PS/PP levels |
+| `[15..16]` | PK7 and PTAD external levels |
+| `[17..18]` | SPI external byte and mode: disconnected, loopback or storage |
+| `[19..25]` | PT1 interval, low width, gap index/multiplier, edge count, run, trace |
+| `[26..29]` | SCI0/1 incoming bytes and external-peer clock divisors |
+| `[30..33]` | SCI transmit counts and last bytes |
+| `[34]` | Enable simulated flash commands; off in normal engine runs |
+| `eeprom[0..511]` | Persistent external-storage fixture bytes |
 
-Inputs are eight raw ADC counts (`0..1023`), in channel order. Omit `--adc` for midscale inputs. The example stores `6400, 12800, …, 51200`: this firmware uses left-justified 10-bit results. It does not establish a temperature, pressure or throttle scale. The demo uses an isolated RAM/stack fixture; it does not run the application startup, EEPROM checks or engine loop.
+## Model boundaries
 
-The early companion executes `0x56D0` / `0x5728` and retains channels 6/7 in four RAM banks. The other complete images execute `0x4F31` / `0x4F52` and store those channels directly. Tests vary the inputs between calls and check every destination. The external analogue multiplexer circuit is not simulated.
+The conditional MCU reference is [MC9S12T64 Rev 1.1.1](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf). The model covers the firmware-used 8N1 SCI paths, SPI master transfers and observed storage protocol, ADC sequencing/formatting, GPIO directions/latches, ECT compare/basic capture, RTI, PLL status, watchdog servicing and maskable interrupts. Flash checks cover bank selection, sector erase, word programming, protection, errors and busy-bank access.
 
-In the debugger, `adc0=123` through `adc7=1023` change raw inputs. `info hardware xtboot` shows conversion counts, flags, last interrupt vector and fixture settings. GPIO fixtures are bytes in `xtboot_0_cfg`: offsets 9–14 supply PA, PB, PE, PT, PS and PP input levels; 15 supplies PK7 and 16 supplies PTAD. Offset 17 is the SPI receive-byte fixture (default 255); 18 selects external-byte mode (0) or test loopback (1). Output latches and direction registers determine GPIO reads. This represents driven digital levels, not ECU conditioning circuits. Timer-controlled PT outputs follow their compare configuration.
+It is a functional model with instruction-boundary peripheral updates. PLL acquisition, storage busy and flash busy durations are deterministic fixtures. Exception-entry timing, analogue settling and oscillator frequency are not calibrated. Unsupported modes stop explicitly: banked CALL/RTC, advanced ECT buffering/pulse accumulators, external ADC triggering, SCI parity/9-bit/break and unused PWM modes. Watchdog reset requests stop with a reason rather than restarting the MCU. It is not a model of every silicon function or every physical fault.
 
-The bounded PT1 fixture uses offsets 19–25: ordinary interval and low width in bus cycles, gap interval index (0 for uniform), gap multiplier, falling-edge count, run switch and event-trace switch. Stop it before changing timing. Invalid timing is rejected; the event trace stops at 20,000 rows. These are simulator controls, not MCU registers.
-
-## What the model covers
-
-- CPU12 instruction execution, with 518 independent fixtures for the local fixes and related addressing modes.
-- Reset-vector loading and execution of the unchanged boot instructions.
-- PLL-lock status, oscillator-relative periodic interrupts, and COP watchdog servicing. A watchdog reset request stops execution with its reason; reset-pin timing and re-entry are not simulated.
-- ECT main-counter prescaling/overflow, compare actions, forced compares, channel-7 override/reset, basic edge capture, fast flag clearing, and the modulus counter.
-- SPI master byte transfers, baud divisor, transmit queue, receive overrun and status/data acknowledgement. Its external fixture is explicitly disconnected; no EEPROM identity, contents or write persistence are invented.
-- ADC sequence length, channel stepping/wrap, 8/10-bit results, signed/unsigned formatting, sample/convert delays, single/continuous operation, FIFO overwrite and documented flag clearing.
-- Functional RTI, timer-channel/overflow, SPI, ADC-complete, modulus-counter and PLL-lock interrupt selection: enable/mask bits, HPRIO selection, CLI delay, register stacking and RTI restoration. Exception-entry bus timing and RTI tail chaining are not modelled.
-- GPIO input levels, output latches and direction for the supported ports; boot configuration storage remains partial.
-- Stops on unimplemented register accesses and attempted CPU writes to flash. Debugger reads do not trigger peripheral side effects.
-
-The MCU reference is the conditional MC9S12T64 identification used elsewhere in the repository. Register behaviour follows [MC9S12T64 Rev 1.1.1](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf), MEBI, CRG, ECT, SCI, SPI and ATD register chapters. CPU interrupt semantics follow the [CPU12 reference manual](https://mil.ufl.edu/4744/docs/hc12/cpu12rm.rev4.pdf), CLI/RTI and section 7.5. PLL acquisition uses a deterministic 64-tick fixture delay, not a measured lock time. ADC delays are measured in simulated bus cycles; analogue power-up settling and electrical errors are not modelled. Peripheral updates occur at instruction boundaries; prescaler changes and bus accesses are not cycle-accurate. The core's reported elapsed seconds and the motorcycle's absolute timing are not validated.
-
-The generic HC12 page registers and inherited 6800 CIA/PIA devices are excluded from this target: they overlap T64 clock registers and application flash addresses.
-
-## Remaining work
-
-Next are a persistent-storage device model, sensor/history conditions for normal injection, and actual SCI receive/transmit traffic. The current serial fixture is idle; transmission attempts stop rather than fabricate communication. Wider ignition-mode coverage, enhanced capture buffering, pulse accumulators, watchdog reset re-entry and precise exception timing also remain unfinished. A dashboard follows the measured firmware behaviours.
-
-Startup and the main loop execute under the stated fixtures. This is not validation of every branch, fault, immobilizer exchange, map scale or physical actuator. The CPU instruction set still needs wider coverage. Unsupported register accesses and external ADC-trigger mode stop explicitly.
-
-Core fixes stay under `patches/`: decrement width/disassembly, indexed addressing, bit-operation fetch order, bit-mask/branch disassembly and indexed bit-instruction lengths, loop decoding, tick accounting, ORCC dispatch and step-over metadata. The XT660 target also supplies maskable interrupt dispatch and correct RTI X-mask restoration. They are local integration fixes. **No upstream submissions have been made.** Any future submission must exclude XT660 firmware, profiles and application code.
+Local core fixes cover decrement width, indexed addressing, flags, bit branches, MOV auto-index updates/disassembly, CCR X-mask transfers, loop decoding, ticks and step-over metadata. Builds pin µCsim commit `59a14ff99efe7e92474faf4c4ddf57b5e4ff0631`, verify known patch states and preserve unrecognised local edits. **No upstream submissions have been made.**
 
 ## License
 
-The native extension and the µCsim-derived patches use GPL-2.0-or-later; see [COPYING](COPYING). µCsim remains credited to its upstream authors. The Python harness files use the same license. This does not assign a license to the Yamaha firmware.
+The emulator and µCsim-derived patches use GPL-2.0-or-later; see [COPYING](COPYING). µCsim remains credited to its upstream authors. This does not assign a license to Yamaha firmware.
