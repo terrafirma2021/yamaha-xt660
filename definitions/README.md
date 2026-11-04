@@ -12,4 +12,10 @@ python scripts/test_xdf_export.py
 
 The website publishes these files directly. Definitions contain raw map tables and reversible feature patches. Use TunerPro's Apply/Remove on the whole patch. For speed offsets, remove the active patch before choosing another. Unsupported early O2 controls are omitted.
 
-Automatic TunerPro checksum correction and unresolved physical conversions are not included. After editing, use the Windows file tool from the release bundle to save a checksum-corrected copy. [Definition details and native verification](../analysis/firmware/XDF_DEFINITIONS.md).
+Automatic TunerPro checksum correction and unresolved physical conversions are not included. The [Windows Flash Tool](../flasher/README.md) validates and corrects the startup checksum before writing. To save a corrected copy without connecting to an ECU, use its offline command:
+
+```powershell
+.\XT660.FileTool.exe --fix edited.bin corrected.bin
+```
+
+[Definition details and native verification](../analysis/firmware/XDF_DEFINITIONS.md).

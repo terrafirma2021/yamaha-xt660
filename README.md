@@ -1,136 +1,50 @@
 # Yamaha XT660 ECU Research
 
-## Model, year, market, ECU and firmware
+Firmware analysis, TunerPro definitions, flashing tools and ECU emulation for the Yamaha XT660 family.
 
-The repository supports multiple BINs through a [firmware registry](firmware/registry.json) and [website library](https://terrafirma2021.github.io/yamaha-xt660/firmware/). It now contains nine image records: seven distinct files from the complete Desktop/XT660 inventory, the original owner dump and its corrected derivative. The static website carries the selected motorcycle, year, market, ECU and firmware through maps, wiring, pins and research. Bike selections use readable paths. The previous xt660x-2005 website forwards old links to this project.
+**[Website](https://terrafirma2021.github.io/yamaha-xt660/) · [Browser emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/) · [Downloads](https://github.com/terrafirma2021/yamaha-xt660/releases)**
 
-All 71 stored map bodies and stored axes match across the owner image, corrected derivative and 2004–06 companion only; application differences are explicitly checked. The companion has a separate [boot breakdown](analysis/firmware/xt660-2004-2006-companion/BOOT.md), disassembly, pseudocode and byte-accounting report. Its boot has not inherited the application execution-test status.
+## Start here
 
-**All nine images now have application decoding and their own calibration catalogues.** [Family decoding](analysis/firmware/FAMILY_DECODING.md) establishes two byte-identical code families: five early-code records with 71 extracted maps each, and four later-code records with 86 each. The later application has 15,928 decoded instructions and 229 recovered functions in structured pseudocode. The website provides 699 image-specific grid pages containing 69,575 source-checked cells. The [repository audit](analysis/REPOSITORY_AUDIT.md) records completed checks and actionable gaps. Complete physical scaling and identification of every residual calibration constant remain unfinished; code identity does not establish hardware interchangeability.
+- **Explore the ECU:** select a motorcycle and firmware on the [website](https://terrafirma2021.github.io/yamaha-xt660/) to browse its maps, connector diagrams, MCU pins and research.
+- **Edit a BIN:** download its matching [BIN and XDF](https://terrafirma2021.github.io/yamaha-xt660/xdf/) and use TunerPro. Definitions include map tables and supported feature patches. [XDF instructions](definitions/README.md).
+- **Read or write an ECU:** the [Windows Flash Tool bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.2) includes the tool, nine BINs and nine XDFs. It uses a USB KKL interface, saves backups and checks compatibility, checksums and readback. [Flashing instructions](flasher/README.md).
+- **Run the firmware:** use the [browser emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/) with no installation, or the [Windows emulator](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.0). Key, starter, throttle, neutral, sensor faults and diagnostic controls act on the emulated ECU. The dash reads its K-line replies. [Emulator instructions and source](emulator/README.md).
 
-[Adding another image](firmware/ADDING_IMAGES.md) documents the importer and review workflow. New images start unreviewed and do not inherit map or pin claims.
+## Current coverage
 
-The [dataset guide](dataset/README.md) explains the 21 preserved sources, 110 applicability profiles, including 89 Fowlers model/market records and manufacturer references. XT660X, XT660R and XT660Z Ténéré have separate entries; TDM900 material is retained only as supporting research, outside the motorcycle selector. Later revisions do not inherit the original maps or connector claims.
+The library contains **nine registered BINs across two application families**, with application decoding and separate calibration catalogues for each image: **71 maps per early image and 86 per later image**. Supplied files retain their recorded hashes; corrected copies are identified separately.
 
-## Downloads
+The emulator runs the **five images with complete boot code**. The other four have missing boot content and are not supplied with donor code. Its HC12 core runs independently of dashboard rendering. Closing or refreshing the browser version ends its session; the Windows process can continue without its dashboard.
 
-[Download the Windows bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.2): nine registered BINs, matching TunerPro XDFs and the XT660 Flash Tool. The desktop app connects through a USB KKL COM port, reads verified backups and writes matched application firmware with automatic checksum correction and readback. It includes the 26-pin and 34-pin connector diagrams. **The serial implementation is software-tested; physical ECU/adapter validation is pending.** [Desktop source and instructions](flasher/README.md). Edit maps and feature patches in TunerPro; [regenerate XDFs](definitions/README.md) when findings change. The website remains a read-only reference.
+The model dataset covers XT660R, XT660X and XT660Z Ténéré. **No matched XT660Z BIN is currently available.** Model, year and ECU associations retain their evidence and qualifications; shared code or a catalogue replacement part does not establish interchangeability.
 
-[Run the emulator in your browser](https://terrafirma2021.github.io/yamaha-xt660/emulator/) or [download the Windows version](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.0). Both execute the five complete BINs on the same HC12 core. Key, starter, throttle, sensor faults and dashboard diagnostics operate through modeled pins and serial interfaces. A worker runs the MCU independently of dashboard rendering. Closing the browser version ends its session; the Windows process can keep running without its dashboard. [Source, checks and timing limits](emulator/README.md). Physical sensor scaling and hardware qualification remain separate.
+Some physical map scales, absolute spark reference and connector-to-MCU wiring remain unresolved. The flash tool is a **bench-test prerelease** with software validation; physical ECU/adapter validation is pending. Emulation checks firmware behaviour, not combustion, AFR or power output. See the [research audit](analysis/REPOSITORY_AUDIT.md) and [verification ledger](analysis/semantics/VERIFICATION_LEDGER.md) for the evidence behind each claim.
 
-## Original application study
+## Source and research
 
-The following analysis statistics concern the original owner image and explicitly byte-matched companions. They do not describe all nine images.
+| Area | Contents |
+|---|---|
+| [Firmware](firmware/registry.json) | BIN identities, hashes and provenance |
+| [Dataset](dataset/README.md) | Model, market, ECU and source records |
+| [Application analysis](analysis/firmware/FAMILY_DECODING.md) | Code families, disassembly and calibration differences |
+| [Control systems](analysis/semantics/README.md) | Fuel, ignition, sensors, diagnostics, checksums and immobilizer |
+| [Pin audit](analysis/firmware/PIN_AUDIT.md) | Per-BIN MCU and connector evidence |
+| [XDF generator](definitions/README.md) | Regenerate definitions when findings change |
+| [Flash tool](flasher/README.md) | Windows application, protocol and checks |
+| [Emulator](emulator/README.md) | Browser/Windows builds, core sources and validation |
 
-A reverse-engineering project for the Yamaha XT660X 2005 firmware image. The repository contains the unchanged binary, structured C, an address-preserving compilable C translation of every decoded instruction, a complete byte listing, calibration analysis, and an annotated Ghidra program.
+## Build the website locally
 
-**[Open Yamaha ECU Research](https://terrafirma2021.github.io/yamaha-xt660/)** for the project overview, searchable map catalogue, [MCU pin explorer](https://terrafirma2021.github.io/yamaha-xt660/pins/) and research library. GitHub Pages rebuilds and deploys it after pushes to `main`; refresh the page after deployment to see the latest version.
-
-The [content coverage index](https://terrafirma2021.github.io/yamaha-xt660/coverage/) lists every tracked repository file. All Markdown documents are rendered on the website; supporting code, datasets, validation reports and firmware link to GitHub. This is repository coverage, not a claim that all physical meanings are resolved. The dark/light switch appears on every page and remembers your choice; otherwise it follows your system theme.
-
-All 71 map pages put their visual map directly below the title. The 52 one-dimensional maps include curve graphs; both temperature sensors include all 1,024 decoded ADC outputs and an optional, clearly conditional Celsius display. All map pages include colour-coded cell grids with raw axis headers, a per-map colour scale, exact values and selectable ROM addresses. The catalogue includes a colour preview for every map. Large grids default to fitting the whole map, with an optional scroll view; arrow keys move between cells, and copyable text matrices remain available. Site validation checks all 8,275 displayed cells against the original image.
-
-The website uses a Yamaha motorsport design, locally served typography and a model-first research workspace. The 2005 XT660X photograph is only used as an X model reference; it is not presented as an R, Z or TDM. The same visual system carries through the map catalogue, pin explorer and research library. [Imagery, font credits and project independence](site/ASSET_CREDITS.md) are recorded separately from the technical evidence.
-
-The [verification ledger](analysis/semantics/VERIFICATION_LEDGER.md) tracks every map, MCU package position and drawn connector position. **Verified is final for a stated claim and evidence scope.** It distinguishes byte-exact extraction, code/register/pin cross-checks, datasheet/manual corroboration, software fixtures and physical sign-off. For the original-image study, all 80 reference package assignments and all 53 firmware-linked register-to-pin chains have been reviewed; fitted MCU identity, external continuity and physical-unit gaps remain open. Pages deployment rejects stale ledger data or failed provenance checks.
-
-**Start with the [control-system breakdown](analysis/semantics/README.md)** for coolant/fan, sensor and output identities, RPM/cut logic, spark, fuel, serial diagnostics, startup, checksums, immobilizer behavior, and XDF export and tool definitions. The [full decompilation guide](analysis/full/README.md) and [function index](analysis/full/FUNCTION_INDEX.md) provide the underlying code.
-
-All **15,942 decoded instructions / 42,849 instruction bytes** are translated, all **225 recovered routines** have structured C, and every byte of the **65,536-byte input** is classified. The complete C translation compiles and passes instruction-level comparisons and independent CPU12/lookup fixtures. This describes coverage of the supplied image, not recovery of the original manufacturer's source project.
-
-The included CPU12 processor model corrects defects in Ghidra 12.1.4's bundled HC12 semantics: indexed word memory dereferencing, ADC overflow, SBC borrow handling, an inverted BRSET condition, and immediate ADCB reading the wrong accumulator. The corrections are documented in a reviewable patch and checked with independent instruction fixtures.
-
-The [calibration map atlas](analysis/MAP_ATLAS.md) now documents **71 maps and curves**, with a [separate breakdown for every map](analysis/MAP_DETAILS.md): 19 grids, 36 uniform-axis curves, 14 precomputed-axis curves and two sensor-conversion curves. It includes 32 stored axes/threshold lists and computed axes. The [unit derivation](analysis/semantics/UNIT_DECODING.md) and [read-only conversion catalogue](analysis/semantics/physical_units.json) now provide 64 numeric, logical or conditional physical cell interpretations, joint arithmetic for seven more maps, and nominal speed axes for 40 maps. These are different levels of resolution; they do not mean 64 fully decoded physical tuning maps. Every map now lists specific remaining requirements and all 90 input-axis uses have an explicit coordinate/physical-scale review. The [normalization breakdown](analysis/semantics/NORMALIZATION.md) covers both inverse-ratio input codes, selection, offset saturation and all four quantity outputs. Absolute spark reference and several sensor scales remain unresolved.
-
-The [extended recovery pass](analysis/semantics/EXTENDED_MAPS.md) adds 22 previously missing layouts: transient fuel gains, air-induction and feedback eligibility grids, spark-path tables, sensor conversions, and a curve copied into RAM. [Remaining calibration work](analysis/REMAINING_CALIBRATIONS.md) accounts for every outstanding span and links 502 static address/width/access records. Three more 2×2 fuel-normalization maps are now recovered and their common multiplier is decoded. Catalogue coverage is not a claim that every physical map meaning is resolved.
-
-The [variant analysis](analysis/semantics/VARIANTS.md) confirms that this image selects variant 9, which skips the second normal injector entry. A second diagnostic injector handler remains present; this does not establish complete twin-cylinder hardware or firmware support. The latest tests also exposed and corrected an ADCB accumulator defect in the decompiler model, and the generated analysis has been rebuilt.
-
-The [map-consumer breakdown](analysis/semantics/MAP_CONSUMERS.md) now reconstructs normal and startup fuel arithmetic, post-start decay, transient pulses, adaptive steps and injection event timing. [Per-map status](analysis/semantics/MAP_RESOLUTION.md) distinguishes gains, thresholds, logical gates, conditional physical values and unresolved scales, including stock-disabled families.
-
-All 71 maps now have [reviewed descriptive names](analysis/MAP_NAMES.md) derived from the recovered roles. The website, map dossiers, atlas, unit catalogue and text extracts use these names. Original IDs such as `main_quantity_C` remain as stable reference keys and URL/file names; its display name is **Alternate load-based fuel quantity**. Unidentified selection modes are not labelled as cylinders, riding modes or octane grades.
-
-The [map-selector trace](analysis/semantics/MAP_SELECTORS.md) resolves the branches behind 25 names: filtered neutral input, road-pulse/crank ratio codes, and a four-stage speed sequence selecting the alternate load-fuel table. Stock timeout zero prevents that sequence completing from cleared state. Ignition splits at ratio code 5, while the first transient family splits at 1. [9,523 instruction-behavior cases](analysis/semantics/map_selector_validation.json) check classification, branches and detector boundaries. Yamaha describes the fault-42 substitute as top gear; the firmware forces code 5, corroborating that interpretation. The previously proposed 20 sensor pulses per revolution has no independent evidence. Its 3,000 synthetic filter iterations remain labelled as a hypothesis experiment, not gear validation.
-
-The [temperature profile](analysis/semantics/TEMPERATURE_PROFILE.md) supplies conditional Celsius values for both sensor tables and 14 map axes. All 256 variant values were tested against the temperature routines; the fixed conversions and fallbacks stay unchanged, while spark correction selection changes. The XT660X target is retained; TDM manual data is comparison evidence. The [spark scheduler](analysis/semantics/SPARK_SCHEDULER.md) now has independently tested charge/fire planning and minimum-dwell handling. These passes add 141,432 instruction-execution cases.
-
-## Checksum-corrected image
-
-[XT660X 2005 startup-checksum-fixed.bin](firmware/XT660X%202005%20startup-checksum-fixed.bin) passes the recovered startup checksum routine in software validation. The single-byte change at `0xF7FD` (`FF` to `7F`) compensates the sum from `0xAAD5` to `0xAA55`; all maps and decoded instructions remain unchanged. The original dump is retained. [Correction details](analysis/semantics/CHECKSUM.md) explain the selected trailer padding, exact hashes and the separate check involving unavailable boot content. This is not a hardware-validated flash image.
-
-## Focused control analysis
-
-The [per-ECU pin audit](analysis/firmware/PIN_AUDIT.md) checks all nine registered BINs, with separate early/later assignments and 26-/34-position manual references. All 24 profile/BIN pin pages now use the selected image’s evidence. PAIR uses PP1 in early code and PP0 in later code; the later O2 signal/heater circuits and the flashing-sketch orientation comparison are recorded explicitly. Instruction checks, datasheet checks and physical board confirmation are separate states.
-
-The original-image [MCU pin overview](analysis/semantics/MCU_PIN_OVERVIEW.md) covers all 80 positions in the conditional MC9S12T64 package reference, with 53 entries linked to firmware instructions. The [ECU connector inventory](analysis/semantics/ECU_CONNECTOR.md) accounts for all 26 positions drawn in the XT manual: 23 wire-labelled and three crosses. The inventory now has 15 corroborated function links, one starter candidate, two unresolved interlock alternatives and five power/return networks. The [route audit](analysis/semantics/CONNECTOR_ROUTE_AUDIT.md) adds 10,344 instruction cases, strengthens supply/serial evidence and withdraws an overconfident B/Y-to-PB0 / L/B-to-PB4 assignment. The [interactive reference](analysis/semantics/MCU_PIN_OVERVIEW.html) connects both diagrams. Upper/lower drawing coordinates are established; OEM cavity numbers, connector face convention, exact MCU package identity and board continuity remain distinct gaps.
-
-The [CPS/reference trace](analysis/semantics/CRANK_REFERENCE.md) now follows capture synchronization through normal spark dispatch. Synthetic crank patterns produce one firing transition per pattern on both halves of the longer cycle counter, supporting wasted-spark operation. The code also aligns cycle phase from pressure changes. [561 new checks](analysis/semantics/crank_reference_validation.json) cover these paths; the physical gap-edge-to-TDC angle is still unconfirmed.
-
-The [area guides](analysis/semantics/README.md) document coolant conversion, fan hysteresis and sensor-fault handling; separate spark/injector period limits and road-speed gates; six major map selections; and remaining work for a tuning definition. The [machine-readable catalogue](analysis/semantics/catalog.json) records 28 raw calibrations, eight ADC channels and six logical outputs. [212,090 focused control cases](analysis/semantics/control_validation.json) exercise the recovered behavior, in addition to instruction-level checks.
-
-A branch-condition defect found during this pass materially affected earlier generated C. All generated code and the Ghidra archive have been regenerated; see [review notes](analysis/semantics/REVIEW_NOTES.md). Original firmware bytes are unchanged.
-
-[150,614 additional cases](analysis/semantics/extended_map_validation.json) verify computed axes, selector branches, step-grid boundaries, special-grid interpolation, the RAM-copied curve and the checksum-corrected file.
-
-[219,324 unit and variant cases](analysis/semantics/units_variant_validation.json) check normalization, scheduler cadence, sensor payload arithmetic, relative spark scheduling and both injector paths. The rebuilt full translation passes 344,357 checks, including independent accumulator tests at every immediate-ADCB site.
-
-[259,216 additional consumer cases](analysis/semantics/map_consumer_validation.json) check complete arithmetic blocks, coupled gains, post-start state decay, transition steps, relative-throttle thresholds and injection phase dispatch.
-
-## Communication and immobilizer analysis
-
-The protocol findings are split into [serial transport](analysis/semantics/K_LINE.md), [dashboard diagnostics](analysis/semantics/DIAGNOSTICS.md), [startup](analysis/semantics/STARTUP.md), [checksums](analysis/semantics/CHECKSUMS.md), and [immobilizer patch/authentication](analysis/semantics/IMMOBILIZER.md). [Verification and offline decoding](analysis/semantics/PROTOCOL_VERIFICATION.md) provides reproducible instruction checks and capture-decoding examples.
-
-The owner confirms that the supplied image was patched to skip immobilizer checking and recalls `0x4E7D: 00 → 80`. This exactly accounts for the ROM sum changing from the expected `AA55` to `AAD5` if it was the only modification. The pre-patch case was tested in simulated memory only; the supplied binary remains unchanged.
-
-## Files
-
-- [Supplied firmware](firmware/XT660X%202005.bin): 65,536 unchanged bytes.
-- [Map atlas](analysis/MAP_ATLAS.md), [maps and values](analysis/maps.json), [axes](analysis/axes.json), and [byte-exact extracts](analysis/map_extracts).
-- [Disassembly](analysis/disassembly.tsv), [approximate C](analysis/decompiled.c), and [individual routines](analysis/functions). The C is not original or buildable source.
-- [Complete compilable low-level C](analysis/full/c), [all-byte listing](analysis/full/whole_image.asm), and [raw data as C](analysis/full/firmware_data.c).
-- [Whole-image coverage](analysis/full/byte_coverage.json), [control-flow edges](analysis/full/control_flow.json), and [C translation validation](analysis/full/validation.json).
-- [Function status](analysis/functions.tsv), [coverage gaps](analysis/undefined_code_ranges.tsv), and [verification](analysis/verification.json).
-- [Annotated Ghidra program](analysis/XT660X-2005.gzf): import into Ghidra to inspect labels and cross-references.
-- [Direct calibration references](analysis/calibration_references.json) and [pointer loads](analysis/calibration_pointer_loads.json), including unclassified items.
-- [Analysis notes](analysis/ANALYSIS_NOTES.md): architecture evidence, limitations, and primary references.
-
-SHA-256: `5a781c2dbc67950fcba6ab3d30ba56b884d4247f66f76d143923db8547f31280`
-
-## Primary-image scope
-
-The complete decoded application is represented, including structurally recovered unreferenced code. **Complete original-source recovery and identification of every map are not claimed.** The top 2 KiB is all FF, including normal hardware vectors; a call to `0xF8A0` targets that unavailable region. Its bytes cannot be decompiled into absent code.
-
-Vehicle/year attribution comes from the filename. Embedded strings mention T64 and 2002 dates. CPU12 instructions and fixed addresses match an MC9S12T64-style application; the exact ECU part number is unverified. Several sensor/output identities are now corroborated by diagnostic cross-references. Connector pins, engineering units, final fuel/timing scaling, and some special lookup forms still need analysis.
-
-The supplied firmware remains unchanged and already contains the owner’s immobilizer patch. The separately named checksum-corrected copy changes one trailer byte; no calibration setting is altered. This is an analysis workspace, not a flash-ready tuning definition. No redistribution license is assigned to the supplied firmware.
-
-## Reproduce
-
-Tools used: Ghidra 12.1.4, JDK 21, Python 3 standard library, and Clang for C validation. The included `XT660-CPU12:BE:16:default` processor is a corrected flat CPU12 model. See [processor setup and corrections](ghidra/README.md) before opening the Ghidra archive.
-
-The [Pages workflow](.github/workflows/pages.yml) checks the stored evidence provenance, builds the static website and validates its generated content, links, profile routes and no-script HTML. It does not rerun the firmware instruction simulations on every push. Run the relevant regression checks locally before pushing; the complete suite is also available through the manually triggered [firmware regression workflow](.github/workflows/regression.yml).
-
-For a local site build, install `python -m pip install -r site/requirements.txt`, then run `python scripts/build_pages.py` and `python scripts/verify_pages.py`. The site is written to ignored directory `_site/`; serve it with `python -m http.server --directory _site 8000`. The registered firmware library is packaged byte-for-byte with the website and checked against its recorded hashes. Regenerate pin or firmware analysis only when its source data changes.
-
-```powershell
-.\scripts\run_analysis.ps1 -GhidraHome 'C:\tools\ghidra_12.1.4_PUBLIC' -JavaHome 'C:\tools\jdk-21'
+```sh
+python -m pip install -r site/requirements.txt
+python scripts/build_pages.py
+python scripts/verify_pages.py
+python -m http.server --directory _site 8000
 ```
 
-To regenerate only the catalogue and validate its bytes:
+Open `http://localhost:8000/`. Pages publishing checks the generated site and stored evidence; full firmware regressions and emulator compilation run separately. Build instructions for each tool live with its source.
 
-```powershell
-python scripts/catalog_maps.py
-python scripts/catalog_calibration_accesses.py
-python scripts/sensor_profiles.py
-python scripts/decode_units.py
-python scripts/map_names.py
-python scripts/verify_map_names.py
-python scripts/fix_startup_checksum.py
-python scripts/build_pin_overview.py
-python scripts/pin_families.py --check
-python scripts/test_pin_families.py
-python scripts/verify_pin_overview.py
-python scripts/verify_analysis.py
-```
+To contribute another BIN, follow the [image import workflow](firmware/ADDING_IMAGES.md). Include its provenance and ECU identification where available. New images do not inherit existing map or wiring claims automatically.
 
-The [external-source reassessment](analysis/semantics/EXTERNAL_SCALE_CHECKS.md) withdraws the earlier owner-corroborated temperature claim: the old logger used guessed conversions without measurement data. Both sensor Celsius profiles remain conditional. Fourteen reproducible hypothesis trials and the comparison-firmware boot findings are retained as scoped evidence.
+Independent research project, not affiliated with Yamaha. [Asset credits](site/ASSET_CREDITS.md). The [emulator licence](emulator/COPYING) does not grant rights to the supplied Yamaha firmware.
