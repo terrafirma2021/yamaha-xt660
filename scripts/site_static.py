@@ -99,21 +99,39 @@ class StaticSite:
         return body+'<ul class="source-list">'+''.join(f'<li><h3><a href="{esc(s["url"])}">{esc(s["title"])} ↗</a></h3><p>{esc(s["claim"])}</p><small>{esc(s["locator"])}</small></li>' for s in sources)+'</ul></details>'
 
     def picker(self, p, i, section, url):
-        body = f'<details class="static-picker"><summary>Change motorcycle / ECU</summary><div class="static-bike-groups">'
+        records = []
+        for r in self.records:
+            profile, image = self.profiles[r['profile']], self.images[r['firmware']]
+            records.append(dict(model=profile['model'], year=str(profile['year']), market=profile['market'],
+                                ecu=profile['ecu'], key=r['profile']+'/'+r['firmware'],
+                                firmware=image['label']+' · '+image['variant'], path=url(r['path'])))
+        data = dict(selected=p['id']+'/'+i['id'], records=records,
+                    models=[dict(id=m['id'],name=m['name']) for m in self.models.values() if not m.get('reference_only')])
+        body = '<div id="choose-bike" class="bike-chooser"><form id="bike-form" hidden><div class="vehicle-selectors">'
+        for key,label in [('model','Motorcycle'),('year','Year'),('market','Market / specification'),('ecu','ECU'),('firmware','Firmware')]:
+            body += f'<label>{label}<select id="choose-{key}" required></select></label>'
+        body += '</div><div class="bike-form-actions"><button type="submit">View bike</button></div></form>'
+        # CSS/HTML navigation remains available if the local enhancement is blocked.
+        body += '<details id="bike-fallback" class="bike-fallback"><summary>Choose bike</summary><div class="bike-fallback-models">'
         for m in self.models.values():
             if m.get('reference_only'):
                 continue
-            records = [r for r in self.records if self.profiles[r['profile']]['model']==m['id']]
-            body += '<section><h3>'+esc(m['name'])+'</h3><ul>'
-            if not records:
-                body += '<li class="unavailable">No BIN yet</li>'
-            for r in records:
-                other, image = self.profiles[r['profile']], self.images[r['firmware']]
-                label = f'{other["year"]} · {other["market"]} · {image["label"]} · {image["variant"]}'
-                current = ' aria-current="page"' if other['id']==p['id'] and image['id']==i['id'] else ''
-                body += f'<li><a href="{url(self.path(other,image,section))}"{current}>{esc(label)}</a></li>'
-            body += '</ul></section>'
-        return body+'</div></details>'
+            choices = [r for r in records if r['model']==m['id']]
+            if not choices:
+                body += '<p class="unavailable">'+esc(m['name'])+' · No BIN yet</p>'
+                continue
+            body += '<details><summary>'+esc(m['name'])+'</summary>'
+            for year in sorted({r['year'] for r in choices}):
+                body += '<details><summary>'+esc(year)+'</summary><ul>'
+                for r in choices:
+                    if r['year']!=year:
+                        continue
+                    current = ' aria-current="page"' if r['key']==data['selected'] else ''
+                    body += f'<li><a href="{esc(r["path"])}"{current}>{esc(r["market"]+" · "+r["firmware"])}</a></li>'
+                body += '</ul></details>'
+            body += '</details>'
+        body += '</div></details><script type="application/json" id="bike-choices">'+json.dumps(data,ensure_ascii=False).replace('</','<\\/')+'</script></div>'
+        return body+f'<script src="{url("assets/bike-picker.js")}" defer></script>'
 
     def pin_reference(self, soup, image, url):
         audited = next(i for i in self.audit['images'] if i['id']==image['id'])
@@ -217,7 +235,11 @@ class StaticSite:
         panel['data-profile'],panel['data-firmware'] = p['id'],image['id']
         panel['data-static-context'] = 'true'
         put(soup.find(id='selection-status'),esc(f'{self.models[p["model"]]["name"]} · {p["year"]} · {image["label"]} · {image["variant"]}'))
-        panel.append(fragment(self.picker(p,image,section,url)))
+        if soup.find(id='vehicle-overview') is not None:
+            panel.append(fragment(self.picker(p,image,section,url)))
+        else:
+            panel['class'] = [*panel.get('class',[]),'vehicle-context-compact']
+            panel.append(fragment(f'<a class="change-bike" href="{url(self.path(p,image,"overview"))}#choose-bike">Change bike</a>'))
         for ident in ['vehicle-overview','vehicle-research','vehicle-hardware']:
             node=soup.find(id=ident)
             if node is not None:

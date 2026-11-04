@@ -48,7 +48,7 @@ for page in SITE.rglob('*.html'):
     else:
         assert parser.theme_buttons==1,f'Missing or duplicate theme switch: {page}'
         assert markup.count('id="vehicle-context"')==1,page
-        assert 'class="static-picker"' in markup and 'id="selection-status"' in markup,page
+        assert ('id="bike-form"' in markup or 'class="change-bike"' in markup) and 'id="selection-status"' in markup,page
         assert not any(urlsplit(link).path.endswith('/vehicles.js') for link in parser.links),page
         assert any(urlsplit(link).path.endswith('/theme.js') for link in parser.links),page
         assert any(urlsplit(link).path.endswith('/theme.css') for link in parser.links),page
@@ -104,7 +104,7 @@ for item in library['images']:
     packaged=(SITE/'firmware/bins'/f"{item['id']}.bin").read_bytes()
     assert packaged==(ROOT/item['file']).read_bytes(),item['id']
     assert len(packaged)==item['size'] and hashlib.sha256(packaged).hexdigest()==item['sha256'],item['id']
-assert 'static-picker' in (SITE/'maps/index.html').read_text(encoding='utf-8')
+assert 'change-bike' in (SITE/'maps/index.html').read_text(encoding='utf-8')
 for route,scope in [('maps/index.html','primary'),('pins/index.html','pins')]:
     assert f'data-study="{scope}"' in (SITE/route).read_text(encoding='utf-8'),route
 pin_audit=json.loads((SITE/'pins/pin_audit.json').read_text(encoding='utf-8'))

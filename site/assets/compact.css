@@ -1,8 +1,15 @@
 /* Reading pages: one context, one heading, direct links. */
 .vehicle-context{padding:14px 24px;margin-bottom:0}
 #selection-status{margin:0;font-size:14px;color:var(--ink)}
-.static-picker{margin-top:6px}
-.static-picker summary{font-size:13px}
+.vehicle-context-compact{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.change-bike{font-size:13px;white-space:nowrap}
+.bike-chooser{scroll-margin-top:20px;margin-top:16px}
+.bike-form-actions{display:flex;justify-content:flex-end;margin-top:14px}
+.bike-form-actions button{padding:10px 22px;border:1px solid var(--blue);background:var(--blue);color:#fff;font:600 14px Barlow,Arial,sans-serif;cursor:pointer}
+.bike-fallback summary{cursor:pointer;color:var(--accent);font-weight:600}
+.bike-fallback-models{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:16px}
+.bike-fallback-models details{margin:10px 0}.bike-fallback-models details details{margin-left:14px}.bike-fallback-models ul{padding-left:18px;font-size:13px}.bike-fallback-models li{margin:12px 0}
+@media(max-width:700px){.vehicle-context-compact{align-items:flex-start}.bike-fallback-models{grid-template-columns:1fr;gap:0}}
 .site-main>.page-heading{padding-top:28px;margin-bottom:24px}
 .page-heading h1{font-size:clamp(32px,4vw,54px);margin-bottom:8px}
 .page-heading p{max-width:70ch}

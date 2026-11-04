@@ -28,7 +28,18 @@ for record in records:
         soup=parse(path)
         panel=soup.find(id='vehicle-context')
         assert panel['data-firmware']==image['id']
-        assert len(panel.select('.static-picker a'))==len(records)
+        if section=='overview':
+            assert len(panel.select('#bike-fallback a'))==len(records)
+            choices=json.loads(panel.find(id='bike-choices').string)
+            assert choices['selected']==record['profile']+'/'+record['firmware']
+            assert {r['key'] for r in choices['records']}=={r['profile']+'/'+r['firmware'] for r in records}
+            assert len(panel.select('#bike-form select'))==5
+        else:
+            assert not panel.select('select,details,#bike-choices')
+            change=panel.select_one('.change-bike')
+            assert change and change['href'].endswith('#choose-bike')
+            destination=posixpath.normpath(posixpath.join(posixpath.dirname(path),urlsplit(change['href']).path))+'/'
+            assert destination==record['path']
         assert soup.find(id='theme-light') and soup.find(id='theme-dark')
         for a in soup.select('nav[aria-label="Main navigation"] a'):
             href=a['href']
@@ -63,7 +74,7 @@ for record in records:
             assert len(soup.select('.downloads-table a[download][href$=".xdf"]'))==9
 home=parse('index.html')
 assert home.select_one('#vehicle-overview .vehicle-summary')
-assert len(home.select('.static-picker a'))==len(records)
+assert len(home.select('#bike-fallback a'))==len(records)
 legacy=parse('tools/index.html')
 assert {'Bench connections','XDF downloads'} <= {a.get_text() for a in legacy.select('main a')}
 for page in SITE.rglob('*.html'):
