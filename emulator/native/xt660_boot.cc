@@ -23,7 +23,14 @@ public:
   bool cop_written, cop_armed;
   unsigned spi_left, spi_tx, spi_pending, spi_armed, spi_count, spi_dropped;
   bool spi_queued;
-  unsigned cfg_size(void) { return 19; }
+  unsigned long long bus_cycles;
+  unsigned pulse_left, pulse_count, trace_count, observed_outputs;
+  bool pulse_low;
+  unsigned cfg_size(void) { return 26; }
+  void advance(unsigned cycles);
+  void pulse_tick(void);
+  void trace(const char *kind, unsigned channel, unsigned value);
+  void observe_outputs(void);
   void timer_tick(unsigned cycles);
   void timer_compare(unsigned channel);
   unsigned timer_pins(unsigned pins);
@@ -82,6 +89,7 @@ public:
     executing= false;
     ++device->irq_count;
     device->irq_vector= vector;
+    device->trace("irq",vector,PC);
     // Instruction-boundary functional delivery. Exception entry bus cycles
     // and RTI tail chaining are not timed in this stage.
     return device->fault ? resHALT : resGO;
@@ -137,12 +145,15 @@ void xt_boot_hw::reset(void) {
   regs[0x3c]->set(0x43);
   spi_left=spi_tx=spi_pending=spi_armed=spi_count=spi_dropped=0;
   spi_queued=false;
+  bus_cycles=0; pulse_left=pulse_count=trace_count=observed_outputs=0; pulse_low=false;
   regs[0xdb]->set(0x20); // SPTEF
   regs[0xd4]->set(0xc0); // SCI1 idle; no external serial traffic
   cfg_set(17,255); cfg_set(18,0); // Unconnected/pulled-high MISO, no EEPROM invented.
   // Explicit, deterministic raw input fixtures; no inferred temperature/RPM.
   for (unsigned n=1; n<=8; ++n) cfg_set(n,512);
   for (unsigned n=9; n<=16; ++n) cfg_set(n,0);
+  cfg_set(19,51200); cfg_set(20,25600); cfg_set(21,11); cfg_set(22,2);
+  cfg_set(23,132); cfg_set(24,0); cfg_set(25,0);
   regs[0xcc]->set(0xc0); // SCI0 TDRE/TC idle; no serial transfer model yet
   load= count= 0xffff;
   prescaler= 1; phase= pll_delay= 0;
@@ -319,6 +330,19 @@ void xt_boot_hw::write(cl_memory_cell *cell, t_mem *v) {
 }
 int xt_boot_hw::tick(int cycles) {
   if (fault) return 0;
+  // A driven waveform / trace uses individual bus ticks. CPU register accesses
+  // and interrupt delivery still occur at instruction boundaries.
+  if (cfg_get(24) || cfg_get(25)) {
+    for (int n=0;n<cycles && !fault;++n) {
+      advance(1);
+      pulse_tick();
+      observe_outputs();
+    }
+  } else advance(cycles);
+  return 0;
+}
+void xt_boot_hw::advance(unsigned cycles) {
+  bus_cycles+=cycles;
   adc_tick(cycles);
   timer_tick(cycles);
   spi_tick(cycles);
@@ -339,7 +363,31 @@ int xt_boot_hw::tick(int cycles) {
       }
     }
   }
-  return 0;
+}
+void xt_boot_hw::trace(const char *kind, unsigned channel, unsigned value) {
+  if (!cfg_get(25)) return;
+  if (++trace_count>20000) { unsupported(0xffff,"event trace limit"); return; }
+  printf("XT_EVENT cycle=%llu kind=%s channel=%u value=%u pc=%04x\n",
+         bus_cycles,kind,channel,value,unsigned(uc->instPC));
+}
+void xt_boot_hw::observe_outputs(void) {
+  unsigned pins=gpio(0xe0), changed=(pins^observed_outputs)&regs[0x40]->get();
+  for (unsigned n=0;n<8;++n) if (changed&(1<<n)) trace("output",n,(pins>>n)&1);
+  observed_outputs=pins;
+}
+void xt_boot_hw::pulse_tick(void) {
+  if (!cfg_get(24) || !pulse_left || --pulse_left) return;
+  pulse_low=!pulse_low;
+  cfg_set(12,pulse_low ? cfg_get(12)&~2u : cfg_get(12)|2u);
+  trace("input",1,pulse_low ? 0 : 1);
+  timer_tick(0); // Capture the edge at this counter value, without an extra tick.
+  if (pulse_low) { ++pulse_count; pulse_left=cfg_get(20); }
+  else if (pulse_count>=cfg_get(23)) cfg_set(24,0);
+  else {
+    unsigned interval=cfg_get(19);
+    if (cfg_get(21) && ((pulse_count+1)%cfg_get(21)==0)) interval*=cfg_get(22);
+    pulse_left=interval-cfg_get(20);
+  }
 }
 void xt_boot_hw::print_info(cl_console_base *con) {
   con->dd_printf("XT660 partial peripherals; not a full engine model\n");
@@ -350,6 +398,7 @@ void xt_boot_hw::print_info(cl_console_base *con) {
     unsigned(regs[0x8b]->get()), irq_count, irq_vector);
   con->dd_printf("TCNT=%u TIMER_OUT=%02x CAPTURES=%u COMPARES=%u RTI_EVENTS=%u COP_SERVICES=%u SPI_BYTES=%u SPI_DROPPED=%u\n",
     word(0x44), timer_output, timer_edges, timer_matches, rti_events, cop_services, spi_count, spi_dropped);
+  con->dd_printf("BUS_CYCLES=%llu PULSES=%u PULSE_RUNNING=%u\n",bus_cycles,pulse_count,unsigned(cfg_get(24)));
 }
 
 
@@ -357,15 +406,39 @@ const char *xt_boot_hw::cfg_help(t_addr a) {
   if (a>=1 && a<=8) return "Raw ADC channel 0..7: integer 0..1023";
   if (a==17) return "SPI external MISO byte (default 255: pulled-high disconnected bus)";
   if (a==18) return "SPI fixture: 0 external byte, 1 internal test loopback (not EEPROM)";
+  if (a==19) return "PT1 fixture: ordinary falling-edge interval in bus cycles";
+  if (a==20) return "PT1 fixture: low pulse width in bus cycles";
+  if (a==21) return "PT1 fixture: every Nth interval is long; 0 means uniform";
+  if (a==22) return "PT1 fixture: long-interval multiplier";
+  if (a==23) return "PT1 fixture: number of falling edges";
+  if (a==24) return "PT1 fixture: 1 starts, 0 stops; no firmware/RAM edits";
+  if (a==25) return "Emit bounded input/capture/output/IRQ event trace";
   if (a>=9) return "Driven GPIO input byte: PA, PB, PE, PT, PS, PP, PK7, PTAD";
   return "XT660 fixture configuration";
 }
 t_mem xt_boot_hw::conf_op(cl_memory_cell *cell, t_addr a, t_mem *v) {
   if (v && a) {
-    unsigned max= a<=8 ? 1023 : a==18 ? 1 : 255;
+    unsigned max= a<=8 ? 1023 : (a==18 || a>=24) ? 1 :
+                  (a==19 || a==20) ? 1000000 : a==21 ? 64 : a==22 ? 8 : a==23 ? 4096 : 255;
     if (*v>max) {
       fprintf(stderr,"XT660 fixture input %u outside 0..%u; unchanged\n",unsigned(a),max);
       *v=cell->get();
+    }
+    if (a>=19 && a<=23 && cfg_get(24)) {
+      fprintf(stderr,"XT660 stop the PT1 fixture before changing its timing\n"); *v=cell->get();
+    }
+    if (a==25 && *v && !cell->get()) observed_outputs=gpio(0xe0);
+    if (a==24 && *v && !cell->get()) {
+      if (cfg_get(19)<32 || !cfg_get(20) || cfg_get(20)>=cfg_get(19) ||
+          cfg_get(21)==1 || !cfg_get(22) || !cfg_get(23)) {
+        fprintf(stderr,"XT660 invalid PT1 pulse fixture; not started\n"); *v=0;
+      } else {
+        pulse_count=0; pulse_low=false; pulse_left=cfg_get(19);
+        cfg_set(12,cfg_get(12)|2u);
+        observed_outputs=gpio(0xe0);
+        trace("input",1,1);
+        timer_tick(0);
+      }
     }
   }
   return cell->get();
@@ -497,6 +570,7 @@ void xt_boot_hw::timer_tick(unsigned cycles) {
           ((edge==3) || (edge==1 && (pins&bit)) || (edge==2 && !(pins&bit)))) {
         set_word(0x50+2*n,word(0x44));
         regs[0x4e]->set(regs[0x4e]->get()|bit); ++timer_edges;
+        trace("capture",n,word(0x44));
       }
     }
     unsigned divisor=1u<<(regs[0x4d]->get()&7);

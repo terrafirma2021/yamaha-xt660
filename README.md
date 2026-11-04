@@ -16,7 +16,7 @@ The [dataset guide](dataset/README.md) explains the 21 preserved sources, 110 ap
 
 [Download the Windows bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.1): nine registered BINs, matching TunerPro XDFs and the XT660 Flash Tool. The desktop app connects through a USB KKL COM port, reads verified backups and writes matched application firmware with automatic checksum correction and readback. It includes the 26-pin and 34-pin connector diagrams. **The serial implementation is software-tested; physical ECU/adapter validation is pending.** [Desktop source and instructions](flasher/README.md). Edit maps and feature patches in TunerPro; [regenerate XDFs](definitions/README.md) when findings change. The website remains a read-only reference.
 
-The [local emulator](emulator/README.md) runs all five complete BINs from reset through startup and repeated main-loop entries, using explicit disconnected-storage and idle-input fixtures. ADC, timers, SPI and interrupt behaviour have regression checks. Engine operation, stored settings and serial peers remain unfinished. This development tool is separate from the flash-tool release.
+The [local emulator](emulator/README.md) runs all five complete BINs from reset through startup, the main loop and synthetic crank synchronisation. It records capture and output events; the supplied later immo-off BIN produces coil-command pulses. Tests also cover pulse loss, ADC, timers, SPI and interrupts. Full engine operation, valid persistent state and serial peers remain unfinished. This development tool is separate from the flash-tool release.
 
 ## Original application study
 

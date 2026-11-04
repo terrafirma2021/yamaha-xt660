@@ -95,7 +95,7 @@ def boot(executable, image_id, wsl=False, steps=200000):
         'application_entry_reached': reached,
         'application_entry': f'0x{entry:04x}',
         'stop_address': '0x' + stops[-1][0] if stops else None,
-        'scope': 'reset to application entry; runtime ECU emulation is not implemented',
+        'scope': 'reset to application entry only; use runtime/crank modes for subsequent execution',
         'instruction_budget': steps,
     }
     (RUNS / f'{image_id}.json').write_text(json.dumps(report, indent=2) + '\n')

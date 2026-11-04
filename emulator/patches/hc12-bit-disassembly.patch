@@ -1,0 +1,50 @@
+diff --git a/src/sims/m68hc12.src/dis.cc b/src/sims/m68hc12.src/dis.cc
+--- a/src/sims/m68hc12.src/dis.cc
++++ b/src/sims/m68hc12.src/dis.cc
+@@ -70,7 +70,12 @@
+ {
+   chars work= chars(), temp= chars(), fmt= chars();
+   const char *b;
+-  //t_mem code= rom->get(addr);
++  t_mem opcode= rom->get(addr);
++  const t_addr bit_addr= addr;
++  bool bit_op= (opcode>=0x0c && opcode<=0x0f) ||
++               (opcode>=0x1c && opcode<=0x1f) ||
++               (opcode>=0x4c && opcode<=0x4f);
++  int bit_length= bit_op ? inst_length(addr) : 0;
+   struct dis_entry *dis_e;
+   int i;
+   bool first;
+@@ -317,7 +322,7 @@
+ 	      break;
+ 	    case 'b': // immediate 8 bit
+ 	      work.appendf("#$%02x",
+-			   rom->read(addr+1));
++			   rom->read(bit_op ? bit_addr+bit_length-((opcode&2) ? 2:1) : addr+1));
+ 	      break;
+ 	    case 'B': // immediate 16 bit
+ 	      work.appendf("#$%04x",
+@@ -325,7 +330,7 @@
+ 	      break;
+ 	    case 'r': // relative 8 bit offset
+ 	      work.appendf("$%04x",
+-			   (addr+2+(i8_t)(rom->read(addr+1))) & 0xffff );
++			   ((bit_op ? bit_addr+bit_length:addr+2)+(i8_t)(rom->read(bit_op ? bit_addr+bit_length-1:addr+1))) & 0xffff );
+ 	      break;
+ 	    case 'R': // relative 16 bit offset
+ 	      {
+@@ -537,6 +542,14 @@
+   u8_t code= rom->read(addr);
+   if (code == 0x04)
+     return 3;
++  if (code>=0x0c && code<=0x0f)
++    {
++      // Indexed bit instructions have mask/branch bytes after the postbyte.
++      u8_t p= rom->get((addr+1)&0xffff);
++      int type= xb_type(p);
++      int extra= type==5 ? 2 : type==2 ? ((p&2) ? 2:1) : 0;
++      return 3+((code&2) ? 1:0)+extra;
++    }
+   struct dis_entry *di= get_dis_entry(addr);
+   if (di && di->mnemonic)
+     {

@@ -1,8 +1,8 @@
 # XT660 emulator
 
-Run the real BIN from reset through startup and repeated main-loop entries, with adjustable ADC inputs and instruction-level debugging. **Engine operation is not emulated yet.**
+Run the real BIN from reset through startup, the main loop and synthetic crank inputs, with adjustable ADC inputs and instruction-level debugging. **Full engine operation is not emulated yet.**
 
-The five complete BINs reach their own main loop without changing their firmware bytes. The runtime fixture has no crank pulses or serial peer, and SPI returns `FF` from a disconnected, pulled-high bus. This does not establish valid persistent settings, successful authentication or a running engine. Images with absent boot code are rejected; no donor bytes are inserted. See [validation.json](validation.json) for checks and their scope.
+The five complete BINs reach their own main loop without changing their firmware bytes. The `--runtime` fixture has no crank pulses; `--crank` adds a synthetic waveform. Both have no serial peer, and SPI returns `FF` from a disconnected, pulled-high bus. This does not establish valid persistent settings, successful authentication or a running engine. Images with absent boot code are rejected; no donor bytes are inserted. See [validation.json](validation.json) for checks and their scope.
 
 ## Build and run
 
@@ -33,6 +33,22 @@ python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt66
 The bounded run starts at the hardware reset vector and stops after the requested number of main-loop entries. It reports ADC conversions, timer interrupts, watchdog services and SPI transfers. It only supplies external pin fixtures: PA5–7 high, PS4 high, eight ADC inputs at 512, and pulled-high SPI MISO. Other external inputs are low. `--adc` accepts eight replacement raw values; `--steps` sets an instruction limit. No application RAM flags, checksum code or authentication branches are patched.
 
 The companion's main loop is `0x538B`; the other complete images use `0x4BC5`. The regression run checks 1,000 entries per image, periodic interrupt delivery, watchdog servicing and all 59,392 flash bytes after execution. Separate fixtures test timer compare/capture behaviour, SPI timing/queues, and watchdog timeout detection.
+
+## Crank input and output trace
+
+```powershell
+python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu --crank --image xt660-2c1-10-immo-off --pitch 1600
+```
+
+This starts the unchanged firmware, drives PT1 with twelve synthetic patterns, records capture/interrupt/output events, then removes the pulses to test loss of synchronisation. The input repeats ten ordinary intervals and one double interval, following the [existing CPS trace](../analysis/semantics/CRANK_REFERENCE.md). It is not a measured rotor waveform. `--pitch` is in timer ticks, **not RPM**; the byte-checked startup instructions select a /32 timer prescaler. `--patterns` accepts 4–24 patterns and `--uniform` removes the long gap. ADC inputs remain adjustable with `--adc`.
+
+All five complete BINs acquire synchronisation, normalise the gap and report the supplied 1,600-tick pitch and 4,800-tick three-pitch interval. The early companion also passes at 800 and 2,400 ticks. Uniform input does not synchronise in the early and later control cases. After pulse loss, both families clear synchronisation and replace the period with `FFFF`. The nine crank runs check every flash byte after execution.
+
+The supplied `xt660-2c1-10-immo-off` image generates eight PT3 charge/release pairs at one-pattern cadence in the default fixture. This exercises its fixed-event ignition path; it does not establish physical BTDC, coil polarity, current or every ignition mode. The four other complete images retain their authentication inhibit with no serial peer attached.
+
+PT6/PT7 injector transitions remain absent in this fixture. A debugger check follows the later injector gate at `F256` to its return at `F260` while the current lean-sensor fault is set (`08B3:10`). The early charge-gate check follows `EE2D → EE77` with authentication inhibit `0D08:01`. No RAM flags or firmware branches are changed to force outputs. Valid persistent state, sensor histories and authenticated communication remain separate work.
+
+The command prints the report and paths to a detailed log and CSV under ignored `emulator/.runs/`. CSV rows contain bus-cycle timestamp, event kind, channel, value and the current instruction. PT3 is the coil command, PT6 the primary injector and PT7 the secondary code path. Pin/compare events are timestamped on bus ticks; CPU accesses and interrupt entry remain instruction-boundary approximations. No wall-clock or physical timing calibration is implied.
 
 ## Debugger
 
@@ -66,6 +82,8 @@ The early companion executes `0x56D0` / `0x5728` and retains channels 6/7 in fou
 
 In the debugger, `adc0=123` through `adc7=1023` change raw inputs. `info hardware xtboot` shows conversion counts, flags, last interrupt vector and fixture settings. GPIO fixtures are bytes in `xtboot_0_cfg`: offsets 9–14 supply PA, PB, PE, PT, PS and PP input levels; 15 supplies PK7 and 16 supplies PTAD. Offset 17 is the SPI receive-byte fixture (default 255); 18 selects external-byte mode (0) or test loopback (1). Output latches and direction registers determine GPIO reads. This represents driven digital levels, not ECU conditioning circuits. Timer-controlled PT outputs follow their compare configuration.
 
+The bounded PT1 fixture uses offsets 19–25: ordinary interval and low width in bus cycles, gap interval index (0 for uniform), gap multiplier, falling-edge count, run switch and event-trace switch. Stop it before changing timing. Invalid timing is rejected; the event trace stops at 20,000 rows. These are simulator controls, not MCU registers.
+
 ## What the model covers
 
 - CPU12 instruction execution, with 518 independent fixtures for the local fixes and related addressing modes.
@@ -84,11 +102,11 @@ The generic HC12 page registers and inherited 6800 CIA/PIA devices are excluded 
 
 ## Remaining work
 
-Next are crank-event sequences and the resulting ignition/injection behaviour, a persistent-storage device model, and actual SCI receive/transmit traffic. The current serial fixture is idle; transmission attempts stop rather than fabricate communication. Enhanced capture buffering, pulse accumulators, watchdog reset re-entry and precise exception timing also remain unfinished. A dashboard follows the measured firmware behaviours.
+Next are a persistent-storage device model, sensor/history conditions for normal injection, and actual SCI receive/transmit traffic. The current serial fixture is idle; transmission attempts stop rather than fabricate communication. Wider ignition-mode coverage, enhanced capture buffering, pulse accumulators, watchdog reset re-entry and precise exception timing also remain unfinished. A dashboard follows the measured firmware behaviours.
 
 Startup and the main loop execute under the stated fixtures. This is not validation of every branch, fault, immobilizer exchange, map scale or physical actuator. The CPU instruction set still needs wider coverage. Unsupported register accesses and external ADC-trigger mode stop explicitly.
 
-Core fixes stay under `patches/`: decrement width/disassembly, indexed addressing, bit-operation fetch order, loop decoding, tick accounting, ORCC dispatch and step-over metadata. The XT660 target also supplies maskable interrupt dispatch and correct RTI X-mask restoration. They are local integration fixes. **No upstream submissions have been made.** Any future submission must exclude XT660 firmware, profiles and application code.
+Core fixes stay under `patches/`: decrement width/disassembly, indexed addressing, bit-operation fetch order, bit-mask/branch disassembly and indexed bit-instruction lengths, loop decoding, tick accounting, ORCC dispatch and step-over metadata. The XT660 target also supplies maskable interrupt dispatch and correct RTI X-mask restoration. They are local integration fixes. **No upstream submissions have been made.** Any future submission must exclude XT660 firmware, profiles and application code.
 
 ## License
 

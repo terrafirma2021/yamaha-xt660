@@ -305,11 +305,607 @@
       "flash_bytes_unchanged": 59392
     }
   ],
+  "bit_branches": {
+    "execution": 30,
+    "disassembly": 8
+  },
+  "pulse_fixture_checks": 12,
+  "crank": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 1600,
+        "three_pitch_ticks": 4800,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-5vk-1x-2008",
+      "sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 1600,
+        "three_pitch_ticks": 4800,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10",
+      "sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 1600,
+        "three_pitch_ticks": 4800,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 1600,
+        "three_pitch_ticks": 4800,
+        "authentication_inhibit": false,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": false,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 16,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [
+        {
+          "cycle": 3947132,
+          "level": 1
+        },
+        {
+          "cycle": 4049596,
+          "level": 0
+        },
+        {
+          "cycle": 4561564,
+          "level": 1
+        },
+        {
+          "cycle": 4663996,
+          "level": 0
+        },
+        {
+          "cycle": 5175932,
+          "level": 1
+        },
+        {
+          "cycle": 5278396,
+          "level": 0
+        },
+        {
+          "cycle": 5790332,
+          "level": 1
+        },
+        {
+          "cycle": 5892796,
+          "level": 0
+        },
+        {
+          "cycle": 6404732,
+          "level": 1
+        },
+        {
+          "cycle": 6507196,
+          "level": 0
+        },
+        {
+          "cycle": 7019132,
+          "level": 1
+        },
+        {
+          "cycle": 7121596,
+          "level": 0
+        },
+        {
+          "cycle": 7633532,
+          "level": 1
+        },
+        {
+          "cycle": 7735996,
+          "level": 0
+        },
+        {
+          "cycle": 8247932,
+          "level": 1
+        },
+        {
+          "cycle": 8350396,
+          "level": 0
+        }
+      ],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-5vk-11",
+      "sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 1600,
+        "three_pitch_ticks": 4800,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2004-2006-companion",
+      "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 800,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 800,
+        "three_pitch_ticks": 2400,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2004-2006-companion",
+      "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 2400,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "ten ordinary, one double",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": true,
+        "sync_byte": 192,
+        "phase": 0,
+        "pitch_ticks": 2400,
+        "three_pitch_ticks": 7200,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": false
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2004-2006-companion",
+      "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "uniform",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": true,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "completed": true,
+      "fixture": {
+        "pitch_timer_ticks": 1600,
+        "timer_prescaler": 32,
+        "patterns": 12,
+        "intervals": "uniform",
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "storage": "disconnected SPI; FF receive bytes",
+        "serial": "idle; no peer"
+      },
+      "falling_edges": 132,
+      "captures": 132,
+      "running": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": false,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "after_pulse_loss": {
+        "synchronized": false,
+        "sync_byte": 0,
+        "phase": 0,
+        "pitch_ticks": 65535,
+        "three_pitch_ticks": 65535,
+        "authentication_inhibit": false,
+        "checksum_fault": false,
+        "sidestand_inhibit": false,
+        "lean_sensor_fault": true
+      },
+      "output_transitions": {
+        "3": 0,
+        "6": 0,
+        "7": 0
+      },
+      "ignition_edges": [],
+      "flash_bytes_unchanged": 59392
+    }
+  ],
+  "output_gate_checks": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "instruction": "0xEE2D",
+      "bytes": "1e0d080145",
+      "flag": "0x0D08",
+      "mask": 1,
+      "return_path": "0xEE77"
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "instruction": "0xF256",
+      "bytes": "1e08b31005",
+      "flag": "0x08B3",
+      "mask": 16,
+      "return_path": "0xF260"
+    }
+  ],
   "ucsim_commit": "59a14ff99efe7e92474faf4c4ddf57b5e4ff0631",
-  "scope": "CPU/peripheral fixtures and 1000 main-loop entries per complete BIN with disconnected SPI storage, idle serial and no crank edges; not engine operation or physical ECU validation",
+  "scope": "CPU/peripheral fixtures, main-loop runs and synthetic crank/capture/ignition/loss checks with disconnected SPI storage and idle serial; not full engine or physical ECU validation",
   "source_hashes": {
     "emulator/build.py": "5be3f49baa58149c6fe11cb3df2b5b4b76c70557df1c50484abec45c9cc41640",
-    "emulator/native/xt660_boot.cc": "25632868f4875d9bd80ccf38aaf31d3c1b3646a826f2d040ca7d4244b9d97f57",
+    "emulator/crank.py": "a7ca7ba170e8a96e3e060a33eb32f0b46fad515b2b23df74af89d5010ef7e58d",
+    "emulator/native/xt660_boot.cc": "e8f5027f323bf7cc80fd67ace494bcb9d62bad3fd53a48a4fd30d50de1db39ba",
+    "emulator/patches/hc12-bit-disassembly.patch": "184b114b3f22a4d1ad3285a51f48c93b674896275b2e82dfbdea8d123899421e",
     "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",
     "emulator/patches/hc12-fetch-order.patch": "6f2f32f997b8023271bd0f9735ab89055acdacf0732d609b519e4e3d5396bdce",
     "emulator/patches/hc12-indexed.patch": "a202a8d68f209983edd5b1e981821c6ce84266e815a30360ac08479bb4efbc50",
@@ -317,11 +913,12 @@
     "emulator/patches/hc12-orcc.patch": "f92a8074ba9d5012e0978c6892e0c93dd7634aeeb3334e4cd4a60d0036b5f63d",
     "emulator/patches/hc12-step-over.patch": "e7dcd555ee26edeb08f85527518a3f1e2b3b523f056bf0e6401d7409a45ad0d1",
     "emulator/patches/hc12-timing.patch": "54469604b483b787d9773dcc8f70d2449ea200eec43317d3869784c6ecca4976",
-    "emulator/run.py": "c44dc7ba1165e29e2cc146710a6af4e26b0d3ffab9719caef3bc610f0840bcb2",
-    "emulator/runner.py": "764b974b554a03fa24134917d596c0198d6a6382fb976879a4d04b1812f46450",
+    "emulator/run.py": "2137564809622cfc93b6bfd6eb8bc0f10b0189c60981cb7c0f5ba67e7fbee98c",
+    "emulator/runner.py": "70ee3dece972aded26e0fce8e93a942bf7a331ad89a67ae1a95bef2e9b1b13b7",
     "emulator/runtime.py": "4c617916493aa8e0f1791b84411b76710db79aff1f28aa77883ea0e9567e7e66",
     "emulator/sensors.py": "65fd435b85b925c0ea303d91ed6d5af4d77fe62f2c39653a2f7c836e6d2dde5b",
-    "emulator/test_emulator.py": "0aa722178d568b2da2b4ea0f585554e07ba9343bc3646feb2b3b4f7daa8b02e3",
+    "emulator/test_crank.py": "4f9df8ae6da20c7f63d07ea294aa0694977d770a724b9c11be6198e28ae74304",
+    "emulator/test_emulator.py": "3c9254fbb0d258cf74ec716d8e0d1a7e1b0c1b5aca49bdc05897bab4900b8bce",
     "emulator/test_peripherals.py": "104670900163c743413f53a891baf5de9fed52c89ce572c15684bb390ecc7252",
     "emulator/test_runtime_devices.py": "29cad76d353ac3be7649ed1249524ffb51d51c3cf3cf5e4215df58a0b416c41e"
   }
