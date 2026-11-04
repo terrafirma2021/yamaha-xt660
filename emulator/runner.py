@@ -6,6 +6,37 @@ from pathlib import Path
 import re
 import subprocess
 import tempfile
+import atexit
+
+
+_wsl_files = {}
+
+
+def _remove_wsl_files():
+    if _wsl_files:
+        subprocess.run(['wsl', '-e', 'python3', '-c',
+                        'import os,sys\nfor p in sys.argv[1:]:\n try: os.unlink(p)\n except FileNotFoundError: pass',
+                        *_wsl_files.values()], capture_output=True, timeout=10)
+
+
+atexit.register(_remove_wsl_files)
+
+
+def _wsl_hex(contents):
+    """The debugger reads HEX one character at a time; stage it on Linux.
+
+    Reading through /mnt/c makes each character a filesystem bridge request.
+    These private temporary copies contain the same validated HEX bytes and
+    are reused only within this Python process, then removed at exit.
+    """
+    digest = hashlib.sha256(contents.encode('ascii')).hexdigest()
+    if digest not in _wsl_files:
+        result = subprocess.run(['wsl', '-e', 'python3', '-c',
+            'import os,sys,tempfile\nfd,p=tempfile.mkstemp(prefix="xt660-",suffix=".hex")\n'
+            'with os.fdopen(fd,"wb") as f: f.write(sys.stdin.buffer.read())\nprint(p)'],
+            input=contents.encode('ascii'), capture_output=True, check=True, timeout=15)
+        _wsl_files[digest] = result.stdout.decode('utf-8').strip()
+    return _wsl_files[digest]
 
 ROOT = Path(__file__).resolve().parents[1]
 RUNS = ROOT / 'emulator/.runs'
@@ -75,8 +106,10 @@ def prepare(image_id, wsl=False):
     record, data = registered_image(image_id)
     RUNS.mkdir(parents=True, exist_ok=True)
     path = RUNS / f'{image_id}.hex'
-    path.write_text(ihex(data, record['base_address']), encoding='ascii')
-    return record, f'file "{target_path(path, wsl)}"\nreset\n'
+    contents = ihex(data, record['base_address'])
+    path.write_text(contents, encoding='ascii')
+    load_path = _wsl_hex(contents) if wsl and os.name == 'nt' else target_path(path, wsl)
+    return record, f'file "{load_path}"\nreset\n'
 
 
 def boot(executable, image_id, wsl=False, steps=200000):

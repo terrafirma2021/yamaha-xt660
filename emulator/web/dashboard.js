@@ -1,15 +1,18 @@
  'use strict';
 const $=id=>document.getElementById(id),token=document.querySelector('meta[name=session]').content;
-let state=null,busy=false,paused=false,timer=null,queue=Promise.resolve(),ticking=false;
+const bench=document.querySelector('.advanced');
+let state=null,busy=false,pendingActions=0,paused=false,timer=null,queue=Promise.resolve(),ticking=false;
+function text(id,value){const element=$(id),next=String(value);if(element.textContent!==next)element.textContent=next;}
 const names=['Throttle','Intake pressure','O₂ input','Intake temperature','Supply monitor','Lean sensor','Coolant','Auxiliary'];
 for(let n=0;n<40;n++)$('tach').append(document.createElement('i'));
 for(let n=0;n<8;n++){
  const row=document.createElement('div');row.className='sensor';
- const label=document.createElement('label');label.htmlFor='adc'+n;label.textContent=names[n];
- const slider=document.createElement('input');Object.assign(slider,{id:'adc'+n,type:'range',min:0,max:1023,value:512,disabled:true});slider.setAttribute('aria-label',names[n]+' ADC');
- const value=document.createElement('input');Object.assign(value,{id:'value'+n,type:'number',min:0,max:1023,value:512,disabled:true});value.setAttribute('aria-label',names[n]+' raw value');
+ const label=document.createElement('label');label.htmlFor='adc'+n;label.textContent=n===0?'Throttle control (%)':names[n]+' (ADC)';
+ const slider=document.createElement('input');Object.assign(slider,{id:'adc'+n,type:'range',min:0,max:n===0?100:1023,value:n===0?0:512,disabled:true});slider.setAttribute('aria-label',n===0?'Throttle control percent':names[n]+' ADC');
+ const value=document.createElement('input');Object.assign(value,{id:'value'+n,type:'number',min:0,max:n===0?100:1023,value:n===0?0:512,disabled:true});value.setAttribute('aria-label',n===0?'Throttle control percent value':names[n]+' raw value');
+ if(n===0)row.title='Simulated control travel, not calibrated throttle angle. ADC input uses the existing 120–820 count fixture.';
  slider.oninput=()=>value.value=slider.value;
- const send=v=>n===6?control('coolant',v):act('adc',{channel:n,value:v});
+ const send=v=>n===0?control('throttle',v):n===6?control('coolant',v):act('adc',{channel:n,value:v});
  slider.onchange=()=>send(Number(slider.value));value.onchange=()=>value.checkValidity()?send(Number(value.value)):value.reportValidity();
  row.append(label,slider,value);$('sensors').append(row);
 }
@@ -47,6 +50,13 @@ function wave(trace){
   }
 }
 
+function renderBench(s){
+ text('serial',s.transcript?.length?s.transcript.map(r=>'TX '+r.request+'  →  RX '+r.reply).join('\n'):'No replies.');
+ $('serial').scrollTop=$('serial').scrollHeight;
+ text('cycles',(s.counts?.bus_cycles??0).toLocaleString());wave(s.trace??[]);
+}
+bench.addEventListener('toggle',()=>{if(bench.open&&state)renderBench(state);});
+
 function render(s){
  state=s;const b=s.bike,m=b.meter,powered=b.powered;
  if(!$('image').options.length)for(const v of s.images){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('image').append(o);}
@@ -54,8 +64,8 @@ function render(s){
  if(!$('faultSelect').options.length)for(const v of b.faults){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('faultSelect').append(o);}
  if(document.activeElement!==$('faultSelect'))$('faultSelect').value=b.fault;
  $('display').classList.toggle('off',!powered);
- $('key').setAttribute('aria-pressed',String(powered));$('key').setAttribute('aria-label','Turn ignition key '+(powered?'off':'on'));$('keyLabel').textContent=powered?'KEY ON':'KEY OFF';
- $('runSwitch').setAttribute('aria-pressed',String(b.run));$('runLabel').textContent=b.run?'ON':'STOP';
+ $('key').setAttribute('aria-pressed',String(powered));$('key').setAttribute('aria-label','Turn ignition key '+(powered?'off':'on'));text('keyLabel',powered?'KEY ON':'KEY OFF');
+ $('runSwitch').setAttribute('aria-pressed',String(b.run));text('runLabel',b.run?'ON':'STOP');
  $('neutral').setAttribute('aria-pressed',String(!b.gear));$('inGear').setAttribute('aria-pressed',String(!!b.gear));
  $('gear').textContent=powered?(b.gear?'1':'N'):'—';$('gear').parentElement.classList.toggle('engaged',!!b.gear);
  $('gear').title='Neutral-switch fixture; not a field in the normal K-line reply';
@@ -63,8 +73,8 @@ function render(s){
  $('auth').textContent=b.authentication;$('frames').textContent=m.frames;
  $('engineState').textContent=!powered?'IGNITION OFF':!b.run?'ENGINE STOP':b.starting?'STARTING':b.rotating?'ENGINE RUNNING':'ENGINE STOPPED';
  $('sessionHint').textContent=!powered?'Key on. Run on. Press start.':b.authentication==='Key rejected'?'Key rejected. Cycle ignition to try again.':b.starting?'Cranking. Waiting for ECU outputs.':b.rotating?'Engine running. Open the throttle.':'Press start when you’re ready.';
- $('simState').textContent=powered?(paused?'Paused':'Running'):'Stopped';$('pause').textContent=paused?'Resume simulation':'Pause simulation';
- $('sessionLight').classList.toggle('on',powered&&!paused);$('link').textContent=!powered?'KEY OFF':m.connected?(paused?'K-LINE / PAUSED':'K-LINE / CONNECTED'):'WAITING FOR ECU';
+ text('simState',powered?(paused?'Paused':'Running'):'Stopped');text('pause',paused?'Resume simulation':'Pause simulation');
+ $('sessionLight').classList.toggle('on',powered&&!paused);text('link',!powered?'KEY OFF':m.connected?(paused?'K-LINE / PAUSED':'K-LINE / CONNECTED'):'WAITING FOR ECU');
  $('heartbeat').classList.toggle('active',m.connected&&m.frames%2===0);
  $('speed').textContent=m.connected?m.speed_pulses:'—';
  $('speedLabel').textContent='VSS PULSES / REPLY';$('rpmLabel').textContent='RPM · NOMINAL';
@@ -79,27 +89,40 @@ function render(s){
  const diag=m.mode!=='normal';
  $('display').classList.toggle('diagnostic',diag);
  $('sessionTitle').textContent=diag?'Diagnostics':'Engine';
- $('diagnostics').textContent=diag?'Exit diagnostics':'Enter diagnostics';$('diagControls').hidden=!diag;
+ text('diagnostics',diag?'Exit diagnostics':'Enter diagnostics');$('diagControls').hidden=!diag;
  const entryText=m.mode==='hold-confirm'?'Confirm dIAG · holding SELECT + RESET':m.mode==='menu-ready'?'dIAG selected · releasing buttons':'Key on · holding SELECT + RESET';
  $('diagState').textContent=m.mode==='diagnostic'?'d:'+String(m.diagnostic_id??'—')+' · '+String(m.diagnostic_value??'—'):entryText+' · '+m.entry_seconds+' s simulated';
  $('diagNumber').textContent=m.diagnostic_id==null?'d:—':'d:'+String(m.diagnostic_id).padStart(2,'0');$('diagName').textContent=m.diagnostic_name;$('diagValue').textContent=m.diagnostic_value??'—';
  $('diagHelp').textContent=m.mode!=='diagnostic'?'Entry and confirmation are automatic. The ECU advances its own hold counters.':m.diagnostic_kind==='actuator'?'Run test cycles the simulated run switch. The ECU controls the output pulses and warning lamp.':m.diagnostic_kind==='erase'?'Clear history performs the run-switch sequence. Active faults may remain.':m.diagnostic_kind==='history'?(m.diagnostic_id===63?'The ECU cycles active oxygen-sensor fault codes.':'The ECU cycles stored fault codes automatically.'):'Previous and Next send the dashboard button commands. Values come from the ECU.';
  if(diag){$('speed').textContent=m.mode==='diagnostic'?$('diagNumber').textContent:'dIAG';$('rpm').textContent=m.diagnostic_value??'—';$('speedLabel').textContent='DIAGNOSTIC';$('rpmLabel').textContent='ECU REPLY';$('rpm').title='Diagnostic data byte returned by the ECU';$('temperature').textContent='—';$('hotLamp').classList.remove('hot');$('faultText').textContent=m.mode==='diagnostic'?m.diagnostic_name:$('diagState').textContent;$('sessionHint').textContent=m.mode==='diagnostic'?'Use the dash buttons to select a diagnostic item.':'Waiting for the ECU’s diagnostic hold sequence.';}
  $('faultHistory').textContent=m.seen.length?'Codes received this key cycle: '+m.seen.join(', '):'No fault codes received.';
- $('serial').textContent=s.transcript?.length?s.transcript.map(r=>'TX '+r.request+'  →  RX '+r.reply).join('\n'):'No replies.';$('serial').scrollTop=$('serial').scrollHeight;
- $('cycles').textContent=(s.counts?.bus_cycles??0).toLocaleString();wave(s.trace??[]);
- if(s.adc)for(let n=0;n<8;n++)for(const prefix of ['adc','value'])if(document.activeElement!==$(prefix+n))$(prefix+n).value=s.adc[n];
- $('status').textContent=!b.selected?'Choose an ECU, then turn the key.':!powered?'ECU selected · key off':paused?'Simulation paused':'ECU running · dash connected via SCI1';
+ if(bench.open)renderBench(s);
+ if(s.adc)for(let n=0;n<8;n++)for(const prefix of ['adc','value'])if(document.activeElement!==$(prefix+n))$(prefix+n).value=n===0?b.throttle:s.adc[n];
+ text('status',!b.selected?'Choose an ECU, then turn the key.':!powered?'ECU selected · key off':paused?'Simulation paused':'ECU running · dash connected via SCI1');
  lock();
 }
-function act(action,data={}){queue=queue.then(()=>execute(action,data));return queue;}
-async function execute(action,data){
- busy=true;lock();
+function act(action,data={},background=false){
+ // Background polling shares the request queue without dimming the controls.
+ // Lock foreground commands as soon as they are queued, including while a
+ // poll is finishing, so repeated clicks cannot enqueue duplicate operations.
+ if(!background){pendingActions++;busy=true;lock();}
+ queue=queue.then(()=>execute(action,data,background));return queue;
+}
+async function execute(action,data,background){
  try{const response=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','X-XT660-Token':token},body:JSON.stringify({action,...data})});const s=await response.json();if(!response.ok)throw Error(s.error);render(s);$('error').hidden=true;if(action==='verify')$('status').textContent='All flash bytes match the registered BIN.';return true;}
  catch(e){paused=true;clearTimeout(timer);$('error').textContent=e.message;$('error').hidden=false;return false;}
- finally{busy=false;lock();}
+ finally{if(!background)busy=--pendingActions>0;lock();}
 }
-async function tick(){if(paused||!state?.bike.powered||ticking)return;ticking=true;await act('tick');ticking=false;if(!paused&&state?.bike.powered)timer=setTimeout(tick,80);}
+async function tick(){
+ if(paused||!state?.bike.powered||ticking)return;
+ ticking=true;
+ const started=performance.now(),cycles=state.counts?.bus_cycles??0;
+ await act('tick',{},true);ticking=false;
+ // Pace against the existing nominal 16 MHz profile. If execution already
+ // took longer, do not add the old fixed 80 ms pause to every batch.
+ const simulatedMs=Math.max(0,((state.counts?.bus_cycles??cycles)-cycles)/16000);
+ if(!paused&&state?.bike.powered)timer=setTimeout(tick,Math.max(0,simulatedMs-(performance.now()-started)));
+}
 function resume(){paused=false;clearTimeout(timer);if(state)render(state);tick();}
 function pause(){paused=true;clearTimeout(timer);if(state)render(state);}
 const control=(name,value)=>act('control',{name,value});

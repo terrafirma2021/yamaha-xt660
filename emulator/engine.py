@@ -9,7 +9,9 @@ from storage import factory_storage, storage_commands
 
 
 class Engine:
-    def __init__(self, executable, image, wsl=False, storage=None, registered=True):
+    def __init__(self, executable, image, wsl=False, storage=None, registered=True, port_b=None):
+        if port_b is not None and (type(port_b) is not int or not 0 <= port_b <= 255):
+            raise ValueError('Initial PORTB fixture must be a byte')
         self.record, setup = prepare(image, wsl)
         self.image = image
         self.early = self.record['application_entry'] == 0x5000
@@ -31,6 +33,8 @@ class Engine:
         try:
             command = setup + storage_commands(storage, registered)
             command += 'set memory xtboot_0_cfg 9 224\nset memory xtboot_0_cfg 13 16\n'
+            if port_b is not None:
+                command += f'set memory xtboot_0_cfg 10 {port_b}\n'
             command += f'break {self.loop} 1000\nstep 2000000\ndelete\ninfo hardware xtboot\n'
             result = self.session.command(command)
             if f'Stop at 0x{self.loop:06x}: (104)' not in result:

@@ -1,0 +1,76 @@
+{
+  "status": "passed",
+  "runtime": "Local Chrome / Playwright",
+  "scope": "Focused follow-up: key-on, immediate start, throttle synchronization, polling controls, nominal pacing; no physical timing validation",
+  "viewports": [
+    [
+      1366,
+      900
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "themes": [
+    "dark",
+    "light"
+  ],
+  "key_on_host_ms": 1434,
+  "start_to_engine_running_host_ms": 1232,
+  "checks": [
+    {
+      "check": "Bench throttle 100% controls main slider and remains in 0..100 range",
+      "value": "100",
+      "main": "100",
+      "max": "100"
+    },
+    {
+      "check": "Release synchronizes both throttle controls to zero",
+      "value": "0",
+      "main": "0"
+    },
+    {
+      "check": "101% rejected without changing the applied throttle",
+      "passed": true
+    },
+    {
+      "check": "Sampling overlapped one foreground throttle update, then controls stayed enabled",
+      "frames": 140,
+      "samples": 1752,
+      "states": [
+        "{\"key\":[true,\"0.38\"],\"load\":[true,\"0.38\"],\"diagnostics\":[true,\"0.38\"],\"starter\":[true,\"0.38\"],\"verify\":[true,\"0.38\"]}",
+        "{\"key\":[false,\"1\"],\"load\":[false,\"1\"],\"diagnostics\":[false,\"1\"],\"starter\":[true,\"0.38\"],\"verify\":[false,\"1\"]}"
+      ]
+    },
+    {
+      "check": "No foreground command: diagnostic polling control stability",
+      "frames": 594,
+      "samples": 2621,
+      "states": [
+        "{\"key\":[false,\"1\"],\"load\":[false,\"1\"],\"diagnostics\":[false,\"1\"],\"verify\":[false,\"1\"]}"
+      ]
+    },
+    {
+      "check": "Timed diagnostic entry and Previous/Next still use ECU responses",
+      "passed": true
+    },
+    {
+      "check": "Exit diagnostics and BIN verification after key cycle",
+      "passed": true
+    },
+    {
+      "check": "Dark mobile 390px layout and light desktop 1366px layout: no horizontal overflow, throttle controls readable",
+      "passed": true
+    }
+  ],
+  "browser_errors": [],
+  "sources": {
+    "emulator/web/dashboard.js": "fdb4d204b34648283211f13fe96131c2815bbe343079cf4a0ded36e022081e7f",
+    "emulator/web/dashboard.css": "02d8a785e88d57c93cc39e27c40aa1c7e5ce9a1b883cd316ae300653726f1c47",
+    "emulator/dashboard.py": "b52e1d12cec46acbabffc799a12f940f36e2e252cec893a421d447c1290da2fc",
+    "emulator/cockpit.py": "5c25e2abfb59dc7478bb3c05dfe74a3a8e4236b83dfbfc2684995ced03ad244a",
+    "emulator/engine.py": "f430f701e556dcbeda193dd96ef9f8b45f3d9df1c4eb7b6dd849a55ec2864428",
+    "emulator/runner.py": "eda06b164dac882f9b80017d0be39e2d03df51ef30aca1dfdd4ff1d1d6599c9c"
+  }
+}

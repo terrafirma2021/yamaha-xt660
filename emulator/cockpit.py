@@ -79,7 +79,11 @@ class Cockpit:
             return
         if self.image is None:
             raise ValueError('Select a BIN first')
-        self.engine = Engine(self.executable,self.image,self.wsl,storage=self.storage)
+        # The external starter is released BEFORE the first reset instruction.
+        # Starting with the default PB1-low fixture and releasing it afterwards
+        # creates a false starter cycle and arms the stock restart inhibit.
+        self.engine = Engine(self.executable,self.image,self.wsl,storage=self.storage,
+                             port_b=(16 if self.gear else 0) | 2)
         self.meter = MeterPeer(lambda:self.engine.cycles,self.engine.wait_cycles)
         self.engine.session.command('set memory xtboot_0_cfg 41 1')
         self.inputs()
@@ -155,11 +159,6 @@ class Cockpit:
             raise ValueError('The ECU rejected this key')
         if self.rotating or self.starting:
             return
-        # A stationary key-on interval gives the stock scheduler time to
-        # qualify idle inputs before the first CPS edge. Time is simulated.
-        while self.engine.snapshot()['counts']['bus_cycles'] < 32000000:
-            self.engine.step(1000000)
-            self.meter.poll(self.engine.exchange)
         self.starting = True
         self.start_ticks = 0
         self.pitch = 2800

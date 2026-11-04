@@ -35,7 +35,11 @@ The dash consumes real five-byte replies, validated before display, through `met
 
 RPM is explicitly **nominal**, using B0 × 190 / 5.12 under the existing 16 MHz profile. Road speed is displayed as **pulses per reply**, not invented km/h. Coolant defaults to the exact received code. Optional `reply − 30 °C` remains a candidate with an unverified offset. The TEMP indicator compares the received code with 136; it is a dashboard threshold, not a read of the fan relay. Throttle percentage means control travel across the fixture's ADC range, not calibrated throttle angle.
 
-The rotating-engine fixture ramps tooth intervals, supplies an intake-pressure ripple and models the fuel-relay supply feedback. It sustains rotation only after observing coil and injector outputs, and stops after sustained loss of either. Startup includes a stationary 32-million-bus-cycle settling interval. First gear supplies four road pulses per synthetic crank revolution solely as a demonstration fixture; this is **not a measured XT sensor/gear ratio**. These external signals enter the MCU model; no ECU runtime variables or flash bytes are patched. The model does not calculate combustion, torque, acceleration, wheel speed or physical temperatures.
+The rotating-engine fixture ramps tooth intervals, supplies an intake-pressure ripple and models the fuel-relay supply feedback. It sustains rotation only after observing coil and injector outputs, and stops after sustained loss of either. The starter input is released before the first reset instruction; Start closes that external contact immediately. First gear supplies four road pulses per synthetic crank revolution solely as a demonstration fixture; this is **not a measured XT sensor/gear ratio**. These external signals enter the MCU model; no ECU runtime variables or flash bytes are patched. The model does not calculate combustion, torque, acceleration, wheel speed or physical temperatures.
+
+The former 32-million-cycle pre-start wait was a host workaround, not a Yamaha requirement. It masked a fixture error: PB1 started low during reset, then was released after startup, creating a false starter cycle. In the early firmware, release arms `BF8:40` at `9019`; the capture path can then set `BF8:80` and reset synchronization at `DD0B–DD17`. Presenting the released contact from reset removes that false event. The [startup checks](startup-validation.json) cover immediate start across all five complete BINs, real output transitions, throttle control and rejection of an incorrect key. The ECU's debounce, authentication and inhibit code still executes.
+
+On Windows/WSL, validated HEX bytes are staged in a private Linux temporary file to avoid the debugger's character-by-character reads through `/mnt/c`. The file loader and firmware initialization still run. Dashboard polling adds no fixed delay when execution already exceeds the nominal simulated interval; this does not make the CPU core run in real time. Host latency measurements are recorded separately from simulated cycles.
 
 The [recovered pressure calculations](../analysis/semantics/PRESSURE_ESTIMATE.md) run inside the original firmware. The external intake model supplies ADC1 with a pressure dip once per two crank revolutions: opening the throttle reduces the dip, increasing speed increases it, and stopping restores the selected ambient input. Its ambient count, waveform, phase and pumping coefficients are demonstration parameters, not recovered kPa calibration or a volumetric-efficiency map. The firmware still detects a disconnected pressure input and checks pressure variation. ADC4 follows the PA2 relay command; a separate PT5 input pulse acknowledges PT3 coil release through the actual timer-capture path. Neither supply nor ignition fault flags are forced clear.
 
@@ -63,12 +67,13 @@ python scripts/build_release.py
 ./scripts/test_desktop_emulator.ps1 -Ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-Tests write detailed logs under ignored `.runs/`. [validation.json](validation.json) records the integrated firmware and controller checks; [desktop-validation.json](desktop-validation.json) records the C# integration separately. [dashboard-validation.json](dashboard-validation.json) records the browser checks. None is a hardware certificate.
+Tests write detailed logs under ignored `.runs/`. [validation.json](validation.json) records the integrated firmware and controller checks; [desktop-validation.json](desktop-validation.json) records the C# integration separately. [dashboard-validation.json](dashboard-validation.json) records the original browser checks; the [responsiveness follow-up](dashboard-responsiveness-validation.json) covers stable controls, startup, throttle percentages and diagnostic navigation. Each report identifies its tested source hashes. None is a hardware certificate.
 
 Cockpit checks are separate from the shorter core regression:
 
 ```sh
 python3 emulator/test_cockpit.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
+python3 emulator/test_startup_sequence.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 python3 emulator/test_cockpit_faults.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 python3 emulator/test_pressure_faults.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 python3 emulator/test_diagnostics.py --image xt660-2004-2006-companion --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
