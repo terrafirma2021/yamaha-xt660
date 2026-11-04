@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 from runner import ROOT, RUNS, execute, prepare, registered_image
+from test_peripherals import test_peripherals, test_interrupts, test_firmware_adc, test_sensor_demo
 
 
 def core_cases():
@@ -236,8 +237,12 @@ def main():
     if not args.core_only:
         report['debugger_and_device']=test_debugger_and_device(args.ucsim,args.wsl)
         report['images']=test_boot(args.ucsim,args.wsl)
+        report['peripheral_checks']=test_peripherals(args.ucsim,args.wsl)
+        report['interrupt_checks']=test_interrupts(args.ucsim,args.wsl)
+        report['firmware_adc']=test_firmware_adc(args.ucsim,args.wsl)
+        report['sensor_demo']=test_sensor_demo(args.ucsim,args.wsl)
     report['ucsim_commit']='59a14ff99efe7e92474faf4c4ddf57b5e4ff0631'
-    report['scope']='selected CPU fixtures and reset-to-application startup; not engine operation'
+    report['scope']='CPU/debugger fixtures, boot, ATD/GPIO, functional ATD/modulus IRQs and isolated firmware sensor routines; not full application or engine operation'
     report['source_hashes']={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
                             for p in sorted((ROOT/'emulator').rglob('*'))
                             if p.is_file() and not any(x.startswith('.') or x=='__pycache__' for x in p.relative_to(ROOT/'emulator').parts)

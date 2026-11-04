@@ -1,8 +1,8 @@
 # XT660 emulator
 
-First stage: run the real BIN from reset to its application entry, with instruction-level debugging. **Engine operation is not emulated yet.**
+Run the real BIN from reset to its application entry, and exercise its sensor-reading routines with adjustable ADC inputs. **The full application and engine operation are not emulated yet.**
 
-The five registered images with populated boot code reach their own application entry (`0x5000` or `0x4800`). The four images with absent boot code are rejected; no donor bytes are inserted. Tests check both boot wait loops, all 2,048 cleared RAM bytes, and all 59,392 unchanged flash bytes per complete image. See [validation.json](validation.json).
+The five registered images with populated boot code reach their own application entry (`0x5000` or `0x4800`). The four images with absent boot code are rejected; no donor bytes are inserted. Tests check both boot wait loops, all 2,048 cleared RAM bytes, and all 59,392 unchanged flash bytes per complete image. The suite also passes 81 ADC/GPIO checks, 42 CPU/interrupt checks and four sensor passes per complete BIN. See [validation.json](validation.json).
 
 ## Build and run
 
@@ -42,25 +42,41 @@ quit
 
 Conditional breakpoints, read/write watchpoints, hit counts, instruction stepping and stepping over JSR are tested. Debugging is at assembly level. [µCsim command reference](https://www.ucsim.hu/cmd.html).
 
+## Sensor routine demo
+
+Run the selected BIN's unchanged ADC setup/read routines and print their RAM results:
+
+```powershell
+python emulator/run.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu --sensors --image xt660-2c1-10 --adc 100 200 300 400 500 600 700 800
+```
+
+Inputs are eight raw ADC counts (`0..1023`), in channel order. Omit `--adc` for midscale inputs. The example stores `6400, 12800, …, 51200`: this firmware uses left-justified 10-bit results. It does not establish a temperature, pressure or throttle scale. The demo uses an isolated RAM/stack fixture; it does not run the application startup, EEPROM checks or engine loop.
+
+The early companion executes `0x56D0` / `0x5728` and retains channels 6/7 in four RAM banks. The other complete images execute `0x4F31` / `0x4F52` and store those channels directly. Tests vary the inputs between calls and check every destination. The external analogue multiplexer circuit is not simulated.
+
+In the debugger, `adc0=123` through `adc7=1023` change raw inputs. `info hardware xtboot` shows conversion counts, flags, last interrupt vector and fixture settings. GPIO fixtures are bytes in `xtboot_0_cfg`: offsets 9–14 supply PA, PB, PE, PT, PS and PP input levels; offset 16 supplies PTAD. Output latches and direction registers determine GPIO reads. This represents driven digital levels, not ECU conditioning circuits or pin multiplexing.
+
 ## What the model covers
 
 - CPU12 instruction execution, with 518 independent fixtures for the local fixes and related addressing modes.
 - Reset-vector loading and execution of the unchanged boot instructions.
 - PLL-lock status and ECT modulus-counter load, prescaling, countdown, expiry and write-one-to-clear flags.
-- Storage for the configuration/GPIO writes made during boot; this does not simulate the external circuits.
+- ADC sequence length, channel stepping/wrap, 8/10-bit results, signed/unsigned formatting, sample/convert delays, single/continuous operation, FIFO overwrite and documented flag clearing.
+- Functional ADC-complete and modulus-counter interrupts: enable/mask bits, HPRIO selection, CLI delay, register stacking and RTI restoration. Exception-entry bus timing and RTI tail chaining are not modelled.
+- GPIO input levels, output latches and direction for the supported ports; boot configuration storage remains partial.
 - Stops on unimplemented register accesses and attempted CPU writes to flash. Debugger reads do not trigger peripheral side effects.
 
-The MCU reference is the conditional MC9S12T64 identification used elsewhere in the repository. Register behaviour follows [MC9S12T64 Rev 1.1.1](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf), CRG and ECT chapters (particularly pages 396–407). PLL acquisition uses a deterministic 64-tick fixture delay, not a measured lock time. The core's reported elapsed seconds and the motorcycle's absolute timing are not validated.
+The MCU reference is the conditional MC9S12T64 identification used elsewhere in the repository. Register behaviour follows [MC9S12T64 Rev 1.1.1](https://www.nxp.com/docs/en/data-sheet/9S12T64AF16V1.pdf), CRG and ECT chapters (particularly pages 396–407). PLL acquisition uses a deterministic 64-tick fixture delay, not a measured lock time. ADC delays are measured in simulated bus cycles; analogue power-up settling and electrical errors are not modelled. The core's reported elapsed seconds and the motorcycle's absolute timing are not validated.
 
 The generic HC12 page registers and inherited 6800 CIA/PIA devices are excluded from this target: they overlap T64 clock registers and application flash addresses.
 
 ## Remaining work
 
-Continuing past entry currently stops on ATD control register `0x0082`, written at `0x5006` in the companion or `0x4806` in the later entry layout. Next: ADC conversion sequences and completion flags, interrupt delivery, watchdog and remaining timer channels, followed by crank-edge inputs and injector/ignition outputs. SCI traffic and flash programming need their own device models. A dashboard follows those running behaviours.
+Continuing from reset now passes ADC/GPIO setup and stops at the unmodelled `0x0033` configuration write (`0x5051` in the companion, `0x4846` in the later layout). Next are the remaining startup configuration, watchdog and ECT timer channels, then SPI/persistent storage and the main loop. Crank inputs, injector/ignition outputs, SCI traffic and flash programming still need device models. A dashboard follows those running behaviours. External ADC triggering and unsupported register accesses deliberately stop execution.
 
 Reaching application entry does **not** mean the application checksum, authentication, engine scheduler or flashing protocol has been exercised. The rest of the CPU instruction set and its timing still need wider validation.
 
-Core fixes stay under `patches/`: decrement width/disassembly, indexed addressing, bit-operation fetch order, loop decoding, tick accounting and step-over metadata. They are local integration fixes. **No upstream submissions have been made.** Any future submission must exclude XT660 firmware, profiles and application code.
+Core fixes stay under `patches/`: decrement width/disassembly, indexed addressing, bit-operation fetch order, loop decoding, tick accounting, ORCC dispatch and step-over metadata. The XT660 target also supplies maskable interrupt dispatch and correct RTI X-mask restoration. They are local integration fixes. **No upstream submissions have been made.** Any future submission must exclude XT660 firmware, profiles and application code.
 
 ## License
 
