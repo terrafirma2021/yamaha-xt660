@@ -48,7 +48,13 @@ for page in SITE.rglob('*.html'):
     elif page==SITE/'emulator/index.html':
         # Standalone application has its own ECU selector and cockpit theme.
         assert 'id="image"' in markup and 'id="theme"' in markup and '<noscript>' in markup
-        assert 'client.js' in parser.links and 'dashboard.js' in parser.links
+        executable={urlsplit(x).path:urlsplit(x).query for x in parser.links if urlsplit(x).path in ('client.js','dashboard.js','dashboard.css')}
+        assert len(executable)==3 and len(set(executable.values()))==1
+        version=executable['client.js']
+        assert re.fullmatch(r'v=[0-9a-f]{16}',version),page
+        assert 'worker.js?'+version in (page.parent/'client.js').read_text()
+        assert 'xt660.mjs?'+version in (page.parent/'worker.js').read_text()
+        assert "'?"+version+"'" in (page.parent/'worker.js').read_text()
     else:
         assert parser.theme_buttons==1,f'Missing or duplicate theme switch: {page}'
         assert markup.count('id="vehicle-context"')==1,page

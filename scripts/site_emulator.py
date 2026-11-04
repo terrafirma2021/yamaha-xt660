@@ -20,9 +20,28 @@ def verified_package(destination):
 def package(destination,runtime=None):
     destination=Path(destination);destination.mkdir(parents=True,exist_ok=True)
     runtime=Path(runtime or ROOT/'emulator/browser/runtime')
+    # Version the complete executable chain. A cached worker otherwise loads
+    # yesterday's WASM even when a normal reload refreshes index.html.
+    inputs=[runtime/name for name in ('xt660.mjs','xt660.wasm','xt660.data')]
+    inputs += [ROOT/'emulator/browser'/name for name in ('client.js','worker.js')]
+    inputs += [ROOT/'emulator/web'/name for name in ('dashboard.js','dashboard.css','dashboard.html')]
+    inputs += [Path(__file__)]
+    digest=hashlib.sha256()
+    for src in inputs:
+        digest.update(src.read_bytes() if src.suffix in ('.wasm','.data') else src.read_text(encoding='utf-8').encode())
+    version=digest.hexdigest()[:16]
     for name in ('xt660.mjs','xt660.wasm','xt660.data'):
         shutil.copyfile(runtime/name,destination/name)
-    for p in (ROOT/'emulator/browser').glob('*.js'):shutil.copyfile(p,destination/p.name)
+    for p in (ROOT/'emulator/browser').glob('*.js'):
+        code=p.read_text(encoding='utf-8')
+        if p.name=='client.js':
+            assert code.count("'worker.js'")==1
+            code=code.replace("'worker.js'",f"'worker.js?v={version}'")
+        elif p.name=='worker.js':
+            assert code.count("'./xt660.mjs'")==1 and code.count('createCore({')==1
+            code=code.replace("'./xt660.mjs'",f"'./xt660.mjs?v={version}'")
+            code=code.replace('createCore({',"createCore({locateFile:name=>new URL(name+'?v="+version+"',import.meta.url).href,")
+        (destination/p.name).write_text(code,encoding='utf-8')
     shutil.copytree(ROOT/'emulator/browser/licenses',destination/'licenses',dirs_exist_ok=True)
     for name in ('dashboard.js','cockpit.png','ignition-key.png'):
         shutil.copyfile(ROOT/'emulator/web'/name,destination/name)
@@ -33,6 +52,8 @@ def package(destination,runtime=None):
     for name in ('dashboard.css','dashboard.js','logo.png','cockpit.png','ignition-key.png'):
         page=page.replace('"/'+name+'"','"'+name+'"')
     page=page.replace('<script src="dashboard.js" defer>', '<script src="client.js" defer></script><script src="dashboard.js" defer>')
+    for name in ('dashboard.css','dashboard.js','client.js'):
+        page=page.replace('"'+name+'"',f'"{name}?v={version}"')
     page=page.replace('{{TOKEN}}','browser-worker')
     page=page.replace('LIVE FIRMWARE / LOCAL SIMULATION','LIVE FIRMWARE / BROWSER SIMULATION')
     page=page.replace('This local simulator needs JavaScript. All scripts and assets are served locally.',

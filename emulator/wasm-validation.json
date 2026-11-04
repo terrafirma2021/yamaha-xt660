@@ -241,7 +241,7 @@
       "errors": [],
       "onlyStaticRequests": true,
       "hotLamp": "lamp hot",
-      "celsiusUnit": "\u00b0C EST.",
+      "celsiusUnit": "°C EST.",
       "storageBytes": 512,
       "traceBytes": 324443
     },
@@ -305,10 +305,19 @@
       "diagnosticCoolantHidden": true,
       "coolantRestored": true,
       "diagnosticExitSpeedZero": true,
-      "keyOffSpeed": "\u2014",
+      "keyOffSpeed": "—",
       "reloadCelsiusDefault": true,
       "rawCoolantToggle": true,
-      "errors": []
+      "errors": [],
+      "cacheVersionedAssets": [
+        "dashboard.css?v=3deae3f23276f64e",
+        "client.js?v=3deae3f23276f64e",
+        "dashboard.js?v=3deae3f23276f64e",
+        "worker.js?v=3deae3f23276f64e",
+        "xt660.mjs?v=3deae3f23276f64e",
+        "xt660.data?v=3deae3f23276f64e",
+        "xt660.wasm?v=3deae3f23276f64e"
+      ]
     },
     "all_bins": [
       {
