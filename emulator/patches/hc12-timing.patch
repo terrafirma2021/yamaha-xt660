@@ -1,0 +1,24 @@
+--- a/src/sims/m68hc12.src/m68hc12.cc
++++ b/src/sims/m68hc12.src/m68hc12.cc
+@@ -247,7 +247,9 @@
+ {
+   if (inst_ticks & 0xf00)
+     inst_ticks= (inst_ticks>>(4*xb_tick_shift)) & 0xf;
+-  tick(inst_ticks);
++  int cycles= inst_ticks;
++  inst_ticks= 0;
++  tick(cycles);
+   if (extra_ticks)
+     tick(extra_ticks);
+   cl_m68hcbase::post_inst();
+@@ -258,7 +260,9 @@
+ {
+   if (inst_ticks & 0xf00)
+     inst_ticks= (inst_ticks>>(4*xb_tick_shift)) & 0xf;
+-  tick(inst_ticks);
++  int cycles= inst_ticks;
++  inst_ticks= 0;
++  tick(cycles);
+   if (extra_ticks)
+     tick(extra_ticks);
+   cl_m68hcbase::post_emu();

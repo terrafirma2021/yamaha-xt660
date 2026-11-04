@@ -1,0 +1,21 @@
+diff --git a/src/sims/m68hc12.src/ibranch.cc b/src/sims/m68hc12.src/ibranch.cc
+index cc7a08f..d1255ee 100644
+--- a/src/sims/m68hc12.src/ibranch.cc
++++ b/src/sims/m68hc12.src/ibranch.cc
+@@ -329,6 +329,7 @@ CL12::lbranch(u8_t code)
+ int
+ CL12::loop(u8_t code)
+ {
++  inst_ticks= 3; // CPU12 loop primitives: PPP / PPO
+   i16_t r= fetch();
+   if ((code & 0xc0) == 0xc0)
+     return resINV;
+@@ -338,7 +339,7 @@ CL12::loop(u8_t code)
+     return resINV;
+ 
+   if (code & 0x80) c->W(c->R() + 1);
+-  if (code & 0x40) c->W(c->R() - 1);
++  if ((code & 0xc0) == 0) c->W(c->R() - 1);
+   int brz= (code & 0x20)?0:1;
+   int isz= (c->R() == 0)?1:0;
+   if (brz == isz)

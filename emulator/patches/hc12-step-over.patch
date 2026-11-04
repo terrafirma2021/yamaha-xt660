@@ -1,0 +1,21 @@
+diff --git a/src/sims/m68hc12.src/hcwrap.cc b/src/sims/m68hc12.src/hcwrap.cc
+index 53a1f2e..ea14b22 100644
+--- a/src/sims/m68hc12.src/hcwrap.cc
++++ b/src/sims/m68hc12.src/hcwrap.cc
+@@ -25,6 +25,7 @@ Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+ 02111-1307, USA. */
+ /*@1@*/
+ 
++#include <cstring>
+ #include "glob12.h"
+ 
+ #include "hcwrapcl.h"
+@@ -72,6 +73,8 @@ cl_wrap::set_disass(int page, int code, const char *mnemo, char branch, int len)
+   tab[code].branch= branch;
+   tab[code].length= len;
+   tab[code].mnemonic= mnemo;
++  tab[code].is_call= !strncmp(mnemo, "JSR ", 4) ||
++    !strncmp(mnemo, "BSR ", 4) || !strncmp(mnemo, "CALL ", 5);
+ }
+ 
+ void

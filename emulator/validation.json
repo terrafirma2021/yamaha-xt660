@@ -1,0 +1,82 @@
+{
+  "core_fixtures": 518,
+  "debugger_and_device": [
+    "interactive console initialization",
+    "conditional breakpoint",
+    "write watchpoint",
+    "read watchpoint",
+    "JSR step over",
+    "W1C flag",
+    "unknown IO stop",
+    "CPU flash write blocked",
+    "timer reload/countdown/expiry/clear"
+  ],
+  "images": [
+    {
+      "image": "xt660x-2005-owner",
+      "status": "boot_absent_rejected"
+    },
+    {
+      "image": "xt660-2004-2006-companion",
+      "status": "application_entry_reached",
+      "application_entry": "0x5000",
+      "flash_bytes_unchanged": 59392,
+      "ram_clear_bytes": 2048
+    },
+    {
+      "image": "xt660x-2005-checksum-fixed",
+      "status": "boot_absent_rejected"
+    },
+    {
+      "image": "xt660-5vk-1x-2008",
+      "status": "application_entry_reached",
+      "application_entry": "0x4800",
+      "flash_bytes_unchanged": 59392,
+      "ram_clear_bytes": 2048
+    },
+    {
+      "image": "xt660-2c1-10",
+      "status": "application_entry_reached",
+      "application_entry": "0x4800",
+      "flash_bytes_unchanged": 59392,
+      "ram_clear_bytes": 2048
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "status": "application_entry_reached",
+      "application_entry": "0x4800",
+      "flash_bytes_unchanged": 59392,
+      "ram_clear_bytes": 2048
+    },
+    {
+      "image": "xt660-2c1-00",
+      "status": "boot_absent_rejected"
+    },
+    {
+      "image": "xt660-2c1-00-immo-off",
+      "status": "boot_absent_rejected"
+    },
+    {
+      "image": "xt660-5vk-11",
+      "status": "application_entry_reached",
+      "application_entry": "0x4800",
+      "flash_bytes_unchanged": 59392,
+      "ram_clear_bytes": 2048
+    }
+  ],
+  "ucsim_commit": "59a14ff99efe7e92474faf4c4ddf57b5e4ff0631",
+  "scope": "selected CPU fixtures and reset-to-application startup; not engine operation",
+  "source_hashes": {
+    "emulator/build.py": "5be3f49baa58149c6fe11cb3df2b5b4b76c70557df1c50484abec45c9cc41640",
+    "emulator/native/xt660_boot.cc": "2f3ceb9d409bce8d36c585efe487d5b2ebb1fcfebf93b3f149c1d61f25beb961",
+    "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",
+    "emulator/patches/hc12-fetch-order.patch": "6f2f32f997b8023271bd0f9735ab89055acdacf0732d609b519e4e3d5396bdce",
+    "emulator/patches/hc12-indexed.patch": "a202a8d68f209983edd5b1e981821c6ce84266e815a30360ac08479bb4efbc50",
+    "emulator/patches/hc12-loop.patch": "de7e0708e7ca9e99af52efbce156910f03b195cfab52724e126e8c39142309eb",
+    "emulator/patches/hc12-step-over.patch": "e7dcd555ee26edeb08f85527518a3f1e2b3b523f056bf0e6401d7409a45ad0d1",
+    "emulator/patches/hc12-timing.patch": "54469604b483b787d9773dcc8f70d2449ea200eec43317d3869784c6ecca4976",
+    "emulator/run.py": "216c675a13544ea02e515c10ba1c8226da258d455c57edb5db70d96c597b4d88",
+    "emulator/runner.py": "764b974b554a03fa24134917d596c0198d6a6382fb976879a4d04b1812f46450",
+    "emulator/test_emulator.py": "907f6dab304d7fbcaa5ac986b8be42d9ff1901cd3be782e08da833295aa9f12d"
+  }
+}

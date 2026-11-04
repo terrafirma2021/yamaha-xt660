@@ -1,0 +1,37 @@
+diff --git a/src/sims/m68hc12.src/wdefs.h b/src/sims/m68hc12.src/wdefs.h
+index 8434c56..177f61f 100644
+--- a/src/sims/m68hc12.src/wdefs.h
++++ b/src/sims/m68hc12.src/wdefs.h
+@@ -8,8 +8,8 @@ int wrap_0_08(class CL12 *uc, t_mem code) { return uc-> inxy ( _cX ); }
+ int wrap_0_09(class CL12 *uc, t_mem code) { return uc-> dexy ( _cX ); }
+ int wrap_0_0a(class CL12 *uc, t_mem code) { return uc-> rtc ( _NONE ); }
+ int wrap_0_0b(class CL12 *uc, t_mem code) { return uc-> rti ( _NONE ); }
+-int wrap_0_0c(class CL12 *uc, t_mem code) { return uc-> Or ( _xb_i8 ); }
+-int wrap_0_0d(class CL12 *uc, t_mem code) { return uc-> And ( _xb_i8n ); }
++int wrap_0_0c(class CL12 *uc, t_mem code) { class cl_memory_cell &dest= uc->xbdst(); u8_t mask= uc->i8(); return uc->Or(dest, mask); }
++int wrap_0_0d(class CL12 *uc, t_mem code) { class cl_memory_cell &dest= uc->xbdst(); u8_t mask= ~uc->i8(); return uc->And(dest, mask); }
+ int wrap_0_0e(class CL12 *uc, t_mem code) { return uc-> brset_id ( _NONE ); }
+ int wrap_0_0f(class CL12 *uc, t_mem code) { return uc-> brclr_id ( _NONE ); }
+ int wrap_0_10(class CL12 *uc, t_mem code) { return uc-> andcc ( _i8 ); }
+@@ -23,8 +23,8 @@ int wrap_0_17(class CL12 *uc, t_mem code) { return uc-> jsr ( _da ); }
+ int wrap_0_19(class CL12 *uc, t_mem code) { return uc-> lea ( _cY ); }
+ int wrap_0_1a(class CL12 *uc, t_mem code) { return uc-> lea ( _cX ); }
+ int wrap_0_1b(class CL12 *uc, t_mem code) { return uc-> lea ( _cS ); }
+-int wrap_0_1c(class CL12 *uc, t_mem code) { return uc-> Or ( _e_i8 ); }
+-int wrap_0_1d(class CL12 *uc, t_mem code) { return uc-> And ( _e_i8n ); }
++int wrap_0_1c(class CL12 *uc, t_mem code) { class cl_memory_cell &dest= uc->edst(); u8_t mask= uc->i8(); return uc->Or(dest, mask); }
++int wrap_0_1d(class CL12 *uc, t_mem code) { class cl_memory_cell &dest= uc->edst(); u8_t mask= ~uc->i8(); return uc->And(dest, mask); }
+ int wrap_0_1e(class CL12 *uc, t_mem code) { return uc-> brset_e ( _NONE ); }
+ int wrap_0_1f(class CL12 *uc, t_mem code) { return uc-> brclr_e ( _NONE ); }
+ int wrap_0_20(class CL12 *uc, t_mem code) { return uc-> BRA ( 0x20 ); }
+@@ -69,8 +69,8 @@ int wrap_0_48(class CL12 *uc, t_mem code) { return uc-> asl ( _cA ); }
+ int wrap_0_49(class CL12 *uc, t_mem code) { return uc-> lsr16 ( _cD ); }
+ int wrap_0_4a(class CL12 *uc, t_mem code) { return uc-> call_e ( _NONE ); }
+ int wrap_0_4b(class CL12 *uc, t_mem code) { return uc-> call_id ( _NONE ); }
+-int wrap_0_4c(class CL12 *uc, t_mem code) { return uc-> Or ( _d_i8 ); }
+-int wrap_0_4d(class CL12 *uc, t_mem code) { return uc-> And ( _d_i8n ); }
++int wrap_0_4c(class CL12 *uc, t_mem code) { class cl_memory_cell &dest= uc->ddst(); u8_t mask= uc->i8(); return uc->Or(dest, mask); }
++int wrap_0_4d(class CL12 *uc, t_mem code) { class cl_memory_cell &dest= uc->ddst(); u8_t mask= ~uc->i8(); return uc->And(dest, mask); }
+ int wrap_0_4e(class CL12 *uc, t_mem code) { return uc-> brset_d ( _NONE ); }
+ int wrap_0_4f(class CL12 *uc, t_mem code) { return uc-> brclr_d ( _NONE ); }
+ int wrap_0_50(class CL12 *uc, t_mem code) { return uc-> neg ( _cB ); }

@@ -9,3 +9,5 @@ analysis/firmware/families/late/full/instructions.jsonl
 
 flasher/build/
 dist/
+emulator/.build/
+emulator/.runs/
