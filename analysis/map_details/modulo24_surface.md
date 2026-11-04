@@ -109,6 +109,7 @@ Converted values: 800, 1400, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 100
 - Lookup inputs, destination and immediate selection: Evaluated at 0x7B8C before the startup/normal fuel branch. Result is clamped (11 to 10, >=23 to 22) then passed through the phase limiter and event dispatcher [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
 - ADC fault replacement, learned closed reference, relative position, movement latch and fuel-axis filtering are replay-checked in all nine BINs. Mechanical angle is not inferred. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
 - Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Phase limiter boundaries, ordinary/pattern-cycle dispatch, delayed and queued starts, overlapping pulses and timer wrap are replay-checked. The limiter skips gap codes differently by direction. Physical crank phase is still unconfirmed. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Cell interpretation: injection_event_code. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
@@ -117,7 +118,6 @@ Converted values: 800, 1400, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 100
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
 - Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.
 - Establish event-code phase relative to the physical crank cycle, including special scheduling modes.
-- Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

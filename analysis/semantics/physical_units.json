@@ -7602,6 +7602,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Phase limiter boundaries, ordinary/pattern-cycle dispatch, delayed and queued starts, overlapping pulses and timer wrap are replay-checked. The limiter skips gap codes differently by direction. Physical crank phase is still unconfirmed.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: injection_event_code. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -7612,7 +7617,6 @@
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
         "Establish event-code phase relative to the physical crank cycle, including special scheduling modes.",
-        "Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Injection event-phase target",
@@ -7902,6 +7906,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "The non-9 secondary request is replayed through immediate, ordinary and phase-aligned output paths. It shares transient counters with the primary path; two special scheduling branches write its retained correction into primary request 0x092A. This is not proof of a twin-cylinder hardware identity.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -7911,7 +7920,6 @@
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
-        "Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Secondary injector quantity multiplier",
@@ -8630,6 +8638,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Early alternate-mode entry, hysteresis, exits and re-entry are replayed together with map lookup, base selection and coil timer scheduling. The tests include neutral/variant differences and output inhibits, with simulated capture/pin states.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: spark_relative_degrees. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -8640,7 +8653,6 @@
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
         "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-        "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Alternate base ignition timing vs speed and coolant",
@@ -9253,9 +9265,14 @@
       ],
       "resolved_items": [
         {
-          "claim": "Lookup inputs, destination and immediate selection: Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+          "claim": "Lookup inputs, destination and immediate selection: Initializes Q8 post-start state 0x0994 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used",
           "evidence": "MAP_SELECTORS.md",
           "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
         },
         {
           "claim": "Cell interpretation: post_start_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
@@ -9265,7 +9282,6 @@
       ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Post-start enrichment \u2014 fast-decay state",
@@ -9361,9 +9377,14 @@
       ],
       "resolved_items": [
         {
-          "claim": "Lookup inputs, destination and immediate selection: Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+          "claim": "Lookup inputs, destination and immediate selection: Initializes Q8 post-start state 0x0996 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used",
           "evidence": "MAP_SELECTORS.md",
           "method": "Instruction trace; replay coverage varies by block"
+        },
+        {
+          "claim": "Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
         },
         {
           "claim": "Cell interpretation: post_start_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
@@ -9373,7 +9394,6 @@
       ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Post-start enrichment \u2014 slow-decay state",
@@ -9863,6 +9883,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: relative_tps_counts. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -9872,7 +9897,6 @@
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
         "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Relative-throttle qualification threshold vs speed",
@@ -9923,6 +9947,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -9930,7 +9959,6 @@
       ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel multiplier vs pressure estimate",
@@ -10061,6 +10089,11 @@
           "method": "Instruction trace; replay coverage varies by block"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: transient_iat_gain_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -10068,7 +10101,6 @@
       ],
       "open_items": [
         "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel multiplier vs intake temperature",
@@ -10144,6 +10176,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -10151,7 +10188,6 @@
       ],
       "open_items": [
         "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel response 1 \u2014 neutral",
@@ -10227,6 +10263,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -10234,7 +10275,6 @@
       ],
       "open_items": [
         "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel response 1 \u2014 lower speed-ratio range",
@@ -10310,6 +10350,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -10317,7 +10362,6 @@
       ],
       "open_items": [
         "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel response 1 \u2014 higher speed-ratio range",
@@ -10369,6 +10413,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -10376,7 +10425,6 @@
       ],
       "open_items": [
         "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel multiplier vs throttle",
@@ -10452,6 +10500,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -10459,7 +10512,6 @@
       ],
       "open_items": [
         "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel response 2 \u2014 neutral",
@@ -10535,6 +10587,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -10542,7 +10599,6 @@
       ],
       "open_items": [
         "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel response 2 \u2014 standard",
@@ -10618,6 +10674,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -10625,7 +10686,6 @@
       ],
       "open_items": [
         "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel response 2 \u2014 alternate",
@@ -11616,6 +11676,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: load_offset_codes. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -11624,7 +11689,7 @@
       "open_items": [
         "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
         "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-        "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
+        "Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Pressure-processing offset vs engine speed",
@@ -11863,6 +11928,11 @@
           "method": "Instruction trace; replay coverage varies by block"
         },
         {
+          "claim": "Early alternate-mode entry, hysteresis, exits and re-entry are replayed together with map lookup, base selection and coil timer scheduling. The tests include neutral/variant differences and output inhibits, with simulated capture/pin states.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: relative_tps_counts. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -11871,7 +11941,6 @@
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
         "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-        "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Alternate ignition mode \u2014 throttle threshold vs coolant",
@@ -12202,6 +12271,11 @@
           "method": "Instruction trace; replay coverage varies by block"
         },
         {
+          "claim": "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer arithmetic differential tests"
@@ -12209,7 +12283,6 @@
       ],
       "open_items": [
         "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-        "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Transient fuel pulse contribution vs coolant",
@@ -15476,6 +15549,11 @@
           "method": "Byte-checked instruction replay"
         },
         {
+          "claim": "Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test.",
+          "evidence": "OPERATING_SEQUENCES.md",
+          "method": "Byte-checked operating-sequence or bounded interleaving replay"
+        },
+        {
           "claim": "Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit.",
           "evidence": "MAP_CONSUMERS.md",
           "method": "Consumer derivation; see scoped test coverage"
@@ -15483,7 +15561,7 @@
       ],
       "open_items": [
         "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-        "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
+        "Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.",
         "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
       ],
       "display_name": "Pressure-to-load processing gain",
@@ -15534,5 +15612,5 @@
     "unresolved_cell_maps": [],
     "axes_with_explicit_review": 90
   },
-  "review_generator_sha256": "ed27d78c54fafdf3e6bf2f3d15c1c03bf69d5f6fbe42f9a4813a29cd8346c135"
+  "review_generator_sha256": "30c06b325aea50743e8cb983c1ea726e2a764d1e40db9a28d5bc10e2f9a88474"
 }

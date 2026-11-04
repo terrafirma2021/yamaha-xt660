@@ -7535,7 +7535,6 @@
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish event-code phase relative to the physical crank cycle, including special scheduling modes.",
-      "Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Injection event-phase target",
@@ -7842,7 +7841,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
-      "Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Secondary injector quantity multiplier",
@@ -8575,7 +8573,6 @@
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate base ignition timing vs speed and coolant",
@@ -9028,11 +9025,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+    "selection": "Initializes Q8 post-start state 0x0994 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment \u2014 fast-decay state",
@@ -9096,11 +9092,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+    "selection": "Initializes Q8 post-start state 0x0996 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment \u2014 slow-decay state",
@@ -9445,7 +9440,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Relative-throttle qualification threshold vs speed",
@@ -9506,7 +9500,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs pressure estimate",
@@ -9584,7 +9577,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs intake temperature",
@@ -9638,7 +9630,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 \u2014 neutral",
@@ -9692,7 +9683,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 \u2014 lower speed-ratio range",
@@ -9746,7 +9736,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 \u2014 higher speed-ratio range",
@@ -9808,7 +9797,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs throttle",
@@ -9862,7 +9850,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 \u2014 neutral",
@@ -9916,7 +9903,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 \u2014 standard",
@@ -9970,7 +9956,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 \u2014 alternate",
@@ -10521,7 +10506,7 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
+      "Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Pressure-processing offset vs engine speed",
@@ -10705,7 +10690,6 @@
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate ignition mode \u2014 throttle threshold vs coolant",
@@ -10903,7 +10887,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel pulse contribution vs coolant",
@@ -13983,7 +13966,7 @@
     "selection": "RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md",
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
+      "Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Pressure-to-load processing gain",

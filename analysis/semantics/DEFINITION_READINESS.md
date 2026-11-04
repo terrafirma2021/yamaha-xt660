@@ -1,5 +1,7 @@
 # Preparing an XDF or custom tool
 
+The [operating-sequence review](OPERATING_SEQUENCES.md) closes the previously listed linked-sequence replay tasks for the early map set and post-start lifecycle in both families. It adds bounded pressure interleaving tests across all nine BINs. It does not establish absolute physical references, exhaustive whole-ECU behaviour or safe edited ranges.
+
 The deliverable now is an evidence model that either kind of tool can consume. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
 
 The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separately, including source review and outstanding sign-off requirements. A final **Verified** state must identify its exact claim; verified bytes or a matched MCU register do not imply a verified physical tuning definition.

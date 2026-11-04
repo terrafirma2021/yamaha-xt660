@@ -1,5 +1,7 @@
 # Pressure sampling, estimation and fuel-map load
 
+The subsequent [instruction-boundary interleaving pass](OPERATING_SEQUENCES.md#pressure-taskinterrupt-interaction) checks one actual pressure producer invocation at each boundary of the selected task calculations in all nine BINs. It confirms mixed-age sample/window outcomes and checks their resulting filter arithmetic. Repeated interrupt streams and physical ADC/timer timing remain outside that bounded fixture.
+
 Six curves use RAM `08F2`: startup pressure gain (`19C6`), transient pressure gain (`353A`), load/throttle fuel pressure gains (`323C`, `32E0`), spark bound (`4BAC`) and pressure-to-load gain (`1854`). This input is a selected, clamped state, not the diagnostic pressure byte and not automatically kPa.
 
 [pressure_state.py](../../scripts/pressure_state.py) models the early selection and tracking blocks. The subsequent [cross-family instruction replay](../../scripts/test_pressure_sources.py) adds acquisition-result storage, the complete five-sample eligibility block, stock load-sample selection, both normalization paths and the intervening filter. Its [23,904 passing cases across all nine BINs](../firmware/pressure_source_validation.json) establish the integer transfer at those boundaries. They do not establish analog calibration or complete ECU scheduling.

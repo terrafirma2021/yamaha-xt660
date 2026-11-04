@@ -89,6 +89,7 @@ Ideal knot positions derived from the uniform header; final endpoint may lie bey
 
 - Lookup inputs, destination and immediate selection: Evaluated at 0x8F91 into threshold 0x0A05 after filtered relative TPS is capped to byte 0x08EC; qualification tests follow at 0x8FAA [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
 - Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Cell interpretation: relative_tps_counts. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
@@ -96,7 +97,6 @@ Ideal knot positions derived from the uniform header; final endpoint may lie bey
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
 - Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.
-- Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

@@ -16,7 +16,7 @@ Inputs: u8 0x08F4 coolant.
 
 Output: u16 Q8 state 0x0996; decays by twice ROM 0x3314 per fuel update.
 
-Selection: Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used.
+Selection: Initializes Q8 post-start state 0x0996 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used.
 
 Interpolation: clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented.
 
@@ -102,13 +102,13 @@ Conditional candidate profile. Ideal final knot can exceed clamped input span.
 
 ### Resolved in the code
 
-- Lookup inputs, destination and immediate selection: Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Lookup inputs, destination and immediate selection: Initializes Q8 post-start state 0x0996 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Cell interpretation: post_start_enrichment_pp. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.
-- Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

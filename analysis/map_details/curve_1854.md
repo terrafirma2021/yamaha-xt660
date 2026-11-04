@@ -106,12 +106,13 @@ Consumer instruction addresses: `0x9609`, `0x965E`.
 
 - Lookup inputs, destination and immediate selection: RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
 - Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families. [Byte-checked instruction replay](../semantics/PRESSURE_ESTIMATE.md).
+- Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.
-- Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.
+- Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

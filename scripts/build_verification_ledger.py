@@ -107,6 +107,7 @@ def build():
         })
     report_paths = [ROOT / 'analysis/full/validation.json', ROOT/'analysis/firmware/pin_configuration_validation.json',
                     ROOT/'analysis/firmware/input_coordinate_validation.json', ROOT/'analysis/firmware/map_entry_validation.json',
+                    ROOT/'analysis/firmware/operating_sequence_validation.json', ROOT/'analysis/firmware/pressure_interleaving_validation.json',
                     *sorted(OUT.glob('*_validation.json'))]
     for path in report_paths:
         r = json.loads(path.read_text())

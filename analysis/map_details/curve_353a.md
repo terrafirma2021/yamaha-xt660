@@ -101,12 +101,12 @@ Conversion: `raw*100/128`; unit: **percent of reference multiplier**.
 
 - Lookup inputs, destination and immediate selection: Pressure factor shared by the two transient pulse calculations beginning at 0x9217 and 0x9438 [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
 - Pressure-estimate eligibility, retained-target tracking, replacement and source selection have byte-checked instruction replay in both families. [Byte-checked instruction replay](../semantics/PRESSURE_ESTIMATE.md).
+- Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Cell interpretation: gain128_percent. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.
-- Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

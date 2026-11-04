@@ -91,12 +91,12 @@ Input is clipped to 0..255 before lookup; four serviced samples, not a guarantee
 
 - Lookup inputs, destination and immediate selection: Variant 9 and filtered neutral input PB4 low (0x0896 bit 4 clear) [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
 - Input = clamp(128 + current filtered TPS count - historical count, 0, 255). Stored ring mask 7 spans four serviced samples. Subtracting 128 gives signed count change; clipping applies at the endpoints. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale. [Consumer arithmetic differential tests](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.
-- Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

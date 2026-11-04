@@ -137,15 +137,20 @@ for record in physical['maps']:
             assert axis['values']==[v-128 for v in axis['raw_ideal_knots']]
 firmware_catalog=json.loads((ROOT/'analysis/firmware/catalog.json').read_text())
 for filename,script,family,count in [('input_coordinate_validation.json','test_input_coordinates.py',None,154368),
-                                     ('map_entry_validation.json','test_map_entry_paths.py','early',11520)]:
+                                     ('map_entry_validation.json','test_map_entry_paths.py','early',11520),
+                                     ('operating_sequence_validation.json','test_operating_sequences.py',None,31937),
+                                     ('pressure_interleaving_validation.json','test_pressure_interleaving.py',None,14260)]:
     report=json.loads((ROOT/'analysis/firmware'/filename).read_text())
     assert report['result']=='passed' and report['cases']==count
     assert report['test_script_sha256']==digest(ROOT/'scripts'/script)
     for name,expected in report['dependencies'].items():assert digest(ROOT/'scripts'/name)==expected
     expected={i['id']:i['sha256'] for i in firmware_catalog['images'] if family is None or i['code_family']==family}
     assert {i['id']:i['firmware_sha256'] for i in report['images']}==expected
-    if family is None:
+    if filename=='input_coordinate_validation.json':
         assert all(i['stock_load_delta_deadband']==255 and i['stock_history_mask']==7 for i in report['images'])
+    if filename=='operating_sequence_validation.json':
+        families={i['id']:i['code_family'] for i in firmware_catalog['images']}
+        assert all(('transient_to_output' in i['checks'])==(families[i['id']]=='early') for i in report['images'])
 fixed_path=ROOT/'firmware/XT660X 2005 startup-checksum-fixed.bin'
 fixed=fixed_path.read_bytes()
 fix=json.loads((OUT/'checksum_fix.json').read_text())

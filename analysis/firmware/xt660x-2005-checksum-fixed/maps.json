@@ -7553,7 +7553,6 @@
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
       "Establish event-code phase relative to the physical crank cycle, including special scheduling modes.",
-      "Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Injection event-phase target",
@@ -7561,7 +7560,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "e55a5c27736a8761c8e96acec072102325e08cb2d0dbb4d4702cfe38f8ab0709",
-    "input_findings": [],
+    "input_findings": [
+      "Phase limiter boundaries, ordinary/pattern-cycle dispatch, delayed and queued starts, overlapping pulses and timer wrap are replay-checked. The limiter skips gap codes differently by direction. Physical crank phase is still unconfirmed."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -7863,7 +7864,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
-      "Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Secondary injector quantity multiplier",
@@ -7871,7 +7871,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "d1fd1ebc2dac0d7c98be6b73032a5cd17713e96005d17db804480c5af195b291",
-    "input_findings": [],
+    "input_findings": [
+      "The non-9 secondary request is replayed through immediate, ordinary and phase-aligned output paths. It shares transient counters with the primary path; two special scheduling branches write its retained correction into primary request 0x092A. This is not proof of a twin-cylinder hardware identity."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -8605,7 +8607,6 @@
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Establish CPS edge relative to mechanical TDC and the coil firing edge; relative scheduler degrees are not absolute BTDC.",
-      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate base ignition timing vs speed and coolant",
@@ -8613,7 +8614,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "d667e972ea87cc6c086ea36ec6c08552fb05ac35f0e90c3f19be3d7aa753161d",
-    "input_findings": [],
+    "input_findings": [
+      "Early alternate-mode entry, hysteresis, exits and re-entry are replayed together with map lookup, base selection and coil timer scheduling. The tests include neutral/variant differences and output inhibits, with simulated capture/pin states."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9076,11 +9079,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+    "selection": "Initializes Q8 post-start state 0x0994 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment — fast-decay state",
@@ -9088,7 +9090,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Fast/slow describe the relative decay with stock decrement bytes 123/2. They are alternative enrichment states, not two terms to add; wall-clock decay time remains mode-dependent.",
     "cells_sha256": "524671dcd235fa1167d3972351aa69e47a05d942a9d0541f73dda50c0cd607c5",
-    "input_findings": [],
+    "input_findings": [
+      "Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9147,11 +9151,10 @@
     "interpolation": "clamped uniform Q8 linear lookup; output may retain Q8 or take high byte as documented",
     "engineering_decode": null,
     "ready_for_tuning_export": false,
-    "selection": "Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used",
+    "selection": "Initializes Q8 post-start state 0x0996 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used",
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Post-start enrichment — slow-decay state",
@@ -9159,7 +9162,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Fast/slow describe the relative decay with stock decrement bytes 123/2. They are alternative enrichment states, not two terms to add; wall-clock decay time remains mode-dependent.",
     "cells_sha256": "55d3a4814089fcf049380bb2fa653f85610fa581a4e1694e145f15a58bbda160",
-    "input_findings": [],
+    "input_findings": [
+      "Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9516,7 +9521,6 @@
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Relative-throttle qualification threshold vs speed",
@@ -9524,7 +9528,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "4001ba71acef633247a0806147b959216c7013b82c0d88630e72e4d6bee6efed",
-    "input_findings": [],
+    "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9580,7 +9586,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs pressure estimate",
@@ -9588,7 +9593,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "52e79b11711faf8d7d7abec3ab3369797364d9a2689c3060d3e2853563de7905",
-    "input_findings": [],
+    "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9661,7 +9668,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the IAT circuit/temperature transfer before assigning Celsius.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs intake temperature",
@@ -9669,7 +9675,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5ef8aad4fe4f48b9ac63229bc517077fc93944c631c641c60166c898b9aa35d2",
-    "input_findings": [],
+    "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9718,7 +9726,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 — neutral",
@@ -9727,6 +9734,7 @@
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "0448497c4ee03f458d27a2f8b2f13601ef7fd7b7cc7341d2f4aed7e594579984",
     "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
       "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
     ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
@@ -9777,7 +9785,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 — lower speed-ratio range",
@@ -9786,6 +9793,7 @@
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "91249390b65e4f8a231f34cb9af7fb6a197ca0535da30d87c47dae4eeba3c6d3",
     "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
       "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
     ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
@@ -9836,7 +9844,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 1 — higher speed-ratio range",
@@ -9845,6 +9852,7 @@
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "491cccd2f88c559912b1319d41d9d69395ebc67d781cd904ea6b52a6cb5a423a",
     "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
       "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
     ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
@@ -9903,7 +9911,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm sensor/mechanical count-to-angle transfer before assigning degrees or percent throttle; baseline learning and filtering are replay-checked.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel multiplier vs throttle",
@@ -9911,7 +9918,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "1f726293631cc9fc3d8c31af993602beff1089ff3df8be379e2d7fd7b47f7669",
-    "input_findings": [],
+    "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -9960,7 +9969,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 — neutral",
@@ -9969,6 +9977,7 @@
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "3a7329187ef9d48b86311abe3d189fe2a8dad783b38b5ffcd9328a4123edfed5",
     "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
       "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
     ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
@@ -10019,7 +10028,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 — standard",
@@ -10028,6 +10036,7 @@
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "86ee084c933e0af9e271ca60785ed7c93a6567384180d0d1950fa31c821f5682",
     "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
       "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
     ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
@@ -10078,7 +10087,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm TPS count-to-angle transfer for angular change. The decoded coordinate is a position difference, not a time-normalized rate.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel response 2 — alternate",
@@ -10087,6 +10095,7 @@
     "naming_note": "Family 1 feeds RAM 0x0A0C and splits at stock ratio code 1 (low 0–1; higher 2–5 in normal classification). Family 2 feeds 0x0D04 and splits at 5 (normal 0–5; extended above 5). Both give priority to variant 9 with filtered PB4 low. Codes are not established gear numbers; curve output is not final pulse duration.",
     "cells_sha256": "86ee084c933e0af9e271ca60785ed7c93a6567384180d0d1950fa31c821f5682",
     "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.",
       "Input is the clipped byte 128 + filtered TPS change over four serviced samples. Raw minus 128 gives relative TPS count change; it does not give degrees/second."
     ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
@@ -10658,7 +10667,7 @@
     "unresolved": [
       "Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.",
       "Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.",
-      "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
+      "Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Pressure-processing offset vs engine speed",
@@ -10666,7 +10675,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "5e8a75acf27058e40ae1cfaa631b30e6fd9280e10431ab9eb1cbdf626dcf295e",
-    "input_findings": [],
+    "input_findings": [
+      "Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -10851,7 +10862,6 @@
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
       "Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.",
-      "Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Alternate ignition mode — throttle threshold vs coolant",
@@ -10859,7 +10869,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "bb8b46d8b46a7639dbb02cffd8c1e5ab062577bc8273804f8676bee0d52f0afd",
-    "input_findings": [],
+    "input_findings": [
+      "Early alternate-mode entry, hysteresis, exits and re-entry are replayed together with map lookup, base selection and coil timer scheduling. The tests include neutral/variant differences and output inhibits, with simulated capture/pin states."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -11058,7 +11070,6 @@
     "evidence_addresses": [],
     "unresolved": [
       "Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.",
-      "Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Transient fuel pulse contribution vs coolant",
@@ -11066,7 +11077,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "7310d864fca0d8f605d9609d3cf12330d353e791dc2cf942a8f7985689e2212d",
-    "input_findings": [],
+    "input_findings": [
+      "Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -14233,7 +14246,7 @@
     "selection": "RAM copy is evaluated at 0x95FD for filtered load and 0xEA1B for the unfiltered sampled-load continuation, using selected estimate 0x08F2. Stock/weighted sample modes, fault substitution, estimator selection and replacement are replay-checked; see semantics/PRESSURE_ESTIMATE.md",
     "unresolved": [
       "Five-sample eligibility, tracking, replacement and source selection are replay-checked in both families, including the early alternate estimator. Confirm analog transfer and absolute reference before assigning kPa.",
-      "Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.",
+      "Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.",
       "Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off."
     ],
     "display_name": "Pressure-to-load processing gain",
@@ -14241,7 +14254,9 @@
     "naming_basis": "analysis/semantics/MAP_CONSUMERS.md",
     "naming_note": "Descriptive alias based on recovered dataflow; it does not establish physical axis units or tuning readiness.",
     "cells_sha256": "75c3b77f108d963ed10a044d32a7da14febc872fefa5e565c81f3617906b22fb",
-    "input_findings": [],
+    "input_findings": [
+      "Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   }
 ]

@@ -83,12 +83,12 @@ Conditional candidate profile. Ideal final knot can exceed clamped input span.
 ### Resolved in the code
 
 - Lookup inputs, destination and immediate selection: Periodic lookup at 0xB8B9 publishes coolant factor 0x0A0F for the joint transient pulse calculation [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
+- Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Exact joint integer pulse arithmetic is decoded: the response, coolant, pressure, IAT and throttle factors together produce timer ticks. A factor alone has no unique millisecond scale. [Consumer arithmetic differential tests](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm the coolant circuit/temperature transfer and resolve the XT manual fallback conflict before assigning Celsius.
-- Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

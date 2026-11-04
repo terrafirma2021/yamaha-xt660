@@ -85,13 +85,14 @@ Ideal knot positions derived from the uniform header; final endpoint may lie bey
 
 - Lookup inputs, destination and immediate selection: Evaluated at 0xB27B after inclusive throttle/speed/load gates, clear 08AF:3C / 089F:80 / 0881:10 and counter B3A > ROM 1871 (or an already-saturated counter). CB6 keeps filtering its retained target when gates reject. ROM 186F != 128 selects this estimator; see semantics/PRESSURE_ESTIMATE.md [Instruction trace; replay coverage varies by block](../semantics/MAP_SELECTORS.md).
 - Speed-history selection, saturation/stale cases and scheduler arithmetic are replay-checked in all nine BINs; clock and crank geometry remain conditional. [Byte-checked instruction replay](../semantics/INPUT_COORDINATES.md).
+- Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test. [Byte-checked operating-sequence or bounded interleaving replay](../semantics/OPERATING_SEQUENCES.md).
 - Cell interpretation: load_offset_codes. Integer rounding and consumer context are retained; conditional physical references remain explicit. [Consumer derivation; see scoped test coverage](../semantics/MAP_CONSUMERS.md).
 
 ### What remains for this map
 
 - Confirm actual timer clock; the 500 kHz profile remains service-correlated, not measured.
 - Confirm CPS pattern per mechanical revolution; the 12-pitch / 180-degree speed-period interpretation remains conditional.
-- Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.
+- Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.
 - Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.
 
 See [consumer derivations](../semantics/MAP_CONSUMERS.md), [per-map status](../semantics/MAP_RESOLUTION.md) and [machine-readable values](../semantics/physical_units.json). Complete axis interpretation, mode coverage and hardware validation are separate from this cell interpretation.

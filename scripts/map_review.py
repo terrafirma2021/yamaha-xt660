@@ -30,8 +30,8 @@ SELECTIONS = {
     'correction_surface_D': 'Computed at 0xB886 into 0x0A88; selected as the alternate base when 0x0885 bit 0x20 is set',
     'curve_18b6': 'Startup flag 0x0881:10 skips this gate. Otherwise 0x09A1:10 bypasses the delay; without that bypass ROM 0x18B5 == 128 inhibits it. Counter 0x0CAF reaching the looked-up threshold sets 0x09A1:40; this block does not clear the latched bit',
     'curve_1996': 'Used by one-shot initialization at 0x715A–0x716C and the startup fuel branch at 0x7BBA (0x0881:10 set). The startup branch retains Q8 precision',
-    'curve_32ef': 'Initializes post-start state 0x0994 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used',
-    'curve_3301': 'Initializes post-start state 0x0996 when 0x0884:08 is clear; reset path at 0x7381 reloads it if ROM 0x32EE != 128. Each fuel update decays this state; the larger of 0x0994 and 0x0996 is used',
+    'curve_32ef': 'Initializes Q8 post-start state 0x0994 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used',
+    'curve_3301': 'Initializes Q8 post-start state 0x0996 only when both outer 0x0883:20 and inner 0x0884:08 gates are clear. Reset clears the outer gate; 0x7381 independently reloads the state if ROM 0x32EE != 128. Each fuel update decays it; the larger of 0x0994 and 0x0996 is used',
     'curve_4234': 'Evaluated in the fuel update at 0x74B8 and the periodic 0xB166 task, using the high byte of filtered supply 0x08DA; rounded result times eight supplies compensation 0x095E',
     'curve_19c6': 'Startup fuel branch (0x0881:10) evaluates pressure multiplier from 0x08F2',
     'curve_19ba': 'Startup fuel branch (0x0881:10) uses 0x08CE; either TPS fault bit in 0x08AF:0C forces this lookup input to zero',
@@ -69,6 +69,24 @@ LOAD_DELTA_INACTIVE = ('All supplied BINs store load-change deadband 255 (early 
                        'and these six gain maps contribute zero. Editing their cells alone cannot activate this contribution.')
 
 
+def sequence_findings(key, family):
+    rows = []
+    if (family == 'early' and key in {'curve_32ef', 'curve_3301'}) or (family == 'late' and key in {'table_32cc', 'table_32de'}):
+        rows.append('Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag.')
+    if family == 'early':
+        if key in TRANSIENT_PULSE:
+            rows.append('Linked transient fixtures execute map lookups, qualification/rearm branches, immediate pulse delivery and retained correction through injector timer writes. Complete counted episodes and cooldown are checked. Primary and dormant secondary channels share the event counter; individual factors have no unique millisecond scale.')
+        if key == 'modulo24_surface':
+            rows.append('Phase limiter boundaries, ordinary/pattern-cycle dispatch, delayed and queued starts, overlapping pulses and timer wrap are replay-checked. The limiter skips gap codes differently by direction. Physical crank phase is still unconfirmed.')
+        if key == 'correction_surface_A':
+            rows.append('The non-9 secondary request is replayed through immediate, ordinary and phase-aligned output paths. It shares transient counters with the primary path; two special scheduling branches write its retained correction into primary request 0x092A. This is not proof of a twin-cylinder hardware identity.')
+        if key in {'correction_surface_D', 'curve_4a33'}:
+            rows.append('Early alternate-mode entry, hysteresis, exits and re-entry are replayed together with map lookup, base selection and coil timer scheduling. The tests include neutral/variant differences and output inhibits, with simulated capture/pin states.')
+    if (family == 'early' and key in {'curve_1854', 'curve_1880'}) or (family == 'late' and key == 'table_1860'):
+        rows.append('Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test.')
+    return rows
+
+
 def resolved_findings(m, unit):
     """Scoped, linkable claims; not a blanket per-map verification badge."""
     rows = [dict(claim='Lookup inputs, destination and immediate selection: '+m['selection'],
@@ -86,6 +104,8 @@ def resolved_findings(m, unit):
             evidence = 'PRESSURE_ESTIMATE.md' if domain in {'load','pressure_estimate'} else 'INPUT_COORDINATES.md'
             rows.append(dict(claim=claim, evidence=evidence, method='Byte-checked instruction replay'))
     key=m['id']
+    for claim in sequence_findings(key, 'early'):
+        rows.append(dict(claim=claim, evidence='OPERATING_SEQUENCES.md', method='Byte-checked operating-sequence or bounded interleaving replay'))
     if key.startswith('delta_098'):
         claim = LOAD_DELTA_INACTIVE if key.startswith('delta_0989') else 'The throttle delta uses high-byte differences, magnitude cap 127, deadband, stale-state and high-throttle gates. These branches are replay-checked in all nine BINs. This is not a degrees/second coordinate.'
         rows.append(dict(claim=claim, evidence='INPUT_COORDINATES.md', method='Byte-checked instruction replay'))
@@ -100,7 +120,7 @@ def resolved_findings(m, unit):
 
 def per_image_input_findings(m, family):
     """Only facts whose source/calibration tests include all family members."""
-    rows=[];key=m['id']
+    key=m['id'];rows=sequence_findings(key, family)
     if (family=='early' and key.startswith('delta_0989_gain_')) or (family=='late' and key in LATE_LOAD_DELTA):
         rows.append(LOAD_DELTA_INACTIVE)
     if (family=='early' and key.startswith('delta_0985_gain_')) or (family=='late' and key in LATE_THROTTLE_DELTA):
@@ -171,16 +191,6 @@ def remaining_questions(m, unit):
     if conversion == 'relative_tps_counts':
         items.append('Confirm the relative TPS count-to-mechanical-angle transfer for the cell threshold.')
     if m['id'] in {'curve_1854', 'curve_1880'}:
-        items.append('Check concurrent interrupt/task behaviour around the replayed calculation blocks on the identified ECU; the documented calculation branches are already covered.')
-    if m['id'] in TRANSIENT_PULSE:
-        items.append('Replay the complete transient trigger, pulse accumulation and output scheduling sequence together; current tests cover input history, map selection and isolated pulse arithmetic.')
-    if m['id'] in {'curve_32ef','curve_3301'}:
-        items.append('Replay post-start initialization, reset/reload and decay as one lifecycle; current tests establish the individual lookups and maximum-selection arithmetic.')
-    if m['id']=='modulo24_surface':
-        items.append('Replay the phase limiter and every special injection dispatcher mode as one event sequence; modulo interpolation alone does not verify event timing.')
-    if m['id']=='correction_surface_A':
-        items.append('Validate the secondary-injector scheduling path under the non-XT variant configurations; the normal XT variant skips that entry.')
-    if m['id'] in {'correction_surface_D','curve_4a33'}:
-        items.append('Replay the early-family alternate ignition state transitions together with final coil scheduling; the later-family state tests cannot certify this early image.')
+        items.append('Validate sustained interrupt load and physical ADC/timer timing on the identified ECU. The bounded software test now covers one producer invocation at each consumer instruction boundary and preserves mixed-age source behaviour.')
     items.append('Validate edited behaviour, permitted ranges and output effects on the identified ECU; software arithmetic checks do not provide bench sign-off.')
     return list(dict.fromkeys(items))

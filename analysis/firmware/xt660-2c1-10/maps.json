@@ -15151,7 +15151,9 @@
       ]
     ],
     "cells_sha256": "75c3b77f108d963ed10a044d32a7da14febc872fefa5e565c81f3617906b22fb",
-    "input_findings": [],
+    "input_findings": [
+      "Single-producer preemption is replayed at every instruction boundary in the selected pressure task fixtures. Separate source-word loads can use an old/new pair; no atomic multiword snapshot is assumed. Repeated interrupts and physical peripheral timing remain outside this bounded test."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -15318,7 +15320,9 @@
       ]
     ],
     "cells_sha256": "422417a8d24cf64f8fb603781aa5e7c7df353cd3d6b33111659f27f269323a24",
-    "input_findings": [],
+    "input_findings": [
+      "Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
@@ -15485,7 +15489,9 @@
       ]
     ],
     "cells_sha256": "c200cd27316d8d1ba26f138a5c5c381500ea755230ab48583cc77e28b71f4ab5",
-    "input_findings": [],
+    "input_findings": [
+      "Nested one-shot initialization, reset with reload enabled/disabled, coolant changes and repeated decay are replay-checked in this BIN. The two Q8 states are selected by maximum, not added. Reset clears the outer initialization flag but retains the inner flag."
+    ],
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
