@@ -235,12 +235,12 @@ class StaticSite:
         panel['data-profile'],panel['data-firmware'] = p['id'],image['id']
         panel['data-static-context'] = 'true'
         put(soup.find(id='selection-status'),esc(f'{self.models[p["model"]]["name"]} · {p["year"]} · {image["label"]} · {image["variant"]}'))
-        if soup.find(id='vehicle-overview') is not None:
+        if soup.select_one('.bike-picker') is not None:
             panel.append(fragment(self.picker(p,image,section,url)))
         else:
             panel['class'] = [*panel.get('class',[]),'vehicle-context-compact']
             panel.append(fragment(f'<a class="change-bike" href="{url(self.path(p,image,"overview"))}#choose-bike">Change bike</a>'))
-        for ident in ['vehicle-overview','vehicle-research','vehicle-hardware']:
+        for ident in ['vehicle-research','vehicle-hardware']:
             node=soup.find(id=ident)
             if node is not None:
                 put(node,self.overview(p,image,url,ident=='vehicle-hardware'))

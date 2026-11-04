@@ -46,8 +46,11 @@ for record in records:
             if a.get_text() in ('Overview','Maps','Pins','Downloads','Research'):
                 destination=posixpath.normpath(posixpath.join(posixpath.dirname(path),href))+'/'
                 assert destination.startswith(record['path']),(path,href)
-        if section in ('overview','wiring'):
-            node=soup.find(id={'overview':'vehicle-overview','wiring':'vehicle-hardware','research':'vehicle-research'}[section])
+        if section=='overview':
+            assert soup.find(id='vehicle-overview') is None
+            assert soup.select_one('.bike-picker')
+        if section=='wiring':
+            node=soup.find(id='vehicle-hardware')
             assert image['label'] in node.get_text() and node.find('img')
         if section=='pins':
             assert soup.find(id='pin-scope')['data-firmware']==image['id']
@@ -73,7 +76,8 @@ for record in records:
             assert selected and selected['href'].endswith('/'+image['id']+'.xdf')
             assert len(soup.select('.downloads-table a[download][href$=".xdf"]'))==9
 home=parse('index.html')
-assert home.select_one('#vehicle-overview .vehicle-summary')
+assert home.find(id='vehicle-overview') is None
+assert home.select_one('.bike-picker')
 assert len(home.select('#bike-fallback a'))==len(records)
 legacy=parse('tools/index.html')
 assert {'Bench connections','XDF downloads'} <= {a.get_text() for a in legacy.select('main a')}

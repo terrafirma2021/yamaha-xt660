@@ -22,7 +22,7 @@ def home():
         opening=f'<a href="{selected["route"]}"' if selected else '<div aria-disabled="true"'
         closing='a' if selected else 'div'
         cards.append(f'''{opening} class="bike-card {m['id']}" data-bike="{m['id']}"><span class="kicker">{esc(m['style'])}</span><strong>{esc(m['name'])}</strong><img class="bike-thumb" src="{m['photo']['file']}" alt="{esc(m['name'])} model reference" width="{m['photo']['width']}" height="{m['photo']['height']}" loading="lazy"><span>{esc(m['tagline']) if selected else 'No BIN yet'}</span><b aria-hidden="true">{'↗' if selected else '—'}</b></{closing}>''')
-    return '''<div class="page-heading"><h1>XT660 ECU library</h1></div><section class="bike-picker" aria-label="Motorcycle families">'''+''.join(cards)+'''</section><section id="vehicle-overview" class="vehicle-overview"></section>'''
+    return '''<div class="page-heading"><h1>XT660 ECU library</h1></div><section class="bike-picker" aria-label="Motorcycle families">'''+''.join(cards)+'''</section>'''
 
 def build_pages(shell,write,repo):
     data=catalog();write('vehicles/catalog.json',json.dumps(data,ensure_ascii=False,indent=2)+'\n')
