@@ -125,7 +125,7 @@ def build():
         checks = dict(window_copy_preemption=n, filter_preemption=f)
         if family == 'early': checks['alternate_estimator_preemption'] = alternate(r, l)
         results.append(dict(id=e['id'], firmware_sha256=e['sha256'], checks=checks,
-            window_outcomes=windows, filter_source_pairs=pairs,
+            window_outcomes=windows, filter_source_pairs=[list(pair) for pair in pairs],
             instruction_addresses=[f'0x{a:04X}' for a in sorted(r.executed)]))
         print(e['id'], checks, flush=True)
     return dict(result='passed', cases=sum(sum(e['checks'].values()) for e in results), images=results,

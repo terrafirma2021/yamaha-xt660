@@ -106,7 +106,9 @@ The supplied firmware remains unchanged and already contains the owner’s immob
 
 Tools used: Ghidra 12.1.4, JDK 21, Python 3 standard library, and Clang for C validation. The included `XT660-CPU12:BE:16:default` processor is a corrected flat CPU12 model. See [processor setup and corrections](ghidra/README.md) before opening the Ghidra archive.
 
-The [Pages workflow](.github/workflows/pages.yml) generates the website from the current analysis: a home page, searchable catalogue of all maps, the pin explorer and rendered research documents. Raw firmware is not included in the website artifact. To prepare the same site locally, install `python -m pip install -r site/requirements.txt`, then run `python scripts/build_pin_overview.py`, `python scripts/pin_families.py`, `python scripts/test_pin_families.py`, `python scripts/verify_pin_overview.py`, `python scripts/build_pages.py` and `python scripts/verify_pages.py`. The site is written to ignored directory `_site/`; serve it with `python -m http.server --directory _site 8000`.
+The [Pages workflow](.github/workflows/pages.yml) checks the stored evidence provenance, builds the static website and validates its generated content, links, profile routes and no-script HTML. It does not rerun the firmware instruction simulations on every push. Run the relevant regression checks locally before pushing; the complete suite is also available through the manually triggered [firmware regression workflow](.github/workflows/regression.yml).
+
+For a local site build, install `python -m pip install -r site/requirements.txt`, then run `python scripts/build_pages.py` and `python scripts/verify_pages.py`. The site is written to ignored directory `_site/`; serve it with `python -m http.server --directory _site 8000`. The registered firmware library is packaged byte-for-byte with the website and checked against its recorded hashes. Regenerate pin or firmware analysis only when its source data changes.
 
 ```powershell
 .\scripts\run_analysis.ps1 -GhidraHome 'C:\tools\ghidra_12.1.4_PUBLIC' -JavaHome 'C:\tools\jdk-21'
