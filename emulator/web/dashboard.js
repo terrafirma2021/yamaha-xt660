@@ -86,8 +86,9 @@ function render(s){
  if(s.runtime?.independent&&powered&&!paused)text('simState',s.runtime.realtime_ratio?(s.runtime.behind_ms>150?'Below real time · ':'Real time · ')+s.runtime.realtime_ratio.toFixed(2)+'×':'Running');
  $('sessionLight').classList.toggle('on',powered&&!paused);text('link',!powered?'KEY OFF':m.connected?(paused?'K-LINE / PAUSED':'K-LINE / CONNECTED'):'WAITING FOR ECU');
  $('heartbeat').classList.toggle('active',m.connected&&m.frames%2===0);
- $('speed').textContent=m.connected?m.speed_pulses:'—';
- $('speedLabel').textContent='VSS PULSES / REPLY';$('rpmLabel').textContent='RPM · NOMINAL';
+ $('speed').textContent=m.connected&&Number.isFinite(m.speed_mph)?Math.round(m.speed_mph):'—';
+ $('speed').title='Yamaha DataLogger profile: sum eight normal speed replies as km/h, then divide by 1.609344. Original reply cadence unverified.';
+ $('speedLabel').textContent='MPH · EST.';$('rpmLabel').textContent='RPM · NOMINAL';
  $('rpm').textContent=m.connected?Math.round(m.engine_code*190/5.12).toLocaleString():'—';
  $('rpm').title='Received engine code × 190 / 5.12, nominal 16 MHz profile';
  for(const [i,bar] of [...$('tach').children].entries())bar.classList.toggle('active',m.connected&&i<m.engine_code*190/5.12/200);
@@ -104,7 +105,7 @@ function render(s){
  $('diagState').textContent=m.mode==='diagnostic'?'d:'+String(m.diagnostic_id??'—')+' · '+String(m.diagnostic_value??'—'):entryText+' · '+m.entry_seconds+' s simulated';
  $('diagNumber').textContent=m.diagnostic_id==null?'d:—':'d:'+String(m.diagnostic_id).padStart(2,'0');$('diagName').textContent=m.diagnostic_name;$('diagValue').textContent=m.diagnostic_value??'—';
  $('diagHelp').textContent=m.mode!=='diagnostic'?'Entry and confirmation are automatic. The ECU advances its own hold counters.':m.diagnostic_kind==='actuator'?'Run test cycles the simulated run switch. The ECU controls the output pulses and warning lamp.':m.diagnostic_kind==='erase'?'Clear history performs the run-switch sequence. Active faults may remain.':m.diagnostic_kind==='history'?(m.diagnostic_id===63?'The ECU cycles active oxygen-sensor fault codes.':'The ECU cycles stored fault codes automatically.'):'Previous and Next send the dashboard button commands. Values come from the ECU.';
- if(diag){$('speed').textContent=m.mode==='diagnostic'?$('diagNumber').textContent:'dIAG';$('rpm').textContent=m.diagnostic_value??'—';$('speedLabel').textContent='DIAGNOSTIC';$('rpmLabel').textContent='ECU REPLY';$('rpm').title='Diagnostic data byte returned by the ECU';$('temperature').textContent='—';$('hotLamp').classList.remove('hot');$('faultText').textContent=m.mode==='diagnostic'?m.diagnostic_name:$('diagState').textContent;$('sessionHint').textContent=m.mode==='diagnostic'?'Use the dash buttons to select a diagnostic item.':'Waiting for the ECU’s diagnostic hold sequence.';}
+ if(diag){$('speed').textContent=m.mode==='diagnostic'?$('diagNumber').textContent:'dIAG';$('speed').title='Diagnostic number returned by the ECU';$('rpm').textContent=m.diagnostic_value??'—';$('speedLabel').textContent='DIAGNOSTIC';$('rpmLabel').textContent='ECU REPLY';$('rpm').title='Diagnostic data byte returned by the ECU';$('temperature').textContent='—';$('hotLamp').classList.remove('hot');$('faultText').textContent=m.mode==='diagnostic'?m.diagnostic_name:$('diagState').textContent;$('sessionHint').textContent=m.mode==='diagnostic'?'Use the dash buttons to select a diagnostic item.':'Waiting for the ECU’s diagnostic hold sequence.';}
  $('faultHistory').textContent=m.seen.length?'Codes received this key cycle: '+m.seen.join(', '):'No fault codes received.';
  if(bench.open)renderBench(s);
  if(s.adc)for(let n=0;n<8;n++)for(const prefix of ['adc','value'])if(document.activeElement!==$(prefix+n))$(prefix+n).value=n===0?b.throttle:s.adc[n];

@@ -31,7 +31,7 @@
     "normal_after_diag"
   ],
   "reference_report_sha256": "0ebde3ed16812dfa439b7a67dd2c1d566d51bf387b451e43da16a5c3ae8563b5",
-  "execution_report_sha256": "5d418a731dbecaadb1554c290e4413166fb42cbd7ebec3c4bc4a7c067dca2e91",
+  "execution_report_sha256": "e1a0507ce54a0c468f0b0af315f9cf672568e206573b9d184e3654df033537e3",
   "execution": [
     {
       "image": "xt660-2004-2006-companion",
@@ -43,20 +43,20 @@
         {
           "simulated_seconds": 2.032928625,
           "throttle": 0,
-          "unpaced_ratio": 1.220472738166387,
-          "wall_seconds": 1.6656895
+          "unpaced_ratio": 1.105785219380695,
+          "wall_seconds": 1.838448
         },
         {
           "simulated_seconds": 2.001877,
           "throttle": 100,
-          "unpaced_ratio": 1.2015290246207941,
-          "wall_seconds": 1.6661079
+          "unpaced_ratio": 1.086938072920651,
+          "wall_seconds": 1.8417581
         },
         {
           "simulated_seconds": 2.041736375,
           "throttle": 0,
-          "unpaced_ratio": 1.2207764321460817,
-          "wall_seconds": 1.67249
+          "unpaced_ratio": 1.110695037799787,
+          "wall_seconds": 1.8382511
         }
       ]
     },
@@ -70,20 +70,20 @@
         {
           "simulated_seconds": 2.00230775,
           "throttle": 0,
-          "unpaced_ratio": 1.1416467507866002,
-          "wall_seconds": 1.7538768
+          "unpaced_ratio": 1.078231060634821,
+          "wall_seconds": 1.8570303
         },
         {
           "simulated_seconds": 1.96371425,
           "throttle": 100,
-          "unpaced_ratio": 1.0998402311210353,
-          "wall_seconds": 1.7854541
+          "unpaced_ratio": 1.0612229661531398,
+          "wall_seconds": 1.8504257
         },
         {
           "simulated_seconds": 2.0013265,
           "throttle": 0,
-          "unpaced_ratio": 1.1397715725951354,
-          "wall_seconds": 1.7559014
+          "unpaced_ratio": 1.0843203544764424,
+          "wall_seconds": 1.8456967
         }
       ]
     },
@@ -97,20 +97,20 @@
         {
           "simulated_seconds": 2.00230775,
           "throttle": 0,
-          "unpaced_ratio": 1.1478888512178305,
-          "wall_seconds": 1.7443394
+          "unpaced_ratio": 1.0607986024192768,
+          "wall_seconds": 1.8875475
         },
         {
           "simulated_seconds": 1.96371425,
           "throttle": 100,
-          "unpaced_ratio": 1.1291512986209469,
-          "wall_seconds": 1.7391064
+          "unpaced_ratio": 1.049100591225358,
+          "wall_seconds": 1.8718074
         },
         {
           "simulated_seconds": 2.0013265,
           "throttle": 0,
-          "unpaced_ratio": 1.119670947651027,
-          "wall_seconds": 1.7874238
+          "unpaced_ratio": 1.0552482336702986,
+          "wall_seconds": 1.8965457
         }
       ]
     },
@@ -124,20 +124,20 @@
         {
           "simulated_seconds": 2.0022091875,
           "throttle": 0,
-          "unpaced_ratio": 1.196557255766914,
-          "wall_seconds": 1.6733083
+          "unpaced_ratio": 1.0739688709764972,
+          "wall_seconds": 1.8643084
         },
         {
           "simulated_seconds": 1.9638311875,
           "throttle": 100,
-          "unpaced_ratio": 1.1705791178034044,
-          "wall_seconds": 1.6776578
+          "unpaced_ratio": 1.036869741914981,
+          "wall_seconds": 1.8939999
         },
         {
           "simulated_seconds": 2.001351125,
           "throttle": 0,
-          "unpaced_ratio": 1.197793146593376,
-          "wall_seconds": 1.6708654
+          "unpaced_ratio": 1.0591485035073838,
+          "wall_seconds": 1.889585
         }
       ]
     },
@@ -151,20 +151,20 @@
         {
           "simulated_seconds": 2.00230775,
           "throttle": 0,
-          "unpaced_ratio": 1.1202483133818606,
-          "wall_seconds": 1.7873785
+          "unpaced_ratio": 1.0822486611123017,
+          "wall_seconds": 1.8501365
         },
         {
           "simulated_seconds": 1.96371425,
           "throttle": 100,
-          "unpaced_ratio": 1.13560163057725,
-          "wall_seconds": 1.7292281
+          "unpaced_ratio": 1.067369832728484,
+          "wall_seconds": 1.8397693
         },
         {
           "simulated_seconds": 2.0013265,
           "throttle": 0,
-          "unpaced_ratio": 1.1552069514911858,
-          "wall_seconds": 1.7324398
+          "unpaced_ratio": 1.080938674218428,
+          "wall_seconds": 1.8514709
         }
       ]
     }
@@ -251,10 +251,12 @@
       "390px mobile",
       "diagnostics"
     ],
-    "network": "Static same-origin requests only; no MCU server, API polling, COM port or remote scripts"
+    "network": "Static same-origin requests only; no MCU server, API polling, COM port or remote scripts",
+    "pacing_artifact_sha256": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
+    "pacing_note": "Recorded browser pacing for the initial browser build; this display update replays the same execution checkpoints and records fresh unpaced results below."
   },
   "artifacts": {
-    "xt660.wasm": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
+    "xt660.wasm": "d3a6da992be39b64b94c944c85ee61585964b29497f01614455a019898e9064d",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
   },
@@ -265,12 +267,100 @@
     "Physical oscillator, coolant offset and road pulses/km remain unconfirmed.",
     "Hardware ECU validation is separate."
   ],
-  "source_archive_rebuild": {
-    "result": "All three runtime artifacts reproduced byte-for-byte from the complete source archive in a clean build directory",
-    "artifacts": {
-      "xt660.wasm": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
-      "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
-      "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
-    }
+  "display": {
+    "logger_source": "https://github.com/terrafirma2021/Yamaha-DataLogger/blob/61a13fef5457e0128185a2ef9b5b2781ee9b12ce/yamaha/src/main.cpp#L406",
+    "speed_formula": "sum of eight accepted normal speed bytes / 1.609344 = estimated MPH",
+    "coolant_default": "reply - 30, estimated Celsius",
+    "diag_coolant_hidden": true,
+    "meter_tests": [
+      "eight-reply window",
+      "km/h to MPH",
+      "zero speed",
+      "wide sum does not wrap",
+      "bad checksum rejected",
+      "snapshot reads do not accumulate",
+      "diagnostics excluded",
+      "key and diagnostic resets"
+    ],
+    "browser_checks": {
+      "eightReplyExample": {
+        "frames": 693,
+        "values": [
+          7,
+          7,
+          8,
+          7,
+          7,
+          8,
+          7,
+          8
+        ],
+        "sum": 59,
+        "kmh": 59,
+        "mph": 36.660900342002705,
+        "display": "37",
+        "coolant": "~27"
+      },
+      "pausedSnapshotsStable": true,
+      "diagnosticCoolantHidden": true,
+      "coolantRestored": true,
+      "diagnosticExitSpeedZero": true,
+      "keyOffSpeed": "\u2014",
+      "reloadCelsiusDefault": true,
+      "rawCoolantToggle": true,
+      "errors": []
+    },
+    "all_bins": [
+      {
+        "image": "xt660-2004-2006-companion",
+        "sum": 38,
+        "kmh": 38,
+        "mph": 23.61210530501869,
+        "display": "24",
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-5vk-1x-2008",
+        "sum": 37,
+        "kmh": 37,
+        "mph": 22.990734112781354,
+        "display": "23",
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-2c1-10",
+        "sum": 37,
+        "kmh": 37,
+        "mph": 22.990734112781354,
+        "display": "23",
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-2c1-10-immo-off",
+        "sum": 37,
+        "kmh": 37,
+        "mph": 22.990734112781354,
+        "display": "23",
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-5vk-11",
+        "sum": 37,
+        "kmh": 37,
+        "mph": 22.990734112781354,
+        "display": "23",
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      }
+    ]
   }
 }

@@ -16,7 +16,30 @@ Json checkpoint(NativeCockpit& b) {
 template<class F> void until(NativeCockpit& b,F condition,int limit) {
   while(!condition()&&limit-->0)b.tick();require(condition(),"Firmware condition not reached");
 }
+void check_meter_display() {
+  auto reply=[](unsigned p){return std::vector<unsigned>{0,p,0,57,(p+57)&255};};
+  NativeMeter m;
+  for(int i=0;i<7;++i)m.accept(reply(5));
+  require(m.state()["speed_mph"].is_null(),"Speed needs eight replies");
+  auto before=m.state();
+  for(int i=0;i<30;++i)require(m.state()==before,"Snapshot changed speed window");
+  auto invalid=reply(5);invalid[4]^=1;
+  bool rejected=false;try{m.accept(invalid);}catch(const std::invalid_argument&){rejected=true;}
+  require(rejected&&m.state()==before,"Bad checksum changed speed window");
+  m.accept(reply(5));
+  require(m.state()["speed_kmh"]==40&&std::abs(m.state()["speed_mph"].get<double>()-24.85484768949336)<1e-10,"Logger km/h to MPH conversion");
+  for(int i=0;i<7;++i){m.accept(reply(0));require(m.state()["speed_kmh"]==40,"Speed did not hold completed window");}
+  m.accept(reply(0));require(m.state()["speed_mph"]==0,"Stopped speed did not become zero");
+  for(int i=0;i<8;++i)m.accept(reply(255));
+  require(m.state()["speed_kmh"]==2040,"Speed accumulator wrapped");
+  m.mode="diagnostic";m.accept(reply(255));
+  require(m.state()["speed_mph"].is_null(),"Diagnostic bytes counted as speed");
+  m.mode="normal";for(int i=0;i<8;++i)m.accept(reply(5));
+  require(m.state()["speed_kmh"]==40,"Diagnostic exit retained stale pulses");
+  m=NativeMeter();require(m.state()["speed_mph"].is_null(),"Key-cycle reset retained speed");
+}
 int main(int argc,char**argv){try {
+  check_meter_display();
   require(argc>=3,"Usage: validate.exe ROOT report.json [reference] [full]");
   fs::path root=argv[1];bool reference=argc>3&&std::string(argv[3])=="reference",full=argc>4;
   auto registry=Json::parse(read_bytes(root/"firmware/registry.json"));Json results=Json::array();

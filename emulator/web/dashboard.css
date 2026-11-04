@@ -242,3 +242,6 @@ html[data-theme=dark] header img{filter:grayscale(1) brightness(0) invert(1)}
 .diagnostic-toolbar #diagHelp{margin:7px 0 0}
 .diagnostic-toolbar #diagState{margin:0}
 @media(max-width:480px){.diagnostic-toolbar{padding:12px}.diagnostic-toolbar .diagnostic-reading{gap:9px}.diagnostic-toolbar .diagnostic-reading span{font-size:12px}.diagnostic-toolbar .diagnostic-reading small{display:none}}
+
+/* Diagnostic replies use this byte for test data, not coolant. */
+.display.diagnostic .coolant-reading{visibility:hidden}

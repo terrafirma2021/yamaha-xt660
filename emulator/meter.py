@@ -37,6 +37,8 @@ class MeterPeer:
         self.last_request = None
         self.hold_started = None
         self.holds = []
+        self.speed_sum = self.speed_samples = 0
+        self.speed_kmh = None
 
     def send(self, exchange, byte):
         # Chosen peer cadence: 16 ms under the nominal 16 MHz profile. It
@@ -60,6 +62,17 @@ class MeterPeer:
             raise ValueError('Expected normal meter mode, received diagnostic/authentication status')
         self.frame = list(frame)
         self.frames += 1
+        # Same eight-reply display profile as Yamaha-DataLogger. This does not
+        # establish pulses/km or the original dashboard's polling cadence.
+        if self.mode == 'normal':
+            self.speed_sum += frame[1]
+            self.speed_samples += 1
+            if self.speed_samples == 8:
+                self.speed_kmh = self.speed_sum
+                self.speed_sum = self.speed_samples = 0
+        else:
+            self.speed_sum = self.speed_samples = 0
+            self.speed_kmh = None
         fault = (frame[2] & 63) if self.mode == 'normal' else 0
         if fault and fault not in self.seen:
             self.seen.append(fault)
@@ -121,6 +134,8 @@ class MeterPeer:
         fallback = 'Waiting for diagnostic number' if self.diag_id is None else f'Diagnostic {self.diag_id}'
         name,kind = DIAGNOSTICS.get(self.diag_id,(fallback,'information'))
         details = dict(diagnostic_name=name,diagnostic_kind=kind,
+                       speed_kmh=self.speed_kmh,
+                       speed_mph=self.speed_kmh/1.609344 if self.speed_kmh is not None else None,
                        entry_seconds=round((self.clock()-self.hold_started)/16000000,1)
                        if self.clock and self.hold_started is not None and self.mode!='diagnostic' else 0)
         if self.frame is None:

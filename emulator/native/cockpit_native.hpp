@@ -35,6 +35,8 @@ class NativeMeter {
 public:
   std::vector<unsigned> frame,seen;
   unsigned frames=0,entry_polls=0;
+  unsigned speed_sum=0,speed_samples=0,speed_kmh=0;
+  bool speed_ready=false;
   std::deque<std::string> log;
   std::string mode="normal";
   int diag_id=-1,diag_value=-1;
@@ -45,6 +47,13 @@ public:
     require(((f[0]+f[1]+f[2]+f[3])&255)==f[4],"Meter rejected checksum");
     require(mode!="normal"||!(f[2]&64),"Unexpected diagnostic/authentication status");
     frame=f;++frames;unsigned fault=mode=="normal"?f[2]&63:0;
+    // Yamaha-DataLogger: one km/h result per eight accepted normal replies.
+    // This is a logger display profile, not an established pulses/km scale.
+    // Accumulate here so rendering frequency cannot skip or duplicate replies.
+    if(mode=="normal") {
+      speed_sum+=f[1];
+      if(++speed_samples==8){speed_kmh=speed_sum;speed_ready=true;speed_sum=speed_samples=0;}
+    } else {speed_sum=speed_samples=speed_kmh=0;speed_ready=false;}
     if(fault&&std::find(seen.begin(),seen.end(),fault)==seen.end())seen.push_back(fault);
     std::string line="TX "+hexbyte(request)+"  →  RX";for(auto b:f)line+=' '+hexbyte(b);
     log.push_back(line);if(log.size()>48)log.pop_front();
@@ -84,6 +93,7 @@ public:
   Json state(uint64_t cycles=0)const {
     auto info=diagnostic_names.find(diag_id);
     Json s={{"connected",!frame.empty()},{"frames",frames},{"seen",seen},{"log",log},{"mode",mode},
+      {"speed_kmh",speed_ready?Json(speed_kmh):Json()},{"speed_mph",speed_ready?Json(speed_kmh/1.609344):Json()},
       {"diagnostic_id",diag_id<0?Json():Json(diag_id)},{"diagnostic_value",diag_value<0?Json():Json(diag_value)},
       {"diagnostic_name",info==diagnostic_names.end()?"Waiting for diagnostic number":info->second.first},
       {"diagnostic_kind",info==diagnostic_names.end()?"information":info->second.second},
