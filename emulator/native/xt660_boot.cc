@@ -3,6 +3,9 @@
 // Device semantics: MC9S12T64 Rev 1.1.1, CRG, ECT, PIM and ATD chapters.
 #include <cstdio>
 #include <deque>
+#include <algorithm>
+#include <functional>
+#include <stdexcept>
 #include "globals.h"
 #include "utils.h"
 #include "m68hc12cl.h"
@@ -13,13 +16,29 @@
 class xt_cpu;
 class xt_boot_hw: public cl_hw {
 public:
+  // These are the same backing bytes used by uCsim's memory cells, not a
+  // register cache. CPU reads/writes still go through all hardware hooks.
+  struct register_byte {
+    cl_memory_cell *cell=nullptr; unsigned char *value=nullptr;
+    register_byte &operator=(cl_memory_cell *c) {
+      if(c->get_width()!=8 || c->get_mask()!=255 || c->get_flag(CELL_READ_ONLY))
+        throw std::runtime_error("Unexpected MCU register storage");
+      cell=c;value=static_cast<unsigned char*>(c->get_data());return *this;
+    }
+    register_byte *operator->(){return this;}
+    unsigned get() const{return *value;}
+    void set(unsigned v){*value=v&255;}
+  };
   xt_cpu *xt;
   cl_address_space *eeprom;
   bool ee_selected, ee_enabled;
   unsigned ee_command, ee_bytes, ee_data, ee_busy, ee_reads, ee_writes;
   void ee_select(bool selected);
   unsigned ee_transfer(unsigned value);
-  cl_memory_cell *regs[0x200];
+  register_byte regs[0x200];
+  u32_t *config_values[42]{};
+  t_mem cfg_get(t_addr n){return *config_values[n];}
+  void cfg_set(t_addr n,t_mem v){*config_values[n]=v;}
   unsigned load, count, prescaler, phase, pll_delay;
   bool counting, fault;
   unsigned adc_left, adc_slot, adc_done, adc_length, adc_armed, adc_period;
@@ -38,6 +57,8 @@ public:
   unsigned coil_feedback_left;
   unsigned observed_pa, observed_pp;
   bool vss_low;
+  bool reference_ticks = false;
+  std::function<void(const char *,unsigned,unsigned,unsigned long long,unsigned)> event_sink;
   struct serial_state {
     unsigned tx_left, tx_value, tx_pending, rx_left, idle_left, armed, sent, received, dropped;
     bool tx_queued, idle_eligible;
@@ -57,6 +78,7 @@ public:
   void sci_receive(unsigned channel, unsigned value);
 
   void advance(unsigned cycles);
+  unsigned next_event(unsigned limit);
   void pulse_tick(void);
   void vss_tick(void);
   void trace(const char *kind, unsigned channel, unsigned value);
@@ -100,11 +122,36 @@ public:
   void mk_hw_elements(void) {
     // Exclude generic HC12 page registers and inherited 6800 CIA/PIA devices:
     // those addresses overlap T64 clock registers and the ECU's program flash.
+#ifndef XT660_EMBEDDED
     cl_uc::mk_hw_elements();
+#endif
     device= new xt_boot_hw(this);
     init_add_hw(device);
   }
   bool interrupts_masked(void) { return rCC & flagI; }
+  int run_instruction() {
+    // Continuous execution does not need the CLI's instruction history.
+    // Keep pre/post hooks, fault and breakpoint processing, and IRQ delivery.
+    if(device->reference_ticks) return do_inst();
+    int result=resGO;
+    if(state==stGO) {
+      pre_inst(); instPC=PC; result=exec_inst();
+      if(result==resINV_INST) PC=instPC;
+    }
+    post_inst();
+    if((result==resGO || result==resNOT_DONE) && !device->fault) {
+      int irq=do_interrupt(); if(irq!=resGO)result=irq;
+    }
+    return device->fault ? resHALT : result;
+  }
+  int tick_hw(int cycles) {
+    if (device->reference_ticks || hws->count!=1) return cl_uc::tick_hw(cycles);
+    // The ECU peripheral model advances to exact event boundaries internally.
+    // All other uCsim devices retain their original one-cycle callbacks.
+    device->tick(cycles);
+    do_extra_hw(cycles);
+    return 0;
+  }
   int do_interrupt(void) {
     // CPU12 has one global I mask. The MCU selects simultaneous requests;
     // software can explicitly re-enable I-masked sources inside a handler.
@@ -150,6 +197,7 @@ public:
 xt_boot_hw::xt_boot_hw(xt_cpu *cpu): cl_hw(cpu, HW_DUMMY, 0, "xtboot"), xt(cpu) {}
 int xt_boot_hw::init(void) {
   cl_hw::init();
+  for(unsigned n=0;n<42;++n) config_values[n]=static_cast<u32_t*>(cfg->get_cell(n)->get_data());
   eeprom=new cl_address_space("eeprom",0,512,8);
   eeprom->init(); uc->address_spaces->add(eeprom);
   cl_memory_chip *chip=new cl_chip8("eeprom_chip",512,8);
@@ -422,15 +470,54 @@ int xt_boot_hw::tick(int cycles) {
   if (fault) return 0;
   // A driven waveform / trace uses individual bus ticks. CPU register accesses
   // and interrupt delivery still occur at instruction boundaries.
-  if (cfg_get(24) || cfg_get(25) || cfg_get(36) || cfg_get(41)) {
+  if (reference_ticks && (cfg_get(24) || cfg_get(25) || cfg_get(36) || cfg_get(41))) {
     for (int n=0;n<cycles && !fault;++n) {
       advance(1);
       pulse_tick();
       vss_tick();
       observe_outputs();
     }
+  } else if (cfg_get(24) || cfg_get(25) || cfg_get(36) || cfg_get(41)) {
+    while (cycles>0 && !fault) {
+      unsigned span=next_event(cycles+1);
+      if(span>unsigned(cycles)) {
+        advance(cycles);
+        if(cfg_get(24) && pulse_left) pulse_left-=cycles;
+        if(cfg_get(36) && vss_left) vss_left-=cycles;
+        if(coil_feedback_left) coil_feedback_left-=cycles;
+        break;
+      }
+      // The last cycle retains the original advance -> crank -> VSS ->
+      // output/coil-feedback order. Nothing observable happens in the prefix.
+      if (span>1) {
+        advance(span-1);
+        if (cfg_get(24) && pulse_left) pulse_left-=span-1;
+        if (cfg_get(36) && vss_left) vss_left-=span-1;
+        if (coil_feedback_left) coil_feedback_left-=span-1;
+      }
+      advance(1); pulse_tick(); vss_tick(); observe_outputs();
+      cycles-=span;
+    }
   } else advance(cycles);
   return 0;
+}
+unsigned xt_boot_hw::next_event(unsigned limit) {
+  auto due=[&](unsigned n) { if(n) limit=std::min(limit,n); };
+  // GPIO writes can have changed an output before this instruction's clocks.
+  if (gpio(0)!=observed_pa || gpio(0xf0)!=observed_pp || gpio(0xe0)!=observed_outputs) return 1;
+  if(cfg_get(24)) due(pulse_left);
+  if(cfg_get(36)) { if(!vss_left)return 1; due(vss_left); }
+  due(coil_feedback_left); due(ee_busy); due(pll_delay);
+  if(adc_running) { due(adc_left); due(adc_sample_left); }
+  due(spi_left);
+  for(unsigned n=0;n<2;++n) {
+    due(flash[n].left); due(sci[n].tx_left); due(sci[n].rx_left); due(sci[n].idle_left);
+    if((sci[n].tx_queued && !sci[n].tx_left) || (!sci[n].rx.empty() && !sci[n].rx_left)) return 1;
+  }
+  // Preserve every timer increment (and its capture/compare ordering).
+  if(regs[0x46]->get()&0x80) due((1u<<(regs[0x4d]->get()&7))-timer_phase);
+  if(counting && (regs[0x66]->get()&4)) due(prescaler-phase);
+  return std::max(1u,limit);
 }
 void xt_boot_hw::advance(unsigned cycles) {
   bus_cycles+=cycles;
@@ -459,6 +546,7 @@ void xt_boot_hw::advance(unsigned cycles) {
   }
 }
 void xt_boot_hw::trace(const char *kind, unsigned channel, unsigned value) {
+  if(event_sink) { event_sink(kind,channel,value,bus_cycles,unsigned(uc->instPC)); return; }
   if (!cfg_get(25)) return;
   if (++trace_count>20000) { unsupported(0xffff,"event trace limit"); return; }
   printf("XT_EVENT cycle=%llu kind=%s channel=%u value=%u pc=%04x\n",
@@ -718,11 +806,13 @@ unsigned xt_boot_hw::pending_vector(void) {
 
 
 unsigned xt_boot_hw::timer_pins(unsigned pins) {
-  unsigned connected=regs[0x42]->get()&regs[0x40]->get();
-  for (unsigned n=0;n<8;++n) {
-    unsigned mode=(regs[n<4?0x49:0x48]->get()>>(2*(n%4)))&3;
-    if (mode && (regs[0x40]->get()&(1<<n))) connected|=1<<n;
-  }
+  // Collapse each nonzero two-bit OM/OL field into its channel bit.
+  unsigned modes=regs[0x49]->get()|(regs[0x48]->get()<<8);
+  modes=(modes|(modes>>1))&0x5555;
+  modes=(modes|(modes>>1))&0x3333;
+  modes=(modes|(modes>>2))&0x0f0f;
+  modes=(modes|(modes>>4))&0xff;
+  unsigned connected=(modes|regs[0x42]->get())&regs[0x40]->get();
   return (pins&~connected)|(timer_output&connected);
 }
 void xt_boot_hw::timer_compare(unsigned n) {
@@ -740,7 +830,7 @@ void xt_boot_hw::timer_compare(unsigned n) {
 void xt_boot_hw::timer_tick(unsigned cycles) {
   unsigned pins=gpio(0xe0), changed=pins^last_pt;
   if (regs[0x46]->get()&0x80) {
-    for (unsigned n=0;n<8;++n) {
+    for (unsigned n=0;changed && n<8;++n) {
       unsigned bit=1<<n, edge=(regs[n<4?0x4b:0x4a]->get()>>(2*(n%4)))&3;
       if (!(regs[0x40]->get()&bit) && (changed&bit) &&
           ((edge==3) || (edge==1 && (pins&bit)) || (edge==2 && !(pins&bit)))) {
@@ -920,27 +1010,40 @@ void xt_boot_hw::sci_receive(unsigned n, unsigned value) {
 }
 void xt_boot_hw::sci_tick(unsigned cycles) {
   for (unsigned n=0;n<2;++n) {
-    serial_state &ch=sci[n]; unsigned base=0xc8+8*n;
-    for (unsigned t=0;t<cycles;++t) {
+    serial_state &ch=sci[n]; unsigned base=0xc8+n*8, left=cycles;
+    while(left) {
       if (!ch.tx_left && ch.tx_queued && (regs[base+3]->get()&8)) { ch.tx_queued=false; sci_begin(n,ch.tx_pending); }
-      if (ch.tx_left && !--ch.tx_left) {
-        ++ch.sent; cfg_set(30+n,ch.sent); cfg_set(32+n,ch.tx_value);
-        trace("serial_tx",n,ch.tx_value);
-        if (ch.tx_queued && (regs[base+3]->get()&8)) { ch.tx_queued=false; sci_begin(n,ch.tx_pending); }
-        else regs[base+4]->set(regs[base+4]->get()|0xc0);
-      }
       if (!ch.rx_left && !ch.rx.empty()) {
         ch.rx_left=cfg_get(28+n)*160;
         if (!ch.rx_left) { unsupported(base,"zero external serial divisor"); return; }
       }
-      if (ch.rx_left) {
-        if (!--ch.rx_left) {
+      bool receiving=ch.rx_left!=0;
+      unsigned span=left;
+      if(ch.tx_left)span=std::min(span,ch.tx_left);
+      if(ch.rx_left)span=std::min(span,ch.rx_left);
+      else if(ch.idle_left)span=std::min(span,ch.idle_left);
+      left-=span;
+      if(ch.tx_left) {
+        ch.tx_left-=span;
+        if(!ch.tx_left) {
+          ++ch.sent; cfg_set(30+n,ch.sent); cfg_set(32+n,ch.tx_value);
+          trace("serial_tx",n,ch.tx_value);
+          if(ch.tx_queued && (regs[base+3]->get()&8)) { ch.tx_queued=false; sci_begin(n,ch.tx_pending); }
+          else regs[base+4]->set(regs[base+4]->get()|0xc0);
+        }
+      }
+      if(receiving) {
+        ch.rx_left-=span;
+        if(!ch.rx_left) {
           unsigned byte=ch.rx.front(); ch.rx.pop_front(); sci_receive(n,byte);
           ch.idle_left=sci_period(n);
         }
-      } else if (ch.idle_left && !--ch.idle_left && (regs[base+3]->get()&4)) {
-        if ((regs[base+3]->get()&2) && !(regs[base+2]->get()&8)) regs[base+3]->set(regs[base+3]->get()&~2u);
-        else if (ch.idle_eligible) { regs[base+4]->set(regs[base+4]->get()|16); ch.idle_eligible=false; }
+      } else if(ch.idle_left) {
+        ch.idle_left-=span;
+        if(!ch.idle_left && (regs[base+3]->get()&4)) {
+          if((regs[base+3]->get()&2) && !(regs[base+2]->get()&8)) regs[base+3]->set(regs[base+3]->get()&~2u);
+          else if(ch.idle_eligible) { regs[base+4]->set(regs[base+4]->get()|16); ch.idle_eligible=false; }
+        }
       }
     }
   }
@@ -1000,6 +1103,7 @@ public:
 };
 
 // Application lifecycle follows uCsim's sm68hc12.cc (Daniel Drotos, GPL-2.0+).
+#ifndef XT660_EMBEDDED
 int main(int argc, char **argv) {
   app_start_at=dnow(); cpus=cpus_m68hc12;
   application=new xt_app(); application->set_name("xt660_boot");
@@ -1011,3 +1115,4 @@ int main(int argc, char **argv) {
   application->done(); delete application;
   return result;
 }
+#endif

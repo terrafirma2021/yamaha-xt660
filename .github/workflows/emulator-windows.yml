@@ -1,0 +1,41 @@
+name: Build and check native Windows emulator
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install cross-build tools
+        run: sudo apt-get update && sudo apt-get install -y g++-mingw-w64-x86-64-posix make autoconf flex bison
+      - name: Build pinned core and Windows package
+        run: python3 emulator/build_windows.py --directory /tmp/xt660-windows-core --jobs 4
+      - uses: actions/upload-artifact@v4
+        with:
+          name: xt660-native-windows
+          path: |
+            dist/xt660-emulator-windows-x64.zip
+            dist/xt660-emulator-windows-x64-source.tar.gz
+  check:
+    needs: build
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/download-artifact@v4
+        with:
+          name: xt660-native-windows
+          path: dist
+      - name: Extract standalone runtime
+        run: Expand-Archive -LiteralPath dist/xt660-emulator-windows-x64.zip -DestinationPath dist
+      - name: Compare execution and check independent real-time worker
+        run: python emulator/test_native.py --bundle dist/xt660-emulator-windows-x64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xt660-native-validation
+          path: emulator/.runs/native-*

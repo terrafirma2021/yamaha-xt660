@@ -4,7 +4,40 @@ Run the registered BINs on a locally patched µCsim HC12 core. The five complete
 
 The local cockpit has key, run/stop, starter, N/1 and throttle controls. Its instruments consume checked SCI1 meter replies. Sensor faults, diagnostic buttons, raw inputs, coil/injector traces and trace export are available alongside the cockpit. It is separate from the reference website and never opens a COM port.
 
-## Build and start
+## Windows download
+
+[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.0). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
+
+The Windows process owns the MCU, peripherals, serial peer and simulation clock. Its worker runs independently of HTTP requests. The browser reads snapshots and sends input controls: closing, refreshing or backgrounding the tab does not pause the MCU. **Pause simulation** is an explicit command. Close the executable to stop the process.
+
+Timing targets one simulated second per real second under the existing **nominal 16 MHz** profile. The worker sleeps when ahead and reports when behind; it never skips instructions to catch up. This is a functional MCU/peripheral emulator, not a physically timed engine or confirmed oscillator measurement. [Native validation](native-validation.json) records reference comparisons, headless timings and the tested executable hash.
+
+Open **http://127.0.0.1:8766/**. Select an ECU, turn the key, leave Run on and press Start. No physical COM port is opened. Storage is retained across key cycles within a selected ECU; switching ECU creates a fresh fixture. Bench controls expose raw inputs, serial replies, step, trace and BIN integrity checks.
+
+## Build the Windows package
+
+On a Linux build host, install Git, Python 3, make, autoconf, flex, bison and the MinGW-w64 x64 POSIX compiler. Then:
+
+```sh
+python3 emulator/build_windows.py --directory /tmp/xt660-windows-core --jobs 4
+```
+
+This creates `dist/xt660-emulator-windows-x64.zip` and a complete corresponding-source archive. Dependencies and the uCsim commit are pinned; the C++ runtime is statically linked. To rebuild the release source archive, extract it and run the script from `source/`, with `--directory ucsim`.
+
+The manually triggered [Windows workflow](../.github/workflows/emulator-windows.yml) builds on Linux and checks the executable on Windows. Pages publishing does not run this build.
+
+Developer checks on Windows:
+
+```powershell
+python emulator/test_native.py --bundle dist/xt660-emulator-windows-x64
+python emulator/test_emulator.py --ucsim dist/xt660-emulator-windows-x64/XT660.Core.exe
+```
+
+`XT660.Core.exe` retains the uCsim command-line debugger; `XT660.Emulator.Check.exe` runs deterministic headless checks. Neither is needed to operate the cockpit. Optional runtime arguments: `--port`, `--no-browser`, `--image ID` and `--storage fixture.bin` (512-byte external-storage fixture, with `--image`). The latter starts key-off and does not change authentication code.
+
+The [Windows core regression](windows-core-validation.json) also covers instruction fixtures, breakpoints/watchpoints, ADC, GPIO, timers, watchdog, SCI, EEPROM, and execution of the boot programming routines. The local Windows pipe patch prevents the debugger from blocking when input is buffered. No upstream pull requests are submitted by this build.
+
+## Reference Linux/Python harness
 
 Linux/WSL needs Python 3, Git, make, g++, autoconf, bison, flex and ncurses development libraries. The build does not install system packages. From this repository:
 
@@ -13,7 +46,7 @@ python3 emulator/build.py --directory /root/xt660-ucsim
 python3 emulator/dashboard.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-Choose a directory writable by your account. On Windows, build inside WSL, then launch from PowerShell:
+This older research harness is not used by the Windows package. To run it through WSL from PowerShell:
 
 ```powershell
 python emulator/dashboard.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
@@ -31,7 +64,7 @@ The server binds only to loopback. It uses bundled HTML/CSS/JavaScript, a per-se
 - SCI1 exercises the challenge/response sequence and normal `FE` / `01` meter requests, with reply checksum checks. Corrupt authentication responses are tested separately.
 - PT1 receives ten ordinary tooth intervals and one double interval per synthetic revolution. This follows the recovered gap detector, not a measured rotor trace. The firmware selects the /32 timer prescaler. Both families synchronise, generate PT3 coil and PT6 injector transitions, and detect pulse loss.
 
-The dash consumes real five-byte replies, validated before display, through `meter.py`. B0 is the engine code, B1 the received road-pulse delta, B2 the fault/status byte and B3 the coolant or diagnostic data. The normal frame contains no gear field: N/1 follows the neutral-switch fixture. Fault injection changes ADC inputs; the firmware qualifies and transmits the resulting fault. Received codes in the sidebar are session observations, separate from ECU history.
+The dash consumes real five-byte replies, validated before display, through the native meter peer (`meter.py` in the reference harness). B0 is the engine code, B1 the received road-pulse delta, B2 the fault/status byte and B3 the coolant or diagnostic data. The normal frame contains no gear field: N/1 follows the neutral-switch fixture. Fault injection changes ADC inputs; the firmware qualifies and transmits the resulting fault. Received codes in the sidebar are session observations, separate from ECU history.
 
 RPM is explicitly **nominal**, using B0 × 190 / 5.12 under the existing 16 MHz profile. Road speed is displayed as **pulses per reply**, not invented km/h. Coolant defaults to the exact received code. Optional `reply − 30 °C` remains a candidate with an unverified offset. The TEMP indicator compares the received code with 136; it is a dashboard threshold, not a read of the fan relay. Throttle percentage means control travel across the fixture's ADC range, not calibrated throttle angle.
 
@@ -39,7 +72,7 @@ The rotating-engine fixture ramps tooth intervals, supplies an intake-pressure r
 
 The former 32-million-cycle pre-start wait was a host workaround, not a Yamaha requirement. It masked a fixture error: PB1 started low during reset, then was released after startup, creating a false starter cycle. In the early firmware, release arms `BF8:40` at `9019`; the capture path can then set `BF8:80` and reset synchronization at `DD0B–DD17`. Presenting the released contact from reset removes that false event. The [startup checks](startup-validation.json) cover immediate start across all five complete BINs, real output transitions, throttle control and rejection of an incorrect key. The ECU's debounce, authentication and inhibit code still executes.
 
-On Windows/WSL, validated HEX bytes are staged in a private Linux temporary file to avoid the debugger's character-by-character reads through `/mnt/c`. The file loader and firmware initialization still run. Dashboard polling adds no fixed delay when execution already exceeds the nominal simulated interval; this does not make the CPU core run in real time. Host latency measurements are recorded separately from simulated cycles.
+In the reference Windows/WSL harness, validated HEX bytes are staged in a private Linux temporary file to avoid the debugger's character-by-character reads through `/mnt/c`. The file loader and firmware initialization still run. Dashboard polling adds no fixed delay when execution already exceeds the nominal simulated interval; this does not make the CPU core run in real time. Host latency measurements are recorded separately from simulated cycles.
 
 The [recovered pressure calculations](../analysis/semantics/PRESSURE_ESTIMATE.md) run inside the original firmware. The external intake model supplies ADC1 with a pressure dip once per two crank revolutions: opening the throttle reduces the dip, increasing speed increases it, and stopping restores the selected ambient input. Its ambient count, waveform, phase and pumping coefficients are demonstration parameters, not recovered kPa calibration or a volumetric-efficiency map. The firmware still detects a disconnected pressure input and checks pressure variation. ADC4 follows the PA2 relay command; a separate PT5 input pulse acknowledges PT3 coil release through the actual timer-capture path. Neither supply nor ignition fault flags are forced clear.
 

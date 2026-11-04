@@ -81,6 +81,10 @@ def target_path(path, wsl=False):
     path = Path(path).resolve()
     if wsl and os.name == 'nt':
         return '/mnt/' + path.drive[0].lower() + path.as_posix()[2:]
+    if os.name=='nt':
+        # uCsim reserves a colon for its format prefix, including in `file`.
+        # Generated inputs live in this checkout, on the working drive.
+        return Path(os.path.relpath(path)).as_posix()
     return path.as_posix()
 
 
@@ -92,6 +96,10 @@ def execute(executable, commands, wsl=False, timeout=30):
         path = Path(script.name)
     command = (['wsl', '-e'] if wsl else []) + [str(executable), '-q', '-R', '0',
                 '-e', f'exec "{target_path(path, wsl)}"']
+    if os.name=='nt' and not wsl:
+        # A script console closes cleanly on Windows. An -e child console can
+        # leave the implicit NUL parent console alive after its `quit`.
+        command=[str(executable),'-q','-R','0','-c',path.as_posix()]
     try:
         result = subprocess.run(command, stdin=subprocess.DEVNULL, text=True,
                                 capture_output=True, timeout=timeout)

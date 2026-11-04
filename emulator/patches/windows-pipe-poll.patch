@@ -1,0 +1,33 @@
+diff --git a/src/core/utils.src/fwio.cc b/src/core/utils.src/fwio.cc
+--- a/src/core/utils.src/fwio.cc
++++ b/src/core/utils.src/fwio.cc
+@@ -239,10 +239,28 @@ cl_io::check_dev(void)
+       }
+ 
+     case F_FILE:
+-    case F_PIPE:
+       pick();
+       return last_used != first_free;
+ 
++    case F_PIPE:
++      {
++        // A redirected debugger pipe is not a terminal. Do not echo partial
++        // commands into reply lines, or block while completed lines remain.
++        echo(NULL);
++        if (last_used != first_free)
++          return 1;
++        DWORD available= 0;
++        if (!PeekNamedPipe(handle, NULL, 0, NULL, &available, NULL))
++          {
++            DWORD error= GetLastError();
++            if (error == ERROR_BROKEN_PIPE || error == ERROR_PIPE_NOT_CONNECTED)
++              at_end= 1;
++            return 0;
++          }
++        if (available) pick();
++        return last_used != first_free;
++      }
++
+     case F_CONSOLE:
+       {
+         INPUT_RECORD *pIRBuf;
