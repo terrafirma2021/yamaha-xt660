@@ -11,7 +11,7 @@
     },
     {
       "script": "scripts/verify_semantics.py",
-      "sha256": "2d4e0fb9b2425dabced5f861a22136f3d95d41d109a3b2336dad41fc1bd8bcce",
+      "sha256": "3d3adebe69faad2737568fa99bf8115eb8b90f399b9adb57e48d4c21d7a17d34",
       "result": "passed"
     },
     {
@@ -7870,6 +7870,15 @@
       "audit_action": "Report/source provenance checked; fixtures not re-executed by ledger build"
     },
     {
+      "path": "analysis/firmware/late_transient_validation.json",
+      "sha256": "ffe68cddd0aa84fa5251dae5f7d47ca019ebdb8829913f3fd888b10eb78dbc1a",
+      "recorded_result": "passed",
+      "recorded_cases": 9816,
+      "scope": "Actual EE81/EF7F/EFA4/EF3A helpers, clamps, fractional lookup, three selections, E21D entry gates and E238..E383 pulse arithmetic. Synthetic RAM/calibration; no physical units, full ADC lifecycle, output edge timing or hardware validation.",
+      "evidence_scope": null,
+      "audit_action": "Report/source provenance checked; fixtures not re-executed by ledger build"
+    },
+    {
       "path": "analysis/semantics/connector_path_validation.json",
       "sha256": "cac99bd7f2608ca3494f4f4549ea69e698c672c68a2cb08e6a3ec2908d7d68cf",
       "recorded_result": "passed",
@@ -7989,6 +7998,6 @@
     "analysis/semantics/package_datasheet_review.json": "1f5f1d8a7c7b2d2acaf66dc4da1385a65e1f1a3fc9c426c7c4e555353414ce4a",
     "analysis/semantics/code_pin_review.json": "e981937623b50e6a32f326614fe602a590c1d480eb366081e7329e8525605204",
     "scripts/map_review.py": "30c06b325aea50743e8cb983c1ea726e2a764d1e40db9a28d5bc10e2f9a88474",
-    "scripts/build_verification_ledger.py": "d185d71d6fd3175f01f66bad75a2b0ccf454a81aa3915af85b6e51dcdd1f120d"
+    "scripts/build_verification_ledger.py": "3eda18eb848d846f89fccfef6cc4509e832127c3f038ee23dab1328eecff6657"
   }
 }

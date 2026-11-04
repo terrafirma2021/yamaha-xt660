@@ -7,11 +7,13 @@ All nine registered images now have an instruction-byte-checked application-fami
 | Family | Images | Application entry | Instructions | Instruction bytes | Decompiled functions | Maps per image | Cells per image |
 |---|---|---|---:|---:|---:|---:|---:|
 | Early | Original 2005, corrected copy, 2004–06 companion, both 2C1-00 files | `0x5000` | 15,942 | 42,849 | 225 | 71 | 8,275 |
-| Later | 5VK-1X, 5VK-11, both 2C1-10 files | `0x4800` | 15,928 | 43,134 | 229 | 77 | 6,938 |
+| Later | 5VK-1X, 5VK-11, both 2C1-10 files | `0x4800` | 15,928 | 43,134 | 229 | 86 | 7,050 |
 
 The entire code span and application dispatch span match within each family, including embedded code-region data. Every exported instruction is also compared individually with every member BIN. Thus the existing early disassembly applies to both 2C1-00 files **without copying the original calibration values**. The later disassembly is shared by four images for the same byte-backed reason.
 
-The count of 663 image-specific map records contains repeated layouts across related images; it is not 663 unique map designs. All 69,127 cell values are read from their own image. A map is not treated as physically scaled merely because its layout was recovered.
+The count of 699 image-specific map records contains repeated layouts across related images; it is not 699 unique map designs. All 69,575 cell values are read from their own image. A map is not treated as physically scaled merely because its layout was recovered.
+
+The [2026-11-04 audit](../REPOSITORY_AUDIT.md) recovered nine additional later-family curves by following the second lookup implementation. [Caller arithmetic and scope](../semantics/LATE_TRANSIENT_MAPS.md) are documented separately.
 
 ## What changed between the applications
 
@@ -126,6 +128,6 @@ Run `decode_firmware_maps.py --check`, `audit_firmware_families.py --check`, `te
 
 ## Still open
 
-The early calibration region has 884 bytes outside the map/header/axis catalogue; the later region has 1,459. Those ranges include constants, flags and potentially unidentified structures, and are preserved in each image's review. Every explicit code reference to them is indexed, but not every meaning is assigned. Several later table names intentionally describe their input or output rather than guessing an actuator.
+The early calibration region has 884 bytes outside the map/header/axis catalogue; the later region has 1,267. Those ranges include constants, flags and potentially unidentified structures, and are preserved in each image's review. Every explicit code reference to them is indexed, but not every meaning is assigned. Several later table names intentionally describe their input or output rather than guessing an actuator.
 
 No new claim of complete physical scaling is made. Sensor circuitry, final spark reference, fitted MCU/package identity and exact bike/market/ECU matching remain separate evidence requirements. There is no verified tuning export or live-flashing approval implied by this decoding.

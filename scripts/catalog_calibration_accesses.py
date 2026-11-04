@@ -57,7 +57,7 @@ classes={}
 for a in range(0x1800,0x5000):
     classes[a]=('catalogued_map_header_cells_or_axis' if a not in unmapped else
                 'focused_semantic_parameter' if a in known_sem else
-                'static_access_role_unresolved' if a in accessed else
+                'static_access_not_in_focused_catalog' if a in accessed else
                 'no_classified_layout_or_static_access')
 spans=[];first=0x1800
 for a in range(0x1801,0x5001):
@@ -73,7 +73,7 @@ coverage=dict(first='0x1800',end_exclusive='0x5000',total_bytes=14336,
     totals=totals,spans=spans)
 (OUT/'calibration_coverage.json').write_text(json.dumps(coverage,indent=2)+'\n',encoding='utf-8',newline='\n')
 lines=['# Remaining calibration work','',
-    'This inventory accounts for every byte in `0x1800–0x4FFF`. Coverage labels record the evidence available; they do not turn unresolved constants into decoded maps. A missing static reference does not mean a byte is safe to edit.','',
+    'This inventory covers the original early-family image at `0x1800–0x4FFF`. It is a layout/access inventory, not a global semantic completion score. A static access absent from the focused scalar catalogue may already be explained in a later research document. A missing static reference does not mean a byte is unused or safe to edit. For all nine images, use [family decoding](firmware/FAMILY_DECODING.md) and each image’s decode review.','',
     '| Evidence category | Bytes |','|---|---:|']
 lines += [f'| {k} | {v} |' for k,v in totals.items()]
 lines += ['',f"The access inventory contains **{len(items)} address/width/access combinations** with caller instructions and stock values. Mixed-width accesses are retained separately.",'',
@@ -86,8 +86,9 @@ for s in spans:
 lines += ['', '## Next trace targets','',
     '1. Trace copied configuration fields and indirect pointer consumers; the RAM-copied curve at 0x1854 demonstrates why a ROM-pointer-only scan is incomplete.',
     '2. Decode the remaining scalar scales, mode switches, fault fallback values and lookup selectors using their complete writer/consumer chains.',
-    '3. Finish the transient gain paths and spark/fuel corrections through the final timer events; raw input/output traces are already attached to each recovered map.',
+    '3. Extend the [operating-sequence tests](semantics/OPERATING_SEQUENCES.md) beyond their stated scenarios. Early transient-to-output chains are covered; later complete ADC-to-transient-output lifecycles and sustained interrupt overlap remain targets.',
     '4. Resolve engineering units using timer configuration, crank geometry and sensor/display transformations; keep unproven Celsius/RPM/degree conversions null.',
-    '5. Reconcile ECU identity and missing boot content before validating a flash-oriented tool.','']
+    '5. Reconcile ECU identity, connector orientation and live boot-session behaviour. Five images contain the same populated boot; four have FF placeholders. See [flash tooling](firmware/FLASH_TOOLING.md) for the recovered protocol and offline implementation.',
+    '6. Reconcile traced scalars back into the focused catalogue with explicit byte ranges and source evidence; do not use a documentation omission as proof that the scalar meaning is unknown.','']
 (OUT/'REMAINING_CALIBRATIONS.md').write_text('\n'.join(lines),encoding='utf-8',newline='\n')
 print(json.dumps(dict(access_entries=len(items),coverage=totals),indent=2))

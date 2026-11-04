@@ -139,7 +139,8 @@ firmware_catalog=json.loads((ROOT/'analysis/firmware/catalog.json').read_text())
 for filename,script,family,count in [('input_coordinate_validation.json','test_input_coordinates.py',None,154368),
                                      ('map_entry_validation.json','test_map_entry_paths.py','early',11520),
                                      ('operating_sequence_validation.json','test_operating_sequences.py',None,31937),
-                                     ('pressure_interleaving_validation.json','test_pressure_interleaving.py',None,14260)]:
+                                     ('pressure_interleaving_validation.json','test_pressure_interleaving.py',None,14260),
+                                     ('late_transient_validation.json','test_late_transient_maps.py','late',9816)]:
     report=json.loads((ROOT/'analysis/firmware'/filename).read_text())
     assert report['result']=='passed' and report['cases']==count
     assert report['test_script_sha256']==digest(ROOT/'scripts'/script)

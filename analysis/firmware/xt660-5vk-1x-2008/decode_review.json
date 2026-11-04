@@ -33,12 +33,12 @@
       "raw_hex": null
     }
   ],
-  "map_count": 77,
-  "map_cells": 6938,
+  "map_count": 86,
+  "map_cells": 7050,
   "changed_maps_from_family_reference": [],
   "family_reference": "xt660-5vk-1x-2008",
-  "calibration_mapped_bytes": 10829,
-  "calibration_remaining_bytes": 1459,
+  "calibration_mapped_bytes": 11021,
+  "calibration_remaining_bytes": 1267,
   "calibration_remaining_ranges": [
     {
       "start": "0x1800",
@@ -162,9 +162,21 @@
     },
     {
       "start": "0x3544",
+      "end_exclusive": "0x3560",
+      "bytes": 28,
+      "raw_hex": "0a0a0a0a0a0a0a02011e46020140801414ff00ff00f0008400841401"
+    },
+    {
+      "start": "0x35DF",
+      "end_exclusive": "0x35E0",
+      "bytes": 1,
+      "raw_hex": "00"
+    },
+    {
+      "start": "0x3621",
       "end_exclusive": "0x3630",
-      "bytes": 236,
-      "raw_hex": "0a0a0a0a0a0a0a02011e46020140801414ff00ff00f000840084140100800084008900d20124017601c8026c00151845666d6d6d000b0b23405f6d6d00151845666d6d6d00000040008000c001000140018001c002008080808080807a696010e020272625242322201f1d1b1a19181817171514131211101010101010101010c0209e99948f8a878582807d7a787573706e6b625950474038302800700070000010535e697479838e98100020003000400050006000700080008080808080808080008000880090009800a000a800b000b800c0808080808080808080feff00ff0000860088008200800500"
+      "bytes": 15,
+      "raw_hex": "feff00ff0000860088008200800500"
     },
     {
       "start": "0x3673",
@@ -3742,7 +3754,7 @@
       "address": "0x3560",
       "raw_u8": 0,
       "raw_u16_be": 128,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE2E0",
@@ -3755,7 +3767,7 @@
       "address": "0x356D",
       "raw_u8": 200,
       "raw_u16_be": 51202,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE2F3",
@@ -3768,7 +3780,7 @@
       "address": "0x3575",
       "raw_u8": 109,
       "raw_u16_be": 28013,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE300",
@@ -3781,7 +3793,7 @@
       "address": "0x357D",
       "raw_u8": 95,
       "raw_u16_be": 24429,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE305",
@@ -3794,7 +3806,7 @@
       "address": "0x3588",
       "raw_u8": 0,
       "raw_u16_be": 0,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE31F",
@@ -3807,7 +3819,7 @@
       "address": "0x3597",
       "raw_u8": 192,
       "raw_u16_be": 49154,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE32D",
@@ -3820,7 +3832,7 @@
       "address": "0x35A3",
       "raw_u8": 16,
       "raw_u16_be": 4320,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE247",
@@ -3833,7 +3845,7 @@
       "address": "0x35C3",
       "raw_u8": 16,
       "raw_u16_be": 4288,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE259",
@@ -3846,7 +3858,7 @@
       "address": "0x35E0",
       "raw_u8": 112,
       "raw_u16_be": 28672,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE238",
@@ -3859,7 +3871,7 @@
       "address": "0x35EE",
       "raw_u8": 16,
       "raw_u16_be": 4096,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE274",
@@ -3872,7 +3884,7 @@
       "address": "0x35FB",
       "raw_u8": 0,
       "raw_u16_be": 128,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE282",
@@ -3885,7 +3897,7 @@
       "address": "0x3606",
       "raw_u8": 0,
       "raw_u16_be": 128,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE2AA",
@@ -3898,7 +3910,7 @@
       "address": "0x3615",
       "raw_u8": 184,
       "raw_u16_be": 47104,
-      "covered_by_map_or_axis": false,
+      "covered_by_map_or_axis": true,
       "uses": [
         {
           "pc": "0xE2B8",

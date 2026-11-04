@@ -19,7 +19,8 @@ def immediate(s,op):
     m=re.fullmatch(op+r' #0x([0-9a-f]+)',s)
     return int(m[1],16) if m else None
 
-HELPERS={0xbbaa:'uniform8',0xbbcf:'uniform16',0xbbb8:'precomputed',0xbc52:'precomputed_integer',0xbcc4:'grid8',0xbe30:'grid16',0xbe73:'modulo24',0xbc69:'special',0xbd1d:'uniform8_word'}
+HELPERS={0xbbaa:'uniform8',0xbbcf:'uniform16',0xbbb8:'precomputed',0xbc52:'precomputed_integer',0xbcc4:'grid8',0xbe30:'grid16',0xbe73:'modulo24',0xbc69:'special',0xbd1d:'uniform8_word',
+         0xee81:'uniform16',0xef7f:'uniform8',0xef3a:'grid8_q8'}
 def late_layouts(image):
     listing=rows(OUT/'families/late/disassembly.tsv');ins={int(r['address'],16):r for r in listing}
     def follow(start):
@@ -49,17 +50,20 @@ def late_layouts(image):
             if calls:loads.append(dict(base=ptr,load=pc,calls=calls))
     axes={}
     for i,r in enumerate(listing):
-        if r['instruction'] not in ('JSR 0xc122','JSR 0xc1c2'):continue
+        if r['instruction'] not in ('JSR 0xc122','JSR 0xc1c2','JSR 0xefa4'):continue
+        alternate=r['instruction']=='JSR 0xefa4'
+        ptr_scratch='0xbc6' if alternate else '0xbbc'
+        src_scratch='0xbc4' if alternate else '0xbba'
         window=listing[max(0,i-20):i];ptr=count=src=None
         for j,x in enumerate(window):
             s=x['instruction'];v=immediate(s,'LDAA')
             if v is not None:count=v
-            if s=='STD 0xbbc' and j:ptr=immediate(window[j-1]['instruction'],'LDD')
-            match=re.fullmatch(r'MOVW #0x([0-9a-f]+),0xbbc',s)
+            if s=='STD '+ptr_scratch and j:ptr=immediate(window[j-1]['instruction'],'LDD')
+            match=re.fullmatch(r'MOVW #0x([0-9a-f]+),'+ptr_scratch,s)
             if match:ptr=int(match[1],16)
-            if s in ('STD 0xbba','STAA 0xbba') and j:src=window[j-1]['instruction']
+            if s in ('STD '+src_scratch,'STAA '+src_scratch) and j:src=window[j-1]['instruction']
         if ptr is None or count is None or not 0x1800<=ptr<0x4800:continue
-        width=2 if r['instruction']=='JSR 0xc1c2' else 1
+        width=2 if r['instruction'] in ('JSR 0xc1c2','JSR 0xefa4') else 1
         ax=axes.setdefault(ptr,dict(address=hx(ptr),count=count,element_bytes=width,raw_values=[],calls=[],input=src))
         assert (ax['count'],ax['element_bytes'])==(count,width)
         ax['calls'].append(hx(int(r['address'],16)))
@@ -100,12 +104,20 @@ def late_layouts(image):
         (0x363d,8,0x3630,'Alternate transient response — neutral'),(0x3645,8,0x3630,'Alternate transient response — normal ratio'),(0x364d,8,0x3630,'Alternate transient response — upper ratio'),
         (0x3667,9,0x3658,'Alternate transient correction — throttle'),
     ]:add(b,1,nc,2 if b in (0x4455,0x4477,0x4499,0x44bb,0x45a9,0x3807) else 1,name,kind='1D_stored_axis',ca=ca,offset=21 if b in (0x4455,0x4477,0x4499,0x44bb,0x45a9,0x3807) else 3)
+    for b,nc,ca,name in [
+        (0x356d,8,0x3560,'Crank-sampled transient fuel — neutral response'),
+        (0x3575,8,0x3560,'Crank-sampled transient fuel — normal ratio response'),
+        (0x357d,8,0x3560,'Crank-sampled transient fuel — upper ratio response'),
+        (0x3597,9,0x3588,'Crank-sampled transient fuel — sampled input correction'),
+        (0x35fb,8,0x35ee,'Crank-sampled transient fuel — speed correction'),
+        (0x3615,9,0x3606,'Crank-sampled transient fuel — change correction'),
+    ]:add(b,1,nc,1,name,kind='1D_stored_axis',ca=ca)
     for x in loads:
         for call,h in x['calls']:
-            if h not in (0xbbaa,0xbbcf,0xbd1d) or x['base']<0x1800:continue
+            if h not in (0xbbaa,0xbbcf,0xbd1d,0xee81,0xef7f) or x['base']<0x1800:continue
             b=x['base']
             if any(m['pointer_base']==hx(b) for m in maps):continue
-            wide=h==0xbbcf; size=2 if wide else 1
+            wide=h in (0xbbcf,0xee81); size=2 if wide else 1
             vals=[int.from_bytes(image[b+k*size:b+(k+1)*size],'big') for k in range(3)]
             lo,span,factor=vals;den=65536 if wide else 256
             assert factor and span*factor/den<255,(hx(b),vals)
@@ -134,6 +146,15 @@ def late_layouts(image):
         if b in names:m['display_name']=names[b]
         corrections={0x31fa:'Fuel multiplier vs intake temperature',0x330d:'Positive transient fuel gain vs coolant',0x331f:'Negative transient fuel gain vs coolant',0x32ba:'Throttle-path fuel multiplier vs pressure',0x4057:'Alternate ignition mode — throttle threshold vs coolant',0x32ef:'Coolant fuel enrichment',0x41d4:'Spark timing bound vs pressure',0x37b6:'Adaptive fuel correction — decrement step',0x37c4:'Adaptive fuel correction — increment step'}
         if b in corrections:m['display_name']=corrections[b]
+        if b in (0x35a3,0x35c3,0x35e0):
+            m['display_name']='Crank-sampled transient fuel — '+{0x35a3:'coolant gain',0x35c3:'intake-temperature gain',0x35e0:'pressure gain'}[b]
+        if 0x356d<=b<=0x3615:
+            source={0x356d:'Captured change code at 0x0912',0x3575:'Captured change code at 0x0912',0x357d:'Captured change code at 0x0912',
+                    0x3597:'Captured input code at 0x090C',0x35a3:'Coolant code at 0x0914',0x35c3:'Intake-temperature code at 0x0915',
+                    0x35e0:'Pressure estimate at 0x0900',0x35fb:'Selected speed code at 0x0920',0x3615:'Filtered change code at 0x0910'}[b]
+            m.update(inputs=[source],output='Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C')
+            m['physical_role']='Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.'
+            m['software_evidence']=dict(report='analysis/firmware/late_transient_validation.json',documentation='docs/semantics/LATE_TRANSIENT_MAPS.html',consumers=['0xE21D','0xE238','0xE383','0xE387','0xEEBD'])
         m['naming_note']='Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.'
         traces=[]
         for call in m['calls']:

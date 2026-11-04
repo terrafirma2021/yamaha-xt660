@@ -880,6 +880,116 @@
     ]
   },
   {
+    "pointer_base": "0x0E32",
+    "load": "0xDF0E",
+    "calls": [
+      {
+        "address": "0xDF14",
+        "helper": "0xEE81",
+        "kind": "uniform16"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x35E0",
+    "load": "0xE238",
+    "calls": [
+      {
+        "address": "0xE23E",
+        "helper": "0xEE81",
+        "kind": "uniform16"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x35A3",
+    "load": "0xE247",
+    "calls": [
+      {
+        "address": "0xE24A",
+        "helper": "0xEF7F",
+        "kind": "uniform8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x35C3",
+    "load": "0xE259",
+    "calls": [
+      {
+        "address": "0xE25C",
+        "helper": "0xEF7F",
+        "kind": "uniform8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x35FB",
+    "load": "0xE282",
+    "calls": [
+      {
+        "address": "0xE28D",
+        "helper": "0xEF3A",
+        "kind": "grid8_q8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x3615",
+    "load": "0xE2B8",
+    "calls": [
+      {
+        "address": "0xE2C3",
+        "helper": "0xEF3A",
+        "kind": "grid8_q8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x356D",
+    "load": "0xE2F3",
+    "calls": [
+      {
+        "address": "0xE310",
+        "helper": "0xEF3A",
+        "kind": "grid8_q8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x3575",
+    "load": "0xE300",
+    "calls": [
+      {
+        "address": "0xE310",
+        "helper": "0xEF3A",
+        "kind": "grid8_q8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x357D",
+    "load": "0xE305",
+    "calls": [
+      {
+        "address": "0xE310",
+        "helper": "0xEF3A",
+        "kind": "grid8_q8"
+      }
+    ]
+  },
+  {
+    "pointer_base": "0x3597",
+    "load": "0xE32D",
+    "calls": [
+      {
+        "address": "0xE338",
+        "helper": "0xEF3A",
+        "kind": "grid8_q8"
+      }
+    ]
+  },
+  {
     "pointer_base": "0x0DA1",
     "load": "0xF4FD",
     "calls": [

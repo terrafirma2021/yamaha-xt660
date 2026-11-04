@@ -2,7 +2,7 @@
 
 The [operating-sequence review](OPERATING_SEQUENCES.md) closes the previously listed linked-sequence replay tasks for the early map set and post-start lifecycle in both families. It adds bounded pressure interleaving tests across all nine BINs. It does not establish absolute physical references, exhaustive whole-ECU behaviour or safe edited ranges.
 
-The deliverable now is an evidence model that either kind of tool can consume. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
+The repository now includes a static research site, a browser map/feature editor and raw XDF export, backed by image-specific evidence. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
 
 The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separately, including source review and outstanding sign-off requirements. A final **Verified** state must identify its exact claim; verified bytes or a matched MCU register do not imply a verified physical tuning definition.
 
@@ -12,16 +12,16 @@ The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separ
 
 | Field needed by an editor | Current state |
 |---|---|
-| Exact binary identity and length | Known: SHA-256 and 65,536 bytes |
-| CPU-address/file-offset translation | Flat for this dump; identity mapping |
+| Exact binary identity and length | Nine registered SHA-256 identities; four 65,536-byte files and five 59,392-byte files |
+| CPU-address/file-offset translation | Recorded per image: CPU base 0 or 0x1800; file offset = CPU address minus base |
 | Scalar width, endianness, unsigned/signed encoding | Recorded for the focused catalogue |
-| Cell address, dimensions and axis storage | Existing map atlas, plus new sensor curves |
+| Cell address, dimensions and axis storage | 699 image-specific maps / 69,575 cells; 71 layouts per early BIN and 86 per later BIN |
 | Runtime selector / variant / alternate calibration | Documented where traced; incomplete globally |
 | Conversion to Celsius, RPM, degrees, milliseconds, pressure | Clock/crank-conditional values and exact code/gain contributions are in the unit companion; Celsius, pressure and absolute BTDC remain unresolved |
-| Reverse conversion and rounding policy | Not defined for engineering units |
+| Reverse conversion and rounding policy | Raw-integer bounds and editor rounding implemented; optional estimated ignition conversion remains explicitly conditional |
 | Valid physical adjustment ranges | Not inferred from the limits of a byte or word |
-| Checksum algorithm and covered ranges | [ROM and serial algorithms](CHECKSUMS.md) recovered; [startup-corrected copy](CHECKSUM.md) tested. Factory correction field, absent boot content and flash workflow remain unvalidated. |
-| Flash format, programming procedure, boot requirements | Unresolved; supplied boot region absent |
+| Checksum algorithm and covered ranges | [ROM and serial algorithms](CHECKSUMS.md) recovered; [startup-corrected copy](CHECKSUM.md) tested. Browser edits correct and recheck the startup sum; hardware programming validation is separate. |
+| Flash format, programming procedure, boot requirements | [XT boot protocol and offline read assembly](../firmware/FLASH_TOOLING.md) recovered. Five BINs have populated boot; four have FF placeholders. Browser live read/write is not implemented or hardware-validated. |
 
 `ready_for_tuning_export` is false for every current entry. This does not mean the offsets are guesses. It means the whole definition is not yet validated for engineering-unit edits and flash use.
 
@@ -34,22 +34,23 @@ The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separ
 - A byte-wide MCU output register is not a calibration. RAM state should be observable in a future logger, not exposed as an editable ROM table.
 - The secondary channel is disabled by the stock variant. Merely finding a second table/output is not evidence that it is used on this motorcycle.
 
-## A useful first custom-tool scope
+## Implemented tools and their limits
 
-A read-only research viewer can be built directly from the current assets: verify the image hash, navigate areas, show raw tables/axes, display exact stock values and instruction references, and show each unresolved unit or mode explicitly. The viewer should distinguish functionally tested items from layout-only candidates. This would be useful before adding write support.
+The browser editor binds a BIN to its own catalogue, provides block edits, interpolation, smoothing, undo/redo, comparison and draft saving, and corrects the startup checksum. Raw XDF export is implemented and independently parsed against every source cell, axis label and image base. Native TunerPro import is still an integration check to perform; XML validation alone is not that check.
 
-An eventual editing tool should bind definitions to a verified image identity, preserve unknown bytes, record exact changes, apply a validated encode/decode pair, and run the established integrity calculation before producing an output. No XDF version-specific serialization is prescribed here; choose the target format when implementation begins and test it in the intended editor.
+`ready_for_tuning_export=false` means the full engineering-unit definition lacks physical/hardware sign-off. It does not mean raw XDF export is absent or that all raw addresses are uncertain. Feature patches have instruction tests, but those tests are not live ECU validation.
 
-## Remaining research by priority
+Flashing currently provides connection references and file inspection. The offline boot reader builds and verifies addressed blocks, but the browser does not transmit a session or read/write an ECU. [Flash tooling](../firmware/FLASH_TOOLING.md) separates recovered bytes from pending transport, timing and recovery work.
 
-1. **Physical units:** establish coolant payload-to-Celsius mapping, timer frequency, crank-event geometry and road-speed scale. These unlock fan and limit definitions.
-2. **Spark:** complete the chain from final timing byte to the coil firing edge and establish the absolute angle reference; classify corrections.
-3. **Fuel:** complete every map-to-request transformation and prove duration units, voltage compensation, temperature corrections and transient paths.
-4. **All cut reasons:** build a writer/consumer record for every dispatcher gate; distinguish rev/road-speed limits, deceleration, faults and interlocks.
-5. **Connector pins:** match the exact ECU part number and harness/board to the logical MCU channels.
-6. **Integrity and packaging:** validate the correction field against the actual ECU/programming format and resolve the missing boot content before producing a flash-oriented definition. The startup computation and range are now recovered.
+## Remaining work we can do from the repository
 
-Matching ECU identification, read-tool/acquisition details, a verified wiring diagram, and measured sensor/timer traces will resolve facts that this image alone cannot prove. None is required to continue the remaining static software analysis.
+1. Extend the later transient-input lifecycle through output eligibility and timer edges. The [nine newly recovered curves](LATE_TRANSIENT_MAPS.md) now have actual-helper and pulse-arithmetic tests; the early linked-sequence tests do not cover that later lifecycle.
+2. Trace residual calibration fields and indirect structures beyond known lookup helpers. Remaining layout bytes are 884 in the early family and 1,267 in the later family; these are not all unknown maps.
+3. Reconcile scattered scalar findings into the focused catalogue, with precise byte ranges and consumer references.
+4. Reconstruct the remaining boot session, retries, watchdog and recovery state machine, then exercise it with a simulated serial peer before live integration.
+5. Test native XDF import and round-trip edits in the intended editor; extend parser, interrupted-transfer and revision-mismatch cases as needed.
+
+Physical work remains distinct: identify the fitted chip/clock, measure CPS phase against TDC and coil firing, establish temperature/pressure/TPS electrical transfer, confirm connector orientation/continuity and perform recoverable read/write/readback bench trials. The existing documents narrow these questions but do not provide all their answers. No additional user measurements are needed to continue the software tasks above.
 
 ## Reproducing the focused evidence
 
@@ -69,6 +70,6 @@ The control fixtures use supplied ROM values and controlled RAM/register inputs.
 
 ## Conditional engineering companion
 
-[physical_units.json](physical_units.json) now provides per-map conversion status, named clock/crank assumptions, 60 numeric/logical/conditional cell interpretations, joint arithmetic for seven maps and nominal speed axes for 40 maps. [UNIT_DECODING.md](UNIT_DECODING.md) separates exact arithmetic from inferred physical scales and conflicting sensor evidence. An editor must display these assumptions and must not relabel relative spark angle as BTDC, treat load as measured kPa, or silently enable writes because a conversion is present.
+[physical_units.json](physical_units.json) now provides per-map conversion status, named clock/crank assumptions, 64 numeric/logical/conditional cell interpretations, joint arithmetic for seven maps and nominal speed axes for 40 maps. [UNIT_DECODING.md](UNIT_DECODING.md) separates exact arithmetic from inferred physical scales and conflicting sensor evidence. An editor must display these assumptions and must not relabel relative spark angle as BTDC, treat load as measured kPa, or silently enable writes because a conversion is present.
 
 The [consumer models](../../scripts/map_models.py) include word wrap, rounding, coupled saturation, asymmetric channel ordering and the stock half-scaling factor. Do not replace them with a single table-to-pulse multiplier. [Stock activation notes](MAP_CONSUMERS.md#active-versus-dormant-calibrations) also matter: some identified families are disabled by stock mode settings or zero eligibility cells.

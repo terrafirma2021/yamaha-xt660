@@ -21,20 +21,20 @@
     },
     {
       "id": "xt660-5vk-1x-2008",
-      "instruction_lookup_cases": 939,
-      "maps_executed": 77,
+      "instruction_lookup_cases": 972,
+      "maps_executed": 86,
       "inline_step_tables_byte_checked_only": []
     },
     {
       "id": "xt660-2c1-10",
-      "instruction_lookup_cases": 939,
-      "maps_executed": 77,
+      "instruction_lookup_cases": 972,
+      "maps_executed": 86,
       "inline_step_tables_byte_checked_only": []
     },
     {
       "id": "xt660-2c1-10-immo-off",
-      "instruction_lookup_cases": 939,
-      "maps_executed": 77,
+      "instruction_lookup_cases": 972,
+      "maps_executed": 86,
       "inline_step_tables_byte_checked_only": []
     },
     {
@@ -51,10 +51,10 @@
     },
     {
       "id": "xt660-5vk-11",
-      "instruction_lookup_cases": 939,
-      "maps_executed": 77,
+      "instruction_lookup_cases": 972,
+      "maps_executed": 86,
       "inline_step_tables_byte_checked_only": []
     }
   ],
-  "total_cases": 8486
+  "total_cases": 8618
 }

@@ -90,38 +90,38 @@
     {
       "id": "xt660-5vk-1x-2008",
       "family": "late",
-      "map_count": 77,
-      "map_cells": 6938,
+      "map_count": 86,
+      "map_cells": 7050,
       "instruction_bytes_verified": 43134,
-      "calibration_mapped_bytes": 10829,
-      "calibration_remaining_bytes": 1459
+      "calibration_mapped_bytes": 11021,
+      "calibration_remaining_bytes": 1267
     },
     {
       "id": "xt660-2c1-10",
       "family": "late",
-      "map_count": 77,
-      "map_cells": 6938,
+      "map_count": 86,
+      "map_cells": 7050,
       "instruction_bytes_verified": 43134,
-      "calibration_mapped_bytes": 10829,
-      "calibration_remaining_bytes": 1459
+      "calibration_mapped_bytes": 11021,
+      "calibration_remaining_bytes": 1267
     },
     {
       "id": "xt660-2c1-10-immo-off",
       "family": "late",
-      "map_count": 77,
-      "map_cells": 6938,
+      "map_count": 86,
+      "map_cells": 7050,
       "instruction_bytes_verified": 43134,
-      "calibration_mapped_bytes": 10829,
-      "calibration_remaining_bytes": 1459
+      "calibration_mapped_bytes": 11021,
+      "calibration_remaining_bytes": 1267
     },
     {
       "id": "xt660-5vk-11",
       "family": "late",
-      "map_count": 77,
-      "map_cells": 6938,
+      "map_count": 86,
+      "map_cells": 7050,
       "instruction_bytes_verified": 43134,
-      "calibration_mapped_bytes": 10829,
-      "calibration_remaining_bytes": 1459
+      "calibration_mapped_bytes": 11021,
+      "calibration_remaining_bytes": 1267
     }
   ]
 }

@@ -5,7 +5,7 @@
   "description": "Byte accounting, not proof that every map or physical meaning is decoded. No-static-access bytes can still be used indirectly.",
   "totals": {
     "no_classified_layout_or_static_access": 295,
-    "static_access_role_unresolved": 552,
+    "static_access_not_in_focused_catalog": 552,
     "catalogued_map_header_cells_or_axis": 13452,
     "focused_semantic_parameter": 37
   },
@@ -22,7 +22,7 @@
       "start": "0x1842",
       "end_exclusive": "0x1852",
       "bytes": 16,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "070c0601000000000000060101010101",
       "access_addresses": [
         "0x1842",
@@ -63,7 +63,7 @@
       "start": "0x186F",
       "end_exclusive": "0x1872",
       "bytes": 3,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "800119",
       "access_addresses": [
         "0x186F",
@@ -83,7 +83,7 @@
       "start": "0x1874",
       "end_exclusive": "0x1880",
       "bytes": 12,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "fe00ff00fe00ff00fe00ff00",
       "access_addresses": [
         "0x1874",
@@ -106,7 +106,7 @@
       "start": "0x189A",
       "end_exclusive": "0x189B",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0e",
       "access_addresses": [
         "0x189A"
@@ -124,7 +124,7 @@
       "start": "0x189C",
       "end_exclusive": "0x189E",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0180",
       "access_addresses": [
         "0x189C"
@@ -142,7 +142,7 @@
       "start": "0x18A0",
       "end_exclusive": "0x18B1",
       "bytes": 17,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "02de2b0010005a006b80ff006b80ff0005",
       "access_addresses": [
         "0x18A0",
@@ -168,7 +168,7 @@
       "start": "0x18B3",
       "end_exclusive": "0x18B6",
       "bytes": 3,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0c0c00",
       "access_addresses": [
         "0x18B3",
@@ -188,7 +188,7 @@
       "start": "0x18C8",
       "end_exclusive": "0x18CF",
       "bytes": 7,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "7dc0208c03c000",
       "access_addresses": [
         "0x18C8",
@@ -212,7 +212,7 @@
       "start": "0x18D0",
       "end_exclusive": "0x18D3",
       "bytes": 3,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "1d0005",
       "access_addresses": [
         "0x18D0",
@@ -233,7 +233,7 @@
       "start": "0x18D4",
       "end_exclusive": "0x18D6",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0406",
       "access_addresses": [
         "0x18D4",
@@ -262,7 +262,7 @@
       "start": "0x18D8",
       "end_exclusive": "0x18D9",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "28",
       "access_addresses": [
         "0x18D8"
@@ -280,7 +280,7 @@
       "start": "0x18DA",
       "end_exclusive": "0x18E6",
       "bytes": 12,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "09ba620c0300030012800001",
       "access_addresses": [
         "0x18DA",
@@ -324,7 +324,7 @@
       "start": "0x19D4",
       "end_exclusive": "0x19D9",
       "bytes": 5,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "2019008904",
       "access_addresses": [
         "0x19D4",
@@ -346,7 +346,7 @@
       "start": "0x19DA",
       "end_exclusive": "0x19E4",
       "bytes": 10,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "006461a8030000808080",
       "access_addresses": [
         "0x19DA",
@@ -371,7 +371,7 @@
       "start": "0x1ACE",
       "end_exclusive": "0x1ACF",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "a6",
       "access_addresses": [
         "0x1ACE"
@@ -397,7 +397,7 @@
       "start": "0x3114",
       "end_exclusive": "0x3115",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "00",
       "access_addresses": [
         "0x3114"
@@ -431,7 +431,7 @@
       "start": "0x312F",
       "end_exclusive": "0x3131",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "05ff",
       "access_addresses": [
         "0x312F",
@@ -450,7 +450,7 @@
       "start": "0x3132",
       "end_exclusive": "0x3137",
       "bytes": 5,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0001000105",
       "access_addresses": [
         "0x3132",
@@ -470,7 +470,7 @@
       "start": "0x3138",
       "end_exclusive": "0x313A",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0002",
       "access_addresses": [
         "0x3138"
@@ -488,7 +488,7 @@
       "start": "0x31EA",
       "end_exclusive": "0x31EB",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "05",
       "access_addresses": [
         "0x31EA"
@@ -530,7 +530,7 @@
       "start": "0x3213",
       "end_exclusive": "0x3215",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "2005",
       "access_addresses": [
         "0x3213",
@@ -573,7 +573,7 @@
       "start": "0x32EE",
       "end_exclusive": "0x32EF",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "80",
       "access_addresses": [
         "0x32EE"
@@ -591,7 +591,7 @@
       "start": "0x3313",
       "end_exclusive": "0x3315",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "7b02",
       "access_addresses": [
         "0x3313",
@@ -610,7 +610,7 @@
       "start": "0x3339",
       "end_exclusive": "0x3342",
       "bytes": 9,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0e100488000002b802",
       "access_addresses": [
         "0x3339",
@@ -636,7 +636,7 @@
       "start": "0x3344",
       "end_exclusive": "0x3345",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "ff",
       "access_addresses": [
         "0x3344"
@@ -654,7 +654,7 @@
       "start": "0x3369",
       "end_exclusive": "0x336B",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0505",
       "access_addresses": [
         "0x3369",
@@ -673,7 +673,7 @@
       "start": "0x33F5",
       "end_exclusive": "0x33F7",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0505",
       "access_addresses": [
         "0x33F5",
@@ -692,7 +692,7 @@
       "start": "0x3481",
       "end_exclusive": "0x3493",
       "bytes": 18,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "83808001030380187d90840f373c45400404",
       "access_addresses": [
         "0x3481",
@@ -735,7 +735,7 @@
       "start": "0x34A4",
       "end_exclusive": "0x34A7",
       "bytes": 3,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "050028",
       "access_addresses": [
         "0x34A4",
@@ -776,7 +776,7 @@
       "start": "0x34C5",
       "end_exclusive": "0x34CB",
       "bytes": 6,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "14ff00ff8c88",
       "access_addresses": [
         "0x34C5",
@@ -799,7 +799,7 @@
       "start": "0x34CC",
       "end_exclusive": "0x34D0",
       "bytes": 4,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "00f0ff01",
       "access_addresses": [
         "0x34CC",
@@ -835,7 +835,7 @@
       "start": "0x3548",
       "end_exclusive": "0x355D",
       "bytes": 21,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0a0a0a0a0a0a0a1e460401400eff00ff8686828005",
       "access_addresses": [
         "0x3548",
@@ -873,7 +873,7 @@
       "start": "0x357B",
       "end_exclusive": "0x357F",
       "bytes": 4,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "010003ff",
       "access_addresses": [
         "0x357B",
@@ -894,7 +894,7 @@
       "start": "0x3580",
       "end_exclusive": "0x3588",
       "bytes": 8,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "80008000a100b100",
       "access_addresses": [
         "0x3580",
@@ -979,7 +979,7 @@
       "start": "0x36A0",
       "end_exclusive": "0x36A4",
       "bytes": 4,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "00060006",
       "access_addresses": [
         "0x36A0",
@@ -1022,7 +1022,7 @@
       "start": "0x36C0",
       "end_exclusive": "0x36C4",
       "bytes": 4,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "199ae666",
       "access_addresses": [
         "0x36C0",
@@ -1041,7 +1041,7 @@
       "start": "0x36D6",
       "end_exclusive": "0x36ED",
       "bytes": 23,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "2c37424d5867727d8792b0d001ff79873eff8a750119e6",
       "access_addresses": [
         "0x36D6",
@@ -1081,7 +1081,7 @@
       "start": "0x36EE",
       "end_exclusive": "0x36F1",
       "bytes": 3,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "80ffff",
       "access_addresses": [
         "0x36EE",
@@ -1101,7 +1101,7 @@
       "start": "0x36F2",
       "end_exclusive": "0x370F",
       "bytes": 29,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "044c051401f4ffff038405dc04b0ffff01f40320015effff01f4035229",
       "access_addresses": [
         "0x36F2",
@@ -1136,7 +1136,7 @@
       "start": "0x3710",
       "end_exclusive": "0x3712",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0000",
       "access_addresses": [
         "0x3710"
@@ -1154,7 +1154,7 @@
       "start": "0x423E",
       "end_exclusive": "0x4246",
       "bytes": 8,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0c0605fff0024005",
       "access_addresses": [
         "0x423E",
@@ -1179,7 +1179,7 @@
       "start": "0x4A2E",
       "end_exclusive": "0x4A33",
       "bytes": 5,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "830a0580b0",
       "access_addresses": [
         "0x4A2E",
@@ -1241,7 +1241,7 @@
       "start": "0x4AF7",
       "end_exclusive": "0x4B12",
       "bytes": 27,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "fdff02034050c8a0a21f148fff6b6b820610808080040404831918",
       "access_addresses": [
         "0x4AF7",
@@ -1285,7 +1285,7 @@
       "start": "0x4B99",
       "end_exclusive": "0x4BA1",
       "bytes": 8,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "030102280000ff04",
       "access_addresses": [
         "0x4B99",
@@ -1310,7 +1310,7 @@
       "start": "0x4BA2",
       "end_exclusive": "0x4BAC",
       "bytes": 10,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "7d7d01147d014600fe70",
       "access_addresses": [
         "0x4BA2",
@@ -1362,7 +1362,7 @@
       "start": "0x4BD7",
       "end_exclusive": "0x4BDF",
       "bytes": 8,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "143c27608dbde6ff",
       "access_addresses": [
         "0x4BD7",
@@ -1394,7 +1394,7 @@
       "start": "0x4BE5",
       "end_exclusive": "0x4BFE",
       "bytes": 25,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0007d00064008c1000ffffff3c3c3c2bffffffff19ff00640f",
       "access_addresses": [
         "0x4BE5",
@@ -1437,7 +1437,7 @@
       "start": "0x4C02",
       "end_exclusive": "0x4C05",
       "bytes": 3,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "64b008",
       "access_addresses": [
         "0x4C02",
@@ -1457,7 +1457,7 @@
       "start": "0x4C06",
       "end_exclusive": "0x4C08",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "8000",
       "access_addresses": [
         "0x4C06"
@@ -1539,7 +1539,7 @@
       "start": "0x4E10",
       "end_exclusive": "0x4E11",
       "bytes": 1,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "01",
       "access_addresses": [
         "0x4E10"
@@ -1557,7 +1557,7 @@
       "start": "0x4E18",
       "end_exclusive": "0x4E33",
       "bytes": 27,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "00bc0c0cfeff2800220014002200000004031e0a03045623791e50",
       "access_addresses": [
         "0x4E18",
@@ -1595,7 +1595,7 @@
       "start": "0x4E34",
       "end_exclusive": "0x4E39",
       "bytes": 5,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "00be010a20",
       "access_addresses": [
         "0x4E34",
@@ -1616,7 +1616,7 @@
       "start": "0x4E3A",
       "end_exclusive": "0x4E47",
       "bytes": 13,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "7bba0a010a0a3c10034032000f",
       "access_addresses": [
         "0x4E3A",
@@ -1643,7 +1643,7 @@
       "start": "0x4E48",
       "end_exclusive": "0x4E4D",
       "bytes": 5,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0008024090",
       "access_addresses": [
         "0x4E48",
@@ -1664,7 +1664,7 @@
       "start": "0x4E4E",
       "end_exclusive": "0x4E5D",
       "bytes": 15,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "780048007814023080fa961e0580c7",
       "access_addresses": [
         "0x4E4E",
@@ -1694,7 +1694,7 @@
       "start": "0x4E5E",
       "end_exclusive": "0x4E64",
       "bytes": 6,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "ba4003120000",
       "access_addresses": [
         "0x4E5E",
@@ -1717,7 +1717,7 @@
       "start": "0x4E66",
       "end_exclusive": "0x4E9A",
       "bytes": 52,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0600000000000000008000808000800000000000000500800a0a0a030514330a00000000007d000296320100f6850a28f60a6604",
       "access_addresses": [
         "0x4E66",
@@ -1783,7 +1783,7 @@
       "start": "0x4E9B",
       "end_exclusive": "0x4ECA",
       "bytes": 47,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "808080808080000100018080808080808080808080808080808000000000000000000000ffffffffffffffffffffff",
       "access_addresses": [
         "0x4E9B",
@@ -1847,7 +1847,7 @@
       "start": "0x4EEA",
       "end_exclusive": "0x4EEC",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "8080",
       "access_addresses": [
         "0x4EEA",
@@ -1866,7 +1866,7 @@
       "start": "0x4EF4",
       "end_exclusive": "0x4EF6",
       "bytes": 2,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "8015",
       "access_addresses": [
         "0x4EF4",
@@ -1885,7 +1885,7 @@
       "start": "0x4F0B",
       "end_exclusive": "0x4F11",
       "bytes": 6,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "053232fa1964",
       "access_addresses": [
         "0x4F0B",
@@ -1908,7 +1908,7 @@
       "start": "0x4F12",
       "end_exclusive": "0x4F17",
       "bytes": 5,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "09c4201428",
       "access_addresses": [
         "0x4F12",
@@ -1929,7 +1929,7 @@
       "start": "0x4F18",
       "end_exclusive": "0x4F24",
       "bytes": 12,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0022003000960032001e0032",
       "access_addresses": [
         "0x4F18",
@@ -1960,7 +1960,7 @@
       "start": "0x4F9E",
       "end_exclusive": "0x4FA2",
       "bytes": 4,
-      "status": "static_access_role_unresolved",
+      "status": "static_access_not_in_focused_catalog",
       "raw_hex": "0096fa87",
       "access_addresses": [
         "0x4F9E",

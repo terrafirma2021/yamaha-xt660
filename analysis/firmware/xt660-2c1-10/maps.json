@@ -9595,6 +9595,772 @@
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
+    "id": "table_3570",
+    "display_name": "Crank-sampled transient fuel — neutral response",
+    "pointer_base": "0x356D",
+    "data_address": "0x3570",
+    "end_exclusive": "0x3578",
+    "rows": 1,
+    "columns": 8,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_stored_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE2F3",
+        "call": "0xE310",
+        "helper": "0xEF3A"
+      }
+    ],
+    "inputs": [
+      "Captured change code at 0x0912"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "column_axis": {
+      "address": "0x3560",
+      "count": 8,
+      "element_bytes": 2,
+      "raw_values": [
+        128,
+        132,
+        137,
+        210,
+        292,
+        374,
+        456,
+        620
+      ],
+      "calls": [
+        "0xE2E8"
+      ],
+      "input": "LDD 0x912",
+      "ascending": true
+    },
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE310",
+        "instructions": [
+          {
+            "address": "0xE305",
+            "bytes": "ce357d",
+            "instruction": "LDX #0x357d"
+          },
+          {
+            "address": "0xE308",
+            "bytes": "cc0000",
+            "instruction": "LDD #0x0"
+          },
+          {
+            "address": "0xE30B",
+            "bytes": "7c0e7c",
+            "instruction": "STD 0xe7c"
+          },
+          {
+            "address": "0xE30E",
+            "bytes": "c608",
+            "instruction": "LDAB #0x8"
+          },
+          {
+            "address": "0xE310",
+            "bytes": "16ef3a",
+            "instruction": "JSR 0xef3a"
+          },
+          {
+            "address": "0xE313",
+            "bytes": "c30080",
+            "instruction": "ADDD #0x80"
+          },
+          {
+            "address": "0xE316",
+            "bytes": "7a0a20",
+            "instruction": "STAA 0xa20"
+          },
+          {
+            "address": "0xE319",
+            "bytes": "fc090c",
+            "instruction": "LDD 0x90c"
+          },
+          {
+            "address": "0xE31C",
+            "bytes": "7c0bc4",
+            "instruction": "STD 0xbc4"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        0,
+        22,
+        26,
+        74,
+        109,
+        117,
+        117,
+        117
+      ]
+    ],
+    "cells_sha256": "9bcf451be31339585b7d7bb541934578ba647e0a8b62961d135ad443a7fa6f3b",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_3578",
+    "display_name": "Crank-sampled transient fuel — normal ratio response",
+    "pointer_base": "0x3575",
+    "data_address": "0x3578",
+    "end_exclusive": "0x3580",
+    "rows": 1,
+    "columns": 8,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_stored_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE300",
+        "call": "0xE310",
+        "helper": "0xEF3A"
+      }
+    ],
+    "inputs": [
+      "Captured change code at 0x0912"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "column_axis": {
+      "address": "0x3560",
+      "count": 8,
+      "element_bytes": 2,
+      "raw_values": [
+        128,
+        132,
+        137,
+        210,
+        292,
+        374,
+        456,
+        620
+      ],
+      "calls": [
+        "0xE2E8"
+      ],
+      "input": "LDD 0x912",
+      "ascending": true
+    },
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE310",
+        "instructions": [
+          {
+            "address": "0xE305",
+            "bytes": "ce357d",
+            "instruction": "LDX #0x357d"
+          },
+          {
+            "address": "0xE308",
+            "bytes": "cc0000",
+            "instruction": "LDD #0x0"
+          },
+          {
+            "address": "0xE30B",
+            "bytes": "7c0e7c",
+            "instruction": "STD 0xe7c"
+          },
+          {
+            "address": "0xE30E",
+            "bytes": "c608",
+            "instruction": "LDAB #0x8"
+          },
+          {
+            "address": "0xE310",
+            "bytes": "16ef3a",
+            "instruction": "JSR 0xef3a"
+          },
+          {
+            "address": "0xE313",
+            "bytes": "c30080",
+            "instruction": "ADDD #0x80"
+          },
+          {
+            "address": "0xE316",
+            "bytes": "7a0a20",
+            "instruction": "STAA 0xa20"
+          },
+          {
+            "address": "0xE319",
+            "bytes": "fc090c",
+            "instruction": "LDD 0x90c"
+          },
+          {
+            "address": "0xE31C",
+            "bytes": "7c0bc4",
+            "instruction": "STD 0xbc4"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        0,
+        12,
+        12,
+        37,
+        68,
+        102,
+        117,
+        117
+      ]
+    ],
+    "cells_sha256": "c6a7db0fb2276d36fa148d4fabaab980ba278ac08d36fa14e33d3a02f6aea82a",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_3580",
+    "display_name": "Crank-sampled transient fuel — upper ratio response",
+    "pointer_base": "0x357D",
+    "data_address": "0x3580",
+    "end_exclusive": "0x3588",
+    "rows": 1,
+    "columns": 8,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_stored_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE305",
+        "call": "0xE310",
+        "helper": "0xEF3A"
+      }
+    ],
+    "inputs": [
+      "Captured change code at 0x0912"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "column_axis": {
+      "address": "0x3560",
+      "count": 8,
+      "element_bytes": 2,
+      "raw_values": [
+        128,
+        132,
+        137,
+        210,
+        292,
+        374,
+        456,
+        620
+      ],
+      "calls": [
+        "0xE2E8"
+      ],
+      "input": "LDD 0x912",
+      "ascending": true
+    },
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE310",
+        "instructions": [
+          {
+            "address": "0xE305",
+            "bytes": "ce357d",
+            "instruction": "LDX #0x357d"
+          },
+          {
+            "address": "0xE308",
+            "bytes": "cc0000",
+            "instruction": "LDD #0x0"
+          },
+          {
+            "address": "0xE30B",
+            "bytes": "7c0e7c",
+            "instruction": "STD 0xe7c"
+          },
+          {
+            "address": "0xE30E",
+            "bytes": "c608",
+            "instruction": "LDAB #0x8"
+          },
+          {
+            "address": "0xE310",
+            "bytes": "16ef3a",
+            "instruction": "JSR 0xef3a"
+          },
+          {
+            "address": "0xE313",
+            "bytes": "c30080",
+            "instruction": "ADDD #0x80"
+          },
+          {
+            "address": "0xE316",
+            "bytes": "7a0a20",
+            "instruction": "STAA 0xa20"
+          },
+          {
+            "address": "0xE319",
+            "bytes": "fc090c",
+            "instruction": "LDD 0x90c"
+          },
+          {
+            "address": "0xE31C",
+            "bytes": "7c0bc4",
+            "instruction": "STD 0xbc4"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        0,
+        22,
+        26,
+        74,
+        109,
+        117,
+        117,
+        117
+      ]
+    ],
+    "cells_sha256": "9bcf451be31339585b7d7bb541934578ba647e0a8b62961d135ad443a7fa6f3b",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_359a",
+    "display_name": "Crank-sampled transient fuel — sampled input correction",
+    "pointer_base": "0x3597",
+    "data_address": "0x359A",
+    "end_exclusive": "0x35A3",
+    "rows": 1,
+    "columns": 9,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_stored_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE32D",
+        "call": "0xE338",
+        "helper": "0xEF3A"
+      }
+    ],
+    "inputs": [
+      "Captured input code at 0x090C"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "column_axis": {
+      "address": "0x3588",
+      "count": 9,
+      "element_bytes": 2,
+      "raw_values": [
+        0,
+        64,
+        128,
+        192,
+        256,
+        320,
+        384,
+        448,
+        512
+      ],
+      "calls": [
+        "0xE327"
+      ],
+      "input": "LDD 0x90c",
+      "ascending": true
+    },
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE338",
+        "instructions": [
+          {
+            "address": "0xE32D",
+            "bytes": "ce3597",
+            "instruction": "LDX #0x3597"
+          },
+          {
+            "address": "0xE330",
+            "bytes": "cc0000",
+            "instruction": "LDD #0x0"
+          },
+          {
+            "address": "0xE333",
+            "bytes": "7c0e7c",
+            "instruction": "STD 0xe7c"
+          },
+          {
+            "address": "0xE336",
+            "bytes": "c609",
+            "instruction": "LDAB #0x9"
+          },
+          {
+            "address": "0xE338",
+            "bytes": "16ef3a",
+            "instruction": "JSR 0xef3a"
+          },
+          {
+            "address": "0xE33B",
+            "bytes": "c30080",
+            "instruction": "ADDD #0x80"
+          },
+          {
+            "address": "0xE33E",
+            "bytes": "7a0a22",
+            "instruction": "STAA 0xa22"
+          },
+          {
+            "address": "0xE341",
+            "bytes": "f60a20",
+            "instruction": "LDAB 0xa20"
+          },
+          {
+            "address": "0xE344",
+            "bytes": "12",
+            "instruction": "MUL"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        128,
+        128,
+        128,
+        128,
+        128,
+        128,
+        122,
+        105,
+        96
+      ]
+    ],
+    "cells_sha256": "cbed71f3009e61cf90080d7de4cb6c734861e494a02c739b69a3f31c1e2f08eb",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_35fe",
+    "display_name": "Crank-sampled transient fuel — speed correction",
+    "pointer_base": "0x35FB",
+    "data_address": "0x35FE",
+    "end_exclusive": "0x3606",
+    "rows": 1,
+    "columns": 8,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_stored_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE282",
+        "call": "0xE28D",
+        "helper": "0xEF3A"
+      }
+    ],
+    "inputs": [
+      "Selected speed code at 0x0920"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "column_axis": {
+      "address": "0x35EE",
+      "count": 8,
+      "element_bytes": 2,
+      "raw_values": [
+        4096,
+        8192,
+        12288,
+        16384,
+        20480,
+        24576,
+        28672,
+        32768
+      ],
+      "calls": [
+        "0xE27C"
+      ],
+      "input": "LDD 0x920",
+      "ascending": true
+    },
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE28D",
+        "instructions": [
+          {
+            "address": "0xE282",
+            "bytes": "ce35fb",
+            "instruction": "LDX #0x35fb"
+          },
+          {
+            "address": "0xE285",
+            "bytes": "cc0000",
+            "instruction": "LDD #0x0"
+          },
+          {
+            "address": "0xE288",
+            "bytes": "7c0e7c",
+            "instruction": "STD 0xe7c"
+          },
+          {
+            "address": "0xE28B",
+            "bytes": "c608",
+            "instruction": "LDAB #0x8"
+          },
+          {
+            "address": "0xE28D",
+            "bytes": "16ef3a",
+            "instruction": "JSR 0xef3a"
+          },
+          {
+            "address": "0xE290",
+            "bytes": "c30080",
+            "instruction": "ADDD #0x80"
+          },
+          {
+            "address": "0xE293",
+            "bytes": "7a0a25",
+            "instruction": "STAA 0xa25"
+          },
+          {
+            "address": "0xE296",
+            "bytes": "180e",
+            "instruction": "TAB"
+          },
+          {
+            "address": "0xE298",
+            "bytes": "87",
+            "instruction": "CLRA"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        128,
+        128,
+        128,
+        128,
+        128,
+        128,
+        128,
+        128
+      ]
+    ],
+    "cells_sha256": "5d5c717bcf5008538df90f0d980ca679bb2db08b75cffb79c3009ae507d40635",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_3618",
+    "display_name": "Crank-sampled transient fuel — change correction",
+    "pointer_base": "0x3615",
+    "data_address": "0x3618",
+    "end_exclusive": "0x3621",
+    "rows": 1,
+    "columns": 9,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_stored_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE2B8",
+        "call": "0xE2C3",
+        "helper": "0xEF3A"
+      }
+    ],
+    "inputs": [
+      "Filtered change code at 0x0910"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "column_axis": {
+      "address": "0x3606",
+      "count": 9,
+      "element_bytes": 2,
+      "raw_values": [
+        128,
+        136,
+        144,
+        152,
+        160,
+        168,
+        176,
+        184,
+        192
+      ],
+      "calls": [
+        "0xE2B2"
+      ],
+      "input": "LDD 0x910",
+      "ascending": true
+    },
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE2C3",
+        "instructions": [
+          {
+            "address": "0xE2B8",
+            "bytes": "ce3615",
+            "instruction": "LDX #0x3615"
+          },
+          {
+            "address": "0xE2BB",
+            "bytes": "cc0000",
+            "instruction": "LDD #0x0"
+          },
+          {
+            "address": "0xE2BE",
+            "bytes": "7c0e7c",
+            "instruction": "STD 0xe7c"
+          },
+          {
+            "address": "0xE2C1",
+            "bytes": "c609",
+            "instruction": "LDAB #0x9"
+          },
+          {
+            "address": "0xE2C3",
+            "bytes": "16ef3a",
+            "instruction": "JSR 0xef3a"
+          },
+          {
+            "address": "0xE2C6",
+            "bytes": "c30080",
+            "instruction": "ADDD #0x80"
+          },
+          {
+            "address": "0xE2C9",
+            "bytes": "7a0a26",
+            "instruction": "STAA 0xa26"
+          },
+          {
+            "address": "0xE2CC",
+            "bytes": "180e",
+            "instruction": "TAB"
+          },
+          {
+            "address": "0xE2CE",
+            "bytes": "87",
+            "instruction": "CLRA"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        128,
+        128,
+        128,
+        128,
+        128,
+        128,
+        128,
+        128,
+        128
+      ]
+    ],
+    "cells_sha256": "772cf1ba4b8ab2f9fe58256385d386b273e07f7087286740c3ea018d93013ea2",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
     "id": "table_37ee",
     "display_name": "Coolant-dependent runtime counter target",
     "pointer_base": "0x37EB",
@@ -12450,6 +13216,377 @@
     "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
   },
   {
+    "id": "table_35e6",
+    "display_name": "Crank-sampled transient fuel — pressure gain",
+    "pointer_base": "0x35E0",
+    "data_address": "0x35E6",
+    "end_exclusive": "0x35EE",
+    "rows": 1,
+    "columns": 8,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_uniform_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE238",
+        "call": "0xE23E",
+        "helper": "0xEE81"
+      }
+    ],
+    "inputs": [
+      "Pressure estimate at 0x0900"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "input_min_raw": 28672,
+    "input_span_raw": 28672,
+    "index_factor_raw": 16,
+    "index_divisor": 65536,
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE23E",
+        "instructions": [
+          {
+            "address": "0xE22F",
+            "bytes": "1e0a271004",
+            "instruction": "BRSET 0xa27,0x10,0xe238"
+          },
+          {
+            "address": "0xE234",
+            "bytes": "1820014f",
+            "instruction": "LBRA 0xe387"
+          },
+          {
+            "address": "0xE238",
+            "bytes": "ce35e0",
+            "instruction": "LDX #0x35e0"
+          },
+          {
+            "address": "0xE23B",
+            "bytes": "fc0900",
+            "instruction": "LDD 0x900"
+          },
+          {
+            "address": "0xE23E",
+            "bytes": "16ee81",
+            "instruction": "JSR 0xee81"
+          },
+          {
+            "address": "0xE241",
+            "bytes": "7a0a21",
+            "instruction": "STAA 0xa21"
+          },
+          {
+            "address": "0xE244",
+            "bytes": "b60914",
+            "instruction": "LDAA 0x914"
+          },
+          {
+            "address": "0xE247",
+            "bytes": "ce35a3",
+            "instruction": "LDX #0x35a3"
+          },
+          {
+            "address": "0xE24A",
+            "bytes": "16ef7f",
+            "instruction": "JSR 0xef7f"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        83,
+        94,
+        105,
+        116,
+        121,
+        131,
+        142,
+        152
+      ]
+    ],
+    "cells_sha256": "52e79b11711faf8d7d7abec3ab3369797364d9a2689c3060d3e2853563de7905",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_35a6",
+    "display_name": "Crank-sampled transient fuel — coolant gain",
+    "pointer_base": "0x35A3",
+    "data_address": "0x35A6",
+    "end_exclusive": "0x35C3",
+    "rows": 1,
+    "columns": 29,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_uniform_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE247",
+        "call": "0xE24A",
+        "helper": "0xEF7F"
+      }
+    ],
+    "inputs": [
+      "Coolant code at 0x0914"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "input_min_raw": 16,
+    "input_span_raw": 224,
+    "index_factor_raw": 32,
+    "index_divisor": 256,
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE24A",
+        "instructions": [
+          {
+            "address": "0xE23E",
+            "bytes": "16ee81",
+            "instruction": "JSR 0xee81"
+          },
+          {
+            "address": "0xE241",
+            "bytes": "7a0a21",
+            "instruction": "STAA 0xa21"
+          },
+          {
+            "address": "0xE244",
+            "bytes": "b60914",
+            "instruction": "LDAA 0x914"
+          },
+          {
+            "address": "0xE247",
+            "bytes": "ce35a3",
+            "instruction": "LDX #0x35a3"
+          },
+          {
+            "address": "0xE24A",
+            "bytes": "16ef7f",
+            "instruction": "JSR 0xef7f"
+          },
+          {
+            "address": "0xE24D",
+            "bytes": "7a0a23",
+            "instruction": "STAA 0xa23"
+          },
+          {
+            "address": "0xE250",
+            "bytes": "f60a21",
+            "instruction": "LDAB 0xa21"
+          },
+          {
+            "address": "0xE253",
+            "bytes": "12",
+            "instruction": "MUL"
+          },
+          {
+            "address": "0xE254",
+            "bytes": "b7c6",
+            "instruction": "XGDY"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        39,
+        38,
+        37,
+        36,
+        35,
+        34,
+        32,
+        31,
+        29,
+        27,
+        26,
+        25,
+        24,
+        24,
+        23,
+        23,
+        21,
+        20,
+        19,
+        18,
+        17,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ]
+    ],
+    "cells_sha256": "7310d864fca0d8f605d9609d3cf12330d353e791dc2cf942a8f7985689e2212d",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
+    "id": "table_35c6",
+    "display_name": "Crank-sampled transient fuel — intake-temperature gain",
+    "pointer_base": "0x35C3",
+    "data_address": "0x35C6",
+    "end_exclusive": "0x35DF",
+    "rows": 1,
+    "columns": 25,
+    "element_bytes": 1,
+    "byte_order": "big",
+    "kind": "1D_uniform_axis",
+    "units": "raw ECU values",
+    "calls": [
+      {
+        "pointer_load": "0xE259",
+        "call": "0xE25C",
+        "helper": "0xEF7F"
+      }
+    ],
+    "inputs": [
+      "Intake-temperature code at 0x0915"
+    ],
+    "output": "Joint pulse contribution 0x0A1E; supply-compensated duration 0x0A1C",
+    "engineering_decode": null,
+    "ready_for_tuning_export": false,
+    "confidence": "Instruction-traced layout; physical units require separate verification",
+    "input_min_raw": 16,
+    "input_span_raw": 192,
+    "index_factor_raw": 32,
+    "index_divisor": 256,
+    "physical_role": "Evaluated by 0xE238–0xE383 to form auxiliary injection duration 0x0A1E, capped at 25000 timer ticks; supply compensation is added into 0x0A1C. The caller, integer rounding and input/phase gates are replay-checked in all four later BINs. Sampled-input coordinates remain internal codes; no physical units or stock activation are inferred from the curve shape.",
+    "software_evidence": {
+      "report": "analysis/firmware/late_transient_validation.json",
+      "documentation": "docs/semantics/LATE_TRANSIENT_MAPS.html",
+      "consumers": [
+        "0xE21D",
+        "0xE238",
+        "0xE383",
+        "0xE387",
+        "0xEEBD"
+      ]
+    },
+    "naming_note": "Role names follow local input/output consumers and comparison with the early application; they do not establish physical units.",
+    "consumer_traces": [
+      {
+        "call": "0xE25C",
+        "instructions": [
+          {
+            "address": "0xE253",
+            "bytes": "12",
+            "instruction": "MUL"
+          },
+          {
+            "address": "0xE254",
+            "bytes": "b7c6",
+            "instruction": "XGDY"
+          },
+          {
+            "address": "0xE256",
+            "bytes": "b60915",
+            "instruction": "LDAA 0x915"
+          },
+          {
+            "address": "0xE259",
+            "bytes": "ce35c3",
+            "instruction": "LDX #0x35c3"
+          },
+          {
+            "address": "0xE25C",
+            "bytes": "16ef7f",
+            "instruction": "JSR 0xef7f"
+          },
+          {
+            "address": "0xE25F",
+            "bytes": "7a0a24",
+            "instruction": "STAA 0xa24"
+          },
+          {
+            "address": "0xE262",
+            "bytes": "180e",
+            "instruction": "TAB"
+          },
+          {
+            "address": "0xE264",
+            "bytes": "87",
+            "instruction": "CLRA"
+          },
+          {
+            "address": "0xE265",
+            "bytes": "c30180",
+            "instruction": "ADDD #0x180"
+          }
+        ]
+      }
+    ],
+    "raw_values": [
+      [
+        158,
+        153,
+        148,
+        143,
+        138,
+        135,
+        133,
+        130,
+        128,
+        125,
+        122,
+        120,
+        117,
+        115,
+        112,
+        110,
+        107,
+        98,
+        89,
+        80,
+        71,
+        64,
+        56,
+        48,
+        40
+      ]
+    ],
+    "cells_sha256": "5ef8aad4fe4f48b9ac63229bc517077fc93944c631c641c60166c898b9aa35d2",
+    "input_findings": [],
+    "physical_unit_status": "Not independently verified for this BIN; physical references and hardware remain conditional"
+  },
+  {
     "id": "table_33bf",
     "display_name": "Load change gain — selection 1",
     "pointer_base": "0x33BC",
@@ -15053,6 +16190,11 @@
         "pointer_load": "0x8A5C",
         "call": "0x8A62",
         "helper": "0xBBCF"
+      },
+      {
+        "pointer_load": "0xDF0E",
+        "call": "0xDF14",
+        "helper": "0xEE81"
       }
     ],
     "inputs": [],
@@ -15116,6 +16258,56 @@
           },
           {
             "address": "0x8A6C",
+            "bytes": "59",
+            "instruction": "ASLD"
+          }
+        ]
+      },
+      {
+        "call": "0xDF14",
+        "instructions": [
+          {
+            "address": "0xDF08",
+            "bytes": "7c0cac",
+            "instruction": "STD 0xcac"
+          },
+          {
+            "address": "0xDF0B",
+            "bytes": "7c0cb6",
+            "instruction": "STD 0xcb6"
+          },
+          {
+            "address": "0xDF0E",
+            "bytes": "ce0e32",
+            "instruction": "LDX #0xe32"
+          },
+          {
+            "address": "0xDF11",
+            "bytes": "fc0900",
+            "instruction": "LDD 0x900"
+          },
+          {
+            "address": "0xDF14",
+            "bytes": "16ee81",
+            "instruction": "JSR 0xee81"
+          },
+          {
+            "address": "0xDF17",
+            "bytes": "7a0cb5",
+            "instruction": "STAA 0xcb5"
+          },
+          {
+            "address": "0xDF1A",
+            "bytes": "87",
+            "instruction": "CLRA"
+          },
+          {
+            "address": "0xDF1B",
+            "bytes": "f60cb5",
+            "instruction": "LDAB 0xcb5"
+          },
+          {
+            "address": "0xDF1E",
             "bytes": "59",
             "instruction": "ASLD"
           }
