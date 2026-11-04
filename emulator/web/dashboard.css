@@ -29,8 +29,9 @@ select{max-width:100%;min-width:0}
 .riding-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:20px;align-items:start}
 .riding{min-width:0;overflow:hidden;border:1px solid var(--border);border-radius:10px;background:#080b10}
 .cockpit{position:relative;container-type:inline-size;isolation:isolate}
+.cockpit-scene{position:relative;container-type:inline-size}
 .cockpit-art{display:block;width:100%;height:auto}
-.display{position:absolute;left:25.5%;top:15.1%;width:49%;height:35.8%;padding:1.4cqw 1.6cqw 1cqw;color:#eef7ff;background:#070d12;border-radius:1.5cqw;display:flex;flex-direction:column;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 4cqw #1b344344;overflow:hidden}
+.display{position:absolute;z-index:1;left:25.5%;top:15.1%;width:49%;height:35.8%;padding:1.4cqw 1.6cqw 1cqw;color:#eef7ff;background:#070d12;border-radius:1.5cqw;display:flex;flex-direction:column;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 4cqw #1b344344;overflow:hidden}
 .display.off>*{visibility:hidden}
 .display.off{background:#030607;box-shadow:inset 0 0 5cqw #0d1d2a44}
 .screen-top{display:flex;align-items:center;gap:.8cqw;font-size:.85cqw;letter-spacing:.12cqw;color:#a9bcca}
@@ -64,14 +65,25 @@ select{max-width:100%;min-width:0}
 .lamp.hot{color:#ff8c8c;border-color:#db5d66;background:#6c1f3355}
 .fault-strip{font-size:.8cqw;letter-spacing:.03cqw;color:#94acbb;min-height:1.3cqw;margin-top:.6cqw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fault-strip.alert{color:#ffc46b}
-.physical{position:absolute;color:white;border-color:#6e7985;background:#121c29e8;box-shadow:0 2px 9px #0009;font-size:.85cqw;padding:.7cqw;border-radius:.6cqw;display:flex;align-items:center;justify-content:center;gap:.4cqw}
-.key{left:46.3%;top:56.5%;width:8%;height:11%;border-radius:50%;flex-direction:column;background:radial-gradient(#344659,#0a0f16);font-size:.7cqw}
-.key-glyph{font-size:2.4cqw;line-height:1}
-.key[aria-pressed=true]{border-color:#63e2b7;box-shadow:0 0 1.2cqw #49dba355}
-.run-switch{left:87%;top:60.6%;width:7%;height:10%;transform:rotate(18deg);background:linear-gradient(#df343d,#7c111e);border-color:#ff8996;flex-direction:column}
-.run-switch b{font-size:1.3cqw}
-.run-switch[aria-pressed=true]{box-shadow:0 0 .8cqw #f5344444;border-color:#ff8796}
-.starter{left:86%;top:71.3%;width:6.5%;height:8%;border-radius:50%;font-size:.8cqw}
+.physical,.physical:hover:not(:disabled),.physical[aria-pressed=true]{position:absolute;padding:0;border:0;background:transparent;box-shadow:none;appearance:none;outline-offset:2px;-webkit-tap-highlight-color:transparent}
+.physical:disabled{opacity:1;cursor:default}
+.physical:focus-visible{outline:2px solid #d3e7ff}
+.key{left:46.45%;top:50.55%;width:7.5%;aspect-ratio:1;border-radius:50%;overflow:visible}
+.key::after{content:"";position:absolute;inset:-12px -14px;border-radius:50%;background:transparent}
+.key-photo{display:block;width:100%;height:100%;pointer-events:none;user-select:none;transform-origin:50% 89.5%;transform:rotate(-28deg);filter:drop-shadow(.15cqw .35cqw .2cqw #0009);transition:transform .32s cubic-bezier(.2,.7,.25,1),filter .15s}
+.key[aria-pressed=true] .key-photo,.key[data-turning=on] .key-photo{transform:rotate(28deg)}
+.key[data-turning=off] .key-photo{transform:rotate(-28deg)}
+.key:hover:not(:disabled) .key-photo{filter:brightness(1.1) drop-shadow(.15cqw .35cqw .2cqw #0009)}
+.run-switch{left:87.65%;top:59.7%;width:6.4%;height:10.8%;border-radius:22%;perspective:30cqw}
+.rocker-photo{display:block;width:100%;height:100%;background:url('/cockpit.png') no-repeat -87.65cqw -39.8cqw/100cqw auto;clip-path:polygon(36% 3%,95% 26%,72% 96%,2% 74%);transform-origin:50% 50%;transition:transform .2s,filter .2s;pointer-events:none}
+.run-switch[aria-pressed=false] .rocker-photo{transform:rotateX(-24deg) translateY(.18cqw);filter:brightness(.7)}
+.run-switch:hover:not(:disabled) .rocker-photo{filter:brightness(1.12)}
+.run-switch:active:not(:disabled) .rocker-photo{transform:rotateX(14deg)}
+.starter{left:85.9%;top:70.6%;width:6.1%;height:8.8%;border-radius:50%}
+.starter-plunger{position:absolute;left:23%;top:26%;width:54%;aspect-ratio:1;border-radius:50%;background:url('/cockpit.png') no-repeat -87.303cqw -48.592cqw/100cqw auto;transition:transform .1s,filter .1s;pointer-events:none}
+.starter:active:not(:disabled) .starter-plunger,.starter[aria-pressed=true] .starter-plunger{transform:scale(.92);filter:brightness(.65)}
+.starter:hover:not(:disabled) .starter-plunger{filter:brightness(1.2)}
+@media(prefers-reduced-motion:reduce){.key-photo,.rocker-photo,.starter-plunger{transition:none}}
 .engine-badge{position:absolute;bottom:5%;left:34%;width:32%;text-align:center;padding:8px;border:1px solid #6b83944f;border-radius:5px;background:#060b13ce;color:#bbd2e5;letter-spacing:2px;font-size:.9cqw}
 .rider-controls{padding:18px;display:flex;align-items:center;gap:20px;color:#dfeaff;border-top:1px solid #283546}
 .gear-controls{display:flex;gap:6px}
@@ -142,9 +154,6 @@ aside{grid-template-columns:1fr 1fr}
 .coolant-panel{grid-column:1/-1}
 .coolant-panel .temperature-actions{max-width:280px}
 .advanced-grid{grid-template-columns:1fr}
-.physical{font-size:1.2cqw}
-.key{font-size:.9cqw}
-.starter{font-size:1cqw}
 .engine-badge{font-size:1.2cqw}
 .connection select{flex:1;width:auto}
 header{padding:12px 16px;gap:15px;height:76px}
@@ -160,7 +169,7 @@ footer{flex-direction:column}
 .connection>label{display:none}
 .connection select{font-size:11px;padding:9px 6px;flex:1 1 240px}
 .connection button{font-size:11px;padding:9px}
-.cockpit{padding-bottom:57px;background:#0c1420;display:flex;flex-direction:column}
+.cockpit{background:#0c1420;display:flex;flex-direction:column}
 .display{position:relative;order:-1;left:auto;top:auto;width:calc(100% - 16px);height:190px;margin:8px;padding:12px;border:1px solid #344957;border-radius:8px}
 .screen-top{font-size:8px;gap:6px}
 .screen-top b{font-size:12px}
@@ -180,13 +189,11 @@ footer{flex-direction:column}
 .screen-bottom small{font-size:8px}
 .lamp{padding:3px}
 .fault-strip{font-size:9px;min-height:14px;margin-top:6px}
-.physical{top:auto;bottom:9px;transform:none;width:28%;height:39px;border-radius:5px;font-size:10px;flex-direction:row}
-.key{left:4%;font-size:9px}
-.key-glyph{font-size:20px}
-.run-switch{left:36%}
-.run-switch b{font-size:11px}
-.starter{left:68%;width:28%;font-size:11px}
-.engine-badge{bottom:67px;font-size:7px;padding:5px}
+.physical::after{content:"";position:absolute;inset:-7px;background:transparent;border-radius:inherit}
+.key::after{inset:-9px}
+.run-switch::after{inset:-9px -9px 0}
+.starter::after{inset:0 -10px -10px}
+.engine-badge{bottom:5%;font-size:7px;padding:5px}
 .rider-controls{padding:12px 8px;gap:10px}
 .rider-controls>button{display:none}
 .gear-controls button{width:33px;padding:8px}

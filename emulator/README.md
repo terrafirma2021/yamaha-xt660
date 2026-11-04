@@ -49,7 +49,7 @@ The [recovered pressure calculations](../analysis/semantics/PRESSURE_ESTIMATE.md
 
 **d:61 History** and **d:62 Count** navigate using the same button commands. Clear history in d:62 models the supply-monitor low/high transition used by the run-switch procedure. Actual EEPROM writes remain firmware operations; active faults can remain or recur. Later d:63 displays active O2 faults (24/31/32), not stored history. **Exit diagnostics** cycles the simulated key and reconnects in normal meter mode.
 
-The cockpit art is a generated backdrop; the instruments and controls are HTML/CSS. All assets are local. The R1-inspired artwork does not imply an R1 ECU or protocol.
+The cockpit art is a generated backdrop with a transparent photographic key asset. The key turns in the barrel; transparent controls animate the photographed run rocker and starter. Keyboard labels, focus outlines and reduced-motion support remain available. All assets are local. The R1-inspired artwork does not imply an R1 ECU or protocol. [Control appearance checks](cockpit-controls-validation.json) cover desktop/mobile layouts, themes and the existing ECU actions.
 
 ## Flash-client integration
 

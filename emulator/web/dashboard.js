@@ -66,6 +66,9 @@ function render(s){
  $('display').classList.toggle('off',!powered);
  $('key').setAttribute('aria-pressed',String(powered));$('key').setAttribute('aria-label','Turn ignition key '+(powered?'off':'on'));text('keyLabel',powered?'KEY ON':'KEY OFF');
  $('runSwitch').setAttribute('aria-pressed',String(b.run));text('runLabel',b.run?'ON':'STOP');
+ $('key').title='Turn ignition key '+(powered?'off':'on');
+ $('runSwitch').setAttribute('aria-label','Engine run switch: '+(b.run?'on':'stop'));$('runSwitch').title=b.run?'Engine run switch: on. Click to stop':'Engine run switch: stop. Click to run';
+ $('starter').setAttribute('aria-pressed',String(b.starting));
  $('neutral').setAttribute('aria-pressed',String(!b.gear));$('inGear').setAttribute('aria-pressed',String(!!b.gear));
  $('gear').textContent=powered?(b.gear?'1':'N'):'—';$('gear').parentElement.classList.toggle('engaged',!!b.gear);
  $('gear').title='Neutral-switch fixture; not a field in the normal K-line reply';
@@ -127,7 +130,7 @@ function resume(){paused=false;clearTimeout(timer);if(state)render(state);tick()
 function pause(){paused=true;clearTimeout(timer);if(state)render(state);}
 const control=(name,value)=>act('control',{name,value});
 $('load').onclick=async()=>{const image=$('image').value;pause();await act('load',{image});};
-$('key').onclick=async()=>{const enabled=!state.bike.powered;pause();if(await act('key',{enabled,wrong_key:$('wrongKey').checked}))if(enabled)resume();};
+$('key').onclick=async()=>{const enabled=!state.bike.powered;pause();$('key').dataset.turning=enabled?'on':'off';try{if(await act('key',{enabled,wrong_key:$('wrongKey').checked}))if(enabled)resume();}finally{delete $('key').dataset.turning;}};
 $('runSwitch').onclick=()=>control('run',!state.bike.run);
 $('starter').onclick=async()=>{if(await act('start'))resume();};
 $('neutral').onclick=()=>control('gear',0);$('inGear').onclick=()=>control('gear',1);

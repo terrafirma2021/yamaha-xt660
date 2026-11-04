@@ -142,6 +142,8 @@ def make_server(dashboard, port):
                 return self.reply(200,(ROOT/'site/assets/yamaha-motor-logo.png').read_bytes(),'image/png')
             if self.path == '/cockpit.png':
                 return self.reply(200,(HERE/'web/cockpit.png').read_bytes(),'image/png')
+            if self.path == '/ignition-key.png':
+                return self.reply(200,(HERE/'web/ignition-key.png').read_bytes(),'image/png')
             with dashboard.lock:
                 try:
                     if self.path == '/api/state':

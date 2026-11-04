@@ -1,0 +1,10 @@
+{
+  "asset": "ignition-key.png",
+  "kind": "Generated photographic-style ignition key illustration with transparent background",
+  "generator": "OpenAI built-in image generation",
+  "tool_mode": "Reference-guided generation with transparent_background=true",
+  "reference": "cockpit.png (lighting and camera reference)",
+  "not_a_photograph_of": "An identified Yamaha key or XT660 installation",
+  "prompt": "Use case: product-mockup / photographic UI asset. The attached motorcycle cockpit is a LIGHTING AND CAMERA REFERENCE ONLY. Generate one isolated realistic motorcycle ignition KEY, to composite into its central ignition barrel. True transparent background, square canvas. Do not include the cockpit, lock, ignition barrel, hand, ring, fob, background or UI. Show a premium, compact black molded rubber/plastic Yamaha-style motorcycle key bow viewed from the rider's elevated front viewpoint, with fine real rubber texture, bevels and subtle worn silver highlights matching the cool soft daylight of the reference. The key is oriented upright in the image, straight along the vertical axis, its black head above a very short silver metal neck at bottom centre. The blade is already inserted into an imaginary lock, so show only its short exposed metal shoulder, not a full long toothed blade. The tip of that short neck at the exact horizontal centre, 80% down the square canvas, is the rotational anchor for a UI animation; center the key around that point with clear transparent margin all around. Key bow should occupy roughly 65% of canvas width. Black head with restrained tiny embossed YAMAHA lettering, physically photographic, not a flat icon, not a button, not glossy toy plastic. No labels, no ON/OFF words, no glowing outline. The final result is just the physically believable inserted key on transparent alpha.",
+  "sha256": "74e68c7f5840f8274be7e9cbdfe3bfdaae14f937fa85042953da7a8358b71e35"
+}
