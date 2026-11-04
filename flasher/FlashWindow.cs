@@ -11,47 +11,72 @@ using System.Windows.Forms;
 namespace Xt660 {
     public sealed class MainWindow : Form {
         readonly Library library;readonly ComboBox ports;readonly Button connect,refresh,read,write,cancel;
-        readonly Label status,identity;readonly ThinProgress progress;readonly TextBox report;
+        readonly ModernButton flashNav,pinoutsNav,themeToggle;
+        readonly Control flashPage,pinoutPage;readonly Panel content;
+        readonly Label status,identity;readonly ThinProgress progress;readonly RichTextBox report;
         BootClient client;CancellationTokenSource cancellation;bool busy,writing;
         string backupDirectory=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"XT660","Backups");
         public MainWindow(Library lib) {
-            library=lib;ShowIcon=false;Text="XT660 · ECU Flash Tool";ClientSize=new Size(820,620);MinimumSize=new Size(780,610);
-            StartPosition=FormStartPosition.CenterScreen;AutoScaleMode=AutoScaleMode.Dpi;
-            Font=Theme.Body(11);BackColor=Theme.Background;ForeColor=Theme.Ink;
-            var grid=new TableLayoutPanel{Dock=DockStyle.Fill,Padding=new Padding(30,18,30,18),ColumnCount=1,RowCount=8,BackColor=Theme.Background};
-            foreach(int height in new[]{116,76,36,112,38,8})grid.RowStyles.Add(new RowStyle(SizeType.Absolute,height));
-            grid.RowStyles.Add(new RowStyle(SizeType.Percent,100));grid.RowStyles.Add(new RowStyle(SizeType.Absolute,43));
-            grid.Controls.Add(new BrandHeader{Dock=DockStyle.Fill});
-            var connection=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=4,RowCount=2,Margin=new Padding(0)};
+            Theme.LoadPreference();library=lib;ShowIcon=false;Text="XT660 · ECU Flash Tool";
+            AutoScaleDimensions=new SizeF(96,96);AutoScaleMode=AutoScaleMode.Dpi;
+            Font=Theme.Body(10.5f);FormBorderStyle=FormBorderStyle.FixedSingle;MaximizeBox=false;
+            ClientSize=new Size(1000,720);StartPosition=FormStartPosition.CenterScreen;
+            var shell=new TableLayoutPanel{Dock=DockStyle.Fill,Padding=new Padding(28,18,28,18),ColumnCount=1,RowCount=4};
+            shell.RowStyles.Add(new RowStyle(SizeType.Absolute,78));shell.RowStyles.Add(new RowStyle(SizeType.Absolute,44));
+            shell.RowStyles.Add(new RowStyle(SizeType.Percent,100));shell.RowStyles.Add(new RowStyle(SizeType.Absolute,30));
+            var header=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2,RowCount=1,Margin=new Padding(0)};
+            header.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));header.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,120));
+            header.Controls.Add(new BrandHeader{Dock=DockStyle.Fill,Margin=new Padding(0)});
+            themeToggle=new ModernButton{Width=116,Height=34,Anchor=AnchorStyles.Right|AnchorStyles.Top,Margin=new Padding(0,15,0,0)};
+            header.Controls.Add(themeToggle);shell.Controls.Add(header);
+            var navigation=new FlowLayoutPanel{Dock=DockStyle.Fill,Margin=new Padding(0),WrapContents=false};
+            flashNav=new ModernButton{Text="Flash",Navigation=true,Width=104,Height=40,Margin=new Padding(0)};
+            pinoutsNav=new ModernButton{Text="Pinouts",Navigation=true,Width=104,Height=40,Margin=new Padding(0)};
+            navigation.Controls.Add(flashNav);navigation.Controls.Add(pinoutsNav);shell.Controls.Add(navigation);
+            content=new Panel{Dock=DockStyle.Fill,Margin=new Padding(0)};shell.Controls.Add(content);
+            var grid=new TableLayoutPanel{Dock=DockStyle.Fill,Padding=new Padding(0,18,0,0),ColumnCount=1,RowCount=7,Margin=new Padding(0),AccessibleName="Flash page"};
+            foreach(int height in new[]{65,29,96,34,6,31})grid.RowStyles.Add(new RowStyle(SizeType.Absolute,height));
+            grid.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+            var connection=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=3,RowCount=2,Margin=new Padding(0)};
             connection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));
-            foreach(int width in new[]{102,122,112})connection.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,width));
-            connection.RowStyles.Add(new RowStyle(SizeType.Absolute,24));connection.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+            connection.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,104));connection.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,120));
+            connection.RowStyles.Add(new RowStyle(SizeType.Absolute,23));connection.RowStyles.Add(new RowStyle(SizeType.Percent,100));
             connection.Controls.Add(Theme.Label("SERIAL CONNECTION",9,Theme.Muted),0,0);
-            ports=new ModernCombo{Dock=DockStyle.Fill,Margin=new Padding(0,0,12,0),AccessibleName="COM port"};
-            refresh=Button("Refresh",90);connect=Button("Connect",112);((ModernButton)connect).Primary=true;
-            var pins=Button("Pinouts",104);
-            connection.Controls.Add(ports,0,1);connection.Controls.Add(refresh,1,1);connection.Controls.Add(connect,2,1);connection.Controls.Add(pins,3,1);grid.Controls.Add(connection);
-            identity=Theme.Label("NOT CONNECTED",10,Theme.Muted);identity.Dock=DockStyle.Fill;identity.Padding=new Padding(0,3,0,0);grid.Controls.Add(identity);
+            ports=new ModernCombo{Dock=DockStyle.Fill,Margin=new Padding(0,0,16,0),AccessibleName="COM port"};
+            refresh=Button("Refresh",92);connect=Button("Connect",116);((ModernButton)connect).Primary=true;
+            connection.Controls.Add(ports,0,1);connection.Controls.Add(refresh,1,1);connection.Controls.Add(connect,2,1);grid.Controls.Add(connection);
+            identity=Theme.Label("NOT CONNECTED",9,Theme.Muted);identity.Dock=DockStyle.Fill;grid.Controls.Add(identity);
             var actions=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2,Margin=new Padding(0)};
             actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));actions.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,50));
-            read=new ModernButton{Text="READ ECU",Subtitle="Save a verified backup",ActionCard=true,Dock=DockStyle.Fill,Margin=new Padding(0,0,8,8)};
-            write=new ModernButton{Text="WRITE ECU",Subtitle="Load BIN · automatic checksum",ActionCard=true,Dock=DockStyle.Fill,Margin=new Padding(8,0,0,8)};
+            read=new ModernButton{Text="READ ECU",Subtitle="Save a verified backup",ActionCard=true,Dock=DockStyle.Fill,Margin=new Padding(0,0,8,10)};
+            write=new ModernButton{Text="WRITE ECU",Subtitle="Load BIN · automatic checksum",ActionCard=true,Dock=DockStyle.Fill,Margin=new Padding(8,0,0,10)};
             actions.Controls.Add(read);actions.Controls.Add(write);grid.Controls.Add(actions);
-            status=Theme.Label("Connect a USB KKL cable to begin.",12,Theme.Ink);status.Dock=DockStyle.Fill;status.AutoEllipsis=true;status.Padding=new Padding(0,5,0,0);grid.Controls.Add(status);
-            progress=new ThinProgress{Dock=DockStyle.Fill,Margin=new Padding(0,0,0,4)};grid.Controls.Add(progress);
-            report=new TextBox{Multiline=true,ReadOnly=true,Dock=DockStyle.Fill,BorderStyle=BorderStyle.None,ScrollBars=ScrollBars.Vertical,BackColor=Theme.Background,ForeColor=Theme.Muted,Font=Theme.Body(11),Margin=new Padding(0,16,0,0),Text="Read saves a checked backup. Write validates your BIN and corrects its checksum."};grid.Controls.Add(report);
-            var footer=new FlowLayoutPanel{Dock=DockStyle.Fill,FlowDirection=FlowDirection.RightToLeft,Margin=new Padding(0)};
-            cancel=Button("Cancel",84);cancel.Visible=false;footer.Controls.Add(cancel);
-            var note=Theme.Label("9600 baud  /  AUTO CHECKSUM  /  BENCH VALIDATION PENDING",9,Theme.Muted);note.Margin=new Padding(0,14,12,0);footer.Controls.Add(note);grid.Controls.Add(footer);
-            Controls.Add(grid);Shown+=(s,e)=>Theme.Chrome(this);
-            refresh.Click+=(s,e)=>RefreshPorts();pins.Click+=(s,e)=>{using(var window=new PinoutWindow())window.ShowDialog(this);};
+            status=Theme.Label("Connect a USB KKL cable to begin.",10.5f,Theme.Ink);status.Dock=DockStyle.Fill;status.AutoEllipsis=true;status.Padding=new Padding(0,4,0,0);grid.Controls.Add(status);
+            progress=new ThinProgress{Dock=DockStyle.Fill,Margin=new Padding(0,0,0,3)};grid.Controls.Add(progress);
+            var activity=Theme.Label("ACTIVITY",9,Theme.Muted);activity.Padding=new Padding(0,10,0,0);grid.Controls.Add(activity);
+            report=new RichTextBox{Multiline=true,ReadOnly=true,Dock=DockStyle.Fill,BorderStyle=BorderStyle.None,ScrollBars=RichTextBoxScrollBars.Vertical,DetectUrls=false,Tag="log",Font=Theme.Body(10.5f),Margin=new Padding(0,4,0,8),Text="Read saves a checked backup. Write validates your BIN and corrects its checksum."};grid.Controls.Add(report);
+            flashPage=grid;pinoutPage=new PinoutPage{Dock=DockStyle.Fill,Visible=false};content.Controls.Add(flashPage);content.Controls.Add(pinoutPage);
+            var footer=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2,RowCount=1,Margin=new Padding(0)};
+            footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));footer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute,84));
+            var note=Theme.Label("9600 baud  /  AUTO CHECKSUM  /  BENCH VALIDATION PENDING",8.5f,Theme.Muted);note.Margin=new Padding(0,9,0,0);footer.Controls.Add(note);
+            cancel=Button("Cancel",80);cancel.Height=28;cancel.Visible=false;footer.Controls.Add(cancel);shell.Controls.Add(footer);
+            Controls.Add(shell);Shown+=(s,e)=>Theme.Chrome(this);
+            flashNav.Click+=(s,e)=>ShowPage(false);pinoutsNav.Click+=(s,e)=>ShowPage(true);
+            themeToggle.Click+=(s,e)=>{Theme.SetDark(!Theme.IsDark,true);ApplyTheme();};
+            refresh.Click+=(s,e)=>RefreshPorts();
             connect.Click+=async(s,e)=>await Connect();read.Click+=async(s,e)=>await ReadEcu();write.Click+=async(s,e)=>await WriteEcu();cancel.Click+=(s,e)=>{if(cancellation!=null)cancellation.Cancel();};
             FormClosing+=(s,e)=>{if(busy){e.Cancel=true;if(!writing&&cancellation!=null)cancellation.Cancel();else Prompt.Show(this,"Wait for writing and verification to finish. Keep ECU power connected.","Write in progress",MessageBoxButtons.OK,MessageBoxIcon.Information);}else Disconnect();};
-            RefreshPorts();SetBusy(false,false);
+            RefreshPorts();SetBusy(false,false);ShowPage(false);ApplyTheme();
         }
-        static Button Button(string text,int width){return new ModernButton{Text=text,Width=width,Height=38,Margin=new Padding(0,0,8,0)};}
+        void ShowPage(bool pins){
+            content.SuspendLayout();flashPage.Visible=!pins;pinoutPage.Visible=pins;
+            (pins?pinoutPage:flashPage).BringToFront();content.ResumeLayout();
+            flashNav.Selected=!pins;pinoutsNav.Selected=pins;flashNav.Invalidate();pinoutsNav.Invalidate();
+        }
+        void ApplyTheme(){Theme.Apply(this);themeToggle.Text=Theme.IsDark?"Light mode":"Dark mode";}
+        static Button Button(string text,int width){return new ModernButton{Text=text,Width=width,Height=34,Margin=new Padding(0,0,8,0)};}
         void RefreshPorts(){string old=ports.SelectedItem as string;ports.Items.Clear();ports.Items.AddRange(SerialPort.GetPortNames().OrderBy(p=>p).Cast<object>().ToArray());if(ports.Items.Count>0)ports.SelectedIndex=Math.Max(0,ports.Items.IndexOf(old??""));connect.Enabled=ports.Items.Count>0;}
-        void SetBusy(bool value,bool writeOperation){busy=value;writing=value&&writeOperation;ports.Enabled=refresh.Enabled=!value&&client==null;connect.Enabled=!value&&(client!=null||ports.Items.Count>0);read.Enabled=write.Enabled=!value&&client!=null&&client.Connected;cancel.Visible=value&&!writeOperation;}
+        void SetBusy(bool value,bool writeOperation){busy=value;writing=value&&writeOperation;ports.Enabled=refresh.Enabled=!value&&client==null;connect.Enabled=!value&&(client!=null||ports.Items.Count>0);read.Enabled=write.Enabled=!value&&client!=null&&client.Connected;cancel.Visible=value&&!writeOperation;pinoutsNav.Enabled=!value;}
         void Progress(FlashProgress update){if(IsDisposed)return;if(InvokeRequired){BeginInvoke(new Action<FlashProgress>(Progress),update);return;}status.Text=update.Message;progress.Value=Math.Max(0,Math.Min(100,update.Percent));}
         void Disconnect(){if(client!=null){client.Dispose();client=null;}connect.Text="Connect";identity.Text="Not connected";}
         void Error(Exception ex,FlashService service=null){

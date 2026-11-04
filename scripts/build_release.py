@@ -8,14 +8,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'dist'
-PACKAGE = OUT / 'yamaha-xt660-windows-v0.2.0'
+PACKAGE = OUT / 'yamaha-xt660-windows-v0.2.1'
 README = '''YAMAHA XT660 — Windows Flash Tool, BINs and XDFs
 
 XT660.FileTool.exe
   Connect: select your USB KKL COM port and follow the power prompts.
   Read ECU: save a backup checked against two independent reads.
   Write ECU: load a matching BIN, review the checksum and confirm.
-  Pinouts: choose the 26-pin or 34-pin ECU connector drawing.
+  Pinouts page: choose the 26-pin or 34-pin ECU connector drawing.
+  Light/dark mode: switch from the header; your choice is remembered.
 
 Always keep a backup. Before writing, the tool saves two matching ECU reads
 under %LOCALAPPDATA%/XT660/Backups. The loaded BIN is unchanged. Startup

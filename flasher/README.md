@@ -5,9 +5,11 @@
 - **Connect** opens the selected COM port, prompts for ECU power and sends the recovered session and service-mode frames.
 - **Read ECU** reads CPU `1800–FFFF` twice and saves a 59,392-byte BIN only when both reads match. Its original checksum is reported; backup bytes are never corrected.
 - **Write ECU** loads a recognised BIN, validates and automatically corrects the startup checksum, asks for confirmation, reads the connected ECU twice, saves the backup, matches the application, programs changed 2 KiB blocks and verifies readback. The original input file is unchanged.
-- **Pinouts** shows the website's 26-pin and 34-pin connector redraws and KKL wiring. No year selection or source photographs are included. K-line is yellow.
+- **Pinouts** is a page inside the main window showing the website's 26-pin and 34-pin connector redraws and KKL wiring. No year selection or source photographs are included. K-line is yellow.
 
 **Bench-test prerelease:** the serial implementation and error handling are software-tested. No physical ECU/adapter transaction has been performed here. Software completion does not mean hardware qualification. Connector-view limitations remain beside the diagrams.
+
+The window is fixed at 1000 × 720 logical pixels, with Flash and Pinouts navigation. Light/dark mode applies to both pages and confirmation dialogs; the choice is saved locally.
 
 ## Write boundaries
 

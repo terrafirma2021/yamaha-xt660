@@ -176,7 +176,7 @@ namespace Xt660 {
                     if(args[0]=="--compare"&&args.Length==3){var a=File.ReadAllBytes(args[1]);var b=File.ReadAllBytes(args[2]);Console.WriteLine(MainWindow.Compare(a,b));return a.SequenceEqual(b)?0:2;}
                     throw new ArgumentException("Use --verify-bundle, --inspect FILE, --fix INPUT OUTPUT or --compare A B");
                 }
-                Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(false);Application.Run(new MainWindow(lib));return 0;
+                Application.EnableVisualStyles();Application.SetCompatibleTextRenderingDefault(true);Application.Run(new MainWindow(lib));return 0;
             } catch(Exception ex) {if(args.Length>0)Console.Error.WriteLine(ex.Message);else MessageBox.Show(ex.Message,"XT660 Flash Tool",MessageBoxButtons.OK,MessageBoxIcon.Error);return 1;}
         }
     }
