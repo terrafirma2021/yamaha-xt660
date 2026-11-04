@@ -10,7 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 fixtures = json.loads(subprocess.check_output(['node', '--input-type=module', '-e', """
-import {speedLayouts,speedRecipe} from './site/assets/tools-speed.mjs';
+import {speedLayouts,speedRecipe} from './flasher/core/tools-speed.mjs';
 console.log(JSON.stringify(Object.entries(speedLayouts).map(([code_family,layout])=>({
  code_family,layout,cases:[true,false].flatMap(enabled=>Array.from({length:41},(_,i)=>({
  enabled,offset:i-20,recipe:speedRecipe({code_family},enabled,i-20)

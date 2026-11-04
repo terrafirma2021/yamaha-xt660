@@ -6,3 +6,6 @@ __pycache__/
 analysis-work/
 _site/
 analysis/firmware/families/late/full/instructions.jsonl
+
+flasher/build/
+dist/

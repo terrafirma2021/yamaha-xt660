@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {featureStates,setFeature,matchesFeatureVariant} from '../site/assets/tools-features.mjs';
-import {coLayouts} from '../site/assets/tools-co.mjs';
-import {matchesMapVariant} from '../site/assets/tools-map-core.mjs';
-import {baseAddress,differences,correctStartupChecksum,verifyStartupChecksum} from '../site/assets/tools-core.mjs';
+import {featureStates,setFeature,matchesFeatureVariant} from '../flasher/core/tools-features.mjs';
+import {coLayouts} from '../flasher/core/tools-co.mjs';
+import {matchesMapVariant} from '../flasher/core/bin-match.mjs';
+import {baseAddress,differences,correctStartupChecksum,verifyStartupChecksum} from '../flasher/core/tools-core.mjs';
 const root=new URL('../',import.meta.url),read=p=>readFileSync(new URL(p,root)),json=p=>JSON.parse(read(p));
 const catalog=json('analysis/firmware/catalog.json'),decodes=json('analysis/firmware/decode_catalog.json');
 const co=(b,i)=>featureStates(b,i).find(f=>f.id==='co-range');

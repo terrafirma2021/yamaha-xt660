@@ -1,8 +1,9 @@
 // Recheck recorded native TunerPro observations. This does not launch TunerPro.
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {sha256, differences, readCell, verifyStartupChecksum, correctStartupChecksum} from '../site/assets/tools-core.mjs';
-import {exportXdf, matchesMapVariant} from '../site/assets/tools-map-core.mjs';
+import {sha256, differences, readCell, verifyStartupChecksum, correctStartupChecksum} from '../flasher/core/tools-core.mjs';
+import {exportXdf} from './lib/xdf.mjs';
+import {matchesMapVariant} from '../flasher/core/bin-match.mjs';
 
 const read=p=>readFileSync(new URL('../'+p,import.meta.url));
 const json=p=>JSON.parse(read(p));
@@ -17,7 +18,7 @@ for(const observed of observations.captures){
   const maps=json(decodes.images.find(i=>i.id===identity.id).maps_path);
   assert.equal(await sha256(original),identity.sha256);
   assert.equal(await sha256(original),observed.sha256.original);
-  const xdf=exportXdf(original,identity.base_address,maps,identity);
+  const xdf=exportXdf(original,identity.base_address,maps,identity,{features:false});
   assert.equal(await sha256(new TextEncoder().encode(xdf)),observed.sha256.xdf,
     'Export changed since native capture: review/repeat the native check');
   const edited=original.slice(),offsets=new Set();

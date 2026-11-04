@@ -7,7 +7,7 @@ from urllib.parse import urlsplit, urlunsplit
 
 SECTIONS={'overview':'index.html','wiring':'wiring/index.html','research':'research/index.html',
           'pins':'pins/index.html','maps':'maps/index.html',
-          'flashing':'flashing/index.html','tune':'tune/index.html'}
+          'flashing':'flashing/index.html','xdf':'xdf/index.html'}
 
 def routes(data):
     models={m['id'] for m in data['models'] if not m.get('reference_only')}
@@ -44,4 +44,7 @@ def build(root,site,write):
             markup=re.sub(r'data-root="[^"]*"',f'data-root="{relative_root}" data-profile="{record["profile"]}" data-firmware="{record["firmware"]}" data-section="{section}"',markup,count=1)
             # Per-BIN grids already have stable paths; the maps alias routes there in JS.
             write(target,markup)
+    # Old per-bike Tune bookmarks resolve to the same bike/BIN XDF page.
+    for record in records:
+        write(record['path']+'tune/index.html', '<!doctype html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=../xdf/"><title>XDF downloads</title></head><body><a href="../xdf/">XDF downloads</a></body></html>')
     return records

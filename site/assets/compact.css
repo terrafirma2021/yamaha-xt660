@@ -1,0 +1,27 @@
+/* Reading pages: one context, one heading, direct links. */
+.vehicle-context{padding:14px 24px;margin-bottom:0}
+#selection-status{margin:0;font-size:14px;color:var(--ink)}
+.static-picker{margin-top:6px}
+.static-picker summary{font-size:13px}
+.site-main>.page-heading{padding-top:28px;margin-bottom:24px}
+.page-heading h1{font-size:clamp(32px,4vw,54px);margin-bottom:8px}
+.page-heading p{max-width:70ch}
+.vehicle-summary{padding:28px!important}
+.vehicle-summary h2{font-size:38px;margin:8px 0 18px}
+.model-photo figcaption{font-size:12px}
+.vehicle-overview>details{padding:16px 28px;border-top:1px solid var(--line)}
+.profile-actions{padding:16px 28px!important;margin:0!important;gap:24px}
+.bike-card{padding:20px!important;min-height:180px!important}
+.bike-card strong{font-size:32px!important}
+.bike-card .bike-thumb{max-height:160px!important}
+.downloads-table{width:100%;border-collapse:collapse;margin:24px 0;background:var(--surface)}
+.downloads-table th,.downloads-table td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--line)}
+.downloads-table th{font-size:12px;text-transform:uppercase;color:var(--muted)}
+.downloads-table small{display:block;color:var(--muted);font-size:12px}
+.downloads-table a{white-space:nowrap}
+.download-bundle{padding:24px;border:1px solid var(--line);background:var(--surface);margin:24px 0;display:flex;gap:28px;align-items:center;justify-content:space-between}
+.download-bundle h2{margin:0 0 8px;font-size:24px}.download-bundle p{margin:0;font-size:14px}
+.download-bundle .xdf-download{white-space:nowrap}
+.research-group h2{font-size:24px}
+.research-group li{margin-bottom:8px}
+@media(max-width:700px){.download-bundle{display:block}.download-bundle .xdf-download{display:inline-block;margin-top:16px}.downloads-table th,.downloads-table td{padding:12px 8px}.downloads-table .file-size{display:none}.vehicle-context{padding:14px 18px}}

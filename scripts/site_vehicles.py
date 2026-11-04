@@ -11,9 +11,7 @@ def catalog():
 def context(current,rel):
     root=rel('index.html',current).removesuffix('index.html') or './'
     return f'''<section class="vehicle-context" id="vehicle-context" data-root="{root}" aria-label="Choose motorcycle and firmware">
-<div class="context-heading"><span class="kicker">YOUR RESEARCH WORKSPACE</span><a href="{root}dataset/">Dataset &amp; sources ↗</a></div>
-<div class="vehicle-selectors"><label>1 · Motorcycle<select id="bike-select" aria-label="Motorcycle"></select></label><label>2 · Year<select id="year-select" aria-label="Year"></select></label><label>3 · Market / specification<select id="market-select" aria-label="Market / specification"></select></label><label>4 · ECU<select id="ecu-select" aria-label="ECU"></select></label><label>5 · Firmware<select id="image-select" aria-label="Firmware"></select></label></div>
-<p id="selection-status" aria-live="polite">The existing study concerns the owner-reported 2005 XT660X image. Enable JavaScript to select another profile.</p></section>'''
+<p id="selection-status"></p></section>'''
 
 def home():
     cards=[];data=catalog()
@@ -24,7 +22,7 @@ def home():
         opening=f'<a href="{selected["route"]}"' if selected else '<div aria-disabled="true"'
         closing='a' if selected else 'div'
         cards.append(f'''{opening} class="bike-card {m['id']}" data-bike="{m['id']}"><span class="kicker">{esc(m['style'])}</span><strong>{esc(m['name'])}</strong><img class="bike-thumb" src="{m['photo']['file']}" alt="{esc(m['name'])} model reference" width="{m['photo']['width']}" height="{m['photo']['height']}" loading="lazy"><span>{esc(m['tagline']) if selected else 'No BIN yet'}</span><b aria-hidden="true">{'↗' if selected else '—'}</b></{closing}>''')
-    return '''<section class="garage-hero"><div><div class="kicker">YAMAHA XT660 / ECU RESEARCH</div><h1>KNOW YOUR BIKE.<br><span>FOLLOW THE EVIDENCE.</span></h1><p>Choose the motorcycle. Pin down its year, market and ECU.<br>Explore the firmware, maps and wiring that belong to that record.</p></div><div class="garage-number" aria-hidden="true">660<span>R / X / Z</span></div></section><section class="bike-picker" aria-label="Motorcycle families">'''+''.join(cards)+'''</section><section id="vehicle-overview" class="vehicle-overview" aria-live="polite"></section><div class="garage-footnote">This catalogue covers the supplied files and documented variants. Listed years can be source claims; each profile states its evidence. XT600 is a different family. Ténéré is listed under its official XT660Z name.</div>'''
+    return '''<div class="page-heading"><h1>XT660 ECU library</h1></div><section class="bike-picker" aria-label="Motorcycle families">'''+''.join(cards)+'''</section><section id="vehicle-overview" class="vehicle-overview"></section>'''
 
 def build_pages(shell,write,repo):
     data=catalog();write('vehicles/catalog.json',json.dumps(data,ensure_ascii=False,indent=2)+'\n')

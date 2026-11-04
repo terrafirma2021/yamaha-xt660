@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 exports=json.loads(subprocess.check_output(['node','--input-type=module','-e',"""
 import {readFileSync} from 'node:fs';
-import {exportXdf} from './site/assets/tools-map-core.mjs';
+import {exportXdf} from './scripts/lib/xdf.mjs';
 const j=p=>JSON.parse(readFileSync(p,'utf8')),catalog=j('analysis/firmware/catalog.json'),d=j('analysis/firmware/decode_catalog.json');
 console.log(JSON.stringify(catalog.images.map(i=>({id:i.id,xml:exportXdf(new Uint8Array(readFileSync(i.file)),i.base_address,j(d.images.find(x=>x.id===i.id).maps_path),i)}))));
 """],cwd=ROOT,text=True,encoding='utf-8'))
@@ -16,7 +16,9 @@ cells=0;tables=0
 for export in exports:
     image=next(i for i in catalog['images'] if i['id']==export['id'])
     maps=json.loads((ROOT/next(i for i in decodes['images'] if i['id']==image['id'])['maps_path']).read_text(encoding="utf-8"))
-    data=(ROOT/image['file']).read_bytes();root=ET.fromstring(export['xml'])
+    published=(ROOT/'definitions'/(image['id']+'.xdf')).read_text(encoding='utf-8')
+    assert published==export['xml'], 'Committed definition is stale'
+    data=(ROOT/image['file']).read_bytes();root=ET.fromstring(published)
     assert root.tag=='XDFFORMAT' and root.attrib['version']=='1.70'
     assert int(root.find('XDFHEADER/REGION').attrib['size'],16)==len(data)
     defaults=root.find('XDFHEADER/DEFAULTS');assert defaults.attrib['lsbfirst']=='0' and defaults.attrib['signed']=='0'

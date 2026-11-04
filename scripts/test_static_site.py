@@ -32,10 +32,10 @@ for record in records:
         assert soup.find(id='theme-light') and soup.find(id='theme-dark')
         for a in soup.select('nav[aria-label="Main navigation"] a'):
             href=a['href']
-            if a.get_text() in ('Overview','Maps','Wiring','MCU pins','Flashing','Tune','Research'):
+            if a.get_text() in ('Overview','Maps','Pins','Downloads','Research'):
                 destination=posixpath.normpath(posixpath.join(posixpath.dirname(path),href))+'/'
                 assert destination.startswith(record['path']),(path,href)
-        if section in ('overview','wiring','research'):
+        if section in ('overview','wiring'):
             node=soup.find(id={'overview':'vehicle-overview','wiring':'vehicle-hardware','research':'vehicle-research'}[section])
             assert image['label'] in node.get_text() and node.find('img')
         if section=='pins':
@@ -57,18 +57,23 @@ for record in records:
             assert len(soup.select('.map-card'))==image['decoded_map_count']
             if not image.get('shared_map_count'):
                 assert image['label'] in soup.h1.parent.get_text()
-        if section=='tune':
-            assert soup.select_one('.tools-fallback a[download]')
-            assert 'JavaScript' in soup.select_one('.tools-fallback').get_text()
+        if section=='xdf':
+            selected=soup.select_one('#xdf-selected a[download]')
+            assert selected and selected['href'].endswith('/'+image['id']+'.xdf')
+            assert len(soup.select('.downloads-table a[download][href$=".xdf"]'))==9
 home=parse('index.html')
 assert home.select_one('#vehicle-overview .vehicle-summary')
 assert len(home.select('.static-picker a'))==len(records)
 legacy=parse('tools/index.html')
-assert {'Flashing & backup','Tune features & maps'} <= {a.get_text() for a in legacy.select('main a')}
+assert {'Bench connections','XDF downloads'} <= {a.get_text() for a in legacy.select('main a')}
 for page in SITE.rglob('*.html'):
     text=page.read_text(encoding='utf-8')
     assert 'scope-pending' not in text,page
     soup=BeautifulSoup(text,'html.parser')
     assert all(not urlsplit(s['src']).netloc for s in soup.select('script[src]'))
-    assert soup.select_one('#selection-status').get_text().strip()
+    if soup.select_one('meta[http-equiv="refresh"]'):
+        assert soup.select_one('meta[http-equiv="refresh"]')['content']=='0; url=../xdf/'
+        assert not soup.select('script')
+    else:
+        assert soup.select_one('#selection-status').get_text().strip()
 print(f'No-script HTML checks passed: {len(records)} selections, both connectors, 80 pins per page, correct per-BIN maps, plain navigation and CSS themes.')

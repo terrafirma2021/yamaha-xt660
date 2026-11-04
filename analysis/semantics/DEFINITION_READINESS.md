@@ -2,7 +2,7 @@
 
 The [operating-sequence review](OPERATING_SEQUENCES.md) closes the previously listed linked-sequence replay tasks for the early map set and post-start lifecycle in both families. It adds bounded pressure interleaving tests across all nine BINs. It does not establish absolute physical references, exhaustive whole-ECU behaviour or safe edited ranges.
 
-The repository now includes a static research site, a browser map/feature editor and raw XDF export, backed by image-specific evidence. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
+The repository now includes a static research site, ready-made TunerPro definitions and flashing file checks, backed by image-specific evidence. It deliberately separates **byte layout**, **software behavior**, **physical interpretation**, and **validated editing**.
 
 The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separately, including source review and outstanding sign-off requirements. A final **Verified** state must identify its exact claim; verified bytes or a matched MCU register do not imply a verified physical tuning definition.
 
@@ -18,9 +18,9 @@ The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separ
 | Cell address, dimensions and axis storage | 699 image-specific maps / 69,575 cells; 71 layouts per early BIN and 86 per later BIN |
 | Runtime selector / variant / alternate calibration | Documented where traced; incomplete globally |
 | Conversion to Celsius, RPM, degrees, milliseconds, pressure | Clock/crank-conditional values and exact code/gain contributions are in the unit companion; Celsius, pressure and absolute BTDC remain unresolved |
-| Reverse conversion and rounding policy | Raw-integer bounds and editor rounding implemented; optional estimated ignition conversion remains explicitly conditional |
+| Reverse conversion and rounding policy | Raw XDF cell encodings are defined; estimated ignition displays in the research remain explicitly conditional |
 | Valid physical adjustment ranges | Not inferred from the limits of a byte or word |
-| Checksum algorithm and covered ranges | [ROM and serial algorithms](CHECKSUMS.md) recovered; [startup-corrected copy](CHECKSUM.md) tested. Browser edits correct and recheck the startup sum; hardware programming validation is separate. |
+| Checksum algorithm and covered ranges | [ROM and serial algorithms](CHECKSUMS.md) recovered; [startup-corrected copy](CHECKSUM.md) tested. Flashing file preparation corrects and rechecks the startup sum; hardware programming validation is separate. |
 | Flash format, programming procedure, boot requirements | [XT boot protocol and offline read assembly](../firmware/FLASH_TOOLING.md) recovered. Five BINs have populated boot; four have FF placeholders. Browser live read/write is not implemented or hardware-validated. |
 
 `ready_for_tuning_export` is false for every current entry. This does not mean the offsets are guesses. It means the whole definition is not yet validated for engineering-unit edits and flash use.
@@ -36,11 +36,11 @@ The [verification ledger](VERIFICATION_LEDGER.md) records each map and pin separ
 
 ## Implemented tools and their limits
 
-The browser editor binds a BIN to its own catalogue, provides block edits, interpolation, smoothing, undo/redo, comparison and draft saving, and corrects the startup checksum. Raw XDF export is implemented and independently parsed against every source cell, axis label and image base. Native TunerPro 5.0.9786 import has now been checked for the early 65,536-byte definition: all 1,350 cells copied from its main fuel table match the BIN, and a saved 915 → 916 edit changes only the expected byte. A second native save checked an 8-bit later table in the 59,392-byte format: 3 → 4 changed only file offset 0x00EE (CPU address 0x18EE). This covers representative edits in both file formats and both cell widths; it is not a native inspection of every table. The [capture record](../firmware/tunerpro_capture.json) preserves exact hashes and differences; XML validation alone is not a native check.
+The XDF library publishes generated definitions for every registered BIN. The [generator](../firmware/XDF_DEFINITIONS.md) reads the image-specific map catalogue and validates the source hash. Independent XML checks cover every source cell, dimension and file base. Native TunerPro captures verify representative 8-bit/16-bit edits in both file formats, plus all 1,350 copied cells from the early fuel table. Flashing file preparation checks a saved BIN and can produce a separate checksum-corrected copy.
 
 `ready_for_tuning_export=false` means the full engineering-unit definition lacks physical/hardware sign-off. It does not mean raw XDF export is absent or that all raw addresses are uncertain. Feature patches have instruction tests, but those tests are not live ECU validation.
 
-Flashing currently provides connection references and file inspection. The offline boot reader builds and verifies addressed blocks, but the browser does not transmit a session or read/write an ECU. [Flash tooling](../firmware/FLASH_TOOLING.md) separates recovered bytes from pending transport, timing and recovery work.
+The website provides connection references; the Windows tool provides file inspection. The offline boot reader builds and verifies addressed blocks, but no live session or ECU read/write is implemented. [Flash tooling](../firmware/FLASH_TOOLING.md) separates recovered bytes from pending transport, timing and recovery work.
 
 ## Remaining work we can do from the repository
 

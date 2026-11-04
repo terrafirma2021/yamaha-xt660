@@ -66,4 +66,4 @@ That establishes the supplied firmware configuration, not proof of which sensor 
 - Actual fault scanning, serial reply packing and reply checksum for faults 24, 31 and 32.
 - Both early and late overrun injection gates versus normal coil-charge scheduling.
 
-`node scripts/test_tools.mjs` additionally checks feature detection, supported-byte edits, exact byte differences, checksum correction, source preservation and re-import matching. The O2 patch changes only `368E` plus the editor's startup-checksum compensation. No fuel-map cell is changed.
+`node scripts/test_tools.mjs` additionally checks feature detection, supported-byte edits, exact byte differences, checksum correction, source preservation and re-import matching. The O2 patch changes only `368E` plus startup-checksum compensation. No fuel-map cell is changed.

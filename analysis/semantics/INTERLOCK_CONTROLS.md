@@ -1,6 +1,6 @@
 # Sidestand and lean-angle ECU controls
 
-The [Tools page](https://terrafirma2021.github.io/yamaha-xt660/tools/index.html#tune) has separate Enabled/Disabled controls for **Sidestand ECU cut-off** and **Lean-angle cut-off**. These recipes are matched to the nine registered BINs and both application families. Enabled means the original firmware behaviour is restored; Disabled applies the bytes below to a draft with automatic startup-checksum correction.
+The **sidestand cut-off** and **lean-angle cut-off** recipes below are matched to the nine registered BINs and both application families. They describe the original behaviour and the exact replacement bytes. They are retained as firmware research, not as website controls or generated XDF flags.
 
 Disabling these protections permits ECU operation with the stand down or after the motorcycle falls over. The tests establish selected software paths, not safe physical sensor removal or vehicle operation. The external starter-relay circuit, board wiring, existing latches and stored faults must not be confused with a BIN setting. No clutch control is added.
 

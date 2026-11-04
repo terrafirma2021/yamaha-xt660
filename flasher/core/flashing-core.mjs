@@ -1,6 +1,6 @@
-import {baseAddress, sha256, inspect, verifyStartupChecksum} from './tools-core.mjs';
+import {baseAddress, sha256, inspect, verifyStartupChecksum, correctStartupChecksum} from './tools-core.mjs';
 import {matchesFeatureVariant} from './tools-features.mjs';
-import {matchesMapVariant} from './tools-map-core.mjs';
+import {matchesMapVariant} from './bin-match.mjs';
 
 export const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const signalNames = {power:'+12V', ground:'GND', kline:'K-line'};
@@ -61,4 +61,14 @@ export async function checkFlashFile(bytes, catalog, selectedId, loadReference, 
     ...inspect(bytes), boot_reference_matches:!!identity && inspect(bytes).boot.startsWith('Populated'),
     flash_ready:false, hardware_verified:false,
   };
+}
+
+// Re-identify the supplied bytes before correction; never trust a stale UI result.
+export async function prepareChecksumCopy(bytes, catalog, selectedId, loadReference, loadMaps) {
+  const result=await checkFlashFile(bytes,catalog,selectedId,loadReference,loadMaps);
+  if(!result.identity||!result.selected_layout_matches||result.checksum.status==='unverified')
+    throw Error('Select a matching registered firmware before checksum correction');
+  const copy=bytes.slice();
+  const checksum=correctStartupChecksum(copy,result.identity);
+  return {bytes:copy,checksum};
 }

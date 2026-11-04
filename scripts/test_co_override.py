@@ -7,7 +7,7 @@ import csv,json,subprocess
 from test_firmware_lookups import ROOT,load_code,reference,put,rd
 
 recipes=json.loads(subprocess.check_output(['node','--input-type=module','-e',
-    "import {coLayouts,coDefinition} from './site/assets/tools-co.mjs'; console.log(JSON.stringify(Object.fromEntries(Object.entries(coLayouts).map(([code_family,l])=>[code_family,{...l,...coDefinition({code_family})}]))));"],cwd=ROOT,text=True))
+    "import {coLayouts,coDefinition} from './flasher/core/tools-co.mjs'; console.log(JSON.stringify(Object.fromEntries(Object.entries(coLayouts).map(([code_family,l])=>[code_family,{...l,...coDefinition({code_family})}]))));"],cwd=ROOT,text=True))
 
 def execute(code,ram,reg,pc,stop):
     for _ in range(600):

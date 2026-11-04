@@ -1,6 +1,6 @@
 # Flashing connector references
 
-The website separates **Flashing** (connections, backup and file checks) from **Tune** (feature and map edits, automatic startup-checksum correction, BIN and XDF export). Live connection, ECU reading, writing and readback remain unavailable. No hardware operation was added by this layout change.
+The **Flashing** page provides connection references, backups and file checks. **XDF** provides generated TunerPro downloads. Live connection, ECU reading, writing and readback remain unavailable.
 
 ## Two independently supplied references
 
@@ -47,6 +47,6 @@ The recovered flashing tool requests 9,600 baud / 8N1. The [serial-port audit](P
 
 ## File checks and reproducibility
 
-Flashing can inspect unchanged repository BINs and local files, recognise the same bounded map/feature modifications as Tune, report the startup checksum and boot coverage, and compare a second file byte-for-byte. It does not repair a captured backup. Unknown code changes and missing boot bytes do not become a verified image because the file has the expected size. A passing checksum never enables live writing.
+Flashing inspects unchanged repository BINs and local files, recognises bounded map/feature modifications, reports the startup checksum and boot coverage, and compares files byte-for-byte. An explicit save action can create a separate checksum-corrected copy for a recognised layout matching the selected firmware. Unknown code changes and missing boot bytes do not become a verified image because the file has the expected size. A passing checksum does not enable live writing.
 
-`scripts/site_flashing.py` builds both connector grids from `pin_audit.json`, preserving manual coordinates and hashing the original references. It emits `flashing/connections.json`. `scripts/test_flashing.mjs` checks both layouts, every matched profile, all nine files, edited-file recognition, unknown changes and unchanged-byte inspection. `scripts/verify_site_routes.py` checks the separate pages and every model-specific route. Old `/tools/` bookmarks redirect to the appropriate workspace.
+`scripts/site_flashing.py` builds both connector grids from `pin_audit.json`, preserving manual coordinates and hashing the original references. It emits `flashing/connections.json`. `scripts/test_flashing.mjs` checks both layouts, every matched profile, all nine files, edited-file recognition, unknown changes and unchanged-byte inspection. `scripts/verify_site_routes.py` checks the separate pages and every model-specific route. The `/tools/` page links to XDF downloads and flashing.

@@ -41,13 +41,17 @@ class Links(HTMLParser):
 count=0
 for page in SITE.rglob('*.html'):
     parser=Links();parser.feed(page.read_text(encoding='utf-8'))
-    assert parser.theme_buttons==1,f'Missing or duplicate theme switch: {page}'
     markup=page.read_text(encoding='utf-8')
-    assert markup.count('id="vehicle-context"')==1,page
-    assert all(f'id="{key}-select"' in markup for key in ('bike','year','market','ecu','image')),page
-    assert any(urlsplit(link).path.endswith('/vehicles.js') for link in parser.links),page
-    assert any(urlsplit(link).path.endswith('/theme.js') for link in parser.links),page
-    assert any(urlsplit(link).path.endswith('/theme.css') for link in parser.links),page
+    redirect='http-equiv="refresh"' in markup
+    if redirect:
+        assert 'content="0; url=../xdf/"' in markup and '<script' not in markup,page
+    else:
+        assert parser.theme_buttons==1,f'Missing or duplicate theme switch: {page}'
+        assert markup.count('id="vehicle-context"')==1,page
+        assert 'class="static-picker"' in markup and 'id="selection-status"' in markup,page
+        assert not any(urlsplit(link).path.endswith('/vehicles.js') for link in parser.links),page
+        assert any(urlsplit(link).path.endswith('/theme.js') for link in parser.links),page
+        assert any(urlsplit(link).path.endswith('/theme.css') for link in parser.links),page
     for value in parser.links:
         url=urlsplit(value)
         if url.scheme or url.netloc or not url.path:continue
@@ -94,14 +98,14 @@ assert {f['path'] for f in coverage['files']}==set(tracked)
 assert coverage['rendered_documents']==sum(p.endswith('.md') for p in tracked)
 assert len(list((SITE/'docs').rglob('*.html')))==coverage['rendered_documents']
 library=json.loads((SITE/'firmware/catalog.json').read_text(encoding='utf-8'))
-assert {p.relative_to(SITE).as_posix() for p in SITE.rglob('*.bin')}=={'tools/bins/'+i['id']+'.bin' for i in library['images']}
+assert {p.relative_to(SITE).as_posix() for p in SITE.rglob('*.bin')}=={'firmware/bins/'+i['id']+'.bin' for i in library['images']}
 for item in library['images']:
     assert (SITE/'firmware'/item['id']/'index.html').is_file()
-    packaged=(SITE/'tools/bins'/f"{item['id']}.bin").read_bytes()
+    packaged=(SITE/'firmware/bins'/f"{item['id']}.bin").read_bytes()
     assert packaged==(ROOT/item['file']).read_bytes(),item['id']
     assert len(packaged)==item['size'] and hashlib.sha256(packaged).hexdigest()==item['sha256'],item['id']
-assert 'image-select' in (SITE/'maps/index.html').read_text(encoding='utf-8')
-for route,scope in [('maps/index.html','primary'),('pins/index.html','pins'),('research/index.html','primary')]:
+assert 'static-picker' in (SITE/'maps/index.html').read_text(encoding='utf-8')
+for route,scope in [('maps/index.html','primary'),('pins/index.html','pins')]:
     assert f'data-study="{scope}"' in (SITE/route).read_text(encoding='utf-8'),route
 pin_audit=json.loads((SITE/'pins/pin_audit.json').read_text(encoding='utf-8'))
 assert {i['id'] for i in pin_audit['images']}=={i['id'] for i in library['images']}

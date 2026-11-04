@@ -13,10 +13,10 @@ ROOT = Path(__file__).resolve().parents[1]
 tree = ast.parse((ROOT/'scripts/verify_protocol.py').read_text(encoding='utf-8'))
 cpu_class = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == 'CPU')
 catalog = json.loads((ROOT/'analysis/firmware/catalog.json').read_text(encoding='utf-8'))
-# Exercise the exact byte recipe shipped to the browser, then independently
+# Exercise the exact byte recipe exported to the XDF, then independently
 # decode each replacement as a CPU12 extended JMP (06, high, low).
 recipes=json.loads(subprocess.check_output(['node','--input-type=module','-e',
-    "import {featureDefinitions} from './site/assets/tools-features.mjs'; console.log(JSON.stringify(Object.fromEntries(['early','late'].map(code_family=>[code_family,featureDefinitions({code_family}).find(f=>f.id==='overrun')]))));"],cwd=ROOT,text=True))
+    "import {featureDefinitions} from './flasher/core/tools-features.mjs'; console.log(JSON.stringify(Object.fromEntries(['early','late'].map(code_family=>[code_family,featureDefinitions({code_family}).find(f=>f.id==='overrun')]))));"],cwd=ROOT,text=True))
 checks = 0
 for image in catalog['images']:
     early = image['code_family'] == 'early'

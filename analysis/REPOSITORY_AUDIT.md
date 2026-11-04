@@ -1,6 +1,6 @@
 # Repository audit — 4 November 2026
 
-Scope: all nine registered BINs, both application families, extracted maps, stored evidence, pin applicability, browser editing/export, offline flash tooling and generated website. This is a repository/software audit, not a physical ECU certification or a claim that every instruction path has been exercised.
+Scope: all nine registered BINs, both application families, extracted maps, stored evidence, pin applicability, XDF generation and file preparation, offline flash tooling and generated website. This is a repository/software audit, not a physical ECU certification or a claim that every instruction path has been exercised.
 
 ## Findings fixed
 
@@ -19,7 +19,7 @@ Scope: all nine registered BINs, both application families, extracted maps, stor
 | Lookup and consumer tests | Existing lookup, source, mode, entry, operating-sequence and pressure-preemption tests rerun; new later transient helper/caller tests pass |
 | Native lifted model | All eleven native-model test programs rerun, including instruction differential, controls, maps, units, sensors, crank, connector, pressure and spark scheduling |
 | Pins | All 80 reference package positions retained; 53 instruction-linked positions in FF-boot images, 56 where populated-boot evidence is available; family and configuration checks pass |
-| Editing and XDF | Raw cells, image-base translation, big endian encoding, edit operations, undo/redo models, feature patches, checksum correction and all 699 exported XML tables checked; native 8-bit/16-bit edits checked in both BIN formats, with all 1,350 copied cells of the 16-bit table verified ([record](firmware/tunerpro_capture.json)) |
+| XDF and file checks | Raw cells, image-base translation, big-endian encoding, checksum correction and all 699 generated XML tables checked; native 8-bit/16-bit edits checked in both BIN formats, with all 1,350 copied cells of the 16-bit table verified ([record](firmware/tunerpro_capture.json)) |
 | Flash tooling | Offline framing/assembly/error tests pass; locally supplied YamahaFlasher identity, 50 static anchors and boot session record rechecked without launching it |
 | Website | Static build, content, map pages, links, profile/firmware routing, NoScript content and same-origin script checks run locally before publication |
 | Publishing | Full firmware regression remains manual-only in GitHub; Pages performs provenance and website checks, not the full replay suite |
@@ -28,7 +28,7 @@ Two preserved source images have startup sum `AAD5`: the original 2005 dump and 
 
 The exact new results are in [late_transient_validation.json](firmware/late_transient_validation.json); image/layout accounting is in [family_verification.json](firmware/family_verification.json), and scoped evidence is indexed by the [verification ledger](semantics/VERIFICATION_LEDGER.md). No new physical sign-off is awarded by this audit.
 
-Native export integration was checked after this audit: TunerPro 5.0.9786 imported representative early 65,536-byte/16-bit and later 59,392-byte/8-bit definitions. Saved edits changed only their expected bytes. All 1,350 copied cells of the early table match. [Capture record](firmware/tunerpro_capture.json) and [reproduction](firmware/MAP_WORKSPACE.md) retain the exact scope; this is representative integration coverage, not a native inspection of every map.
+Native export integration was checked after this audit: TunerPro 5.0.9786 imported representative early 65,536-byte/16-bit and later 59,392-byte/8-bit definitions. Saved edits changed only their expected bytes. All 1,350 copied cells of the early table match. [Capture record](firmware/tunerpro_capture.json) and [reproduction](firmware/XDF_DEFINITIONS.md) retain the exact scope; this is representative integration coverage, not a native inspection of every map.
 
 ## Software work still possible with the existing files
 

@@ -48,11 +48,11 @@ Variant 9 selects cells `0x4F81`; other selector values use `0x4F64`. Both suppl
 
 ## Provisional base-angle display
 
-The map pages and Tune workspace offer **Estimated base °BTDC** for the three primary base ignition maps and the alternate speed/coolant base map in **both firmware families, across all nine registered BINs**. The display uses `raw*90/256-12.5`, assuming capture event 6 is at **10° BTDC** and the nominal twelve-pitch geometry. The physical reference is **unverified for both families**. This offset shifts every displayed cell equally; it does not change the slope or map shape.
+The read-only map pages offer **Estimated base °BTDC** for the three primary base ignition maps and the alternate speed/coolant base map in **both firmware families, across all nine registered BINs**. The display uses `raw*90/256-12.5`, assuming capture event 6 is at **10° BTDC** and the nominal twelve-pitch geometry. The physical reference is **unverified for both families**. This offset shifts every displayed cell equally; it does not change the slope or map shape.
 
 The static scheduler origin contributes `-64*90/256 = -22.5°`, so the proposed display offset is `10-22.5 = -12.5°`. The ECU's time correction and other consumers remain separate. For example, final code 64 and the nominal 1,400-rpm variant-9 correction of 113 ticks predict 9.3784° with the assumed 10° reference. Yamaha's early manual specifies **9.0° at 1,400 rpm**, not 10°. That comparison does not establish the trigger reference.
 
-This view is explicitly provisional and read-only in Tune. Raw codes remain available for inspection, editing, clipboard copy and XDF export. Angle differences use the slope alone, so unchanged cells display zero difference. The profile is not assigned to fuel, dwell, timer-correction, threshold or bound maps. It does not establish live spark timing or change firmware bytes.
+This research view is explicitly provisional. The generated XDFs retain raw values. The profile is not assigned to fuel, dwell, timer-correction, threshold or bound maps; it does not establish live spark timing or change firmware bytes.
 
 ### Coverage of the later application
 

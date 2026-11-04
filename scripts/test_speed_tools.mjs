@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {speedLayouts,speedState,setSpeed,speedAddresses} from '../site/assets/tools-speed.mjs';
-import {matchesFeatureVariant,setFeature} from '../site/assets/tools-features.mjs';
-import {baseAddress,correctStartupChecksum,verifyStartupChecksum} from '../site/assets/tools-core.mjs';
+import {speedLayouts,speedState,setSpeed,speedAddresses} from '../flasher/core/tools-speed.mjs';
+import {matchesFeatureVariant,setFeature} from '../flasher/core/tools-features.mjs';
+import {baseAddress,correctStartupChecksum,verifyStartupChecksum} from '../flasher/core/tools-core.mjs';
 const json=p=>JSON.parse(readFileSync(new URL('../'+p,import.meta.url),'utf8'));
 const catalog=json('analysis/firmware/catalog.json'),decodes=json('analysis/firmware/decode_catalog.json');
 let checks=0;

@@ -9,6 +9,7 @@ from bs4 import BeautifulSoup
 from bs4.dammit import EntitySubstitution
 from bs4.formatter import HTMLFormatter
 from site_routes import SECTIONS
+from site_xdf import selected_definition
 
 
 class OrderedFormatter(HTMLFormatter):
@@ -81,10 +82,9 @@ class StaticSite:
         if record:
             specs += [('Model code / variant',record['model_code']+' · '+record['variant']),('Harness reference','; '.join((v['replaces']+' → ' if v['replaces'] else '')+v['listed_part'] for v in record['parts'] if v['role']=='harness'))]
         specs += [('Firmware',i['label']+' · '+i['variant']),('Oxygen sensor',p['oxygen'])]
-        body = f'<div class="vehicle-summary"><div><div class="kicker">{esc(model["style"])} / {esc(p.get("display_status",p["association"]))}</div><h2>{esc(model["name"])}<br>{esc(str(p["year"]))}</h2><p>{esc(p["notes"])}</p><dl class="vehicle-specs">'+''.join(f'<dt>{k}</dt><dd>{esc(v)}</dd>' for k,v in specs)+'</dl></div>'
-        body += f'<div><figure class="model-photo"><img class="vehicle-art" src="{url(photo["file"])}" width="{photo["width"]}" height="{photo["height"]}" alt="Yamaha {esc(model["name"])} — {esc(str(photo["year"]))} model reference" loading="lazy"><figcaption>{esc(photo["caption"])} <a href="{esc(photo["source"])}">Photo source ↗</a></figcaption></figure><div class="source-card"><strong>Firmware identity recorded</strong><p>{i["size"]:,} bytes · boot {esc(i["boot_status"])}<br><code>{i["sha256"][:20]}…</code></p></div></div></div>'
-        body += f'<div class="coverage-tiles"><div><small>CALIBRATION</small><strong>{i.get("decoded_map_count",0)} extracted layouts</strong><small>Cells and axes are extracted for this BIN. Physical scaling is still incomplete.</small></div><div><small>HARDWARE</small><strong>{esc(i["code_family"].title())} application pin review</strong><small>Instruction bytes checked per BIN; manual connector and physical fitment remain separate.</small></div><div><small>DEFINITIONS</small><strong>Source candidates</strong><small>XDF presence does not establish correct addressing, units or ECU compatibility.</small></div></div>'
-        body += '<div class="profile-actions">'+''.join(f'<a href="{url(self.path(p,i,s))}">{label} ↗</a>' for s,label in [('maps','Maps & curves'),('wiring','Wiring & sensors'),('pins','MCU pins'),('research','Research')])+f'<a href="{url("firmware/"+i["id"]+"/")}">Firmware record ↗</a></div>'
+        body = f'<div class="vehicle-summary"><div><div class="kicker">{esc(model["style"])} / {esc(p.get("display_status",p["association"]))}</div><h2>{esc(model["name"])}<br>{esc(str(p["year"]))}</h2><dl class="vehicle-specs">'+''.join(f'<dt>{k}</dt><dd>{esc(v)}</dd>' for k,v in specs)+'</dl></div>'
+        body += f'<div><figure class="model-photo"><img class="vehicle-art" src="{url(photo["file"])}" width="{photo["width"]}" height="{photo["height"]}" alt="Yamaha {esc(model["name"])} — {esc(str(photo["year"]))} model reference" loading="lazy"><figcaption>{esc(photo["caption"])} <a href="{esc(photo["source"])}">Photo source ↗</a></figcaption></figure></div></div>'
+        body += '<div class="profile-actions">'+''.join(f'<a href="{url(self.path(p,i,s))}">{label}</a>' for s,label in [('maps','Maps'),('pins','Pins'),('xdf','BIN & XDF downloads')])+'</div>'
         if hardware:
             if record:
                 body += f'<h3>Catalogue parts for {esc(record["model_code"])} / {esc(record["country"])}</h3><div class="part-cards">'
@@ -93,7 +93,7 @@ class StaticSite:
                 body += '</div>'
             body += '<h3>Wiring and MCU applicability</h3><p>Early and later application families have separate GPIO assignments and 26- / 34-position manual references. Exact hardware fitment, connector orientation and board continuity remain separately qualified.</p>'
         sources = [s for s in self.vehicles['sources'] if s['id'] in p['source_ids']]
-        body += '<details'+(' open' if hardware else '')+'><summary>Sources and model/year evidence</summary>'
+        body += '<details><summary>Identification &amp; sources</summary><p>'+esc(p['notes'])+'</p><p>'+str(i['size'])+' bytes · SHA-256 <code>'+i['sha256']+'</code></p>'
         if p.get('label_evidence'):
             body += '<p>'+esc(p['label_evidence'])+'</p>'
         return body+'<ul class="source-list">'+''.join(f'<li><h3><a href="{esc(s["url"])}">{esc(s["title"])} ↗</a></h3><p>{esc(s["claim"])}</p><small>{esc(s["locator"])}</small></li>' for s in sources)+'</ul></details>'
@@ -216,16 +216,15 @@ class StaticSite:
         url = lambda target: posixpath.relpath(target,posixpath.dirname(current))+('/' if target.endswith('/') else '')
         panel['data-profile'],panel['data-firmware'] = p['id'],image['id']
         panel['data-static-context'] = 'true'
-        put(soup.find(id='selection-status'),esc(f'{self.models[p["model"]]["name"]} · {p["year"]} · {p["market"]} · {image["label"]} · {image["variant"]}'))
+        put(soup.find(id='selection-status'),esc(f'{self.models[p["model"]]["name"]} · {p["year"]} · {image["label"]} · {image["variant"]}'))
         panel.append(fragment(self.picker(p,image,section,url)))
-        for name,value in [('bike',self.models[p['model']]['name']),('year',str(p['year'])),('market',p['market']),('ecu',p['ecu']),('image',image['label']+' · '+image['variant'])]:
-            select = soup.find(id=name+'-select')
-            put(select,'<option selected>'+esc(value)+'</option>')
-            select['disabled'] = ''
         for ident in ['vehicle-overview','vehicle-research','vehicle-hardware']:
             node=soup.find(id=ident)
             if node is not None:
                 put(node,self.overview(p,image,url,ident=='vehicle-hardware'))
+        selected=soup.find(id='xdf-selected')
+        if selected is not None:
+            put(selected,selected_definition(image,url))
         defs=soup.find(id='vehicle-definitions')
         if defs is not None:
             selected=[d for d in self.definitions if (d['source_path'].startswith('xt 660 r/') if image.get('map_catalog')=='primary' else '2012-2016' in d['source_path'] if '2c1-10' in image['id'] else '2008' in d['source_path'] if re.search(r'5vk-(1x|11)',image['id']) else False)]
@@ -253,13 +252,6 @@ class StaticSite:
                 link['href']=url(self.path(p,image,target))+('#'+u.fragment if u.fragment else '')
             elif dest in ('firmware','firmware/index.html') and link.find_parent('nav',attrs={'aria-label':'Main navigation'}):
                 link['href']=url('firmware/'+image['id']+'/')
-        for ident in ('repo-bin','flash-repo-bin'):
-            if soup.find(id=ident):
-                put(soup.find(id=ident),''.join(f'<option value="{i["id"]}"'+(' selected' if i['id']==image['id'] else '')+'>'+esc(i['label']+' · '+i['variant'])+'</option>' for i in self.images.values()))
-        if soup.find(id='repo-bin') or soup.find(id='flash-repo-bin'):
-            mode='tools' if soup.find(id='repo-bin') else 'flashing'
-            fallback = f'<section class="script-fallback {mode}-fallback"><h2>{"BIN editing" if mode=="tools" else "BIN file checks"}</h2><p>This browser tool needs this site’s JavaScript to process local files. The motorcycle pages, maps, wiring and pin references work without it.</p><p><a href="{url(self.path(p,image,"maps"))}">Browse this BIN’s maps ↗</a> · <a href="{url("tools/bins/"+image["id"]+".bin")}" download>Download {esc(image["label"])} · {esc(image["variant"])}</a></p></section>'
-            soup.select_one('main').insert(1,fragment(fallback))
         path.write_text(soup.decode(formatter=FORMAT),encoding='utf-8',newline='\n')
 
 
