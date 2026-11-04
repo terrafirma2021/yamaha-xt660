@@ -1,0 +1,276 @@
+{
+  "scope": "WebAssembly HC12 execution in a dedicated browser worker; nominal 16 MHz, not measured motorcycle timing",
+  "date": "2026-11-04",
+  "toolchain": {
+    "emscripten": "4.0.23",
+    "ucsim": "59a14ff99efe7e92474faf4c4ddf57b5e4ff0631",
+    "node": "v24.14.1"
+  },
+  "matched_windows_checkpoints": 34,
+  "native_compatibility_checkpoints": 34,
+  "compared_fields": [
+    "PC",
+    "cycle count",
+    "RAM SHA-256",
+    "register SHA-256",
+    "external-storage SHA-256",
+    "output transitions",
+    "event count/signature",
+    "K-line reply",
+    "key rejection"
+  ],
+  "extended_comparisons": [
+    "active_faults",
+    "holds",
+    "menu",
+    "history",
+    "cleared_history",
+    "coil_test",
+    "coil_rises",
+    "coil_falls",
+    "normal_after_diag"
+  ],
+  "reference_report_sha256": "0ebde3ed16812dfa439b7a67dd2c1d566d51bf387b451e43da16a5c3ae8563b5",
+  "execution_report_sha256": "5d418a731dbecaadb1554c290e4413166fb42cbd7ebec3c4bc4a7c067dca2e91",
+  "execution": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "bin_sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "checkpoints": 6,
+      "bad_key_matches": true,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.032928625,
+          "throttle": 0,
+          "unpaced_ratio": 1.220472738166387,
+          "wall_seconds": 1.6656895
+        },
+        {
+          "simulated_seconds": 2.001877,
+          "throttle": 100,
+          "unpaced_ratio": 1.2015290246207941,
+          "wall_seconds": 1.6661079
+        },
+        {
+          "simulated_seconds": 2.041736375,
+          "throttle": 0,
+          "unpaced_ratio": 1.2207764321460817,
+          "wall_seconds": 1.67249
+        }
+      ]
+    },
+    {
+      "image": "xt660-5vk-1x-2008",
+      "bin_sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
+      "checkpoints": 6,
+      "bad_key_matches": true,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.00230775,
+          "throttle": 0,
+          "unpaced_ratio": 1.1416467507866002,
+          "wall_seconds": 1.7538768
+        },
+        {
+          "simulated_seconds": 1.96371425,
+          "throttle": 100,
+          "unpaced_ratio": 1.0998402311210353,
+          "wall_seconds": 1.7854541
+        },
+        {
+          "simulated_seconds": 2.0013265,
+          "throttle": 0,
+          "unpaced_ratio": 1.1397715725951354,
+          "wall_seconds": 1.7559014
+        }
+      ]
+    },
+    {
+      "image": "xt660-2c1-10",
+      "bin_sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+      "checkpoints": 6,
+      "bad_key_matches": true,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.00230775,
+          "throttle": 0,
+          "unpaced_ratio": 1.1478888512178305,
+          "wall_seconds": 1.7443394
+        },
+        {
+          "simulated_seconds": 1.96371425,
+          "throttle": 100,
+          "unpaced_ratio": 1.1291512986209469,
+          "wall_seconds": 1.7391064
+        },
+        {
+          "simulated_seconds": 2.0013265,
+          "throttle": 0,
+          "unpaced_ratio": 1.119670947651027,
+          "wall_seconds": 1.7874238
+        }
+      ]
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "bin_sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "checkpoints": 6,
+      "bad_key_matches": false,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.0022091875,
+          "throttle": 0,
+          "unpaced_ratio": 1.196557255766914,
+          "wall_seconds": 1.6733083
+        },
+        {
+          "simulated_seconds": 1.9638311875,
+          "throttle": 100,
+          "unpaced_ratio": 1.1705791178034044,
+          "wall_seconds": 1.6776578
+        },
+        {
+          "simulated_seconds": 2.001351125,
+          "throttle": 0,
+          "unpaced_ratio": 1.197793146593376,
+          "wall_seconds": 1.6708654
+        }
+      ]
+    },
+    {
+      "image": "xt660-5vk-11",
+      "bin_sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "checkpoints": 6,
+      "bad_key_matches": true,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.00230775,
+          "throttle": 0,
+          "unpaced_ratio": 1.1202483133818606,
+          "wall_seconds": 1.7873785
+        },
+        {
+          "simulated_seconds": 1.96371425,
+          "throttle": 100,
+          "unpaced_ratio": 1.13560163057725,
+          "wall_seconds": 1.7292281
+        },
+        {
+          "simulated_seconds": 2.0013265,
+          "throttle": 0,
+          "unpaced_ratio": 1.1552069514911858,
+          "wall_seconds": 1.7324398
+        }
+      ]
+    }
+  ],
+  "browser": {
+    "platform": "Windows-10-10.0.19044-SP0",
+    "engine": "Chrome on Windows x64; desktop and 390px viewport",
+    "pacing": [
+      {
+        "image": "xt660-2004-2006-companion",
+        "ratio": 1.0055499676156532,
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-5vk-1x-2008",
+        "ratio": 0.999480387360273,
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-2c1-10",
+        "ratio": 0.998237143810719,
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-2c1-10-immo-off",
+        "ratio": 0.9996374388468106,
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      },
+      {
+        "image": "xt660-5vk-11",
+        "ratio": 0.999330952481749,
+        "rotating": true,
+        "fault": 0,
+        "error": ""
+      }
+    ],
+    "functional": {
+      "wrongKey": "Key rejected",
+      "badKeyStartDisabled": true,
+      "pausedReadsStable": true,
+      "stepAdvanced": true,
+      "mainThreadBlocked": {
+        "cycles": 43342362,
+        "ratio": 0.9975686337691033
+      },
+      "faults": "Codes received this key cycle: 15, 21",
+      "diagnosticEntry": "d:01",
+      "next": "d:03",
+      "previous": "d:01",
+      "storedHistory": "15",
+      "countBefore": "2",
+      "historyCleared": true,
+      "actuatorOutputs": {
+        "3": 10,
+        "6": 0,
+        "7": 0
+      },
+      "normalAfterDiagnostics": "normal",
+      "refreshSafe": true,
+      "selectorPreserved": true,
+      "mobileViewport": {
+        "width": 390,
+        "documentWidth": 390,
+        "engineStarted": true
+      },
+      "errors": [],
+      "onlyStaticRequests": true,
+      "hotLamp": "lamp hot",
+      "celsiusUnit": "\u00b0C EST.",
+      "storageBytes": 512,
+      "traceBytes": 324443
+    },
+    "visual": [
+      "desktop dark",
+      "desktop light",
+      "390px mobile",
+      "diagnostics"
+    ],
+    "network": "Static same-origin requests only; no MCU server, API polling, COM port or remote scripts"
+  },
+  "artifacts": {
+    "xt660.wasm": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
+    "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
+    "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
+  },
+  "limits": [
+    "Speed depends on browser and hardware; measurements are not a universal real-time guarantee.",
+    "Closing or refreshing the tab ends the session. Browser suspension may pause the worker.",
+    "The engine model and synthetic storage are test fixtures, not measured bike physics.",
+    "Physical oscillator, coolant offset and road pulses/km remain unconfirmed.",
+    "Hardware ECU validation is separate."
+  ],
+  "source_archive_rebuild": {
+    "result": "All three runtime artifacts reproduced byte-for-byte from the complete source archive in a clean build directory",
+    "artifacts": {
+      "xt660.wasm": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
+      "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
+      "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
+    }
+  }
+}

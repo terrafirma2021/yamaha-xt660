@@ -15,6 +15,7 @@ from site_routes import build as build_bike_routes
 from site_xdf import build as build_xdf
 from site_flashing import build as build_flashing
 from site_static import build as build_static
+from site_emulator import verified_package as build_emulator
 from site_decoded_maps import build as build_decoded_maps
 from firmware_catalog import build as build_firmware_catalog
 from site_map_grids import grid as map_grid, preview as map_preview, palette_css
@@ -49,7 +50,7 @@ def rel(target, current):
     return Path(os.path.relpath(target, Path(current).parent)).as_posix()
 
 def nav(current, active):
-    links = [('Overview', 'index.html'), ('Maps', 'maps/index.html'), ('Downloads', 'xdf/index.html'), ('Pins', 'pins/index.html'), ('Research', 'research/index.html')]
+    links = [('Overview', 'index.html'), ('Maps', 'maps/index.html'), ('Downloads', 'xdf/index.html'), ('Emulator', 'emulator/index.html'), ('Pins', 'pins/index.html'), ('Research', 'research/index.html')]
     return '<header id="sitebar"><a class="brand" href="'+rel('index.html', current)+'"><span class="brand-mark"><img class="yamaha-logo" src="'+rel('assets/yamaha-motor-logo.png',current)+'" width="1042" height="360" alt="Yamaha Motor — Revs Your Heart"></span><span class="brand-model">ECU RESEARCH<small>XT660R / XT660X / XT660Z</small></span></a><nav aria-label="Main navigation">'+''.join(
         f'<a href="{rel(url,current)}"'+(' aria-current="page"' if label=={'XDF':'Downloads','MCU pins':'Pins','Flashing':'Downloads','Firmware':'Downloads','Wiring':'Pins'}.get(active,active) else '')+f'>{label}</a>' for label,url in links)+f'<a href="{REPO}">GitHub ↗</a><details class="css-theme"><summary>Theme</summary><fieldset><legend>Colour theme</legend><label><input type="radio" name="css-theme" id="theme-system" checked>System</label><label><input type="radio" name="css-theme" id="theme-light">Light</label><label><input type="radio" name="css-theme" id="theme-dark">Dark</label></fieldset></details><button id="theme-toggle" hidden type="button" aria-label="Switch to dark theme" aria-pressed="false">Dark theme</button></nav></header>'
 
@@ -193,5 +194,6 @@ for source in documents:
     write(target,shell(title,body,target,'Research',script))
 static_records=build_bike_routes(ROOT,DEST,write)
 build_static(ROOT,DEST,static_records)
+build_emulator(DEST/'emulator')
 write('.nojekyll','')
 print(f'Built project website: home, {len(maps)} maps, pin explorer and {len(documents)} research documents.')

@@ -7,8 +7,12 @@
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
+#ifdef _WIN32
 #include <windows.h>
 #include <bcrypt.h>
+#else
+#include "sha256_portable.hpp"
+#endif
 #include <array>
 #include <chrono>
 #include <filesystem>
@@ -29,10 +33,14 @@ inline std::vector<unsigned char> read_bytes(const fs::path &p) {
   return {std::istreambuf_iterator<char>(f),std::istreambuf_iterator<char>()};
 }
 inline std::string sha256(const std::vector<unsigned char>& data) {
+#ifdef _WIN32
   unsigned char digest[32];
   if(BCryptHash(BCRYPT_SHA256_ALG_HANDLE,NULL,0,const_cast<PUCHAR>(data.data()),ULONG(data.size()),digest,32)<0)
     throw std::runtime_error("SHA-256 failed");
   std::ostringstream out;out<<std::hex<<std::setfill('0');for(auto c:digest)out<<std::setw(2)<<unsigned(c);return out.str();
+#else
+  return sha256_portable(data);
+#endif
 }
 inline std::string hexbyte(unsigned value) { std::ostringstream out;out<<std::uppercase<<std::hex<<std::setfill('0')<<std::setw(2)<<value;return out.str(); }
 struct Event { std::string kind;unsigned channel,value;uint64_t cycle;unsigned pc; };
@@ -52,7 +60,12 @@ public:
   NativeEngine() {
     app_start_at=dnow();cpus=cpus_m68hc12;
     application=new xt_app();application->set_name("XT660_Emulator");
-    char a0[]="XT660.Emulator",a1[]="-q",a2[]="-R",a3[]="0",a4[]="-c",a5[]="NUL";
+    char a0[]="XT660.Emulator",a1[]="-q",a2[]="-R",a3[]="0",a4[]="-c";
+#ifdef _WIN32
+    char a5[]="NUL";
+#else
+    char a5[]="/dev/null";
+#endif
     char* args[]={a0,a1,a2,a3,a4,a5};application->init(6,args);
     cl_sim *sim=new xt_sim(application);if(sim->init())throw std::runtime_error("HC12 initialization failed");
     application->set_simulator(sim);cpu=static_cast<xt_cpu*>(sim->uc);hw=cpu->device;
@@ -74,6 +87,7 @@ public:
       int result=cpu->run_instruction();
       if(hw->fault || (result!=resGO && result!=resNOT_DONE))throw std::runtime_error("MCU stopped at "+std::to_string(cpu->PC)+", result "+std::to_string(result));
     }
+    cpu->flush_hw();
   }
   void until(uint64_t deadline) { while(cycles()<deadline)step(std::max(1u,unsigned(std::min<uint64_t>(10000,(deadline-cycles())/4)))); }
   void reach(unsigned pc,unsigned hits=1,unsigned budget=2000000) {

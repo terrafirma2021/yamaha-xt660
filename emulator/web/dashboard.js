@@ -1,5 +1,9 @@
  'use strict';
 const $=id=>document.getElementById(id),token=document.querySelector('meta[name=session]').content;
+const transport=window.XT660Transport??{
+ async state(){const r=await fetch('/api/state');if(!r.ok)throw Error('Runtime unavailable');return r.json();},
+ async action(action,data){const r=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','X-XT660-Token':token},body:JSON.stringify({action,...data})});const s=await r.json();if(!r.ok)throw Error(s.error);return s;}
+};
 const bench=document.querySelector('.advanced');
 let state=null,busy=false,pendingActions=0,paused=false,timer=null,queue=Promise.resolve(),ticking=false;
 function text(id,value){const element=$(id),next=String(value);if(element.textContent!==next)element.textContent=next;}
@@ -58,10 +62,11 @@ function renderBench(s){
 bench.addEventListener('toggle',()=>{if(bench.open&&state)renderBench(state);});
 
 function render(s){
- state=s;if(s.runtime?.native)paused=s.runtime.paused;
+ const previousSelected=state?.bike.selected;
+ state=s;if(s.runtime?.independent)paused=s.runtime.paused;
  const b=s.bike,m=b.meter,powered=b.powered;
  if(!$('image').options.length)for(const v of s.images){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('image').append(o);}
- if(b.selected&&document.activeElement!==$('image'))$('image').value=b.selected;
+ if(b.selected&&b.selected!==previousSelected)$('image').value=b.selected;
  if(!$('faultSelect').options.length)for(const v of b.faults){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('faultSelect').append(o);}
  if(document.activeElement!==$('faultSelect'))$('faultSelect').value=b.fault;
  $('display').classList.toggle('off',!powered);
@@ -78,7 +83,7 @@ function render(s){
  $('engineState').textContent=!powered?'IGNITION OFF':!b.run?'ENGINE STOP':b.starting?'STARTING':b.rotating?'ENGINE RUNNING':'ENGINE STOPPED';
  $('sessionHint').textContent=!powered?'Key on. Run on. Press start.':b.authentication==='Key rejected'?'Key rejected. Cycle ignition to try again.':b.starting?'Cranking. Waiting for ECU outputs.':b.rotating?'Engine running. Open the throttle.':'Press start when you’re ready.';
  text('simState',powered?(paused?'Paused':'Running'):'Stopped');text('pause',paused?'Resume simulation':'Pause simulation');
- if(s.runtime?.native&&powered&&!paused)text('simState',s.runtime.behind_ms>150?'Behind real time':s.runtime.realtime_ratio?'Real time · '+s.runtime.realtime_ratio.toFixed(2)+'×':'Running');
+ if(s.runtime?.independent&&powered&&!paused)text('simState',s.runtime.realtime_ratio?(s.runtime.behind_ms>150?'Below real time · ':'Real time · ')+s.runtime.realtime_ratio.toFixed(2)+'×':'Running');
  $('sessionLight').classList.toggle('on',powered&&!paused);text('link',!powered?'KEY OFF':m.connected?(paused?'K-LINE / PAUSED':'K-LINE / CONNECTED'):'WAITING FOR ECU');
  $('heartbeat').classList.toggle('active',m.connected&&m.frames%2===0);
  $('speed').textContent=m.connected?m.speed_pulses:'—';
@@ -115,17 +120,16 @@ function act(action,data={},background=false){
  queue=queue.then(()=>execute(action,data,background));return queue;
 }
 async function execute(action,data,background){
- try{const response=await fetch('/api/action',{method:'POST',headers:{'Content-Type':'application/json','X-XT660-Token':token},body:JSON.stringify({action,...data})});const s=await response.json();if(!response.ok)throw Error(s.error);render(s);$('error').hidden=true;if(action==='verify')$('status').textContent='All flash bytes match the registered BIN.';return true;}
- catch(e){if(!state?.runtime?.native){paused=true;clearTimeout(timer);}$('error').textContent=e.message;$('error').hidden=false;return false;}
+ try{const s=await transport.action(action,data);render(s);$('error').hidden=!!s.error?false:true;if(action==='verify')$('status').textContent='All flash bytes match the registered BIN.';return true;}
+ catch(e){if(!state?.runtime?.independent){paused=true;clearTimeout(timer);}$('error').textContent=e.message;$('error').hidden=false;return false;}
  finally{if(!background)busy=--pendingActions>0;lock();}
 }
 async function tick(){
- if(state?.runtime?.native){
-  // Snapshot reads never step or pace the MCU. Poll even while key-off/paused;
-  // closing or throttling this tab has no effect on the native worker.
+ if(state?.runtime?.independent){
+  // Snapshot reads never step or pace the MCU. The worker owns execution.
   if(ticking)return;ticking=true;
   queue=queue.then(async()=>{
-   try{const r=await fetch('/api/state');if(!r.ok)throw Error('Native runtime unavailable');render(await r.json());}
+   try{render(await transport.state());}
    catch(e){text('error',e.message);$('error').hidden=false;}
   });
   await queue;ticking=false;timer=setTimeout(tick,50);return;
@@ -139,11 +143,11 @@ async function tick(){
  const simulatedMs=Math.max(0,((state.counts?.bus_cycles??cycles)-cycles)/16000);
  if(!paused&&state?.bike.powered)timer=setTimeout(tick,Math.max(0,simulatedMs-(performance.now()-started)));
 }
-function resume(){if(state?.runtime?.native){if(paused)act('pause',{paused:false});return;}paused=false;clearTimeout(timer);if(state)render(state);tick();}
-function pause(){if(state?.runtime?.native){if(!paused)act('pause',{paused:true});return;}paused=true;clearTimeout(timer);if(state)render(state);}
+function resume(){if(state?.runtime?.independent){if(paused)act('pause',{paused:false});return;}paused=false;clearTimeout(timer);if(state)render(state);tick();}
+function pause(){if(state?.runtime?.independent){if(!paused)act('pause',{paused:true});return;}paused=true;clearTimeout(timer);if(state)render(state);}
 const control=(name,value)=>act('control',{name,value});
-$('load').onclick=async()=>{const image=$('image').value;if(!state?.runtime?.native)pause();await act('load',{image});};
-$('key').onclick=async()=>{const enabled=!state.bike.powered;if(!state.runtime?.native)pause();$('key').dataset.turning=enabled?'on':'off';try{if(await act('key',{enabled,wrong_key:$('wrongKey').checked}))if(enabled)resume();}finally{delete $('key').dataset.turning;}};
+$('load').onclick=async()=>{const image=$('image').value;if(!state?.runtime?.independent)pause();await act('load',{image});};
+$('key').onclick=async()=>{const enabled=!state.bike.powered;if(!state.runtime?.independent)pause();$('key').dataset.turning=enabled?'on':'off';try{if(await act('key',{enabled,wrong_key:$('wrongKey').checked}))if(enabled)resume();}finally{delete $('key').dataset.turning;}};
 $('runSwitch').onclick=async event=>{
  if(busy)return;
  const button=$('runSwitch');let enabled=!state.bike.run;
@@ -166,7 +170,7 @@ $('nextFault').onclick=()=>{const options=state.bike.faults;control('fault',opti
 $('restore').onclick=()=>control('fault','none');$('coolantNormal').onclick=()=>control('coolant',512);$('coolantHot').onclick=()=>control('coolant',80);
 $('pause').onclick=()=>paused?resume():pause();$('step').onclick=()=>act('tick');$('verify').onclick=()=>act('verify');
 $('celsius').onchange=()=>render(state);
- $('diagnostics').onclick=async()=>{if(!state.runtime?.native)pause();if(await act('diagnostics',{enabled:state.bike.meter.mode==='normal'}))resume();};
+ $('diagnostics').onclick=async()=>{if(!state.runtime?.independent)pause();if(await act('diagnostics',{enabled:state.bike.meter.mode==='normal'}))resume();};
  $('diagPrev').onclick=()=>act('diagnostic-next',{direction:-1});$('diagNext').onclick=()=>act('diagnostic-next',{direction:1});
  $('history').onclick=()=>act('diagnostic-item',{number:61});$('count').onclick=()=>act('diagnostic-item',{number:62});
  $('clearHistory').onclick=()=>act('clear-history');
@@ -174,5 +178,6 @@ $('celsius').onchange=()=>render(state);
  $('stopTest').onclick=()=>act('diagnostic-test',{enabled:false});
 function theme(v){document.documentElement.dataset.theme=v;$('theme').textContent=v==='dark'?'Light mode':'Dark mode';try{localStorage.setItem('xt660-emulator-theme',v);}catch{}}
 $('theme').onclick=()=>theme(document.documentElement.dataset.theme==='dark'?'light':'dark');try{theme(localStorage.getItem('xt660-emulator-theme')||'dark');}catch{}
-fetch('/api/state').then(r=>r.json()).then(s=>{paused=true;render(s);if(s.runtime?.native)tick();}).catch(e=>{$('error').hidden=false;$('error').textContent=e.message;});
-window.addEventListener('pagehide',()=>{if(state?.runtime?.native)clearTimeout(timer);else pause();});
+transport.state().then(s=>{paused=true;render(s);if(s.runtime?.independent)tick();}).catch(e=>{$('error').hidden=false;$('error').textContent=e.message;});
+window.addEventListener('pagehide',()=>{if(state?.runtime?.independent)clearTimeout(timer);else pause();});
+window.addEventListener('pageshow',e=>{if(e.persisted&&state?.runtime?.independent){clearTimeout(timer);tick();}});

@@ -1,0 +1,35 @@
+{
+  "ucsim": "59a14ff99efe7e92474faf4c4ddf57b5e4ff0631",
+  "emscripten": "4.0.23",
+  "artifacts": {
+    "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424",
+    "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
+    "xt660.wasm": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712"
+  },
+  "sources": {
+    "emulator/native/browser_bridge.cc": "33242417bc66a7422889045d694d47f40290d3bc06009b7e1d4202a5b4588660",
+    "emulator/native/cockpit_native.hpp": "854f74f2801586aa6e778bff5a4e32fe6d88cc7d149389b05054b6c9cbb8edce",
+    "emulator/native/dashboard_native.cc": "b6d5fafb53520f2758958d4c8a37a2bc537d950bf2877f15542e36105bf766d3",
+    "emulator/native/engine_native.hpp": "3195c2d83ced66e8e3e0c076598bdf698d7844fc65eda37fad151c598ec393ba",
+    "emulator/native/sha256_portable.hpp": "c956a85343b0dcfcda71cdc412a455bcd02689649e6a5a53750706e28d3995e7",
+    "emulator/native/validate_native.cc": "91f294fb97129f5a2014a4ae470f5220dc726e6da3182327e2592cecf6f4801b",
+    "emulator/native/xt660_boot.cc": "0ede0b982daead77e7adb30d690315776d3de4d20a41e70751a849f47928a8c7",
+    "emulator/patches/hc12-bit-disassembly.patch": "184b114b3f22a4d1ad3285a51f48c93b674896275b2e82dfbdea8d123899421e",
+    "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",
+    "emulator/patches/hc12-fetch-order.patch": "6f2f32f997b8023271bd0f9735ab89055acdacf0732d609b519e4e3d5396bdce",
+    "emulator/patches/hc12-indexed.patch": "a202a8d68f209983edd5b1e981821c6ce84266e815a30360ac08479bb4efbc50",
+    "emulator/patches/hc12-load-store-flags.patch": "d6984bbc546cc5fb7afe438df63596f2f7d2a04d99a646224f39a8e3d185ec91",
+    "emulator/patches/hc12-loop.patch": "de7e0708e7ca9e99af52efbce156910f03b195cfab52724e126e8c39142309eb",
+    "emulator/patches/hc12-move-disassembly.patch": "df11d8df2b4e51fcd586751331b49a94c70bb108dc1b091d7ac6c322c504eddb",
+    "emulator/patches/hc12-move-index-update.patch": "13a4078ffbf3e4d13e6b46c4b815304d0c9d3d370621bf6ef914534d59f92987",
+    "emulator/patches/hc12-orcc.patch": "f92a8074ba9d5012e0978c6892e0c93dd7634aeeb3334e4cd4a60d0036b5f63d",
+    "emulator/patches/hc12-step-over.patch": "e7dcd555ee26edeb08f85527518a3f1e2b3b523f056bf0e6401d7409a45ad0d1",
+    "emulator/patches/hc12-timing.patch": "54469604b483b787d9773dcc8f70d2449ea200eec43317d3869784c6ecca4976",
+    "emulator/patches/hc12-transfer-x-mask.patch": "7305874fd6e8b4d103b1b5eb46279919e4dea45088adfb593fb3b25bf2e9917e",
+    "emulator/patches/windows-pipe-poll.patch": "83560455f0b0ee3e47b522e9586b5285a4b89e909cd5f073394d34bfc29866aa",
+    "emulator/build.py": "08beccf2808b635da4b0c03c15ee03fdf6efea765b6660e4b75c3fba6a674d6e",
+    "emulator/build_wasm.py": "1b5a7d909c7e1b54793619fd43ea0acbd8687769afbeeadf13eb03bbeb83120e",
+    "emulator/build_windows.py": "088750dd7621e74199b8232f75c4c61a9eac40295b2bc8d95a8a57e9fc105dbe",
+    "firmware/registry.json": "0e00be07494e571a5689e7765174b1bdfc8787e6e185652e3d0158332956d81d"
+  }
+}

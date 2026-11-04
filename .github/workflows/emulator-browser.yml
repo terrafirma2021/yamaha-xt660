@@ -1,0 +1,32 @@
+name: Build and check browser emulator
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y make autoconf flex bison
+      - name: Install pinned Emscripten
+        run: |
+          git clone --depth 1 --branch 4.0.23 https://github.com/emscripten-core/emsdk.git /tmp/emsdk
+          /tmp/emsdk/emsdk install 4.0.23
+          /tmp/emsdk/emsdk activate 4.0.23
+      - name: Build and compare with Windows execution
+        run: |
+          source /tmp/emsdk/emsdk_env.sh
+          python3 emulator/build_wasm.py --directory /tmp/xt660-wasm-core --jobs 4
+          python3 emulator/test_wasm.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: xt660-browser-build
+          path: |
+            dist/xt660-wasm
+            emulator/.runs/wasm-full.*

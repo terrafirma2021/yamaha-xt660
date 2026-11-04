@@ -14,7 +14,7 @@
 #include "fiocl.h"
 
 class xt_cpu;
-class xt_boot_hw: public cl_hw {
+class xt_boot_hw final: public cl_hw {
 public:
   // These are the same backing bytes used by uCsim's memory cells, not a
   // register cache. CPU reads/writes still go through all hardware hooks.
@@ -110,10 +110,34 @@ public:
   void unsupported(unsigned addr, const char *operation);
 };
 
-class xt_cpu: public cl_m68hc12 {
+class xt_cpu final: public cl_m68hc12 {
 public:
   xt_boot_hw *device;
   bool executing;
+  unsigned deferred_cycles=0, event_deadline=0;
+#ifdef XT660_DEFER_CLOCKS
+  unsigned char* instruction_bytes=nullptr;
+  void make_memories() override {
+    cl_m68hc12::make_memories();
+    instruction_bytes=static_cast<unsigned char*>(rom->get_cell(0)->get_data());
+    for(unsigned a=0;a<65536;++a)
+      if(rom->get_cell(a)->get_width()!=8 || rom->get_cell(a)->get_data()!=instruction_bytes+a)
+        throw std::runtime_error("Instruction memory is not the expected flat byte mapping");
+  }
+  t_mem fetch() override {
+    if(device->reference_ticks || PC<0x200 || PC>65535)return cl_uc::fetch();
+    if(PC>=0x1800 && device->flash[PC<0x8000?1:0].left){
+      flush_hw();device->unsupported(PC,"read from busy flash bank");
+    }
+    // The exact backing memory, not a decoded-code cache. Register execution
+    // still takes the regular I/O path and flash-busy protection is preserved.
+    unsigned code=instruction_bytes[PC];PC=(PC+1)&PCmask;++vc.fetch;return code;
+  }
+#endif
+  void flush_hw() {
+    if(deferred_cycles){unsigned n=deferred_cycles;deferred_cycles=0;device->tick(n);}
+    event_deadline=0;
+  }
   xt_cpu(cl_sim *sim): cl_m68hc12(sim), device(NULL), executing(false) {
     cpu12= NULL;
   }
@@ -146,9 +170,17 @@ public:
   }
   int tick_hw(int cycles) {
     if (device->reference_ticks || hws->count!=1) return cl_uc::tick_hw(cycles);
+#ifdef XT660_DEFER_CLOCKS
+    // Delay only work before the next observable peripheral event. Register
+    // accesses and external inputs flush first; all CPU instructions still run.
+    if(!event_deadline)event_deadline=device->next_event(256);
+    deferred_cycles+=cycles;
+    if(deferred_cycles>=event_deadline)flush_hw();
+#else
     // The ECU peripheral model advances to exact event boundaries internally.
     // All other uCsim devices retain their original one-cycle callbacks.
     device->tick(cycles);
+#endif
     do_extra_hw(cycles);
     return 0;
   }
@@ -158,6 +190,7 @@ public:
     if (device->fault || (rCC & flagI) || block_irq) return resGO;
     unsigned vector= device->pending_vector();
     if (!vector) return resGO;
+    flush_hw();
     executing= true;
     push_regs(true);
     vc.wr += 9;
@@ -181,7 +214,11 @@ public:
   }
   int exec_inst(void) {
     if (device->fault) return resHALT;
+#ifdef XT660_DEFER_CLOCKS
+    unsigned op= PC<=65535?instruction_bytes[PC]:rom->get(PC);
+#else
     unsigned op= rom->get(PC);
+#endif
     if (op==0x4a || op==0x4b || op==0x0a) {
       fprintf(stderr, "XT660 unsupported banked CALL/RTC at %04x\n", unsigned(PC));
       device->fault= true;
@@ -286,6 +323,7 @@ t_mem xt_boot_hw::read(cl_memory_cell *cell) {
   unsigned a= address(cell);
   if (conf(cell,NULL)) return cell->get();
   if (!xt->executing) return cell->get(); // debugger reads have no side effects
+  if(a<0x200 || (a>=0x1800 && flash[a<0x8000?1:0].left))xt->flush_hw();
   if (a>=0x1800) {
     if (flash[a<0x8000?1:0].left) unsupported(a,"read from busy flash bank");
     return cell->get();
@@ -331,6 +369,7 @@ t_mem xt_boot_hw::read(cl_memory_cell *cell) {
   return cell->get();
 }
 void xt_boot_hw::write(cl_memory_cell *cell, t_mem *v) {
+  xt->flush_hw();
   if (conf(cell,v)) return;
   unsigned a= address(cell);
   if (!xt->executing) return; // fixture/debugger memory setup, never an ECU write
@@ -517,6 +556,17 @@ unsigned xt_boot_hw::next_event(unsigned limit) {
   // Preserve every timer increment (and its capture/compare ordering).
   if(regs[0x46]->get()&0x80) due((1u<<(regs[0x4d]->get()&7))-timer_phase);
   if(counting && (regs[0x66]->get()&4)) due(prescaler-phase);
+#ifdef XT660_DEFER_CLOCKS
+  // RTI and watchdog use OSCCLK, independently of the timer prescaler.
+  unsigned numerator=1,denominator=2;
+  if(regs[0x39]->get()&0x80){numerator=(regs[0x34]->get()&63)+1;denominator=(regs[0x35]->get()&15)+1;}
+  auto oscillator_due=[&](unsigned clocks){due((clocks*numerator-osc_phase+denominator-1)/denominator);};
+  unsigned scale=(regs[0x3b]->get()>>4)&7;
+  if(scale)oscillator_due(((regs[0x3b]->get()&15)+1)*(1u<<(9+scale))-rti_phase);
+  unsigned rate=regs[0x3c]->get()&7;
+  static const unsigned shifts[]={0,14,16,18,20,22,23,24};
+  if(rate)oscillator_due((1u<<shifts[rate])-cop_elapsed);
+#endif
   return std::max(1u,limit);
 }
 void xt_boot_hw::advance(unsigned cycles) {
@@ -647,6 +697,7 @@ const char *xt_boot_hw::cfg_help(t_addr a) {
   return "XT660 fixture configuration";
 }
 t_mem xt_boot_hw::conf_op(cl_memory_cell *cell, t_addr a, t_mem *v) {
+  if(v)xt->flush_hw();
   if (v && a) {
     if ((a>=30 && a<=33) || a==38) { *v=cell->get(); return cell->get(); }
     if (a>=35) {

@@ -2,7 +2,39 @@
 
 Run the registered BINs on a locally patched µCsim HC12 core. The five complete images execute from reset with modeled ADC, GPIO, timers, interrupts, SPI storage and both serial interfaces. The four images without boot code are rejected; donor boot bytes are never inserted.
 
-The local cockpit has key, run/stop, starter, N/1 and throttle controls. Its instruments consume checked SCI1 meter replies. Sensor faults, diagnostic buttons, raw inputs, coil/injector traces and trace export are available alongside the cockpit. It is separate from the reference website and never opens a COM port.
+The cockpit has key, run/stop, starter, N/1 and throttle controls. Its instruments consume checked SCI1 meter replies. Sensor faults, diagnostic buttons, raw inputs, coil/injector traces and trace export are available alongside the cockpit. It never opens a COM port.
+
+## Run in your browser
+
+[Open the emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/). Select an ECU, turn the key and press Start. No installation, Python, WSL or local ECU server is needed. All assets are served by the site; no third-party scripts are loaded.
+
+The same C++ HC12 core, peripherals and meter peer compile to WebAssembly. A dedicated Web Worker owns instruction execution and the simulation clock. Dashboard rendering and snapshot polling do not advance or pause the MCU. Pause simulation is explicit. Closing or refreshing the tab ends this session; browser suspension can also pause execution. On resumption, the worker continues from its last instruction without inventing missed time. Storage survives key cycles within the session, and can be exported before closing it.
+
+All five complete BINs measured approximately **1.00× real time** in Chrome on the test Windows PC at the nominal 16 MHz profile. Other devices may be slower; the cockpit reports the measured rate. [Browser validation](wasm-validation.json) records the 34 exact Windows checkpoint comparisons, diagnostic traces and browser checks. This does not establish physical sensor calibration or the motorcycle's oscillator frequency.
+
+## Build the browser package
+
+Activate Emscripten **4.0.23** on a build host with Python 3, Git, make, autoconf, flex and bison, then run:
+
+```sh
+python3 emulator/build_wasm.py --directory /tmp/xt660-wasm-core --jobs 4
+python3 emulator/test_wasm.py
+```
+
+`dist/xt660-wasm` contains the runtime and a separate deterministic test executable. The latter is run in Node and compared with the recorded Windows reference. The browser runtime uses one worker and needs no SharedArrayBuffer or special cross-origin isolation headers. Sources, BIN hashes and runtime hashes are checked when packaging the website.
+
+The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.0) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
+
+```sh
+python3 scripts/site_emulator.py --runtime dist/xt660-wasm --destination dist/browser-preview/emulator
+python3 -m http.server 8767 --directory dist/browser-preview
+```
+
+Open `http://127.0.0.1:8767/emulator/`. The HTTP server only serves files. Browser and native builds remain separate options. The manually triggered [browser workflow](../.github/workflows/emulator-browser.yml) performs the build and execution comparison; normal Pages publishing only verifies and copies the committed runtime.
+
+The browser speed improvements defer peripheral bookkeeping only between observable events and use direct instruction reads from the same flash backing memory. I/O accesses, interrupt delivery, flash-busy checks, RTI and COP deadlines retain their checks. Every CPU instruction still executes. Matched checkpoints include cycle counts, registers, RAM, storage, K-line replies and output-event signatures.
+
+The uCsim-derived code is GPL-2.0-or-later; see [COPYING](COPYING). [Bundled dependency notices](browser/licenses) cover Emscripten, its runtime libraries and nlohmann/json. Source archives include the patched pinned uCsim tree, our core and browser code, build scripts and JSON header.
 
 ## Windows download
 

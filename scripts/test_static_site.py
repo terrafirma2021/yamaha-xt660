@@ -86,6 +86,12 @@ for page in SITE.rglob('*.html'):
     assert 'scope-pending' not in text,page
     soup=BeautifulSoup(text,'html.parser')
     assert all(not urlsplit(s['src']).netloc for s in soup.select('script[src]'))
+    if page==SITE/'emulator/index.html':
+        # Executable cockpit has its own controls; research remains static HTML.
+        assert soup.select_one('noscript').get_text().strip()
+        assert soup.select_one('#image') and soup.select_one('#theme')
+        assert soup.select_one('footer a[href="../"]')
+        continue
     if soup.select_one('meta[http-equiv="refresh"]'):
         assert soup.select_one('meta[http-equiv="refresh"]')['content']=='0; url=../xdf/'
         assert not soup.select('script')

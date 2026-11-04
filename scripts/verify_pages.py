@@ -45,6 +45,10 @@ for page in SITE.rglob('*.html'):
     redirect='http-equiv="refresh"' in markup
     if redirect:
         assert 'content="0; url=../xdf/"' in markup and '<script' not in markup,page
+    elif page==SITE/'emulator/index.html':
+        # Standalone application has its own ECU selector and cockpit theme.
+        assert 'id="image"' in markup and 'id="theme"' in markup and '<noscript>' in markup
+        assert 'client.js' in parser.links and 'dashboard.js' in parser.links
     else:
         assert parser.theme_buttons==1,f'Missing or duplicate theme switch: {page}'
         assert markup.count('id="vehicle-context"')==1,page
