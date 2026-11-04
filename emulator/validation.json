@@ -110,11 +110,206 @@
     ],
     "invalid_inputs_rejected": 3
   },
+  "timer_spi_checks": 75,
+  "watchdog_checks": [
+    "unserviced watchdog requests reset",
+    "serviced watchdog stays running"
+  ],
+  "runtime_guards": [
+    "SCI transmit",
+    "SCI transmit interrupt",
+    "SPI slave",
+    "COP invalid service",
+    "COP early window service",
+    "ATD external trigger"
+  ],
+  "runtime": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
+      "main_loop": "0x538B",
+      "main_loop_entries": 1000,
+      "completed": true,
+      "fixture": {
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "spi": "disconnected/pulled-high MISO; no persistent storage model",
+        "serial": "idle; no peer",
+        "crank": "no edges"
+      },
+      "counts": {
+        "adc_conversions": 255,
+        "adc_sequences": 31,
+        "irq_count": 20,
+        "captures": 0,
+        "compares": 0,
+        "rti_events": 20,
+        "cop_services": 28,
+        "spi_bytes": 93,
+        "spi_dropped": 0
+      },
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-5vk-1x-2008",
+      "sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
+      "main_loop": "0x4BC5",
+      "main_loop_entries": 1000,
+      "completed": true,
+      "fixture": {
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "spi": "disconnected/pulled-high MISO; no persistent storage model",
+        "serial": "idle; no peer",
+        "crank": "no edges"
+      },
+      "counts": {
+        "adc_conversions": 280,
+        "adc_sequences": 35,
+        "irq_count": 25,
+        "captures": 0,
+        "compares": 0,
+        "rti_events": 25,
+        "cop_services": 29,
+        "spi_bytes": 92,
+        "spi_dropped": 0
+      },
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10",
+      "sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
+      "main_loop": "0x4BC5",
+      "main_loop_entries": 1000,
+      "completed": true,
+      "fixture": {
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "spi": "disconnected/pulled-high MISO; no persistent storage model",
+        "serial": "idle; no peer",
+        "crank": "no edges"
+      },
+      "counts": {
+        "adc_conversions": 280,
+        "adc_sequences": 35,
+        "irq_count": 25,
+        "captures": 0,
+        "compares": 0,
+        "rti_events": 25,
+        "cop_services": 29,
+        "spi_bytes": 92,
+        "spi_dropped": 0
+      },
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "main_loop": "0x4BC5",
+      "main_loop_entries": 1000,
+      "completed": true,
+      "fixture": {
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "spi": "disconnected/pulled-high MISO; no persistent storage model",
+        "serial": "idle; no peer",
+        "crank": "no edges"
+      },
+      "counts": {
+        "adc_conversions": 280,
+        "adc_sequences": 35,
+        "irq_count": 25,
+        "captures": 0,
+        "compares": 0,
+        "rti_events": 25,
+        "cop_services": 26,
+        "spi_bytes": 59,
+        "spi_dropped": 0
+      },
+      "flash_bytes_unchanged": 59392
+    },
+    {
+      "image": "xt660-5vk-11",
+      "sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "main_loop": "0x4BC5",
+      "main_loop_entries": 1000,
+      "completed": true,
+      "fixture": {
+        "adc": [
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512,
+          512
+        ],
+        "port_a_inputs": 224,
+        "port_s_inputs": 16,
+        "spi": "disconnected/pulled-high MISO; no persistent storage model",
+        "serial": "idle; no peer",
+        "crank": "no edges"
+      },
+      "counts": {
+        "adc_conversions": 280,
+        "adc_sequences": 35,
+        "irq_count": 25,
+        "captures": 0,
+        "compares": 0,
+        "rti_events": 25,
+        "cop_services": 29,
+        "spi_bytes": 92,
+        "spi_dropped": 0
+      },
+      "flash_bytes_unchanged": 59392
+    }
+  ],
   "ucsim_commit": "59a14ff99efe7e92474faf4c4ddf57b5e4ff0631",
-  "scope": "CPU/debugger fixtures, boot, ATD/GPIO, functional ATD/modulus IRQs and isolated firmware sensor routines; not full application or engine operation",
+  "scope": "CPU/peripheral fixtures and 1000 main-loop entries per complete BIN with disconnected SPI storage, idle serial and no crank edges; not engine operation or physical ECU validation",
   "source_hashes": {
     "emulator/build.py": "5be3f49baa58149c6fe11cb3df2b5b4b76c70557df1c50484abec45c9cc41640",
-    "emulator/native/xt660_boot.cc": "33c386710ea74968bdc0ac66708b0e20505ef02dc3f1e955875d92788639f81e",
+    "emulator/native/xt660_boot.cc": "25632868f4875d9bd80ccf38aaf31d3c1b3646a826f2d040ca7d4244b9d97f57",
     "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",
     "emulator/patches/hc12-fetch-order.patch": "6f2f32f997b8023271bd0f9735ab89055acdacf0732d609b519e4e3d5396bdce",
     "emulator/patches/hc12-indexed.patch": "a202a8d68f209983edd5b1e981821c6ce84266e815a30360ac08479bb4efbc50",
@@ -122,10 +317,12 @@
     "emulator/patches/hc12-orcc.patch": "f92a8074ba9d5012e0978c6892e0c93dd7634aeeb3334e4cd4a60d0036b5f63d",
     "emulator/patches/hc12-step-over.patch": "e7dcd555ee26edeb08f85527518a3f1e2b3b523f056bf0e6401d7409a45ad0d1",
     "emulator/patches/hc12-timing.patch": "54469604b483b787d9773dcc8f70d2449ea200eec43317d3869784c6ecca4976",
-    "emulator/run.py": "5831d6e048d633a5d24049ce6217436b974453430ff3ef58ae07c0bf21ec2eae",
+    "emulator/run.py": "c44dc7ba1165e29e2cc146710a6af4e26b0d3ffab9719caef3bc610f0840bcb2",
     "emulator/runner.py": "764b974b554a03fa24134917d596c0198d6a6382fb976879a4d04b1812f46450",
+    "emulator/runtime.py": "4c617916493aa8e0f1791b84411b76710db79aff1f28aa77883ea0e9567e7e66",
     "emulator/sensors.py": "65fd435b85b925c0ea303d91ed6d5af4d77fe62f2c39653a2f7c836e6d2dde5b",
-    "emulator/test_emulator.py": "8ea3cb431e969a783c441eab8c77901ad2004745ef086b3a279db1869584f331",
-    "emulator/test_peripherals.py": "104670900163c743413f53a891baf5de9fed52c89ce572c15684bb390ecc7252"
+    "emulator/test_emulator.py": "0aa722178d568b2da2b4ea0f585554e07ba9343bc3646feb2b3b4f7daa8b02e3",
+    "emulator/test_peripherals.py": "104670900163c743413f53a891baf5de9fed52c89ce572c15684bb390ecc7252",
+    "emulator/test_runtime_devices.py": "29cad76d353ac3be7649ed1249524ffb51d51c3cf3cf5e4215df58a0b416c41e"
   }
 }

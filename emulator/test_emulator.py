@@ -7,6 +7,7 @@ import re
 import subprocess
 import sys
 from runner import ROOT, RUNS, execute, prepare, registered_image
+from test_runtime_devices import test_timer_spi, test_watchdog, test_runtime, test_runtime_guards
 from test_peripherals import test_peripherals, test_interrupts, test_firmware_adc, test_sensor_demo
 
 
@@ -241,8 +242,12 @@ def main():
         report['interrupt_checks']=test_interrupts(args.ucsim,args.wsl)
         report['firmware_adc']=test_firmware_adc(args.ucsim,args.wsl)
         report['sensor_demo']=test_sensor_demo(args.ucsim,args.wsl)
+        report['timer_spi_checks']=test_timer_spi(args.ucsim,args.wsl)
+        report['watchdog_checks']=test_watchdog(args.ucsim,args.wsl)
+        report['runtime_guards']=test_runtime_guards(args.ucsim,args.wsl)
+        report['runtime']=test_runtime(args.ucsim,args.wsl)
     report['ucsim_commit']='59a14ff99efe7e92474faf4c4ddf57b5e4ff0631'
-    report['scope']='CPU/debugger fixtures, boot, ATD/GPIO, functional ATD/modulus IRQs and isolated firmware sensor routines; not full application or engine operation'
+    report['scope']='CPU/peripheral fixtures and 1000 main-loop entries per complete BIN with disconnected SPI storage, idle serial and no crank edges; not engine operation or physical ECU validation'
     report['source_hashes']={p.relative_to(ROOT).as_posix():hashlib.sha256(p.read_bytes()).hexdigest()
                             for p in sorted((ROOT/'emulator').rglob('*'))
                             if p.is_file() and not any(x.startswith('.') or x=='__pycache__' for x in p.relative_to(ROOT/'emulator').parts)

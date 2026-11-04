@@ -18,7 +18,20 @@ public:
   unsigned adc_sample_left, adc_sample, adc_sequences, adc_conversions;
   bool adc_running;
   unsigned irq_count, irq_vector;
-  unsigned cfg_size(void) { return 17; }
+  unsigned timer_phase, timer_output, timer_edges, timer_matches, last_pt;
+  unsigned osc_phase, rti_phase, rti_events, cop_elapsed, cop_services;
+  bool cop_written, cop_armed;
+  unsigned spi_left, spi_tx, spi_pending, spi_armed, spi_count, spi_dropped;
+  bool spi_queued;
+  unsigned cfg_size(void) { return 19; }
+  void timer_tick(unsigned cycles);
+  void timer_compare(unsigned channel);
+  unsigned timer_pins(unsigned pins);
+  void clock_tick(unsigned cycles);
+  void spi_tick(unsigned cycles);
+  void spi_begin(unsigned value);
+  unsigned word(unsigned a) { return regs[a]->get()*256+regs[a+1]->get(); }
+  void set_word(unsigned a, unsigned value) { regs[a]->set(value>>8); regs[a+1]->set(value&255); }
   const char *cfg_help(t_addr a);
   t_mem conf_op(cl_memory_cell *cell, t_addr a, t_mem *v);
   void adc_start(bool fresh);
@@ -118,6 +131,15 @@ void xt_boot_hw::reset(void) {
   adc_sample_left= adc_sample= adc_sequences= adc_conversions= 0;
   adc_length=8; adc_running=false;
   irq_count= irq_vector=0;
+  timer_phase=timer_output=timer_edges=timer_matches=last_pt=0;
+  osc_phase=rti_phase=rti_events=cop_elapsed=cop_services=0;
+  cop_written=cop_armed=false;
+  regs[0x3c]->set(0x43);
+  spi_left=spi_tx=spi_pending=spi_armed=spi_count=spi_dropped=0;
+  spi_queued=false;
+  regs[0xdb]->set(0x20); // SPTEF
+  regs[0xd4]->set(0xc0); // SCI1 idle; no external serial traffic
+  cfg_set(17,255); cfg_set(18,0); // Unconnected/pulled-high MISO, no EEPROM invented.
   // Explicit, deterministic raw input fixtures; no inferred temperature/RPM.
   for (unsigned n=1; n<=8; ++n) cfg_set(n,512);
   for (unsigned n=9; n<=16; ++n) cfg_set(n,0);
@@ -138,9 +160,9 @@ bool xt_boot_hw::supported(unsigned a) {
     || (a>=0x90 && a<=0x9f)
     || a==0xe0 || a==0xe1 || a==0xe2 || a==0xe8 || a==0xe9 || a==0xea
     || a==0xf0 || a==0xf1 || a==0xf2
-    || a==0x34 || a==0x35 || a==0x37 || a==0x39 || a==0x3a || a==0x3c
-    || a==0x46 || a==0x4d || a==0x66 || a==0x67 || a==0x76 || a==0x77
-    || (a>=0xc8 && a<=0xcb) || a==0xee || a==0xf8 || a==0x100;
+    || (a>=0x32 && a<=0x35) || (a>=0x37 && a<=0x3c) || a==0x3f
+    || (a>=0x40 && a<=0x5f) || a==0x66 || a==0x67 || a==0x76 || a==0x77
+    || (a>=0xc8 && a<=0xd5) || a==0xd7 || (a>=0xd8 && a<=0xdb) || a==0xdd || a==0xee || a==0xf8 || a==0x100;
 }
 void xt_boot_hw::unsupported(unsigned a, const char *operation) {
   if (!fault) fprintf(stderr, "XT660 unmodelled %s at register %04x, instruction %04x\n",
@@ -153,8 +175,17 @@ t_mem xt_boot_hw::read(cl_memory_cell *cell) {
   if (!xt->executing) return cell->get(); // debugger reads have no side effects
   if (a>=0x1800) return cell->get();
   if (!supported(a)) { unsupported(a, "read"); return cell->get(); }
+  if (a==0x32) return ((regs[0x32]->get()&regs[0x33]->get()) | (cfg_get(15)&~regs[0x33]->get()))&0x80;
+  if (a==0x3f || a==0x41) return 0;
   if (a==0 || a==1 || a==8 || a==0xe0 || a==0xe1 || a==0xe8 || a==0xe9 || a==0xf0 || a==0xf1)
     return gpio(a);
+  if ((a==0x44 || a==0x45) && (regs[0x46]->get()&0x10)) regs[0x4f]->set(0);
+  if (a>=0x50 && a<=0x5f && (regs[0x46]->get()&0x10) && !(regs[0x40]->get()&(1<<((a-0x50)/2))))
+    regs[0x4e]->set(regs[0x4e]->get()&~(1<<((a-0x50)/2)));
+  if (a==0xdb) spi_armed |= cell->get();
+  if (a==0xdd && (spi_armed&0x80)) {
+    regs[0xdb]->set(regs[0xdb]->get()&~0x80); spi_armed &= ~0x80;
+  }
   if (a==0x8f) return cfg_get(16) & regs[0x8d]->get();
   if (a==0x8b) adc_armed |= cell->get();
   if (a>=0x90 && a<=0x9f) {
@@ -182,7 +213,66 @@ void xt_boot_hw::write(cl_memory_cell *cell, t_mem *v) {
   if (a>=0x1800) { unsupported(a, "CPU flash write"); *v=cell->get(); return; }
   if (!supported(a)) { unsupported(a, "write"); *v=cell->get(); return; }
   unsigned old= cell->get();
-  if (a>=0x82 && a<=0x84) {
+  if (a==0x32 || a==0x33) {
+    *v &= 0x80;
+  } else if (a==0x3b) {
+    *v &= 0x7f; rti_phase=0;
+  } else if (a==0x3c) {
+    if (cop_written) *v=old;
+    else { *v &= 0xc7; cop_written=true; cop_elapsed=0; cop_armed=false; }
+  } else if (a==0x3f) {
+    unsigned rate=regs[0x3c]->get()&7;
+    if (rate) {
+      static unsigned shifts[]={0,14,16,18,20,22,23,24};
+      unsigned period=1u<<shifts[rate];
+      if ((*v!=0x55 && *v!=0xaa) || ((regs[0x3c]->get()&0x80) && cop_elapsed<period*3/4))
+        unsupported(a,"COP reset request (invalid service)");
+      else if (*v==0x55) cop_armed=true;
+      else if (cop_armed) { cop_elapsed=0; cop_armed=false; ++cop_services; }
+    }
+    *v=0;
+  } else if (a==0x41) {
+    for (unsigned n=0;n<8;++n) if ((*v&regs[0x40]->get())&(1<<n)) timer_compare(n);
+    *v=0; // Forced compare does not set an interrupt flag.
+  } else if (a==0x44 || a==0x45) {
+    if (regs[0x46]->get()&0x10) regs[0x4f]->set(0);
+    *v=old; // TCNT is read-only in normal mode.
+  } else if (a==0x46) {
+    *v &= 0xf0;
+  } else if (a==0x4d) {
+    *v &= 0x8f;
+  } else if (a==0x4e || a==0x4f) {
+    *v=old & ~(*v & (a==0x4e ? 255 : 128));
+  } else if (a>=0x50 && a<=0x5f) {
+    unsigned bit=1<<((a-0x50)/2);
+    if (!(regs[0x40]->get()&bit)) *v=old;
+    else if (regs[0x46]->get()&0x10) regs[0x4e]->set(regs[0x4e]->get()&~bit);
+  } else if (a==0xcc || a==0xcd || a==0xce || a==0xd4 || a==0xd5) {
+    *v=old; // Idle SCI status / receive data. No serial peer is attached.
+  } else if (a==0xcf || a==0xd7) {
+    unsupported(a,"SCI transmit (no serial transfer model)"); *v=old;
+  } else if (a==0xcb || a==0xd3) {
+    if (*v&0xd3) { unsupported(a,"SCI interrupt/break/wakeup mode"); *v=old; }
+  } else if (a==0xca || a==0xd2) {
+    if (*v&0x93) { unsupported(a,"SCI framing/loop mode"); *v=old; }
+  } else if (a==0xd8) {
+    if ((*v&0x40) && !(*v&0x10)) { unsupported(a,"SPI slave mode"); *v=old; return; }
+    if (!(*v&0x40)) { spi_left=0; spi_queued=false; spi_armed=0; regs[0xdb]->set(0x20); }
+  } else if (a==0xd9) {
+    if (*v) { unsupported(a,"SPI mode configuration"); *v=old; }
+  } else if (a==0xda) {
+    *v &= 0x77;
+  } else if (a==0xdb) {
+    *v=old;
+  } else if (a==0xdd) {
+    if ((regs[0xd8]->get()&0x50)==0x50 && (regs[0xdb]->get()&0x20) && (spi_armed&0x20)) {
+      spi_armed &= ~0x20;
+      regs[0xdb]->set(regs[0xdb]->get()&~0x20);
+      if (!spi_left) spi_begin(*v);
+      else { spi_pending=*v; spi_queued=true; }
+    }
+    *v=old; // Separate receive data and transmit buffer share the address.
+  } else if (a>=0x82 && a<=0x84) {
     if (a==0x82 && (*v&0x04)) { unsupported(a,"external ATD trigger configuration"); *v=old; return; }
     adc_running=false;
     regs[0x86]->set(regs[0x86]->get()&~0x20);
@@ -230,6 +320,9 @@ void xt_boot_hw::write(cl_memory_cell *cell, t_mem *v) {
 int xt_boot_hw::tick(int cycles) {
   if (fault) return 0;
   adc_tick(cycles);
+  timer_tick(cycles);
+  spi_tick(cycles);
+  clock_tick(cycles);
   if (pll_delay && (regs[0x3a]->get()&0x40)) {
     if (unsigned(cycles)>=pll_delay) { pll_delay=0; regs[0x37]->set(regs[0x37]->get()|0x1c); }
     else pll_delay-=cycles;
@@ -255,17 +348,21 @@ void xt_boot_hw::print_info(cl_console_base *con) {
   con->dd_printf("ADC_BUSY=%u ADC_SLOT=%u ADC_CONVERSIONS=%u ADC_SEQUENCES=%u SCF=%u CCF=%02x IRQ_COUNT=%u IRQ_VECTOR=%04x\n",
     adc_running, adc_slot, adc_conversions, adc_sequences, (regs[0x86]->get()>>7)&1,
     unsigned(regs[0x8b]->get()), irq_count, irq_vector);
+  con->dd_printf("TCNT=%u TIMER_OUT=%02x CAPTURES=%u COMPARES=%u RTI_EVENTS=%u COP_SERVICES=%u SPI_BYTES=%u SPI_DROPPED=%u\n",
+    word(0x44), timer_output, timer_edges, timer_matches, rti_events, cop_services, spi_count, spi_dropped);
 }
 
 
 const char *xt_boot_hw::cfg_help(t_addr a) {
   if (a>=1 && a<=8) return "Raw ADC channel 0..7: integer 0..1023";
-  if (a>=9) return "Driven GPIO input byte: PA, PB, PE, PT, PS, PP, reserved, PTAD";
+  if (a==17) return "SPI external MISO byte (default 255: pulled-high disconnected bus)";
+  if (a==18) return "SPI fixture: 0 external byte, 1 internal test loopback (not EEPROM)";
+  if (a>=9) return "Driven GPIO input byte: PA, PB, PE, PT, PS, PP, PK7, PTAD";
   return "XT660 fixture configuration";
 }
 t_mem xt_boot_hw::conf_op(cl_memory_cell *cell, t_addr a, t_mem *v) {
   if (v && a) {
-    unsigned max= a<=8 ? 1023 : 255;
+    unsigned max= a<=8 ? 1023 : a==18 ? 1 : 255;
     if (*v>max) {
       fprintf(stderr,"XT660 fixture input %u outside 0..%u; unchanged\n",unsigned(a),max);
       *v=cell->get();
@@ -286,6 +383,7 @@ unsigned xt_boot_hw::gpio(unsigned a) {
   if (a==8) direction &= 0xfc; // PE0/PE1 are input-only.
   unsigned pins=(regs[base]->get()&direction) | (cfg_get(fixture)&~direction);
   // PTI registers observe the driven pin level too, including output pins.
+  if (base==0xe0) pins=timer_pins(pins);
   return pins & 255;
 }
 void xt_boot_hw::adc_flags(void) {
@@ -354,13 +452,122 @@ void xt_boot_hw::adc_tick(unsigned cycles) {
   }
 }
 unsigned xt_boot_hw::pending_vector(void) {
-  bool atd=(regs[0x82]->get()&2) && (regs[0x86]->get()&0x80);
-  bool modulus=(regs[0x66]->get()&0x80) && (regs[0x67]->get()&0x80);
-  // HPRIO may promote a pending source; otherwise the higher vector wins.
-  unsigned highest=regs[0x1f]->get();
-  if (highest==0xca && modulus) return 0xffca;
-  if (atd) return 0xffd2;
-  return modulus ? 0xffca : 0;
+  unsigned selected=0, promoted=0xff00|regs[0x1f]->get();
+  auto consider=[&](unsigned vector, bool pending) {
+    if (pending && (vector==promoted || (selected!=promoted && vector>selected))) selected=vector;
+  };
+  consider(0xfff0, regs[0x38]->get()&regs[0x37]->get()&0x80);
+  for (unsigned n=0;n<8;++n) consider(0xffee - 2*n, regs[0x4c]->get()&regs[0x4e]->get()&(1<<n));
+  consider(0xffde, regs[0x4d]->get()&regs[0x4f]->get()&0x80);
+  consider(0xffd8, ((regs[0xd8]->get()&0x80) && (regs[0xdb]->get()&0x80)) ||
+                    ((regs[0xd8]->get()&0x20) && (regs[0xdb]->get()&0x20)));
+  consider(0xffd2, (regs[0x82]->get()&2) && (regs[0x86]->get()&0x80));
+  consider(0xffca, regs[0x66]->get()&regs[0x67]->get()&0x80);
+  consider(0xffc6, regs[0x38]->get()&regs[0x37]->get()&0x10);
+  return selected;
+}
+
+
+unsigned xt_boot_hw::timer_pins(unsigned pins) {
+  unsigned connected=regs[0x42]->get()&regs[0x40]->get();
+  for (unsigned n=0;n<8;++n) {
+    unsigned mode=(regs[n<4?0x49:0x48]->get()>>(2*(n%4)))&3;
+    if (mode && (regs[0x40]->get()&(1<<n))) connected|=1<<n;
+  }
+  return (pins&~connected)|(timer_output&connected);
+}
+void xt_boot_hw::timer_compare(unsigned n) {
+  unsigned bit=1<<n, mode=(regs[n<4?0x49:0x48]->get()>>(2*(n%4)))&3;
+  if (!(regs[0x42]->get()&bit)) {
+    if (mode==1) timer_output^=bit;
+    if (mode==2) timer_output&=~bit;
+    if (mode==3) timer_output|=bit;
+  }
+  if (n==7) {
+    unsigned mask=regs[0x42]->get()&regs[0x40]->get();
+    timer_output=(timer_output&~mask)|(regs[0x43]->get()&mask);
+  }
+}
+void xt_boot_hw::timer_tick(unsigned cycles) {
+  unsigned pins=gpio(0xe0), changed=pins^last_pt;
+  if (regs[0x46]->get()&0x80) {
+    for (unsigned n=0;n<8;++n) {
+      unsigned bit=1<<n, edge=(regs[n<4?0x4b:0x4a]->get()>>(2*(n%4)))&3;
+      if (!(regs[0x40]->get()&bit) && (changed&bit) &&
+          ((edge==3) || (edge==1 && (pins&bit)) || (edge==2 && !(pins&bit)))) {
+        set_word(0x50+2*n,word(0x44));
+        regs[0x4e]->set(regs[0x4e]->get()|bit); ++timer_edges;
+      }
+    }
+    unsigned divisor=1u<<(regs[0x4d]->get()&7);
+    timer_phase+=cycles;
+    while (timer_phase>=divisor) {
+      timer_phase-=divisor;
+      unsigned counter=(word(0x44)+1)&65535;
+      bool reset7=(regs[0x4d]->get()&8) && (regs[0x40]->get()&0x80);
+      if (reset7 && word(0x5e)==0) counter=0;
+      if (!counter && !(reset7 && word(0x5e)==0)) {
+        regs[0x4f]->set(regs[0x4f]->get()|0x80);
+        timer_output ^= regs[0x47]->get()&regs[0x40]->get();
+      }
+      for (unsigned n=0;n<8;++n) {
+        if ((regs[0x40]->get()&(1<<n)) && counter==word(0x50+2*n)) {
+          regs[0x4e]->set(regs[0x4e]->get()|(1<<n));
+          timer_compare(n); ++timer_matches;
+        }
+      }
+      if (reset7 && counter==word(0x5e)) counter=0;
+      set_word(0x44,counter);
+    }
+  }
+  last_pt=pins;
+}
+void xt_boot_hw::clock_tick(unsigned cycles) {
+  // OSCCLK is independent of the PLL-derived bus clock. Keep the rational
+  // relationship; no assumed oscillator MHz or invented wall-clock speed.
+  unsigned numerator=1, denominator=2;
+  if (regs[0x39]->get()&0x80) {
+    numerator=(regs[0x34]->get()&0x3f)+1;
+    denominator=(regs[0x35]->get()&0x0f)+1;
+  }
+  osc_phase+=cycles*denominator;
+  unsigned clocks=osc_phase/numerator; osc_phase%=numerator;
+  unsigned scale=(regs[0x3b]->get()>>4)&7;
+  if (scale) {
+    unsigned period=((regs[0x3b]->get()&15)+1)*(1u<<(9+scale));
+    rti_phase+=clocks;
+    while (rti_phase>=period) {
+      rti_phase-=period; ++rti_events;
+      regs[0x37]->set(regs[0x37]->get()|0x80);
+    }
+  }
+  unsigned rate=regs[0x3c]->get()&7;
+  if (rate) {
+    static unsigned shifts[]={0,14,16,18,20,22,23,24};
+    cop_elapsed+=clocks;
+    if (cop_elapsed>=(1u<<shifts[rate])) unsupported(0x3f,"COP timeout reset request");
+  }
+}
+void xt_boot_hw::spi_begin(unsigned value) {
+  unsigned baud=regs[0xda]->get();
+  spi_tx=value&255;
+  spi_left=8*(((baud>>4)&7)+1)*(2u<<(baud&7));
+  regs[0xdb]->set(regs[0xdb]->get()|0x20);
+}
+void xt_boot_hw::spi_tick(unsigned cycles) {
+  while (spi_left && cycles) {
+    unsigned elapsed=cycles<spi_left ? cycles : spi_left;
+    spi_left-=elapsed; cycles-=elapsed;
+    if (!spi_left) {
+      unsigned value=cfg_get(18)==1 ? spi_tx : cfg_get(17);
+      ++spi_count;
+      if (!(regs[0xdb]->get()&0x80)) {
+        regs[0xdd]->set(value);
+        regs[0xdb]->set(regs[0xdb]->get()|0x80);
+      } else ++spi_dropped; // Unread receive buffer retains its first byte.
+      if (spi_queued) { spi_queued=false; spi_begin(spi_pending); }
+    }
+  }
 }
 
 class xt_sim: public cl_sim {
