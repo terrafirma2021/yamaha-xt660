@@ -67,7 +67,7 @@ function render(s){
  $('key').setAttribute('aria-pressed',String(powered));$('key').setAttribute('aria-label','Turn ignition key '+(powered?'off':'on'));text('keyLabel',powered?'KEY ON':'KEY OFF');
  $('runSwitch').setAttribute('aria-pressed',String(b.run));text('runLabel',b.run?'ON':'STOP');
  $('key').title='Turn ignition key '+(powered?'off':'on');
- $('runSwitch').setAttribute('aria-label','Engine run switch: '+(b.run?'on':'stop'));$('runSwitch').title=b.run?'Engine run switch: on. Click to stop':'Engine run switch: stop. Click to run';
+ $('runSwitch').setAttribute('aria-label','Engine run switch: '+(b.run?'on, lower end pressed':'stop, upper end pressed'));$('runSwitch').title=b.run?'Run · lower end pressed. Click to stop':'Stop · upper end pressed. Click to run';
  $('starter').setAttribute('aria-pressed',String(b.starting));
  $('neutral').setAttribute('aria-pressed',String(!b.gear));$('inGear').setAttribute('aria-pressed',String(!!b.gear));
  $('gear').textContent=powered?(b.gear?'1':'N'):'—';$('gear').parentElement.classList.toggle('engaged',!!b.gear);
@@ -131,7 +131,19 @@ function pause(){paused=true;clearTimeout(timer);if(state)render(state);}
 const control=(name,value)=>act('control',{name,value});
 $('load').onclick=async()=>{const image=$('image').value;pause();await act('load',{image});};
 $('key').onclick=async()=>{const enabled=!state.bike.powered;pause();$('key').dataset.turning=enabled?'on':'off';try{if(await act('key',{enabled,wrong_key:$('wrongKey').checked}))if(enabled)resume();}finally{delete $('key').dataset.turning;}};
-$('runSwitch').onclick=()=>control('run',!state.bike.run);
+$('runSwitch').onclick=async event=>{
+ if(busy)return;
+ const button=$('runSwitch');let enabled=!state.bike.run;
+ if(event.detail){
+  // Project the pointer onto the rocker's local long axis, including its photo rotation.
+  const box=button.getBoundingClientRect(),matrix=new DOMMatrix(getComputedStyle(button).transform);
+  const along=(event.clientX-box.x-box.width/2)*matrix.c+(event.clientY-box.y-box.height/2)*matrix.d;
+  if(Math.abs(along)>button.offsetHeight*.15)enabled=along>0;
+ }
+ if(enabled===state.bike.run)return;
+ button.dataset.turning=enabled?'run':'stop';
+ try{await control('run',enabled);}finally{delete button.dataset.turning;}
+};
 $('starter').onclick=async()=>{if(await act('start'))resume();};
 $('neutral').onclick=()=>control('gear',0);$('inGear').onclick=()=>control('gear',1);
 $('throttle').oninput=()=>$('throttleValue').textContent=$('throttle').value+'%';$('throttle').onchange=()=>control('throttle',Number($('throttle').value));

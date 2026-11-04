@@ -68,22 +68,37 @@ select{max-width:100%;min-width:0}
 .physical,.physical:hover:not(:disabled),.physical[aria-pressed=true]{position:absolute;padding:0;border:0;background:transparent;box-shadow:none;appearance:none;outline-offset:2px;-webkit-tap-highlight-color:transparent}
 .physical:disabled{opacity:1;cursor:default}
 .physical:focus-visible{outline:2px solid #d3e7ff}
-.key{left:46.45%;top:50.55%;width:7.5%;aspect-ratio:1;border-radius:50%;overflow:visible}
+.key{left:50.2%;top:60.6%;width:6%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;overflow:visible}
 .key::after{content:"";position:absolute;inset:-12px -14px;border-radius:50%;background:transparent}
-.key-photo{display:block;width:100%;height:100%;pointer-events:none;user-select:none;transform-origin:50% 89.5%;transform:rotate(-28deg);filter:drop-shadow(.15cqw .35cqw .2cqw #0009);transition:transform .32s cubic-bezier(.2,.7,.25,1),filter .15s}
-.key[aria-pressed=true] .key-photo,.key[data-turning=on] .key-photo{transform:rotate(28deg)}
-.key[data-turning=off] .key-photo{transform:rotate(-28deg)}
-.key:hover:not(:disabled) .key-photo{filter:brightness(1.1) drop-shadow(.15cqw .35cqw .2cqw #0009)}
-.run-switch{left:87.65%;top:59.7%;width:6.4%;height:10.8%;border-radius:22%;perspective:30cqw}
-.rocker-photo{display:block;width:100%;height:100%;background:url('/cockpit.png') no-repeat -87.65cqw -39.8cqw/100cqw auto;clip-path:polygon(36% 3%,95% 26%,72% 96%,2% 74%);transform-origin:50% 50%;transition:transform .2s,filter .2s;pointer-events:none}
-.run-switch[aria-pressed=false] .rocker-photo{transform:rotateX(-24deg) translateY(.18cqw);filter:brightness(.7)}
-.run-switch:hover:not(:disabled) .rocker-photo{filter:brightness(1.12)}
-.run-switch:active:not(:disabled) .rocker-photo{transform:rotateX(14deg)}
+.key-core{position:absolute;left:50%;top:50%;width:3.2cqw;height:3.2cqw;translate:-50% -50%;border-radius:50%;background:url('/cockpit.png') no-repeat -48.6cqw -38.8cqw/100cqw auto;transform:rotate(0deg);transition:transform .32s cubic-bezier(.2,.7,.25,1);pointer-events:none}
+.key-photo{display:block;width:100%;height:100%;pointer-events:none;user-select:none;transform-origin:50% 50%;transform:rotate(90deg);filter:drop-shadow(.1cqw .2cqw .13cqw #000a);transition:transform .32s cubic-bezier(.2,.7,.25,1),filter .15s}
+.key[aria-pressed=true] .key-core,.key[data-turning=on] .key-core{transform:rotate(55deg)}
+.key[data-turning=off] .key-core{transform:rotate(0deg)}
+.key[aria-pressed=true] .key-photo,.key[data-turning=on] .key-photo{transform:rotate(145deg)}
+.key[data-turning=off] .key-photo{transform:rotate(90deg)}
+.key:hover:not(:disabled) .key-photo{filter:brightness(1.1) drop-shadow(.1cqw .2cqw .13cqw #000a)}
+/* Fixed recess hides the backdrop's rocker; the red part pivots across its centre. */
+.run-switch{left:90.95%;top:65.3%;width:4.35%;height:9.3%;transform:translate(-50%,-50%) rotate(20deg);border-radius:.65cqw;perspective:14cqw;perspective-origin:50% -70%}
+.rocker-well{position:absolute;inset:0;border-radius:.65cqw;background:linear-gradient(100deg,#07080b,#202127 45%,#050609);box-shadow:inset .12cqw .12cqw .25cqw #000,0 .12cqw .2cqw #000c;pointer-events:none}
+.rocker-pivot{position:absolute;inset:.35cqw .35cqw;transform-style:preserve-3d;transform-origin:50% 50%;transform:translateZ(.3cqw) rotateX(-32deg);transition:transform .22s cubic-bezier(.25,.7,.25,1);pointer-events:none}
+.rocker-face{position:absolute;inset:0;overflow:hidden;border-radius:.35cqw;background:#b01524;box-shadow:inset .08cqw 0 .08cqw #ff9ca47a,inset -.09cqw 0 .1cqw #480610}
+.rocker-face::before{content:"";position:absolute;left:50%;top:50%;width:6.8cqw;height:8cqw;background:url('/cockpit.png') no-repeat -87.55cqw -39.533cqw/100cqw auto;transform:translate(-50%,-50%) rotate(-20deg)}
+.rocker-face::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(#ffb0ba50,transparent 38%,#38030d50);transition:transform .22s;box-shadow:inset 0 .1cqw .1cqw #f68b98b0,inset 0 -.1cqw .1cqw #4e0815}
+.rocker-stop-mark,.rocker-run-mark{position:absolute;left:50%;z-index:1;transform:translateX(-50%);opacity:.82}
+.rocker-stop-mark{top:14%;width:.7cqw;height:.7cqw;border:.12cqw solid #ffe4e3;border-radius:50%}
+.rocker-run-mark{bottom:14%;width:.13cqw;height:.75cqw;background:#ffe4e3;border-radius:.05cqw}
+.rocker-end{position:absolute;left:0;width:100%;height:.7cqw;background:linear-gradient(#b92936,#550713);border-radius:.2cqw;transform-origin:50% 0;transform:rotateX(-90deg)}
+.rocker-top{top:0}
+.rocker-bottom{top:100%;background:linear-gradient(#a82430,#440610)}
+.run-switch[aria-pressed=false] .rocker-pivot,.run-switch[data-turning=stop] .rocker-pivot{transform:translateZ(.3cqw) rotateX(32deg)}
+.run-switch[data-turning=run] .rocker-pivot{transform:translateZ(.3cqw) rotateX(-32deg)}
+.run-switch[aria-pressed=false] .rocker-face::after,.run-switch[data-turning=stop] .rocker-face::after{transform:rotate(180deg)}
+.run-switch[data-turning=run] .rocker-face::after{transform:none}
 .starter{left:85.9%;top:70.6%;width:6.1%;height:8.8%;border-radius:50%}
 .starter-plunger{position:absolute;left:23%;top:26%;width:54%;aspect-ratio:1;border-radius:50%;background:url('/cockpit.png') no-repeat -87.303cqw -48.592cqw/100cqw auto;transition:transform .1s,filter .1s;pointer-events:none}
 .starter:active:not(:disabled) .starter-plunger,.starter[aria-pressed=true] .starter-plunger{transform:scale(.92);filter:brightness(.65)}
 .starter:hover:not(:disabled) .starter-plunger{filter:brightness(1.2)}
-@media(prefers-reduced-motion:reduce){.key-photo,.rocker-photo,.starter-plunger{transition:none}}
+@media(prefers-reduced-motion:reduce){.key-photo,.key-core,.rocker-pivot,.rocker-face::after,.starter-plunger{transition:none}}
 .engine-badge{position:absolute;bottom:5%;left:34%;width:32%;text-align:center;padding:8px;border:1px solid #6b83944f;border-radius:5px;background:#060b13ce;color:#bbd2e5;letter-spacing:2px;font-size:.9cqw}
 .rider-controls{padding:18px;display:flex;align-items:center;gap:20px;color:#dfeaff;border-top:1px solid #283546}
 .gear-controls{display:flex;gap:6px}

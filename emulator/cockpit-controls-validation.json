@@ -2,7 +2,7 @@
   "status": "passed",
   "date": "2026-11-04",
   "runtime": "Local Chrome / Playwright with actual emulator server",
-  "scope": "Photographic cockpit controls and existing key/run/starter actions; no hardware validation",
+  "scope": "Top-down ignition artwork, lock rotation and rocker geometry/input; angles are illustrative; no hardware validation",
   "firmware": "xt660-2c1-10",
   "viewports": [
     [
@@ -18,54 +18,31 @@
     "dark",
     "light"
   ],
+  "inventory": [
+    "Key top edge centred over barrel in both positions",
+    "Rocker centre pivot, opposite ends depressed; fixed recess does not move",
+    "Key/run/start controls still operate actual emulator; round trip",
+    "Mobile hit areas and both themes",
+    "Reduced motion",
+    "Failed command restores acknowledged position"
+  ],
   "checks": [
-    "Run rocker keyboard activation changes the actual external run control",
-    {
-      "check": "Starter depresses while ECU cranks",
-      "transform": "matrix(0.92, 0, 0, 0.92, 0, 0)"
-    },
-    "Starter starts the unchanged ECU through the existing request; plunger releases after firing",
-    "Turning the key off by keyboard powers down the ECU",
-    {
-      "check": "Failed key request returns visual to acknowledged OFF state",
-      "powered": "false"
-    },
-    {
-      "check": "Reduced-motion setting respected",
-      "transition": "0s"
-    },
-    "390px phone: run switch and starter have separate hit areas; stop/run/start work and no horizontal overflow",
-    {
-      "check": "Transparent photo controls stay visible; starter disabled with key off",
-      "controls": [
-        {
-          "id": "key",
-          "disabled": false,
-          "background": "rgba(0, 0, 0, 0)",
-          "opacity": "1"
-        },
-        {
-          "id": "runSwitch",
-          "disabled": true,
-          "background": "rgba(0, 0, 0, 0)",
-          "opacity": "1"
-        },
-        {
-          "id": "starter",
-          "disabled": true,
-          "background": "rgba(0, 0, 0, 0)",
-          "opacity": "1"
-        }
-      ]
-    },
-    "Local key asset served as image/png"
+    "Upper rocker end selects Stop; lower end selects Run; both settle at opposite 32-degree angles",
+    "Actual ECU key-on, Run and Start reach ENGINE RUNNING",
+    "Keyboard Space toggles Stop and Run",
+    "Failed rocker request returns to acknowledged Run position",
+    "Rocker housing stays fixed across both positions",
+    "Key, lock core and rocker respect reduced motion",
+    "390px layout: separate rocker/starter hit areas, lower-end Run selection and actual engine start, no horizontal overflow",
+    "Key-off returns key and lock slot to initial position; starter stays disabled",
+    "Failed key command restores both key and lock core to OFF",
+    "Top-view key and lock slot rotate together by 55 degrees around the barrel centre; intermediate and final positions inspected"
   ],
   "browser_errors": [],
   "sources": {
-    "emulator/dashboard.py": "accfc9b86be59a53bae4aed0f660da9c7125cce75d96d74fc35bddba332a5932",
-    "emulator/web/dashboard.html": "2518ee68476bfbee0af641991c5e3c130cb7e12c134237512c23b3b6abd60fbc",
-    "emulator/web/dashboard.css": "89919095b123bea4c5f1b1125c1b96a096477eb0ff18878bb76a94a8eef04079",
-    "emulator/web/dashboard.js": "24e7c80acde7d6ec9afeffbdec4075e027b3277d7554f156c5305065aed3873f",
-    "emulator/web/ignition-key.png": "74e68c7f5840f8274be7e9cbdfe3bfdaae14f937fa85042953da7a8358b71e35"
+    "emulator/web/dashboard.html": "e7b72261a514e19d7c12f60e31468ecd2256563fdfa76323b6146c8810a695be",
+    "emulator/web/dashboard.css": "8a3b3a5d53f3c12bcd0e01eb524097cabaa440f12cd1a6dd187c37873f863657",
+    "emulator/web/dashboard.js": "d85969ce02b87d69dac65285aec6fd4dc3045d010e9c7b9b9c8ead4816f1c03f",
+    "emulator/web/ignition-key.png": "27e48bcfd34d857fc7de894e043fec1aed83731dacd751b0418777086b39b1c6"
   }
 }
