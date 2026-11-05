@@ -30,10 +30,11 @@
     "coil_falls",
     "normal_after_diag",
     "tps",
-    "tps_fault_reply"
+    "tps_fault_reply",
+    "dynamics"
   ],
-  "reference_report_sha256": "f6e2ada2f66c83509b996bcac5ef8280bb539c3b3b79ade18bc0e60d395e2cf2",
-  "execution_report_sha256": "48b325ea9e60beb1d14bf702e171751a69138b452101ffe094e3e8e7bf268b8c",
+  "reference_report_sha256": "8953cbc2d909b93fe7ff81d6fdde3ff89fb142e0d7e2f22c1a8a9130223f84d2",
+  "execution_report_sha256": "0a625ea08de2ce11c724e7ae08bb160a28722b8699187564e19281086e0aaf98",
   "execution": [
     {
       "image": "xt660-2004-2006-companion",
@@ -43,22 +44,52 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.032792,
+          "simulated_seconds": 2.029015375,
           "throttle": 0,
-          "unpaced_ratio": 1.1418525372082327,
-          "wall_seconds": 1.7802579
+          "unpaced_ratio": 1.1433651709377148,
+          "wall_seconds": 1.7745996
         },
         {
-          "simulated_seconds": 2.000995,
+          "simulated_seconds": 2.006836625,
           "throttle": 100,
-          "unpaced_ratio": 1.1211145733212724,
-          "wall_seconds": 1.7848265
+          "unpaced_ratio": 1.12251125651062,
+          "wall_seconds": 1.7878098
         },
         {
-          "simulated_seconds": 2.0417539375,
+          "simulated_seconds": 1.9862315625,
           "throttle": 0,
-          "unpaced_ratio": 1.139770981975213,
-          "wall_seconds": 1.7913721
+          "unpaced_ratio": 1.099376512815625,
+          "wall_seconds": 1.8066891
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 120,
+          "cut_resumes": 119,
+          "first_cut_seconds": 1.1363145,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1424.505680528322,
+          "idle_min_rpm": 1375.6313102038237,
+          "longest_cut_ms": 33.0139375,
+          "longest_injection_gap_ms": 49.2870625,
+          "longest_spark_gap_ms": 41.0853125,
+          "peak_rpm": 7345.808318591072
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 112,
+          "cut_resumes": 111,
+          "first_cut_seconds": 2.401268625,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1424.505680528322,
+          "idle_min_rpm": 1375.6313102038237,
+          "longest_cut_ms": 33.259875,
+          "longest_injection_gap_ms": 49.3225,
+          "longest_spark_gap_ms": 41.074875,
+          "peak_rpm": 7328.194139962817
         }
       ]
     },
@@ -70,22 +101,52 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.002018375,
+          "simulated_seconds": 2.000285375,
           "throttle": 0,
-          "unpaced_ratio": 1.0769838268854226,
-          "wall_seconds": 1.8589122
+          "unpaced_ratio": 1.104941835045445,
+          "wall_seconds": 1.8103083
         },
         {
-          "simulated_seconds": 1.9634223125,
+          "simulated_seconds": 1.9718625625,
           "throttle": 100,
-          "unpaced_ratio": 1.0709232970404967,
-          "wall_seconds": 1.8333921
+          "unpaced_ratio": 1.0963126426223135,
+          "wall_seconds": 1.7986316
         },
         {
-          "simulated_seconds": 2.0008464375,
+          "simulated_seconds": 1.9485658125,
           "throttle": 0,
-          "unpaced_ratio": 1.0903772125497935,
-          "wall_seconds": 1.8350039
+          "unpaced_ratio": 1.0838829257409246,
+          "wall_seconds": 1.7977641
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.097400625,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.2722774399112,
+          "idle_min_rpm": 1375.0800339358473,
+          "longest_cut_ms": 82.2758125,
+          "longest_injection_gap_ms": 98.182,
+          "longest_spark_gap_ms": 81.7494375,
+          "peak_rpm": 7427.754119673933
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3007939375,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.2722774399112,
+          "idle_min_rpm": 1375.0800339358473,
+          "longest_cut_ms": 98.531375,
+          "longest_injection_gap_ms": 114.2975,
+          "longest_spark_gap_ms": 98.0945,
+          "peak_rpm": 7373.062438521648
         }
       ]
     },
@@ -97,22 +158,52 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.002018375,
+          "simulated_seconds": 2.0002834375,
           "throttle": 0,
-          "unpaced_ratio": 1.1199973723379748,
-          "wall_seconds": 1.7875206
+          "unpaced_ratio": 1.1134188355868149,
+          "wall_seconds": 1.7965238
         },
         {
-          "simulated_seconds": 1.9634223125,
+          "simulated_seconds": 1.9718481875,
           "throttle": 100,
-          "unpaced_ratio": 1.088504616279318,
-          "wall_seconds": 1.8037795
+          "unpaced_ratio": 1.1036225715915529,
+          "wall_seconds": 1.7867052
         },
         {
-          "simulated_seconds": 2.0008464375,
+          "simulated_seconds": 1.9485448125,
           "throttle": 0,
-          "unpaced_ratio": 1.1074524024594967,
-          "wall_seconds": 1.806711
+          "unpaced_ratio": 1.0947833061549397,
+          "wall_seconds": 1.7798452
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.0974078125,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.292761298776,
+          "idle_min_rpm": 1375.0700680492514,
+          "longest_cut_ms": 82.2745625,
+          "longest_injection_gap_ms": 98.1551875,
+          "longest_spark_gap_ms": 81.7915625,
+          "peak_rpm": 7427.891218799949
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.300544,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.292761298776,
+          "idle_min_rpm": 1375.0700680492514,
+          "longest_cut_ms": 98.7795625,
+          "longest_injection_gap_ms": 114.3748125,
+          "longest_spark_gap_ms": 98.13475,
+          "peak_rpm": 7373.02990800891
         }
       ]
     },
@@ -124,22 +215,52 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.0019554375,
+          "simulated_seconds": 2.0002481875,
           "throttle": 0,
-          "unpaced_ratio": 1.0910476282320143,
-          "wall_seconds": 1.8348928
+          "unpaced_ratio": 1.120965208100143,
+          "wall_seconds": 1.7843981
         },
         {
-          "simulated_seconds": 1.963632,
+          "simulated_seconds": 1.972026875,
           "throttle": 100,
-          "unpaced_ratio": 1.0983396190195136,
-          "wall_seconds": 1.7878186
+          "unpaced_ratio": 1.1051328940620708,
+          "wall_seconds": 1.7844251
         },
         {
-          "simulated_seconds": 2.00079075,
+          "simulated_seconds": 1.9486160625,
           "throttle": 0,
-          "unpaced_ratio": 1.1031142280394872,
-          "wall_seconds": 1.8137657
+          "unpaced_ratio": 1.0972174525057299,
+          "wall_seconds": 1.7759616
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.097307,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.3164104341784,
+          "idle_min_rpm": 1375.0589776919887,
+          "longest_cut_ms": 82.0274375,
+          "longest_injection_gap_ms": 98.160125,
+          "longest_spark_gap_ms": 81.782375,
+          "peak_rpm": 7427.912923636059
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3004583125,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.3164104341784,
+          "idle_min_rpm": 1375.0589776919887,
+          "longest_cut_ms": 98.2825625,
+          "longest_injection_gap_ms": 114.37425,
+          "longest_spark_gap_ms": 98.134,
+          "peak_rpm": 7373.020248611479
         }
       ]
     },
@@ -151,22 +272,52 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.002018375,
+          "simulated_seconds": 2.000285375,
           "throttle": 0,
-          "unpaced_ratio": 1.0967497964704156,
-          "wall_seconds": 1.8254103
+          "unpaced_ratio": 1.0722186742803341,
+          "wall_seconds": 1.8655573
         },
         {
-          "simulated_seconds": 1.9634223125,
+          "simulated_seconds": 1.9718625625,
           "throttle": 100,
-          "unpaced_ratio": 1.0910385667248022,
-          "wall_seconds": 1.7995902
+          "unpaced_ratio": 1.0693770154579134,
+          "wall_seconds": 1.8439358
         },
         {
-          "simulated_seconds": 2.0008464375,
+          "simulated_seconds": 1.9485658125,
           "throttle": 0,
-          "unpaced_ratio": 1.1087725253675424,
-          "wall_seconds": 1.8045599
+          "unpaced_ratio": 1.0605057919294234,
+          "wall_seconds": 1.8373929
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.097400625,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.2722774399112,
+          "idle_min_rpm": 1375.0800339358473,
+          "longest_cut_ms": 82.2758125,
+          "longest_injection_gap_ms": 98.182,
+          "longest_spark_gap_ms": 81.7494375,
+          "peak_rpm": 7427.754119673933
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3007939375,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.2722774399112,
+          "idle_min_rpm": 1375.0800339358473,
+          "longest_cut_ms": 98.531375,
+          "longest_injection_gap_ms": 114.2975,
+          "longest_spark_gap_ms": 98.0945,
+          "peak_rpm": 7373.062438521648
         }
       ]
     }
@@ -243,7 +394,7 @@
       "errors": [],
       "onlyStaticRequests": true,
       "hotLamp": "lamp hot",
-      "celsiusUnit": "°C EST.",
+      "celsiusUnit": "\u00b0C EST.",
       "storageBytes": 512,
       "traceBytes": 324443
     },
@@ -259,7 +410,7 @@
     "date": "2026-11-04"
   },
   "artifacts": {
-    "xt660.wasm": "aaceeb865f88ed15f4821da7e603ac6f26815c2525ed56cd2f96adce1edf8aea",
+    "xt660.wasm": "321069737e8a8b522e2b6dcfd65e329211a6cfca376f19f633e1c50e99e53f56",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
   },
@@ -308,7 +459,7 @@
       "diagnosticCoolantHidden": true,
       "coolantRestored": true,
       "diagnosticExitSpeedZero": true,
-      "keyOffSpeed": "—",
+      "keyOffSpeed": "\u2014",
       "reloadCelsiusDefault": true,
       "rawCoolantToggle": true,
       "errors": [],
@@ -938,5 +1089,55 @@
     "old_wide_bar_removed": true,
     "input_and_readout_inside_scene": true,
     "errors": []
+  },
+  "dynamics": {
+    "scope": "Original ECU fuel/spark outputs drive an approximate external single-cylinder inertial plant; no ECU memory writes or host rev limiter.",
+    "source": "native/engine_plant.hpp",
+    "engine_specification": "https://global.yamaha-motor.com/news/2003/1022/tms-04.html",
+    "runnable_bins_checked": 5,
+    "load_modes": [
+      "neutral",
+      "nominal first-gear road load"
+    ],
+    "clock_hz": 16000000,
+    "power_stroke_crank_degrees": 720,
+    "fuel_edge": "PT6 low-to-high completes the active-low injector pulse",
+    "spark_edge": "PT3 high-to-low releases the charged coil",
+    "compression_phase": "Second revolution of the external pressure/CPS fixture, not a measured TDC offset",
+    "original_flash_unchanged": true,
+    "firmware_checkpoints_and_limiter_timing": "exact native/WASM match",
+    "plant_rpm_comparison_absolute_tolerance": 1e-08,
+    "not_calibrated": [
+      "crank inertia",
+      "full torque curve",
+      "injector flow and AFR",
+      "absolute spark-to-torque relationship",
+      "0-60 performance",
+      "VSS pulses per shaft revolution"
+    ],
+    "browser": {
+      "date": "2026-11-05",
+      "early_neutral": {
+        "dash_min": 7236,
+        "dash_max": 7311,
+        "plant_min": 7247.438310033248,
+        "plant_max": 7351.270966131873
+      },
+      "later_in_gear": {
+        "dash_min": 7273,
+        "dash_max": 7311,
+        "plant_min": 7277.670252069641,
+        "plant_max": 7327.134972396892,
+        "faults": [
+          0
+        ],
+        "realtime_ratio": 1.0000133890043814
+      },
+      "pause_resume": true,
+      "release_coasts": true,
+      "run_stop_spins_down": true,
+      "wrong_key_disables_starter": true,
+      "errors": []
+    }
   }
 }

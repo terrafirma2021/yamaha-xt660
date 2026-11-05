@@ -64,29 +64,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 6935863,
-          "event_count": 554,
-          "event_signature": 4607372811396145713,
+          "cycles": 17152100,
+          "event_count": 1393,
+          "event_signature": 15887407601914342213,
           "meter": [
-            24,
+            25,
             0,
             128,
             57,
-            209
+            210
           ],
           "outputs": [
             0,
             0,
             0,
-            4,
+            14,
             0,
             0,
-            6,
+            16,
             0
           ],
-          "pc": 43060,
-          "ram": "c24d6813a2601d3a66f15361dc6376b384c242c46779e72d25fd53c1d3a2ee3c",
-          "registers": "91b77323c5737276913ef5974cda28b95069da01cc400f42b53806990e58f74f",
+          "pc": 34296,
+          "ram": "c738df8c938bcbd5bf5b3b4dea8ff31e07278ecd54b665a7abd92a1ac689a6e7",
+          "registers": "88694e1f3a732143173fdad8c7c50842fe25685fd6e9ffc8f4613cc25d746574",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -94,15 +94,15 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 39460535,
-          "event_count": 4757,
-          "event_signature": 8959285945065253529,
+          "cycles": 49616346,
+          "event_count": 5355,
+          "event_signature": 6742345884630637766,
           "meter": [
-            37,
+            36,
             0,
             0,
             57,
-            94
+            93
           ],
           "outputs": [
             0,
@@ -111,12 +111,12 @@
             96,
             0,
             0,
-            58,
+            64,
             0
           ],
-          "pc": 21725,
-          "ram": "54f56ef37bf13128f7649ebe2ae01870feded71e1a2b26eaa3acae250686ef36",
-          "registers": "7f2d6f5d556910ebecc381a034895aab670fbc958d3c6e7c971c527bcfffd99d",
+          "pc": 25185,
+          "ram": "0ddba20bfa5fff459e28493519cf41b2e885e0d28ced8b8724758bcbb6729b19",
+          "registers": "8a7e9c1cd4ba225070a862abee3275a9d3af85ad03ddbf2995baeef89b51d492",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -124,29 +124,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 71476455,
-          "event_count": 17008,
-          "event_signature": 8693171968619666741,
+          "cycles": 81725732,
+          "event_count": 15695,
+          "event_signature": 6855900312110911877,
           "meter": [
-            134,
-            16,
+            169,
+            20,
             0,
             57,
-            207
+            246
           ],
           "outputs": [
             0,
             0,
             0,
-            405,
+            348,
             0,
             0,
-            213,
+            192,
             0
           ],
-          "pc": 26532,
-          "ram": "43ddb5c853130e72606e38587d04211c93ae4cdf942b80d2a9126b19161bba92",
-          "registers": "04574ad49c30d27c62ac00bd988fcb5234a538d58b2d02433a10fe0ddf4f9f22",
+          "pc": 26489,
+          "ram": "4a4859a74e5bf26cd5108787ed561e036ea87416c9cdc79f359150c4eef70521",
+          "registers": "4155a4823c92c24e0c846339064f6086a2c9ad75c37d396e00841a17b8d56582",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -154,29 +154,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 104144518,
-          "event_count": 21502,
-          "event_signature": 6924498460048028427,
+          "cycles": 113505437,
+          "event_count": 26251,
+          "event_signature": 8094656723111949347,
           "meter": [
-            37,
+            109,
             0,
             0,
             57,
-            94
+            166
           ],
           "outputs": [
             0,
             0,
             0,
-            508,
+            687,
             0,
             0,
-            264,
+            362,
             0
           ],
-          "pc": 34178,
-          "ram": "e0d1e77e31209ad029df894b0a7e1df39d311dfc736e56f8f78b884b37c429e2",
-          "registers": "c590e8ff046bbae96921eaaf9af095ec1f45fa4f4947ec49fe34ba2755c3655b",
+          "pc": 63648,
+          "ram": "3bf4c278debf436c4b92c06dd5b4d35681ec5661d93bb4c4cfdc34e1d8aee5cc",
+          "registers": "faf7eac8ce8cd8e0f37d77200cf274636a63a78edf94ee0ae473f1b59015b699",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -184,30 +184,30 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 104970804,
-          "event_count": 21549,
-          "event_signature": 3817479805864799422,
+          "cycles": 114304211,
+          "event_count": 26472,
+          "event_signature": 306679670762005487,
           "meter": [
-            37,
+            108,
             0,
             0,
             57,
-            94
+            165
           ],
           "outputs": [
             0,
             0,
             0,
-            508,
+            693,
             0,
             0,
-            264,
+            366,
             0
           ],
-          "pc": 25234,
-          "ram": "497fa42a1b00bc79d928858224f393b260ba4ce340096d040f9fccf6773f3ecb",
-          "registers": "4870924a8159830b68814d8bbbc99ef4c0cfdd6c6df2ac3fcb569fe8cb311d59",
-          "rotating": false,
+          "pc": 56947,
+          "ram": "4de421f2b3051cb448bd1b1c34fa4e4b308831109d9a0afcda97f01411acded6",
+          "registers": "91e2c8610b2fb09e7af12e3a953cf781e0d18efc80260eadb8a3e125ed52a2ad",
+          "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
           "synchronized": true
@@ -215,9 +215,9 @@
       ],
       "cleared_history": {
         "auth": "Key accepted",
-        "cycles": 397528950,
+        "cycles": 397529065,
         "event_count": 30270,
-        "event_signature": 190254556809690267,
+        "event_signature": 17387512232837561849,
         "meter": [
           0,
           0,
@@ -235,33 +235,33 @@
           0,
           0
         ],
-        "pc": 21385,
-        "ram": "954cbd5df68e658cedace4af61b03c808628ab2bfae02d6455455b827ebc13e3",
-        "registers": "0602daf1ff59e64f8a676f2d05dc671c4697ebb8ee2a2b64bf7ea4906b026440",
+        "pc": 25257,
+        "ram": "d0b681b8377d6dfd8b3d168d260787b7bd8daa883babbd312d92766ec3648d75",
+        "registers": "1e11bf55ee8e4f6097ee627f8bc96b49c3d6483fb52f17dd71ab1f4242a66f63",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
       "coil_falls": [
-        453096284,
-        469096188,
-        485096124,
-        501096412,
-        517096412
+        453096508,
+        469096348,
+        485096220,
+        501096476,
+        517096380
       ],
       "coil_rises": [
-        453016284,
-        469016188,
-        485016124,
-        501016412,
-        517016412
+        453016508,
+        469016348,
+        485016220,
+        501016476,
+        517016380
       ],
       "coil_test": {
         "auth": "Key accepted",
-        "cycles": 532962898,
+        "cycles": 532962517,
         "event_count": 38188,
-        "event_signature": 10442656299902223862,
+        "event_signature": 9005764135114395832,
         "meter": [
           0,
           0,
@@ -279,30 +279,60 @@
           0,
           0
         ],
-        "pc": 21398,
-        "ram": "61033d6882155a0597a2656bcd5c7b7d5eea4c57e78abc9308694c8dac4fe3f8",
-        "registers": "010e6fb9de41422dcfdbaa4f122371abc4750bc056b9888796ec4e027e1e9ba5",
+        "pc": 26756,
+        "ram": "ab0f1beb240d20223be107457de06db3599d1cab00747a3f692d8d9171f4c339",
+        "registers": "0acda0d3f5575b3a03ef40c97fd159ffb1e175e0fc81b40391504bcd1888b732",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 120,
+          "cut_resumes": 119,
+          "first_cut_seconds": 1.1363145,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1424.505680528322,
+          "idle_min_rpm": 1375.6313102038237,
+          "longest_cut_ms": 33.0139375,
+          "longest_injection_gap_ms": 49.2870625,
+          "longest_spark_gap_ms": 41.0853125,
+          "peak_rpm": 7345.808318591072
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 112,
+          "cut_resumes": 111,
+          "first_cut_seconds": 2.401268625,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1424.505680528322,
+          "idle_min_rpm": 1375.6313102038237,
+          "longest_cut_ms": 33.259875,
+          "longest_injection_gap_ms": 49.3225,
+          "longest_spark_gap_ms": 41.074875,
+          "peak_rpm": 7328.194139962817
+        }
+      ],
       "history": [
         15,
         21
       ],
       "holds": [
         {
-          "cycles": 128000995,
+          "cycles": 128001016,
           "stage": "menu"
         },
         {
-          "cycles": 32769062,
+          "cycles": 32769191,
           "stage": "confirm"
         }
       ],
       "image": "xt660-2004-2006-companion",
-      "key_seconds": 0.1729002,
+      "key_seconds": 0.1729828,
       "menu": [
         1,
         3,
@@ -326,9 +356,9 @@
       ],
       "normal_after_diag": {
         "auth": "Key accepted",
-        "cycles": 3798342,
+        "cycles": 3798334,
         "event_count": 225,
-        "event_signature": 5314769666994205855,
+        "event_signature": 13764234280946226766,
         "meter": [
           0,
           0,
@@ -346,8 +376,8 @@
           0,
           0
         ],
-        "pc": 34308,
-        "ram": "9737b07ed36e7d26b7d5f067fcf92cb691fec5cb194fafddeaa2956671f1cd7a",
+        "pc": 26484,
+        "ram": "5699e1fc904cbdd60ba22c2b8d8bbaa35df6a7b07408134e0f599aca3b22e578",
         "registers": "8f194c85ae286e459be613040fc75e90cb1113cef7c7ada597d54eb44d4940c9",
         "rotating": false,
         "starting": false,
@@ -356,22 +386,22 @@
       },
       "performance": [
         {
-          "simulated_seconds": 2.032792,
+          "simulated_seconds": 2.029015375,
           "throttle": 0,
-          "unpaced_ratio": 1.6156096097041233,
-          "wall_seconds": 1.2582198
+          "unpaced_ratio": 1.5839193165888805,
+          "wall_seconds": 1.2810093
         },
         {
-          "simulated_seconds": 2.000995,
+          "simulated_seconds": 2.006836625,
           "throttle": 100,
-          "unpaced_ratio": 1.5516969566268988,
-          "wall_seconds": 1.2895527
+          "unpaced_ratio": 1.5197414161886764,
+          "wall_seconds": 1.3205119
         },
         {
-          "simulated_seconds": 2.0417539375,
+          "simulated_seconds": 1.9862315625,
           "throttle": 0,
-          "unpaced_ratio": 1.6035693200847776,
-          "wall_seconds": 1.2732558
+          "unpaced_ratio": 1.5217792187195331,
+          "wall_seconds": 1.3052035
         }
       ],
       "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
@@ -514,89 +544,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 7025978,
-          "event_count": 558,
-          "event_signature": 9803232545673800404,
+          "cycles": 17231298,
+          "event_count": 1395,
+          "event_signature": 9406997111550514941,
           "meter": [
-            24,
+            25,
             0,
             128,
             57,
-            209
+            210
           ],
           "outputs": [
             0,
             0,
             0,
-            4,
+            14,
             0,
             0,
-            6,
-            0
-          ],
-          "pc": 31146,
-          "ram": "c483b6e695f3b8cf59563f22f25da7a58b5bce9d14cca84f1256924695c4e145",
-          "registers": "7ab7c5c8734693a76f6289457245b49861a884c0fbadfb28c6b69488c25ff3a5",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 39058272,
-          "event_count": 4629,
-          "event_signature": 18262224909747248773,
-          "meter": [
-            37,
-            0,
-            0,
-            57,
-            94
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            56,
-            0,
-            0,
-            58,
-            0
-          ],
-          "pc": 24765,
-          "ram": "22f3270be6ffd5774084e095ebec9422d323e3823bedc41fc72f4f172117b2d5",
-          "registers": "a5af9ba9d6e2f09d9b8b0953a086e88d4ed38fa744c7ef993349c896e2c1785b",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 70473029,
-          "event_count": 16202,
-          "event_signature": 16126191438361413379,
-          "meter": [
-            134,
             16,
-            0,
-            57,
-            207
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            208,
-            0,
-            0,
-            211,
             0
           ],
-          "pc": 24767,
-          "ram": "b597e45fb4ae9c2d8e538675390de52e2c91df73387990493711b67a4715edb7",
-          "registers": "51256041942ff4c4f3e2d31f4b262a003be78b948d2ed496a05da0cab169c287",
+          "pc": 23130,
+          "ram": "833b08b014db905de60d50f6d574f6ce81555a95e9675a88903fd4a67117af85",
+          "registers": "e867c79861ee1b51d6fe5d6ab1a5aee144e3b68a9ee3ad5128d77f1c658032c6",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -604,29 +574,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 102486572,
-          "event_count": 20504,
-          "event_signature": 15317255391109928547,
+          "cycles": 49235864,
+          "event_count": 5227,
+          "event_signature": 8368765817371580208,
           "meter": [
-            37,
+            35,
             0,
             0,
             57,
-            94
+            92
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            62,
             0,
             0,
-            262,
+            64,
             0
           ],
-          "pc": 27865,
-          "ram": "d587b774b625272c4329083f7b5d25c4d039cfb95b5888b996db945b4200c676",
-          "registers": "9475d399c2827af06171ba911f50371f7957ab8854986a445ab10562cf391ce8",
+          "pc": 24505,
+          "ram": "d8512ab0517f53b20287f1b9972762bbd40e4ddc96b487c31e73a4d52df90871",
+          "registers": "3e8edf013668334c30237d314fc3b9cd817cc8b5d176eecf52539be34024d3a8",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -634,55 +604,145 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 103294240,
-          "event_count": 20551,
-          "event_signature": 11454382574136326719,
+          "cycles": 80785665,
+          "event_count": 15326,
+          "event_signature": 17657902375925426320,
           "meter": [
-            37,
-            0,
+            173,
+            20,
             0,
             57,
-            94
+            250
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            190,
             0,
             0,
-            262,
+            194,
             0
           ],
-          "pc": 24773,
-          "ram": "ea6a8351fe620f887b78bcadeeb8adb67c63b9bd727576f5326f1bb743bbe24c",
-          "registers": "192cf3dfbe381a27e7efc43b22a07648cba31bd5611961f358466bfae485cf8c",
-          "rotating": false,
+          "pc": 19405,
+          "ram": "6b6a5d118e0b7994bd9ac1c518c33253963abc405412320f644b89052d4aae23",
+          "registers": "b62db2e1262133b434e363233e3ec71c115168eb5e758861d94cf259c6211aab",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 111962718,
+          "event_count": 25416,
+          "event_signature": 6436203407170894904,
+          "meter": [
+            113,
+            0,
+            0,
+            57,
+            170
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            361,
+            0,
+            0,
+            364,
+            0
+          ],
+          "pc": 24505,
+          "ram": "7f1c556574faddd3dbfed93aa0083cd05de1f58e768fe567708e2dbf22d4c4e1",
+          "registers": "a72d70650f934a1586b893c8a2734be92f70209caa69ab40b71cc3639a10d1b3",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 112748286,
+          "event_count": 25629,
+          "event_signature": 5724401888705768870,
+          "meter": [
+            112,
+            0,
+            0,
+            57,
+            169
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            364,
+            0,
+            0,
+            368,
+            0
+          ],
+          "pc": 19454,
+          "ram": "af7738ca8ed5fcf66a48568cd6582d387d9964e3c79b7dbea03947e2936c52dc",
+          "registers": "27133ea66e7bc48f42b1a5b8e82566740f4700649b4e7d0d3b702fd39fa37ccd",
+          "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
           "synchronized": true
         }
       ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.097400625,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.2722774399133,
+          "idle_min_rpm": 1375.0800339358502,
+          "longest_cut_ms": 82.2758125,
+          "longest_injection_gap_ms": 98.182,
+          "longest_spark_gap_ms": 81.7494375,
+          "peak_rpm": 7427.754119673933
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3007939375,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.2722774399133,
+          "idle_min_rpm": 1375.0800339358502,
+          "longest_cut_ms": 98.531375,
+          "longest_injection_gap_ms": 114.2975,
+          "longest_spark_gap_ms": 98.0945,
+          "peak_rpm": 7373.062438521648
+        }
+      ],
       "image": "xt660-5vk-1x-2008",
-      "key_seconds": 0.1742305,
+      "key_seconds": 0.1734622,
       "performance": [
         {
-          "simulated_seconds": 2.002018375,
+          "simulated_seconds": 2.000285375,
           "throttle": 0,
-          "unpaced_ratio": 1.5987810205192319,
-          "wall_seconds": 1.2522155
+          "unpaced_ratio": 1.5615115578305265,
+          "wall_seconds": 1.280993
         },
         {
-          "simulated_seconds": 1.9634223125,
+          "simulated_seconds": 1.9718625625,
           "throttle": 100,
-          "unpaced_ratio": 1.53577320851635,
-          "wall_seconds": 1.2784585
+          "unpaced_ratio": 1.506732447788693,
+          "wall_seconds": 1.3087012
         },
         {
-          "simulated_seconds": 2.0008464375,
+          "simulated_seconds": 1.9485658125,
           "throttle": 0,
-          "unpaced_ratio": 1.5885338886245097,
-          "wall_seconds": 1.2595554
+          "unpaced_ratio": 1.5038025297294846,
+          "wall_seconds": 1.2957591
         }
       ],
       "sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
@@ -829,89 +889,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 7025978,
-          "event_count": 558,
-          "event_signature": 12787085710012340879,
+          "cycles": 17231298,
+          "event_count": 1395,
+          "event_signature": 15750768954442443130,
           "meter": [
-            24,
+            25,
             0,
             128,
             57,
-            209
+            210
           ],
           "outputs": [
             0,
             0,
             0,
-            4,
+            14,
             0,
             0,
-            6,
-            0
-          ],
-          "pc": 31146,
-          "ram": "1d266e86459a97df580df6d553a79dc1442b38747b0ce24ee12809ebc5e2a3c3",
-          "registers": "c5e4196a9e5ffd79a32c6ed03fd4ab3d74d6a82ba031d06c10e3363b662848fb",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 39058272,
-          "event_count": 4629,
-          "event_signature": 14336087511541989871,
-          "meter": [
-            37,
-            0,
-            0,
-            57,
-            94
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            56,
-            0,
-            0,
-            58,
-            0
-          ],
-          "pc": 24765,
-          "ram": "0201c7fe2e1ea534ea8f60192b63e3f7430cd0ec27253929c9da6d3fb2301e1f",
-          "registers": "09b01b06a47fe9d961ef5f0c1b6dafb432ebfb83810470468f4605b4cf6f1f80",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 70473029,
-          "event_count": 16202,
-          "event_signature": 11500213667468834624,
-          "meter": [
-            134,
             16,
-            0,
-            57,
-            207
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            208,
-            0,
-            0,
-            211,
             0
           ],
-          "pc": 24767,
-          "ram": "5539989a76318cf0b916f6fa26dddd6507f5b79760a66be8f9c1a46d8274b977",
-          "registers": "cb88c6d075f9e1068a177dafc3edb25198728dc8206da171cd86a37bb912d5fb",
+          "pc": 23130,
+          "ram": "3ce0d331db2a41ef7a0f46cd8621d7b83a5dd9a138cf6b497a878fb3451376ac",
+          "registers": "b7dbe7aeb694df207f465b7e9f902d90a961c8e0d168f3e3680c61e3f40c8fe6",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -919,60 +919,120 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 102486572,
-          "event_count": 20504,
-          "event_signature": 12978376308106643732,
+          "cycles": 49235833,
+          "event_count": 5227,
+          "event_signature": 10846413945238011336,
           "meter": [
-            37,
+            35,
             0,
             0,
             57,
-            94
+            92
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            62,
             0,
             0,
-            262,
-            0
-          ],
-          "pc": 27865,
-          "ram": "3b0021746fe00ff19b121e83711f8e289085fb8a5db55084621f7fe27af5300e",
-          "registers": "63838f92f4a51e17199c84c5721371d949e3835050c461871698ada84f4d3a14",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 103294240,
-          "event_count": 20551,
-          "event_signature": 10911398348979740036,
-          "meter": [
-            37,
-            0,
-            0,
-            57,
-            94
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            258,
-            0,
-            0,
-            262,
+            64,
             0
           ],
           "pc": 24773,
-          "ram": "141b797dd0f0ead0930b7aec90cea0b29274b206fb3547e172a87d5751ac025a",
-          "registers": "296922647c5d0e035d7788ae2d30cf25a955337eb6b0e7c5702b46b8bcc15aec",
-          "rotating": false,
+          "ram": "a25e98e048f76b6bc06e5098424d94f97742885d73ccbf92174706bbe58b57af",
+          "registers": "bb0308e64c4ae4fa22578fbcf17a888fc497d93f7c830900ef57658a9fd1bf4b",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 80785404,
+          "event_count": 15327,
+          "event_signature": 7413359670683969327,
+          "meter": [
+            173,
+            20,
+            0,
+            57,
+            250
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            190,
+            0,
+            0,
+            194,
+            0
+          ],
+          "pc": 19462,
+          "ram": "501f73059ed5fa4c8aa702e6e6ce0a5cb3b2f48cf77617a90ba3307658f3e4a6",
+          "registers": "7af5c8010ff0b976673bb446ab2d772d61919526bd6c488a7b910b30df127bd2",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 111962121,
+          "event_count": 25415,
+          "event_signature": 5699139556487603459,
+          "meter": [
+            113,
+            0,
+            0,
+            57,
+            170
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            361,
+            0,
+            0,
+            364,
+            0
+          ],
+          "pc": 19668,
+          "ram": "b71a66417c75df4ab9e676ac887c578062b20e14c1ebc07493e3eba0e82593e7",
+          "registers": "02866d431f3a1450b24f0b853c836bcdb30b309611140bf40ac5cc5bbaf5a9e6",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 112747661,
+          "event_count": 25629,
+          "event_signature": 13466546097716305105,
+          "meter": [
+            112,
+            0,
+            0,
+            57,
+            169
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            364,
+            0,
+            0,
+            368,
+            0
+          ],
+          "pc": 23095,
+          "ram": "59fc3ea590d89f21915deb999ce6f896e034dba6ab78aea6439a7bbf0b2e3335",
+          "registers": "9081678783831f46f4dab7b16b08657611579a4af52f5ec6022a452de1795214",
+          "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
           "synchronized": true
@@ -980,9 +1040,9 @@
       ],
       "cleared_history": {
         "auth": "Key accepted",
-        "cycles": 408887842,
+        "cycles": 408887648,
         "event_count": 31141,
-        "event_signature": 10563812394720336903,
+        "event_signature": 6398132211532533648,
         "meter": [
           0,
           0,
@@ -1000,33 +1060,33 @@
           0,
           0
         ],
-        "pc": 31272,
-        "ram": "40b791d8d1926db342c023c8e192a66e199c4cd259e8f520d67e0f3b2b92f9b3",
-        "registers": "56997d9afc2245a621cd633c81d0b14bcda0bd1ce392a034302f073894e7163a",
+        "pc": 31269,
+        "ram": "0698481da7b2519d90c3bfaf0f0a38605e7db1886b8a62d5232456c0081e9bca",
+        "registers": "1288d3c30dc2ce883baaf05791e216ff8d12ce9faff266e799d541787f9ed47a",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
       "coil_falls": [
-        467163932,
-        483163900,
-        499163836,
-        515169276,
-        531169308
+        467169212,
+        483169500,
+        499169212,
+        515169212,
+        531163836
       ],
       "coil_rises": [
-        467083932,
-        483083900,
-        499083836,
-        515089276,
-        531089308
+        467089212,
+        483089500,
+        499089212,
+        515089212,
+        531083836
       ],
       "coil_test": {
         "auth": "Key accepted",
-        "cycles": 547082363,
+        "cycles": 547081606,
         "event_count": 39273,
-        "event_signature": 13644189361845855783,
+        "event_signature": 16951471777669959399,
         "meter": [
           0,
           0,
@@ -1044,30 +1104,60 @@
           0,
           0
         ],
-        "pc": 23131,
-        "ram": "f762922d5c4822445ef9568aaa2b29bfa4aa556108b7114dc371803aaf20e1e3",
-        "registers": "95eecb0372b5c4405de8e028fd7fdbfb766106047a63cadc0ff24d9342005685",
+        "pc": 24533,
+        "ram": "38550738d0ca8956ec6849328471f424f8bb8ccb64c71bc00a5b4e0776051372",
+        "registers": "4301afab6445bf746674173f3d2e0c070262bea6a9efea803a8bea78f2a8ba63",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.0974078125,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.292761298776,
+          "idle_min_rpm": 1375.0700680492514,
+          "longest_cut_ms": 82.2745625,
+          "longest_injection_gap_ms": 98.1551875,
+          "longest_spark_gap_ms": 81.7915625,
+          "peak_rpm": 7427.891218799949
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.300544,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.292761298776,
+          "idle_min_rpm": 1375.0700680492514,
+          "longest_cut_ms": 98.7795625,
+          "longest_injection_gap_ms": 114.3748125,
+          "longest_spark_gap_ms": 98.13475,
+          "peak_rpm": 7373.02990800891
+        }
+      ],
       "history": [
         15,
         21
       ],
       "holds": [
         {
-          "cycles": 128001673,
+          "cycles": 128001677,
           "stage": "menu"
         },
         {
-          "cycles": 32768569,
+          "cycles": 32768575,
           "stage": "confirm"
         }
       ],
       "image": "xt660-2c1-10",
-      "key_seconds": 0.1771584,
+      "key_seconds": 0.1760873,
       "menu": [
         1,
         3,
@@ -1092,9 +1182,9 @@
       ],
       "normal_after_diag": {
         "auth": "Key accepted",
-        "cycles": 3890954,
+        "cycles": 3890934,
         "event_count": 230,
-        "event_signature": 18159252932175898750,
+        "event_signature": 10046511158073253587,
         "meter": [
           0,
           0,
@@ -1112,9 +1202,9 @@
           0,
           0
         ],
-        "pc": 24539,
-        "ram": "b3668b9f4b308d4b9ae979e511d95f823b220193c76d6b719f82d0d0575643e2",
-        "registers": "e0735f0d53cfd9c507e680adf06c76412c165995d0012062453e6bf885567804",
+        "pc": 24767,
+        "ram": "bbd4caa4b1d457947258c397314e15415931f207b65b066f0fff0b6ff65c3d42",
+        "registers": "f51ba63edf565d2f4b69033c6807f665394e76951607734911ba7898da857a0c",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1122,22 +1212,22 @@
       },
       "performance": [
         {
-          "simulated_seconds": 2.002018375,
+          "simulated_seconds": 2.0002834375,
           "throttle": 0,
-          "unpaced_ratio": 1.5302251665155564,
-          "wall_seconds": 1.3083162
+          "unpaced_ratio": 1.580701170406576,
+          "wall_seconds": 1.2654406
         },
         {
-          "simulated_seconds": 1.9634223125,
+          "simulated_seconds": 1.9718481875,
           "throttle": 100,
-          "unpaced_ratio": 1.444557593262261,
-          "wall_seconds": 1.3591859
+          "unpaced_ratio": 1.5320092508006764,
+          "wall_seconds": 1.2870994
         },
         {
-          "simulated_seconds": 2.0008464375,
+          "simulated_seconds": 1.9485448125,
           "throttle": 0,
-          "unpaced_ratio": 1.582995595754018,
-          "wall_seconds": 1.2639621
+          "unpaced_ratio": 1.499767795334317,
+          "wall_seconds": 1.299231
         }
       ],
       "sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
@@ -1260,89 +1350,29 @@
         },
         {
           "auth": "Disabled in BIN",
-          "cycles": 5388925,
-          "event_count": 413,
-          "event_signature": 535592527224247464,
+          "cycles": 15593163,
+          "event_count": 1252,
+          "event_signature": 7947078060892864512,
           "meter": [
-            24,
+            25,
             0,
             128,
             57,
-            209
+            210
           ],
           "outputs": [
             0,
             0,
             0,
-            4,
+            14,
             0,
             0,
-            4,
-            0
-          ],
-          "pc": 24539,
-          "ram": "2879dce57751203e5c4a98688c115dcb446975cebdbf8ddcac9587933f5ffa06",
-          "registers": "289910735786625acd0059d156f66d4a55cc991ff4d903aa2e978063fc6b65d5",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Disabled in BIN",
-          "cycles": 37420212,
-          "event_count": 4484,
-          "event_signature": 12049753256046310413,
-          "meter": [
-            37,
-            0,
-            0,
-            57,
-            94
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            56,
-            0,
-            0,
-            56,
-            0
-          ],
-          "pc": 19646,
-          "ram": "c539c9da601386f48cf6c551d2037960a0c8a8b94e12ac8fe9fcb2d6a33babf1",
-          "registers": "94440a752b59bed7000ed089b6dbe58aedfa7cfcfbeead94ae3c14c3a84075a7",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Disabled in BIN",
-          "cycles": 68838324,
-          "event_count": 16057,
-          "event_signature": 15723210182876595924,
-          "meter": [
-            134,
             16,
-            0,
-            57,
-            207
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            208,
-            0,
-            0,
-            209,
             0
           ],
-          "pc": 44747,
-          "ram": "691a6e644a6e34caddf186fe7225729138e795a637b2878957e95994e50b0412",
-          "registers": "4210ccef604dd67ed945aaea088d1d8b018cf432cc251a2c7eb29163b8cea82c",
+          "pc": 24502,
+          "ram": "e08ce6ae2625565416d386a7eaf4407af526beb53da1eac02a555681c7bee9dc",
+          "registers": "7b85ebe14a0b4524e41ab1b9f7deb91f58aefb6bc0957666b95ce7c4d38c8b2d",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1350,29 +1380,29 @@
         },
         {
           "auth": "Disabled in BIN",
-          "cycles": 100850976,
-          "event_count": 20360,
-          "event_signature": 597072117322041474,
+          "cycles": 47597134,
+          "event_count": 5085,
+          "event_signature": 13809189231724033997,
           "meter": [
-            37,
+            35,
             0,
             0,
             57,
-            94
+            92
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            62,
             0,
             0,
-            260,
+            64,
             0
           ],
-          "pc": 23113,
-          "ram": "73ba1449161414116dbeb5ba81409b78eab733d4de1f0207523923a001e565fd",
-          "registers": "4b897e5050520e0af4139f0d089ccaa192fe921046bb330965d99dc61e5c5b64",
+          "pc": 19734,
+          "ram": "d144d018f59910eca0006522eab86104a18a8a11a4bbd6a875b2aa3664255ed7",
+          "registers": "773169b7d0eb18f02bb022b92b18d2c003c265472194f9d22445ea79f34660cd",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1380,30 +1410,90 @@
         },
         {
           "auth": "Disabled in BIN",
-          "cycles": 101658693,
-          "event_count": 20406,
-          "event_signature": 7956185579671149492,
+          "cycles": 79149564,
+          "event_count": 15185,
+          "event_signature": 13270551177736288452,
           "meter": [
-            37,
-            0,
+            173,
+            21,
             0,
             57,
-            94
+            251
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            190,
             0,
             0,
-            260,
+            194,
             0
           ],
-          "pc": 24533,
-          "ram": "a480e2b22abfe9ff56f660243a2ab98b2277005b70ce32586dfdf6d7ef82a681",
-          "registers": "06e805748bc575bb579dd232083c8c9ca358fe7e04d04185cd939f4888c576da",
-          "rotating": false,
+          "pc": 24786,
+          "ram": "6f0526e21d08e833fe8f096828ca8e8a799ceaa295ed12569ae6e599de9f22d5",
+          "registers": "c443c79af1caa825d3b881fa4d7931deb0858ecc7ab1254263d9b7fbf6df60b3",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Disabled in BIN",
+          "cycles": 110327421,
+          "event_count": 25274,
+          "event_signature": 9771676873007864400,
+          "meter": [
+            113,
+            0,
+            0,
+            57,
+            170
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            361,
+            0,
+            0,
+            364,
+            0
+          ],
+          "pc": 24770,
+          "ram": "a77157b0742318c82d49109149d922a7586b26b02972aecd9ebc809c29356cd6",
+          "registers": "f157e50650c1928fe12535c492ec30db8ba4266341db4df8100b158a71e0945a",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Disabled in BIN",
+          "cycles": 111112941,
+          "event_count": 25487,
+          "event_signature": 1852042520682920334,
+          "meter": [
+            111,
+            0,
+            0,
+            57,
+            168
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            364,
+            0,
+            0,
+            368,
+            0
+          ],
+          "pc": 19492,
+          "ram": "1a6a8b0cfcb837795117a8f5ea008495f6caaf0f2f2981a86d2fec54122460f7",
+          "registers": "5dac11d8359d5307e0060ce74228db67bd82aaa4606eb96a2483cf87fb7cc1a4",
+          "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
           "synchronized": true
@@ -1411,9 +1501,9 @@
       ],
       "cleared_history": {
         "auth": "Disabled in BIN",
-        "cycles": 407247751,
+        "cycles": 407247648,
         "event_count": 30999,
-        "event_signature": 7082717928755945705,
+        "event_signature": 14570999116968610482,
         "meter": [
           0,
           0,
@@ -1431,33 +1521,33 @@
           0,
           0
         ],
-        "pc": 24786,
-        "ram": "70ea3626ef310fdad9004332429aa983b164f3d80b23c4f68a1ecd7e450d4919",
-        "registers": "1f10d7be3e4341131cf045e14478e5dc013309f32694df443a57e03a740d1b3c",
+        "pc": 24500,
+        "ram": "0a84d673805783da12b5d61080d6ac70da35104cadf1c2ee605e0a24886efede",
+        "registers": "382cc454b1bb01180230cd1c41d6c5db7c7a95206903ec1db517e79b4a86eabe",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
       "coil_falls": [
-        465563868,
+        465564060,
         481564188,
-        497564284,
-        513564028,
-        529563996
+        497564060,
+        513564092,
+        529563836
       ],
       "coil_rises": [
-        465483868,
+        465484060,
         481484188,
-        497484284,
-        513484028,
-        529483996
+        497484060,
+        513484092,
+        529483836
       ],
       "coil_test": {
         "auth": "Disabled in BIN",
-        "cycles": 545441584,
+        "cycles": 545440929,
         "event_count": 39130,
-        "event_signature": 1956541663970513085,
+        "event_signature": 14179836384262657619,
         "meter": [
           0,
           0,
@@ -1475,30 +1565,60 @@
           0,
           0
         ],
-        "pc": 24770,
-        "ram": "17c2561745bfe61dc4956d4549549e26a90163b39a102acba1cee26dbd77993b",
-        "registers": "5ed25ca7b8ae7bf05311e66d9014ec36744aa77a908ec12da8ced5530db37373",
+        "pc": 19395,
+        "ram": "ca5ea37cdc1ed4c72dac3b129f32053f02aef2920b609e0a0d4a6c568708cf1f",
+        "registers": "a332ab7b9e924a0fc8b83151156552e90c27c6a67f5fd3f24a9012c990cf23ec",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.097307,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.3164104341784,
+          "idle_min_rpm": 1375.0589776919887,
+          "longest_cut_ms": 82.0274375,
+          "longest_injection_gap_ms": 98.160125,
+          "longest_spark_gap_ms": 81.782375,
+          "peak_rpm": 7427.912923636059
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3004583125,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.3164104341784,
+          "idle_min_rpm": 1375.0589776919887,
+          "longest_cut_ms": 98.2825625,
+          "longest_injection_gap_ms": 114.37425,
+          "longest_spark_gap_ms": 98.134,
+          "peak_rpm": 7373.020248611479
+        }
+      ],
       "history": [
         15,
         21
       ],
       "holds": [
         {
-          "cycles": 128000707,
+          "cycles": 128000745,
           "stage": "menu"
         },
         {
-          "cycles": 32768154,
+          "cycles": 32768208,
           "stage": "confirm"
         }
       ],
       "image": "xt660-2c1-10-immo-off",
-      "key_seconds": 0.1222746,
+      "key_seconds": 0.1121102,
       "menu": [
         1,
         3,
@@ -1523,9 +1643,9 @@
       ],
       "normal_after_diag": {
         "auth": "Disabled in BIN",
-        "cycles": 2253900,
+        "cycles": 2253895,
         "event_count": 88,
-        "event_signature": 17652673168087402965,
+        "event_signature": 14930576305794829537,
         "meter": [
           0,
           0,
@@ -1543,9 +1663,9 @@
           0,
           0
         ],
-        "pc": 19718,
-        "ram": "fbccc5ea1bf5c29bc5331984fa5a2a4ad92d1477135dfb8fa482a195d77bc9bb",
-        "registers": "fb558494260623a198eb7f30f49d2cb6df168906474e0be72ea34d7a626d0772",
+        "pc": 19402,
+        "ram": "d28645f44b7547c5802db1a952fa41bc5ffb63acf1615b54d2b5f486c967c9b4",
+        "registers": "0c07ce6e71b7d1a7f98b0940fd1cde01d590922aeb8ef3a0ae7901f6a6cf9c2c",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1553,22 +1673,22 @@
       },
       "performance": [
         {
-          "simulated_seconds": 2.0019554375,
+          "simulated_seconds": 2.0002481875,
           "throttle": 0,
-          "unpaced_ratio": 1.4820349143957725,
-          "wall_seconds": 1.3508153
+          "unpaced_ratio": 1.5467438258168076,
+          "wall_seconds": 1.2931994
         },
         {
-          "simulated_seconds": 1.963632,
+          "simulated_seconds": 1.972026875,
           "throttle": 100,
-          "unpaced_ratio": 1.4487133508829697,
-          "wall_seconds": 1.3554317
+          "unpaced_ratio": 1.4836326589141144,
+          "wall_seconds": 1.3291881
         },
         {
-          "simulated_seconds": 2.00079075,
+          "simulated_seconds": 1.9486160625,
           "throttle": 0,
-          "unpaced_ratio": 1.5144420672895882,
-          "wall_seconds": 1.3211405
+          "unpaced_ratio": 1.4736741636177761,
+          "wall_seconds": 1.3222842
         }
       ],
       "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
@@ -1711,89 +1831,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 7025978,
-          "event_count": 558,
-          "event_signature": 9803232545673800404,
+          "cycles": 17231298,
+          "event_count": 1395,
+          "event_signature": 9406997111550514941,
           "meter": [
-            24,
+            25,
             0,
             128,
             57,
-            209
+            210
           ],
           "outputs": [
             0,
             0,
             0,
-            4,
+            14,
             0,
             0,
-            6,
-            0
-          ],
-          "pc": 31146,
-          "ram": "e38467421bc798159e79ceffc25a0981e1ea4f1dd867d63b50ab3f11df892903",
-          "registers": "7ab7c5c8734693a76f6289457245b49861a884c0fbadfb28c6b69488c25ff3a5",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 39058272,
-          "event_count": 4629,
-          "event_signature": 18262224909747248773,
-          "meter": [
-            37,
-            0,
-            0,
-            57,
-            94
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            56,
-            0,
-            0,
-            58,
-            0
-          ],
-          "pc": 24765,
-          "ram": "d3fd42ee6e2e7e3ee1caa1ccaf5be9e656685f796f43ce92058b9b58f75e3894",
-          "registers": "a5af9ba9d6e2f09d9b8b0953a086e88d4ed38fa744c7ef993349c896e2c1785b",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Key accepted",
-          "cycles": 70473029,
-          "event_count": 16202,
-          "event_signature": 16126191438361413379,
-          "meter": [
-            134,
             16,
-            0,
-            57,
-            207
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            208,
-            0,
-            0,
-            211,
             0
           ],
-          "pc": 24767,
-          "ram": "05bc25db89ed2ec635487da5e41ed1f6f89e7a60de0432d90df2d47ee443796b",
-          "registers": "51256041942ff4c4f3e2d31f4b262a003be78b948d2ed496a05da0cab169c287",
+          "pc": 23130,
+          "ram": "68bd6ac866da58a77afe626bb9bbbbd8e56a18b89a7cf47bfa87e1f1eaa49d2f",
+          "registers": "e867c79861ee1b51d6fe5d6ab1a5aee144e3b68a9ee3ad5128d77f1c658032c6",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1801,29 +1861,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 102486572,
-          "event_count": 20504,
-          "event_signature": 15317255391109928547,
+          "cycles": 49235864,
+          "event_count": 5227,
+          "event_signature": 8368765817371580208,
           "meter": [
-            37,
+            35,
             0,
             0,
             57,
-            94
+            92
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            62,
             0,
             0,
-            262,
+            64,
             0
           ],
-          "pc": 27865,
-          "ram": "9db720350f586a725e40f5eaa97fb17dee774fe6cd6aa746a2a045d20cb141b8",
-          "registers": "9475d399c2827af06171ba911f50371f7957ab8854986a445ab10562cf391ce8",
+          "pc": 24505,
+          "ram": "963d44f467929cd5267ddba58729dbef76faa90176a329481c7ee52eace5b217",
+          "registers": "3e8edf013668334c30237d314fc3b9cd817cc8b5d176eecf52539be34024d3a8",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1831,55 +1891,145 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 103294240,
-          "event_count": 20551,
-          "event_signature": 11454382574136326719,
+          "cycles": 80785665,
+          "event_count": 15326,
+          "event_signature": 17657902375925426320,
           "meter": [
-            37,
-            0,
+            173,
+            20,
             0,
             57,
-            94
+            250
           ],
           "outputs": [
             0,
             0,
             0,
-            258,
+            190,
             0,
             0,
-            262,
+            194,
             0
           ],
-          "pc": 24773,
-          "ram": "a8c1481236412585a6159fb03acca044fa3384674cfafd30f66fdabaffbc9b4b",
-          "registers": "192cf3dfbe381a27e7efc43b22a07648cba31bd5611961f358466bfae485cf8c",
-          "rotating": false,
+          "pc": 19405,
+          "ram": "c0f5c1e8f2efb2677ffdd6acb0e84b9c437fc8b8683958e79c0151fcd6636d3d",
+          "registers": "b62db2e1262133b434e363233e3ec71c115168eb5e758861d94cf259c6211aab",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 111962718,
+          "event_count": 25416,
+          "event_signature": 6436203407170894904,
+          "meter": [
+            113,
+            0,
+            0,
+            57,
+            170
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            361,
+            0,
+            0,
+            364,
+            0
+          ],
+          "pc": 24505,
+          "ram": "612fa8daa8eb9fdf6ad37cb01d621479d8acec66061b9021d6d394609b502cd1",
+          "registers": "a72d70650f934a1586b893c8a2734be92f70209caa69ab40b71cc3639a10d1b3",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Key accepted",
+          "cycles": 112748286,
+          "event_count": 25629,
+          "event_signature": 5724401888705768870,
+          "meter": [
+            112,
+            0,
+            0,
+            57,
+            169
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            364,
+            0,
+            0,
+            368,
+            0
+          ],
+          "pc": 19454,
+          "ram": "10ef2ffecfcf5876db3fa5b2ce91615679b72b549eebe3593c79a12162905898",
+          "registers": "27133ea66e7bc48f42b1a5b8e82566740f4700649b4e7d0d3b702fd39fa37ccd",
+          "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
           "synchronized": true
         }
       ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 61,
+          "first_cut_seconds": 1.097400625,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.2722774399133,
+          "idle_min_rpm": 1375.0800339358502,
+          "longest_cut_ms": 82.2758125,
+          "longest_injection_gap_ms": 98.182,
+          "longest_spark_gap_ms": 81.7494375,
+          "peak_rpm": 7427.754119673933
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3007939375,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.2722774399133,
+          "idle_min_rpm": 1375.0800339358502,
+          "longest_cut_ms": 98.531375,
+          "longest_injection_gap_ms": 114.2975,
+          "longest_spark_gap_ms": 98.0945,
+          "peak_rpm": 7373.062438521648
+        }
+      ],
       "image": "xt660-5vk-11",
-      "key_seconds": 0.1737874,
+      "key_seconds": 0.17387,
       "performance": [
         {
-          "simulated_seconds": 2.002018375,
+          "simulated_seconds": 2.000285375,
           "throttle": 0,
-          "unpaced_ratio": 1.5870722930954746,
-          "wall_seconds": 1.2614538
+          "unpaced_ratio": 1.593779612682349,
+          "wall_seconds": 1.2550577
         },
         {
-          "simulated_seconds": 1.9634223125,
+          "simulated_seconds": 1.9718625625,
           "throttle": 100,
-          "unpaced_ratio": 1.5069130886202033,
-          "wall_seconds": 1.3029433
+          "unpaced_ratio": 1.5330197233001963,
+          "wall_seconds": 1.2862604
         },
         {
-          "simulated_seconds": 2.0008464375,
+          "simulated_seconds": 1.9485658125,
           "throttle": 0,
-          "unpaced_ratio": 1.5931547829245607,
-          "wall_seconds": 1.2559021
+          "unpaced_ratio": 1.5213424310207524,
+          "wall_seconds": 1.28082
         }
       ],
       "sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
@@ -1968,55 +2118,55 @@
   "headless": [
     {
       "image": "xt660-2004-2006-companion",
-      "key_on_seconds": 0.1879909000126645,
-      "start_seconds": 0.21000299998559058,
-      "no_client_wall_seconds": 8.019551799981855,
-      "no_client_simulated_seconds": 8.0110655,
-      "realtime_ratio": 0.9989417987197398,
+      "key_on_seconds": 0.19701860001077875,
+      "start_seconds": 0.8456700000097044,
+      "no_client_wall_seconds": 8.003926999983378,
+      "no_client_simulated_seconds": 7.9983690625,
+      "realtime_ratio": 0.9993055986788248,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-5vk-1x-2008",
-      "key_on_seconds": 0.18223439995199442,
-      "start_seconds": 0.18512370000826195,
-      "no_client_wall_seconds": 8.002471799962223,
-      "no_client_simulated_seconds": 7.9697564375,
-      "realtime_ratio": 0.9959118428305643,
+      "key_on_seconds": 0.19455590000143275,
+      "start_seconds": 0.8887928999611177,
+      "no_client_wall_seconds": 8.016828699968755,
+      "no_client_simulated_seconds": 7.9924270625,
+      "realtime_ratio": 0.9969561982197711,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-2c1-10",
-      "key_on_seconds": 0.17561670002760366,
-      "start_seconds": 0.21265300002414733,
-      "no_client_wall_seconds": 8.02813099999912,
-      "no_client_simulated_seconds": 8.065124375,
-      "realtime_ratio": 1.0046079685297715,
+      "key_on_seconds": 0.178322899970226,
+      "start_seconds": 0.8344178999541327,
+      "no_client_wall_seconds": 8.017005999980029,
+      "no_client_simulated_seconds": 8.0130725625,
+      "realtime_ratio": 0.9995093632859899,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-2c1-10-immo-off",
-      "key_on_seconds": 0.12730520003242418,
-      "start_seconds": 0.19897750002564862,
-      "no_client_wall_seconds": 8.024218300008215,
-      "no_client_simulated_seconds": 8.0168175625,
-      "realtime_ratio": 0.9990776998791013,
+      "key_on_seconds": 0.12845840002410114,
+      "start_seconds": 0.8821651000180282,
+      "no_client_wall_seconds": 8.003286299994215,
+      "no_client_simulated_seconds": 8.03068275,
+      "realtime_ratio": 1.003423150063469,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-5vk-11",
-      "key_on_seconds": 0.1906347000040114,
-      "start_seconds": 0.20737000001827255,
-      "no_client_wall_seconds": 8.017086000007112,
-      "no_client_simulated_seconds": 8.0174003125,
-      "realtime_ratio": 1.0000392053288298,
+      "key_on_seconds": 0.1930481999879703,
+      "start_seconds": 0.8779908999567851,
+      "no_client_wall_seconds": 8.022196699981578,
+      "no_client_simulated_seconds": 7.9924270625,
+      "realtime_ratio": 0.9962890915549795,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
@@ -2024,15 +2174,16 @@
   ],
   "source_hashes": {
     "native/browser_bridge.cc": "33242417bc66a7422889045d694d47f40290d3bc06009b7e1d4202a5b4588660",
-    "native/cockpit_native.hpp": "333081bc3ec1b4a7b61e14ef01809cae3442cae330922c2a7686a15b8786b53f",
+    "native/cockpit_native.hpp": "2a6c675e343c9cfb7e89c2a310fb382393a43497281cceec46e74cd09757d182",
     "native/dashboard_native.cc": "b6d5fafb53520f2758958d4c8a37a2bc537d950bf2877f15542e36105bf766d3",
-    "native/engine_native.hpp": "3195c2d83ced66e8e3e0c076598bdf698d7844fc65eda37fad151c598ec393ba",
+    "native/engine_native.hpp": "9f90c4f36310cb331bdc956e28b19812efa3b9f6e6ba34b530f97025fbf9b0e8",
+    "native/engine_plant.hpp": "42ad08d80e62c4f00d346c5b82f2aa9625d920045aa0f8dd70424859ec04ba4e",
     "native/sha256_portable.hpp": "c956a85343b0dcfcda71cdc412a455bcd02689649e6a5a53750706e28d3995e7",
-    "native/validate_native.cc": "277a590934c18239e34b3de5e68a8220b074d0339e283979cce7c59ca7849be5",
-    "native/xt660_boot.cc": "a6f5576ffc854409e473fb504846dfbed15d75384e8f28c603ac25385f6c3f9c",
+    "native/validate_native.cc": "13fd7b5770db7a8176554df47a8950b8bab26644d7839e42855313938414dccc",
+    "native/xt660_boot.cc": "9eded830db56dfdc1f434ac7d5fe649645755623b31ef120d39ffb21bc6cd161",
     "web/dashboard.js": "f212f64baf502e7623562026fc2c883dc69ea9323ceb8d0a4d508c241561b5cc",
     "build_windows.py": "088750dd7621e74199b8232f75c4c61a9eac40295b2bc8d95a8a57e9fc105dbe",
     "test_native.py": "95397c06f99927d46109905f3e7c7c0046d2ad4b8843e16497f2e06120d93fb7"
   },
-  "exe_sha256": "2a0476b63ed3e4112c09c3d8a516604d47f6a0b0636bbfd800946ae5bed493b0"
+  "exe_sha256": "2bdb9b47a89e76b33ad6573ccebb65b5cebff9963682602b61428d09f338bf63"
 }

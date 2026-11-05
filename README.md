@@ -9,7 +9,7 @@ Firmware analysis, TunerPro definitions, flashing tools and ECU emulation for th
 - **Explore the ECU:** select a motorcycle and firmware on the [website](https://terrafirma2021.github.io/yamaha-xt660/) to browse its maps, connector diagrams, MCU pins and research.
 - **Edit a BIN:** download its matching [BIN and XDF](https://terrafirma2021.github.io/yamaha-xt660/xdf/) and use TunerPro. Definitions include map tables and supported feature patches. [XDF instructions](definitions/README.md).
 - **Read or write an ECU:** the [Windows Flash Tool bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.2) includes the tool, nine BINs and nine XDFs. It uses a USB KKL interface, saves backups and checks compatibility, checksums and readback. [Flashing instructions](flasher/README.md).
-- **Run the firmware:** use the [browser emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/) with no installation, or the [Windows emulator](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.2). Key, starter, throttle, neutral, sensor faults and diagnostic controls act on the emulated ECU. The dash reads its K-line replies. [Emulator instructions and source](emulator/README.md).
+- **Run the firmware:** use the [browser emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/) with no installation, or the [Windows emulator](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.3). Key, starter, throttle, neutral, sensor faults and diagnostic controls act on the emulated ECU. The dash reads its K-line replies. [Emulator instructions and source](emulator/README.md).
 
 ## Current coverage
 
@@ -19,7 +19,7 @@ The emulator runs the **five images with complete boot code**. The other four ha
 
 The model dataset covers XT660R, XT660X and XT660Z Ténéré. **No matched XT660Z BIN is currently available.** Model, year and ECU associations retain their evidence and qualifications; shared code or a catalogue replacement part does not establish interchangeability.
 
-Some physical map scales, absolute spark reference and connector-to-MCU wiring remain unresolved. The flash tool is a **bench-test prerelease** with software validation; physical ECU/adapter validation is pending. Emulation checks firmware behaviour, not combustion, AFR or power output. See the [research audit](analysis/REPOSITORY_AUDIT.md) and [verification ledger](analysis/semantics/VERIFICATION_LEDGER.md) for the evidence behind each claim.
+Some physical map scales, absolute spark reference and connector-to-MCU wiring remain unresolved. The flash tool is a **bench-test prerelease** with software validation; physical ECU/adapter validation is pending. The external engine model exercises feedback and limiter behaviour; it does not predict AFR, horsepower or road performance. See the [research audit](analysis/REPOSITORY_AUDIT.md) and [verification ledger](analysis/semantics/VERIFICATION_LEDGER.md) for the evidence behind each claim.
 
 ## Source and research
 

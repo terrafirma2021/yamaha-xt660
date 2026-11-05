@@ -682,7 +682,7 @@ const char *xt_boot_hw::cfg_help(t_addr a) {
   if (a==24) return "PT1 fixture: 1 starts, 0 stops; no firmware/RAM edits";
   if (a==25) return "Emit bounded input/capture/output/IRQ event trace";
   if (a==34) return "Enable simulated flash commands (source BIN never modified)";
-  if (a==35) return "Pending PT1 interval: 0 or 12800..128000 bus cycles, applied between pulses";
+  if (a==35) return "Pending PT1 interval: 0 or 1024..16000000 bus cycles, applied between pulses";
   if (a==36) return "PT2 external speed input: 0 stops, otherwise 1000..16000000 bus cycles per pulse";
   if (a==37) return "Continuous external PT1 fixture; 0 retains finite pulse count";
   if (a==38) return "External PT2 falling-edge count (read-only)";
@@ -701,8 +701,8 @@ t_mem xt_boot_hw::conf_op(cl_memory_cell *cell, t_addr a, t_mem *v) {
   if (v && a) {
     if ((a>=30 && a<=33) || a==38) { *v=cell->get(); return cell->get(); }
     if (a>=35) {
-      unsigned limit=a==35 ? 128000 : a==36 ? 16000000 : a==39 ? 255 : 1;
-      unsigned minimum=a==35 ? 12800 : a==36 ? 1000 : 0;
+      unsigned limit=a==35 ? 16000000 : a==36 ? 16000000 : a==39 ? 255 : 1;
+      unsigned minimum=a==35 ? 1024 : a==36 ? 1000 : 0;
       if (*v>limit || (*v && *v<minimum)) { *v=cell->get(); return cell->get(); }
       if (a==36 && !*v) {
         vss_left=0; vss_low=false;
@@ -716,7 +716,7 @@ t_mem xt_boot_hw::conf_op(cl_memory_cell *cell, t_addr a, t_mem *v) {
       return cell->get();
     }
     unsigned max= a<=8 ? 1023 : (a==28 || a==29) ? 8191 : (a==26 || a==27) ? 255 : a==18 ? 2 : (a==24 || a==25 || a==34) ? 1 :
-                  (a==19 || a==20) ? 1000000 : a==21 ? 64 : a==22 ? 8 : a==23 ? 4096 : 255;
+                  (a==19 || a==20) ? 16000000 : a==21 ? 64 : a==22 ? 8 : a==23 ? 4096 : 255;
     if (*v>max) {
       fprintf(stderr,"XT660 fixture input %u outside 0..%u; unchanged\n",unsigned(a),max);
       *v=cell->get();

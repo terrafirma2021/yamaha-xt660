@@ -57,6 +57,9 @@ public:
   Json record,storage_origin,transcript=Json::array();
   bool early=false,authentication_required=true,reference=false;
   unsigned loop=0,pitch=1600;
+  std::function<void(uint64_t)> plant_tick;
+  std::function<void(unsigned,unsigned,uint64_t)> plant_output;
+  uint64_t plant_deadline=0;
   NativeEngine() {
     app_start_at=dnow();cpus=cpus_m68hc12;
     application=new xt_app();application->set_name("XT660_Emulator");
@@ -73,7 +76,7 @@ public:
       auto hash=[&](uint64_t n){for(unsigned i=0;i<8;++i){event_signature^=(n>>(i*8))&255;event_signature*=1099511628211ull;}};
       for(const char* p=k;*p;++p)hash(static_cast<unsigned char>(*p));hash(ch);hash(v);hash(c);hash(pc);++event_count;
       if(std::string(k)=="serial_tx")tx[ch].push_back(v);
-      if(std::string(k)=="output") { ++outputs[ch]; if(ch==3)last_coil=c;if(ch==6)last_fuel=c; }
+      if(std::string(k)=="output") { ++outputs[ch]; if(ch==3)last_coil=c;if(ch==6)last_fuel=c;if(plant_output)plant_output(ch,v,c); }
       trace.push_back({k,ch,v,c,pc});if(trace.size()>10000)trace.pop_front();
     };
   }
@@ -86,6 +89,9 @@ public:
     for(unsigned n=0;n<count;++n) {
       int result=cpu->run_instruction();
       if(hw->fault || (result!=resGO && result!=resNOT_DONE))throw std::runtime_error("MCU stopped at "+std::to_string(cpu->PC)+", result "+std::to_string(result));
+      if(plant_tick&&cycles()+cpu->deferred_cycles>=plant_deadline) {
+        cpu->flush_hw();plant_deadline=cycles()+4000;plant_tick(cycles());
+      }
     }
     cpu->flush_hw();
   }

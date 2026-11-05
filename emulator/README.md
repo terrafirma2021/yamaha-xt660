@@ -23,7 +23,7 @@ python3 emulator/test_wasm.py
 
 `dist/xt660-wasm` contains the runtime and a separate deterministic test executable. The latter is run in Node and compared with the recorded Windows reference. The browser runtime uses one worker and needs no SharedArrayBuffer or special cross-origin isolation headers. Sources, BIN hashes and runtime hashes are checked when packaging the website.
 
-The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.4) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
+The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.5) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
 
 ```sh
 python3 scripts/site_emulator.py --runtime dist/xt660-wasm --destination dist/browser-preview/emulator
@@ -38,7 +38,7 @@ The uCsim-derived code is GPL-2.0-or-later; see [COPYING](COPYING). [Bundled dep
 
 ## Windows download
 
-[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.2). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
+[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.3). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
 
 The Windows process owns the MCU, peripherals, serial peer and simulation clock. Its worker runs independently of HTTP requests. The browser reads snapshots and sends input controls: closing, refreshing or backgrounding the tab does not pause the MCU. **Pause simulation** is an explicit command. Close the executable to stop the process.
 
@@ -78,7 +78,7 @@ python3 emulator/build.py --directory /root/xt660-ucsim
 python3 emulator/dashboard.py --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
 ```
 
-This older research harness is not used by the Windows package. To run it through WSL from PowerShell:
+This older research harness is not used by the Windows or browser packages. Its preset-speed crank fixture is retained for the older instruction experiments; it does not include the C++ engine plant below. To run it through WSL from PowerShell:
 
 ```powershell
 python emulator/dashboard.py --wsl --ucsim /root/xt660-ucsim/src/sims/m68hc12.src/xt660-emu
@@ -104,7 +104,15 @@ Throttle percentage is control travel between closed and open stops. The [Yamaha
 
 Speed uses the [Yamaha DataLogger calculation](https://github.com/terrafirma2021/Yamaha-DataLogger/blob/61a13fef5457e0128185a2ef9b5b2781ee9b12ce/yamaha/src/main.cpp#L406): add eight consecutive normal speed replies as km/h, then divide by 1.609344 for **estimated MPH**. The meter peer counts every accepted reply independently of browser updates. Diagnostic bytes are excluded, key cycles reset the window, and wide accumulation avoids the old logger's byte overflow. Original dashboard cadence and pulses/km remain unmeasured; this display profile does not establish physical speed calibration. The firmware and polling cadence are unchanged.
 
-The rotating-engine fixture ramps tooth intervals, supplies an intake-pressure ripple and models the fuel-relay supply feedback. It sustains rotation only after observing coil and injector outputs, and stops after sustained loss of either. The starter input is released before the first reset instruction; Start closes that external contact immediately. First gear supplies four road pulses per synthetic crank revolution solely as a demonstration fixture; this is **not a measured XT sensor/gear ratio**. These external signals enter the MCU model; no ECU runtime variables or flash bytes are patched. The model does not calculate combustion, torque, acceleration, wheel speed or physical temperatures.
+The browser and native Windows runtimes use an [external engine plant](native/engine_plant.hpp), advanced by MCU bus cycles independently of dashboard requests. Starter torque begins rotation from rest. Completed active-low PT6 injector pulses and PT3 coil-release edges permit combustion, with one power stroke per **720 crank degrees**; any spark on the intervening revolution is wasted. The later firmware can suppress that extra spark after pressure-based cycle identification. Combustion work accelerates an inertial crank, while friction and optional first-gear road load oppose it. The resulting rotation generates the PT1 crank input. There is no throttle-to-RPM target, host rev limiter, random RPM noise or forced ECU cut flag. The dash still reads the original serial replies, including their speed-history filtering and quantization.
+
+The original primary fuel and spark period gates independently suppress their outputs. Their stock 2054/2055 period boundaries correspond to approximately **7,303 / 7,299 RPM** under the nominal clock/crank profile. Remaining combustion work and inertia carry the crank through the cut, it slows, and the ECU resumes its outputs. This produces a limit cycle rather than an exact RPM clamp. Throttle release and the run switch allow mechanical spin-down; a brief output gap no longer freezes or stops the crank. The run switch removes combustion permission in the external plant, representing loss of running power. Key-off ends the powered simulation session.
+
+**Plant calibration is illustrative, not a dyno model.** [Yamaha's 2003 launch specification](https://global.yamaha-motor.com/news/2003/1022/tms-04.html) gives 58.4 Nm at 5,250 RPM, 35.3 kW at 6,000 RPM, an XT660X dry mass of 173 kg and a 160/60-17 rear tyre. The plant uses these torque/power limits as an envelope (`min(58.4, 35300 / angular_speed)`), not a recovered full torque curve. The 2004 R/X manual supplies primary 75/36, first gear 30/12 and final drive 45/15. This same nominal early-R/X plant is used with all five runnable BINs; it does not establish later-market engine specifications.
+
+Unmeasured fixture choices are explicit: crank inertia **0.10 kg·m²**; loaded bike/rider mass **260 kg**; nominal tyre radius **0.3119 m**; drag `4 + 0.002 × RPM` Nm; rolling coefficient **0.015**, air density **1.225 kg/m³**, drag area **0.65 m²**; starter stall torque **24 Nm**, tapering to zero at **900 RPM**; and an idle-air term `150 / max(600, RPM)`. Positive combustion work is spread over 180 degrees with a half-sine profile. Mechanical compression phase is a fixture choice because absolute TDC is unresolved. These assumptions produce deterministic power-stroke ripple and different loaded/free acceleration; they are not measurements or fitted 0–60 results. Injector pulse width is recorded, but injector flow, AFR and spark-to-torque effects are not calibrated. Editing fuel or ignition maps therefore **does not predict horsepower**.
+
+The starter contact is released before the first reset instruction; Start closes it, and successful firing releases it again. First gear still supplies four road pulses per synthetic crank revolution solely as a demonstration fixture; this is **not a measured XT sensor/gear ratio**, and the MPH display is not validated by the road-load calculation. Intake-pressure ripple and fuel-relay supply feedback remain external inputs. No ECU runtime variables or flash bytes are patched. [Native validation](native-validation.json) and [WASM validation](wasm-validation.json) record idle ripple, loaded/free acceleration, actual fuel/spark output gaps, repeated limiter recovery, spin-down and unchanged flash for each runnable BIN.
 
 The former 32-million-cycle pre-start wait was a host workaround, not a Yamaha requirement. It masked a fixture error: PB1 started low during reset, then was released after startup, creating a false starter cycle. In the early firmware, release arms `BF8:40` at `9019`; the capture path can then set `BF8:80` and reset synchronization at `DD0B–DD17`. Presenting the released contact from reset removes that false event. The [startup checks](startup-validation.json) cover immediate start across all five complete BINs, real output transitions, throttle control and rejection of an incorrect key. The ECU's debounce, authentication and inhibit code still executes.
 

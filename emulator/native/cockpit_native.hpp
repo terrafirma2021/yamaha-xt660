@@ -2,6 +2,7 @@
 // External fixtures and serial meter peer. No firmware variables are forced.
 #pragma once
 #include "engine_native.hpp"
+#include "engine_plant.hpp"
 #include <cmath>
 #include <map>
 
@@ -121,11 +122,12 @@ public:
   Json image;
   std::vector<unsigned char> storage;
   NativeMeter meter;
+  EnginePlant plant;
+  bool crank_running=false;
   int gear=0,throttle=0,coolant=512,pitch=2800;
   bool run=true,rotating=false,starting=false,reference=false;
   std::string auth="Key off",fault="none";
-  uint64_t start_cycle=0,last_firing=0,start_coil=0,start_fuel=0;
-  unsigned start_ticks=0;
+  uint64_t start_cycle=0,start_firings=0;
   explicit NativeCockpit(fs::path p):root(p){}
   void select(const Json& rec) {
     power(false);if(image.is_null()||image["id"]!=rec["id"])storage.clear();
@@ -134,16 +136,34 @@ public:
   void power(bool enabled,bool wrong_key=false,bool diagnostic=false) {
     if(!enabled) {
       if(engine){storage=engine->storage();engine.reset();}
-      meter=NativeMeter();rotating=starting=false;auth="Key off";return;
+      meter=NativeMeter();plant=EnginePlant();crank_running=false;rotating=starting=false;auth="Key off";return;
     }
     if(engine)return;require(!image.is_null(),"Select a BIN first");
     engine=std::make_unique<NativeEngine>();engine->reference=reference;
     try {
       engine->load(root,image,storage,(gear?16:0)|2);meter=NativeMeter();engine->config(41,1);
+      plant.last_cycle=engine->cycles();plant.run=run;plant.travel=throttle;plant.load=gear;
+      engine->plant_output=[this](unsigned ch,unsigned value,uint64_t cycle){plant.output(ch,value,cycle,engine->hw->pulse_count/11);};
+      engine->plant_tick=[this](uint64_t cycle){advance_plant(cycle);};
       inputs();engine->step(200000);auth="Disabled in BIN";
       if(engine->authentication_required){engine->authenticate(wrong_key);auth=wrong_key?"Key rejected":"Key accepted";}
       if(auth!="Key rejected")meter.connect(*engine,diagnostic);
     } catch(...) {engine.reset();throw;}
+  }
+  void advance_plant(uint64_t cycle) {
+    plant.advance(cycle);
+    if(meter.mode!="normal")return;
+    if(starting&&plant.firings-start_firings>=4&&plant.rpm()>900) {
+      starting=false;rotating=true;plant.starter=false;inputs();
+    }
+    if(starting&&cycle-start_cycle>80000000)stop();
+    if(plant.rpm()>=80) {
+      int next=std::max(32,rounded(2500000/plant.rpm()));
+      if(!crank_running){plant.last_power_cycle=-1;engine->crank(next);crank_running=true;}
+      if(next!=pitch){pitch=next;engine->drive(pitch,gear!=0);pressure_input();}
+    }else if(crank_running) {
+      engine->drive(-1);crank_running=false;rotating=false;pressure_input();
+    }
   }
   void pressure_input() {
     int ambient=512,dip=0;
@@ -167,27 +187,21 @@ public:
     else if(name=="fault") {
       std::string f=value.get<std::string>();require(f=="none"||f=="coolant"||f=="throttle"||f=="pressure"||f=="air"||f=="combined","Unknown sensor fault");fault=f;
     } else if(name=="run"){run=bool_value(value);if(!run)stop();}
-    else throw std::invalid_argument("Unknown control");inputs();
+    else throw std::invalid_argument("Unknown control");
+    plant.travel=throttle;plant.load=gear;plant.run=run;inputs();
   }
-  void stop(){starting=rotating=false;if(engine){engine->drive(-1);inputs();}}
+  void stop(){starting=false;plant.starter=false;if(engine)inputs();}
   void start() {
     require(engine&&run,"Turn the key and run switch on first");
     require(meter.mode=="normal","Leave diagnostics before starting");
     require(auth!="Key rejected","The ECU rejected this key");
-    if(rotating||starting)return;starting=true;start_ticks=0;pitch=2800;inputs();
-    start_cycle=last_firing=engine->cycles();start_coil=engine->outputs[3];start_fuel=engine->outputs[6];engine->crank(pitch);
+    if(rotating||starting)return;starting=true;plant.starter=true;plant.run=run;plant.travel=throttle;plant.load=gear;inputs();
+    start_cycle=engine->cycles();start_firings=plant.firings;
   }
   void tick() {
     require(bool(engine),"Key is off");
-    if(rotating){pitch+=std::clamp(1800-throttle*13-pitch,-200,200);engine->drive(pitch,gear!=0);pressure_input();}
     if(meter.mode!="normal")for(int n=0;n<8;++n)meter.poll(*engine);
     else {engine->step(200000);if(auth!="Key rejected")meter.poll(*engine);}
-    if(engine->last_coil>start_cycle&&engine->last_fuel>start_cycle)last_firing=std::min(engine->last_coil,engine->last_fuel);
-    if(starting) {
-      ++start_ticks;
-      if(engine->outputs[3]-start_coil>=4&&engine->outputs[6]-start_fuel>=4){rotating=true;starting=false;inputs();}
-      else if(start_ticks>=16)stop();
-    }else if(rotating&&engine->cycles()-last_firing>4000000)stop();
   }
   void diagnostics(bool enabled){power(false);run=!enabled;power(true,false,enabled);inputs();}
   void diagnostic_next(int direction) {
@@ -214,6 +228,8 @@ public:
       faults.push_back({{"id",f.first},{"label",f.second}});
     return {{"selected",image.is_null()?Json():image["id"]},{"powered",bool(engine)},{"gear",gear},{"throttle",throttle},
       {"coolant",coolant},{"run",run},{"starting",starting},{"rotating",rotating},{"authentication",auth},{"fault",fault},
-      {"faults",faults},{"meter",meter.state(engine?engine->cycles():0)}};
+      {"faults",faults},{"plant",{{"rpm",plant.rpm()},{"crank_revolutions",plant.angle/(2*EnginePlant::pi)},
+      {"combustions",plant.firings},{"sparks",plant.sparks},{"injections",plant.injections},{"injection_ms",plant.last_injection_ms},
+      {"inertia_kg_m2",plant.inertia()},{"fixture",true}}},{"meter",meter.state(engine?engine->cycles():0)}};
   }
 };

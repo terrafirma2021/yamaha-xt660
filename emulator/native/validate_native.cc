@@ -16,6 +16,74 @@ Json checkpoint(NativeCockpit& b) {
 template<class F> void until(NativeCockpit& b,F condition,int limit) {
   while(!condition()&&limit-->0)b.tick();require(condition(),"Firmware condition not reached");
 }
+void check_plant_math() {
+  EnginePlant p;p.omega=200;p.last_cycle=1;
+  auto initial=p.rpm();p.advance(16001);
+  require(p.rpm()>0&&p.rpm()<initial,"Inertia must coast, not freeze or stop instantly");
+  p.output(3,1,16002,1);p.output(3,0,32002,1);
+  require(p.firings==0,"Spark alone produced combustion");
+  p.output(6,1,33002,1);p.output(6,0,34002,1);
+  require(p.injections==0,"Injector idle-high was treated as a pulse");
+  p.output(6,1,50002,1);require(p.injections==1&&p.last_injection_ms==1,"Active-low injector duration");
+  p.output(3,1,51002,3);p.output(3,0,52002,3);
+  require(p.firings==1,"Completed fuel pulse and coil release did not ignite");
+  p.output(3,1,53002,4);p.output(3,0,54002,4);
+  require(p.firings==1,"Wasted spark incorrectly produced another power stroke");
+  p.output(3,1,55002,5);p.output(3,0,56002,5);
+  require(p.firings==1,"Consumed fuel pulse was reused");
+  require(std::abs(EnginePlant::envelope(5250)-58.4)<1e-9,"Yamaha torque anchor");
+  require(std::abs(EnginePlant::envelope(6000)*6000*2*EnginePlant::pi/60-35300)<1e-6,"Yamaha power anchor");
+}
+Json check_dynamics(NativeCockpit& b) {
+  Json modes=Json::array();
+  for(int gear:{0,1}) {
+    b.power(false);b.control("run",true);b.control("gear",0);b.control("throttle",0);b.power(true);b.start();
+    until(b,[&]{return b.rotating;},100);
+    auto idle=b.engine->cycles();while(b.engine->cycles()-idle<48000000)b.tick();
+    double idle_min=1e9,idle_max=0;
+    for(int n=0;n<12;++n){b.tick();idle_min=std::min(idle_min,b.plant.rpm());idle_max=std::max(idle_max,b.plant.rpm());}
+    require(idle_min>700&&idle_max<2200&&idle_max-idle_min>1,"Idle must retain power-stroke ripple");
+    b.control("gear",gear);b.control("throttle",100);auto begin=b.engine->cycles();
+    auto advance=b.engine->plant_tick;
+    unsigned previous=0,entries=0,resumes=0;uint64_t first_cut=0,cut_begin=0;
+    uint64_t gap_sparks=0,gap_fuel=0,longest_cut=0;bool coast_during_cut=false;
+    double peak=0,cut_rpm=0;
+    b.engine->plant_tick=[&](uint64_t c) {
+      advance(c);peak=std::max(peak,b.plant.rpm());unsigned mask=b.engine->byte(0x88c)&10;
+      if(mask==10&&previous!=10) {
+        ++entries;if(!first_cut)first_cut=c;cut_begin=c;cut_rpm=b.plant.rpm();
+      }
+      if(first_cut){gap_sparks=std::max(gap_sparks,c-b.plant.last_spark);gap_fuel=std::max(gap_fuel,c-b.plant.last_fuel);}
+      if(mask==0&&previous==10) {
+        ++resumes;longest_cut=std::max(longest_cut,c-cut_begin);
+        if(b.plant.rpm()<cut_rpm-10)coast_during_cut=true;
+      }
+      previous=mask;
+    };
+    while(b.engine->cycles()-begin<128000000) {
+      b.tick();require(b.rotating&&b.meter.state()["fault"]==0,"WOT engine stopped or faulted");
+    }
+    b.engine->plant_tick=advance;
+    require(entries>=3&&resumes>=3&&coast_during_cut&&peak>7000&&peak<8500,"Original ECU did not govern the limiter cycle");
+    require(longest_cut>160000,"Cut did not persist across combustion opportunities");
+    require(gap_sparks>480000&&gap_fuel>480000,"Cut flags did not interrupt actual spark and injector pulses");
+    double before=b.plant.rpm();b.control("throttle",0);auto coast=b.engine->cycles();b.tick();
+    // A power stroke already in progress can finish after closing the throttle.
+    require(b.plant.rpm()>500&&std::abs(b.plant.rpm()-before)<500,"Throttle release must preserve crank inertia");
+    while(b.engine->cycles()-coast<32000000)b.tick();
+    require(b.plant.rpm()<before-500,"Closed throttle did not decelerate");
+    b.control("run",false);auto stop=b.engine->cycles();b.tick();
+    require(b.plant.rpm()>0,"Run switch froze the crank");
+    while(b.engine->cycles()-stop<480000000&&b.plant.rpm()>0)b.tick();
+    require(b.plant.rpm()==0&&!b.rotating,"Stopped engine kept turning: "+std::to_string(b.plant.rpm()));b.engine->verify();
+    modes.push_back({{"gear",gear},{"idle_min_rpm",idle_min},{"idle_max_rpm",idle_max},{"peak_rpm",peak},
+      {"first_cut_seconds",double(first_cut-begin)/16000000},{"cut_entries",entries},{"cut_resumes",resumes},
+      {"longest_cut_ms",double(longest_cut)/16000},{"longest_spark_gap_ms",double(gap_sparks)/16000},
+      {"longest_injection_gap_ms",double(gap_fuel)/16000},{"coasts_during_cut",coast_during_cut},{"flash_unchanged",true}});
+  }
+  require(modes[1]["first_cut_seconds"].get<double>()>modes[0]["first_cut_seconds"].get<double>(),"Load did not slow acceleration");
+  b.power(false);return modes;
+}
 void check_meter_display() {
   auto reply=[](unsigned p){return std::vector<unsigned>{0,p,0,57,(p+57)&255};};
   NativeMeter m;
@@ -40,6 +108,7 @@ void check_meter_display() {
 }
 int main(int argc,char**argv){try {
   check_meter_display();
+  check_plant_math();
   require(argc>=3,"Usage: validate.exe ROOT report.json [reference] [full]");
   fs::path root=argv[1];bool reference=argc>3&&std::string(argv[3])=="reference",full=argc>4;
   auto registry=Json::parse(read_bytes(root/"firmware/registry.json"));Json results=Json::array();
@@ -49,7 +118,7 @@ int main(int argc,char**argv){try {
     NativeCockpit b(root);b.reference=reference;b.select(row);Json checkpoints=Json::array();
     auto start=Clock::now();b.power(true);double key=std::chrono::duration<double>(Clock::now()-start).count();
     checkpoints.push_back(checkpoint(b));auto key_cycles=b.engine->cycles();b.start();require(b.engine->cycles()==key_cycles,"Starter command advanced CPU");
-    until(b,[&]{return b.rotating;},16);checkpoints.push_back(checkpoint(b));
+    until(b,[&]{return b.rotating;},100);checkpoints.push_back(checkpoint(b));
     Json performance=Json::array();
     for(int t:{0,100,0}) {
       b.control("throttle",t);b.control("gear",t?1:0);start=Clock::now();auto cycles=b.engine->cycles();
@@ -66,6 +135,7 @@ int main(int argc,char**argv){try {
       r["bad_key"]=checkpoint(b);
     }
     b.power(false);
+    if(full)r["dynamics"]=check_dynamics(b);
     // End-to-end TPS: physical-input fixture -> original ADC/diagnostic code
     // -> checked K-line reply. No forced RAM or dashboard percentage mapping.
     b.diagnostics(true);until(b,[&]{return b.meter.mode=="diagnostic";},240);
