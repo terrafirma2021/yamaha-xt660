@@ -18,7 +18,7 @@ def compare(optimized,reference):
     assert len(optimized['images'])==len(reference['images'])==5
     for actual,expected in zip(optimized['images'],reference['images']):
         assert actual['image']==expected['image']
-        for name in ('checkpoints','bad_key','tps','tps_fault_reply'):
+        for name in ('checkpoints','bad_key','tps','tps_fault_reply','supply'):
             assert actual.get(name)==expected.get(name),(actual['image'],name)
     return sum(len(x['checkpoints'])+('bad_key' in x) for x in optimized['images'])
 

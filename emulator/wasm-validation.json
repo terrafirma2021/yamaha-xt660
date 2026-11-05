@@ -31,10 +31,11 @@
     "tps",
     "tps_fault_reply",
     "dynamics",
-    "gearing"
+    "gearing",
+    "supply"
   ],
-  "reference_report_sha256": "09e70d8a9185c42ee963c45c6388d944844aaf8bb0656a13e596520dee5443e1",
-  "execution_report_sha256": "3a175b4b6d69133bad40692b85bc9c457ad8129ce5369245db060d1e68a4f444",
+  "reference_report_sha256": "b914b1626ac54207b6b919c2940b658cfe25f43c0f284c6d3f9b69206a611e49",
+  "execution_report_sha256": "6c676265cf9b9a6bc020e1f33aed90b673a593224f7dd886aed7abecf3f04a39",
   "execution": [
     {
       "image": "xt660-2004-2006-companion",
@@ -44,22 +45,22 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.029015375,
+          "simulated_seconds": 2.02913625,
           "throttle": 0,
-          "unpaced_ratio": 1.1121237977890337,
-          "wall_seconds": 1.824451
+          "unpaced_ratio": 1.1241516036865487,
+          "wall_seconds": 1.8050379
         },
         {
-          "simulated_seconds": 2.00677975,
+          "simulated_seconds": 2.0054138125,
           "throttle": 100,
-          "unpaced_ratio": 1.0879967450851253,
-          "wall_seconds": 1.8444722
+          "unpaced_ratio": 1.1131087621992777,
+          "wall_seconds": 1.8016333
         },
         {
-          "simulated_seconds": 1.9859635625,
+          "simulated_seconds": 1.985081125,
           "throttle": 0,
-          "unpaced_ratio": 1.0839348640892121,
-          "wall_seconds": 1.8321798
+          "unpaced_ratio": 1.0978477063746286,
+          "wall_seconds": 1.8081571
         }
       ],
       "dynamics": [
@@ -67,29 +68,29 @@
           "coasts_during_cut": true,
           "cut_entries": 120,
           "cut_resumes": 119,
-          "first_cut_seconds": 1.1363145,
+          "first_cut_seconds": 1.13602875,
           "flash_unchanged": true,
           "gear": 0,
-          "idle_max_rpm": 1424.505680528322,
-          "idle_min_rpm": 1375.6313102038237,
-          "longest_cut_ms": 33.0139375,
-          "longest_injection_gap_ms": 49.2870625,
-          "longest_spark_gap_ms": 41.0853125,
-          "peak_rpm": 7345.808318591072
+          "idle_max_rpm": 1424.3700444220362,
+          "idle_min_rpm": 1375.6530013539889,
+          "longest_cut_ms": 33.2610625,
+          "longest_injection_gap_ms": 49.289,
+          "longest_spark_gap_ms": 41.0815625,
+          "peak_rpm": 7345.747280407267
         },
         {
           "coasts_during_cut": true,
-          "cut_entries": 112,
-          "cut_resumes": 110,
-          "first_cut_seconds": 2.4010416875,
+          "cut_entries": 113,
+          "cut_resumes": 111,
+          "first_cut_seconds": 2.3414670625,
           "flash_unchanged": true,
           "gear": 1,
-          "idle_max_rpm": 1424.505680528322,
-          "idle_min_rpm": 1375.6313102038237,
-          "longest_cut_ms": 33.2615625,
-          "longest_injection_gap_ms": 49.3398125,
-          "longest_spark_gap_ms": 41.11175,
-          "peak_rpm": 7328.235896395367
+          "idle_max_rpm": 1424.3700444220362,
+          "idle_min_rpm": 1375.6530013539889,
+          "longest_cut_ms": 33.012,
+          "longest_injection_gap_ms": 49.25825,
+          "longest_spark_gap_ms": 41.067375,
+          "peak_rpm": 7333.693071740551
         }
       ],
       "gearing": [
@@ -107,7 +108,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 41700,
-          "received_kmh": 45.34310976000697
+          "received_kmh": 45.34317404557306
         },
         {
           "expected_kmh": 69.40830105146651,
@@ -123,7 +124,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 27105,
-          "received_kmh": 69.34022429761102
+          "received_kmh": 69.34021337582325
         },
         {
           "expected_kmh": 98.07694713794183,
@@ -139,7 +140,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 19182,
-          "received_kmh": 98.08382154918485
+          "received_kmh": 98.08380609998935
         },
         {
           "expected_kmh": 124.0673381294964,
@@ -155,7 +156,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 15164,
-          "received_kmh": 123.76119875401929
+          "received_kmh": 123.76125704691442
         },
         {
           "expected_kmh": 146.62503597122296,
@@ -171,7 +172,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 12831,
-          "received_kmh": 146.6811743951613
+          "received_kmh": 146.68115129140133
         },
         {
           "expected_kmh": 46.273381294964025,
@@ -187,7 +188,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 41700,
-          "received_kmh": 46.50694015288768
+          "received_kmh": 46.50700608848386
         },
         {
           "expected_kmh": 71.18981737686774,
@@ -203,7 +204,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 27105,
-          "received_kmh": 71.11999328376699
+          "received_kmh": 71.11998208164758
         },
         {
           "expected_kmh": 100.59430716296528,
@@ -219,7 +220,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 19182,
-          "received_kmh": 100.601358021055
+          "received_kmh": 100.601342175322
         },
         {
           "expected_kmh": 127.25179856115109,
@@ -235,7 +236,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 15164,
-          "received_kmh": 126.93780144694534
+          "received_kmh": 126.93786123605553
         },
         {
           "expected_kmh": 150.38848920863305,
@@ -251,9 +252,16 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 12831,
-          "received_kmh": 150.44606854838707
+          "received_kmh": 150.4460448516184
         }
-      ]
+      ],
+      "supply": {
+        "run_off_adc10": 614,
+        "running_adc10": 737,
+        "running_firmware_high": 184,
+        "stopped_adc10": 614,
+        "stopped_firmware_high": 153
+      }
     },
     {
       "image": "xt660-5vk-1x-2008",
@@ -263,52 +271,52 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.000285375,
+          "simulated_seconds": 2.000349,
           "throttle": 0,
-          "unpaced_ratio": 1.086992933760656,
-          "wall_seconds": 1.8402009
+          "unpaced_ratio": 1.0923616884069696,
+          "wall_seconds": 1.8312149
         },
         {
-          "simulated_seconds": 1.971833625,
+          "simulated_seconds": 1.972345375,
           "throttle": 100,
-          "unpaced_ratio": 1.0722833961123401,
-          "wall_seconds": 1.8389109
+          "unpaced_ratio": 1.0750698945602157,
+          "wall_seconds": 1.8346206
         },
         {
-          "simulated_seconds": 1.9481055,
+          "simulated_seconds": 1.9534315625,
           "throttle": 0,
-          "unpaced_ratio": 1.0656811327598843,
-          "wall_seconds": 1.8280379
+          "unpaced_ratio": 1.0683448914781155,
+          "wall_seconds": 1.8284653
         }
       ],
       "dynamics": [
         {
           "coasts_during_cut": true,
           "cut_entries": 61,
-          "cut_resumes": 61,
-          "first_cut_seconds": 1.097400625,
+          "cut_resumes": 60,
+          "first_cut_seconds": 1.097358125,
           "flash_unchanged": true,
           "gear": 0,
-          "idle_max_rpm": 1426.2722774399112,
-          "idle_min_rpm": 1375.0800339358473,
-          "longest_cut_ms": 82.2758125,
-          "longest_injection_gap_ms": 98.182,
-          "longest_spark_gap_ms": 81.7494375,
-          "peak_rpm": 7427.754119673933
+          "idle_max_rpm": 1426.2700039017345,
+          "idle_min_rpm": 1375.072139144299,
+          "longest_cut_ms": 97.782625,
+          "longest_injection_gap_ms": 114.476625,
+          "longest_spark_gap_ms": 97.6411875,
+          "peak_rpm": 7451.586901759186
         },
         {
           "coasts_during_cut": true,
           "cut_entries": 57,
-          "cut_resumes": 57,
-          "first_cut_seconds": 2.300551625,
+          "cut_resumes": 56,
+          "first_cut_seconds": 2.3005028125,
           "flash_unchanged": true,
           "gear": 1,
-          "idle_max_rpm": 1426.2722774399112,
-          "idle_min_rpm": 1375.0800339358473,
-          "longest_cut_ms": 98.78375,
-          "longest_injection_gap_ms": 114.306875,
-          "longest_spark_gap_ms": 98.104625,
-          "peak_rpm": 7373.095071615628
+          "idle_max_rpm": 1426.2700039017345,
+          "idle_min_rpm": 1375.072139144299,
+          "longest_cut_ms": 98.281875,
+          "longest_injection_gap_ms": 114.404125,
+          "longest_spark_gap_ms": 98.1103125,
+          "peak_rpm": 7373.088988625921
         }
       ],
       "gearing": [
@@ -326,7 +334,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 41700,
-          "received_kmh": 45.32610591652128
+          "received_kmh": 45.02396080385254
         },
         {
           "expected_kmh": 69.40830105146651,
@@ -342,7 +350,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 27105,
-          "received_kmh": 69.5000290719993
+          "received_kmh": 69.50005139802632
         },
         {
           "expected_kmh": 98.07694713794183,
@@ -350,10 +358,10 @@
           "gear": 3,
           "last_frame": [
             161,
-            41,
+            40,
             0,
             57,
-            3
+            2
           ],
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
@@ -374,7 +382,7 @@
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 15164,
-          "received_kmh": 123.78633843931276
+          "received_kmh": 123.78929127590575
         },
         {
           "expected_kmh": 146.62503597122296,
@@ -382,15 +390,15 @@
           "gear": 5,
           "last_frame": [
             161,
-            61,
+            60,
             0,
             57,
-            23
+            22
           ],
           "model": "xt660x",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 12831,
-          "received_kmh": 146.85413006627343
+          "received_kmh": 146.554479748291
         },
         {
           "expected_kmh": 46.273381294964025,
@@ -406,7 +414,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 41700,
-          "received_kmh": 46.48949986845321
+          "received_kmh": 46.179599538574074
         },
         {
           "expected_kmh": 71.18981737686774,
@@ -422,285 +430,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 27105,
-          "received_kmh": 71.28389979829494
-        },
-        {
-          "expected_kmh": 100.59430716296528,
-          "flash_unchanged": true,
-          "gear": 3,
-          "last_frame": [
-            161,
-            41,
-            0,
-            57,
-            3
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 19182,
-          "received_kmh": 100.72728207236842
-        },
-        {
-          "expected_kmh": 127.25179856115109,
-          "flash_unchanged": true,
-          "gear": 4,
-          "last_frame": [
-            161,
-            51,
-            0,
-            57,
-            13
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 15164,
-          "received_kmh": 126.96358639741726
-        },
-        {
-          "expected_kmh": 150.38848920863305,
-          "flash_unchanged": true,
-          "gear": 5,
-          "last_frame": [
-            161,
-            61,
-            0,
-            57,
-            23
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 12831,
-          "received_kmh": 150.62346350625583
-        }
-      ]
-    },
-    {
-      "image": "xt660-2c1-10",
-      "bin_sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
-      "checkpoints": 6,
-      "bad_key_matches": true,
-      "diagnostic_fields_match": true,
-      "unpaced_performance": [
-        {
-          "simulated_seconds": 2.0002834375,
-          "throttle": 0,
-          "unpaced_ratio": 1.0894829129015386,
-          "wall_seconds": 1.8359934
-        },
-        {
-          "simulated_seconds": 1.9726025625,
-          "throttle": 100,
-          "unpaced_ratio": 1.0698035685164475,
-          "wall_seconds": 1.8438923
-        },
-        {
-          "simulated_seconds": 1.9491020625,
-          "throttle": 0,
-          "unpaced_ratio": 1.061851583966434,
-          "wall_seconds": 1.8355692
-        }
-      ],
-      "dynamics": [
-        {
-          "coasts_during_cut": true,
-          "cut_entries": 61,
-          "cut_resumes": 61,
-          "first_cut_seconds": 1.0974078125,
-          "flash_unchanged": true,
-          "gear": 0,
-          "idle_max_rpm": 1426.292761298776,
-          "idle_min_rpm": 1375.0700680492514,
-          "longest_cut_ms": 82.2745625,
-          "longest_injection_gap_ms": 98.1551875,
-          "longest_spark_gap_ms": 81.7915625,
-          "peak_rpm": 7427.891218799949
-        },
-        {
-          "coasts_during_cut": true,
-          "cut_entries": 57,
-          "cut_resumes": 56,
-          "first_cut_seconds": 2.3580545,
-          "flash_unchanged": true,
-          "gear": 1,
-          "idle_max_rpm": 1426.292761298776,
-          "idle_min_rpm": 1375.0700680492514,
-          "longest_cut_ms": 82.2774375,
-          "longest_injection_gap_ms": 98.4448125,
-          "longest_spark_gap_ms": 81.939,
-          "peak_rpm": 7360.15681336215
-        }
-      ],
-      "gearing": [
-        {
-          "expected_kmh": 46.273381294964025,
-          "flash_unchanged": true,
-          "gear": 1,
-          "last_frame": [
-            161,
-            19,
-            0,
-            57,
-            237
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 41700,
-          "received_kmh": 46.48949986845321
-        },
-        {
-          "expected_kmh": 71.18981737686774,
-          "flash_unchanged": true,
-          "gear": 2,
-          "last_frame": [
-            161,
-            29,
-            0,
-            57,
-            247
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 27105,
-          "received_kmh": 71.28389979829494
-        },
-        {
-          "expected_kmh": 100.59430716296528,
-          "flash_unchanged": true,
-          "gear": 3,
-          "last_frame": [
-            161,
-            41,
-            0,
-            57,
-            3
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 19182,
-          "received_kmh": 100.72728207236842
-        },
-        {
-          "expected_kmh": 127.25179856115109,
-          "flash_unchanged": true,
-          "gear": 4,
-          "last_frame": [
-            161,
-            51,
-            0,
-            57,
-            13
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 15164,
-          "received_kmh": 126.96358639741726
-        },
-        {
-          "expected_kmh": 150.38848920863305,
-          "flash_unchanged": true,
-          "gear": 5,
-          "last_frame": [
-            161,
-            61,
-            0,
-            57,
-            23
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 12831,
-          "received_kmh": 150.62346350625583
-        }
-      ]
-    },
-    {
-      "image": "xt660-2c1-10-immo-off",
-      "bin_sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
-      "checkpoints": 6,
-      "bad_key_matches": false,
-      "diagnostic_fields_match": true,
-      "unpaced_performance": [
-        {
-          "simulated_seconds": 2.0002481875,
-          "throttle": 0,
-          "unpaced_ratio": 1.0832343853808364,
-          "wall_seconds": 1.8465516
-        },
-        {
-          "simulated_seconds": 1.9727449375,
-          "throttle": 100,
-          "unpaced_ratio": 1.067429141650578,
-          "wall_seconds": 1.8481273
-        },
-        {
-          "simulated_seconds": 1.9493538125,
-          "throttle": 0,
-          "unpaced_ratio": 1.0593374612099622,
-          "wall_seconds": 1.8401632
-        }
-      ],
-      "dynamics": [
-        {
-          "coasts_during_cut": true,
-          "cut_entries": 61,
-          "cut_resumes": 61,
-          "first_cut_seconds": 1.097307,
-          "flash_unchanged": true,
-          "gear": 0,
-          "idle_max_rpm": 1426.3164104341784,
-          "idle_min_rpm": 1375.0589776919887,
-          "longest_cut_ms": 82.0274375,
-          "longest_injection_gap_ms": 98.160125,
-          "longest_spark_gap_ms": 81.782375,
-          "peak_rpm": 7427.912923636059
-        },
-        {
-          "coasts_during_cut": true,
-          "cut_entries": 57,
-          "cut_resumes": 57,
-          "first_cut_seconds": 2.3579660625,
-          "flash_unchanged": true,
-          "gear": 1,
-          "idle_max_rpm": 1426.3164104341784,
-          "idle_min_rpm": 1375.0589776919887,
-          "longest_cut_ms": 82.0279375,
-          "longest_injection_gap_ms": 98.2495,
-          "longest_spark_gap_ms": 81.8975625,
-          "peak_rpm": 7357.577419064153
-        }
-      ],
-      "gearing": [
-        {
-          "expected_kmh": 46.273381294964025,
-          "flash_unchanged": true,
-          "gear": 1,
-          "last_frame": [
-            161,
-            19,
-            0,
-            57,
-            237
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 41700,
-          "received_kmh": 46.48949986845321
-        },
-        {
-          "expected_kmh": 71.18981737686774,
-          "flash_unchanged": true,
-          "gear": 2,
-          "last_frame": [
-            161,
-            29,
-            0,
-            57,
-            247
-          ],
-          "model": "xt660r",
-          "nominal_rpm": 5995.2038369304555,
-          "pulse_period_cycles": 27105,
-          "received_kmh": 71.05436825992302
+          "received_kmh": 71.28392269736842
         },
         {
           "expected_kmh": 100.59430716296528,
@@ -716,7 +446,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 19182,
-          "received_kmh": 100.72724971498198
+          "received_kmh": 100.72728207236842
         },
         {
           "expected_kmh": 127.25179856115109,
@@ -732,7 +462,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 15164,
-          "received_kmh": 127.07138128064005
+          "received_kmh": 126.96661502503981
         },
         {
           "expected_kmh": 150.38848920863305,
@@ -748,64 +478,71 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 12831,
-          "received_kmh": 149.79436119921155
+          "received_kmh": 150.31612200544208
         }
-      ]
+      ],
+      "supply": {
+        "run_off_adc10": 614,
+        "running_adc10": 737,
+        "running_firmware_high": 184,
+        "stopped_adc10": 614,
+        "stopped_firmware_high": 153
+      }
     },
     {
-      "image": "xt660-5vk-11",
-      "bin_sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "image": "xt660-2c1-10",
+      "bin_sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
       "checkpoints": 6,
       "bad_key_matches": true,
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.000285375,
+          "simulated_seconds": 2.000349,
           "throttle": 0,
-          "unpaced_ratio": 1.0514378174297843,
-          "wall_seconds": 1.9024286
+          "unpaced_ratio": 1.0875451592296086,
+          "wall_seconds": 1.839325
         },
         {
-          "simulated_seconds": 1.97259675,
+          "simulated_seconds": 1.973130375,
           "throttle": 100,
-          "unpaced_ratio": 1.0339955560028558,
-          "wall_seconds": 1.907742
+          "unpaced_ratio": 1.0549249577149002,
+          "wall_seconds": 1.8703988
         },
         {
-          "simulated_seconds": 1.9490735625,
+          "simulated_seconds": 1.94981175,
           "throttle": 0,
-          "unpaced_ratio": 1.0230721958316185,
-          "wall_seconds": 1.9051183
+          "unpaced_ratio": 1.0527026538928572,
+          "wall_seconds": 1.8521961
         }
       ],
       "dynamics": [
         {
           "coasts_during_cut": true,
           "cut_entries": 61,
-          "cut_resumes": 61,
-          "first_cut_seconds": 1.097400625,
+          "cut_resumes": 60,
+          "first_cut_seconds": 1.097358125,
           "flash_unchanged": true,
           "gear": 0,
-          "idle_max_rpm": 1426.2722774399112,
-          "idle_min_rpm": 1375.0800339358473,
-          "longest_cut_ms": 82.2758125,
-          "longest_injection_gap_ms": 98.182,
-          "longest_spark_gap_ms": 81.7494375,
-          "peak_rpm": 7427.754119673933
+          "idle_max_rpm": 1426.2700037025008,
+          "idle_min_rpm": 1375.0721384813,
+          "longest_cut_ms": 97.782625,
+          "longest_injection_gap_ms": 114.278625,
+          "longest_spark_gap_ms": 97.6411875,
+          "peak_rpm": 7451.586922410868
         },
         {
           "coasts_during_cut": true,
           "cut_entries": 57,
-          "cut_resumes": 56,
-          "first_cut_seconds": 2.3580635625,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3580225625,
           "flash_unchanged": true,
           "gear": 1,
-          "idle_max_rpm": 1426.2722774399112,
-          "idle_min_rpm": 1375.0800339358473,
-          "longest_cut_ms": 82.2779375,
-          "longest_injection_gap_ms": 98.4054375,
-          "longest_spark_gap_ms": 81.9465625,
-          "peak_rpm": 7360.160571486745
+          "idle_max_rpm": 1426.2700037025008,
+          "idle_min_rpm": 1375.0721384813,
+          "longest_cut_ms": 82.0275,
+          "longest_injection_gap_ms": 98.2825625,
+          "longest_spark_gap_ms": 81.9478125,
+          "peak_rpm": 7357.589716311469
         }
       ],
       "gearing": [
@@ -823,7 +560,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 41700,
-          "received_kmh": 46.48949986845321
+          "received_kmh": 46.179599538574074
         },
         {
           "expected_kmh": 71.18981737686774,
@@ -839,7 +576,7 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 27105,
-          "received_kmh": 71.28389979829494
+          "received_kmh": 71.28392269736842
         },
         {
           "expected_kmh": 100.59430716296528,
@@ -847,10 +584,10 @@
           "gear": 3,
           "last_frame": [
             161,
-            41,
+            40,
             0,
             57,
-            3
+            2
           ],
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
@@ -871,7 +608,153 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 15164,
-          "received_kmh": 126.96358639741726
+          "received_kmh": 126.96661502503981
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            60,
+            0,
+            57,
+            22
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 150.31612200544208
+        }
+      ],
+      "supply": {
+        "run_off_adc10": 614,
+        "running_adc10": 737,
+        "running_firmware_high": 184,
+        "stopped_adc10": 614,
+        "stopped_firmware_high": 153
+      }
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "bin_sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
+      "checkpoints": 6,
+      "bad_key_matches": false,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.00032025,
+          "throttle": 0,
+          "unpaced_ratio": 1.09821049994562,
+          "wall_seconds": 1.8214361
+        },
+        {
+          "simulated_seconds": 1.97319725,
+          "throttle": 100,
+          "unpaced_ratio": 1.078625083457994,
+          "wall_seconds": 1.8293634
+        },
+        {
+          "simulated_seconds": 1.9500335,
+          "throttle": 0,
+          "unpaced_ratio": 1.07643501226342,
+          "wall_seconds": 1.8115664
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 60,
+          "first_cut_seconds": 1.0972351875,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.3108609784,
+          "idle_min_rpm": 1375.0665226265667,
+          "longest_cut_ms": 82.0290625,
+          "longest_injection_gap_ms": 98.1738125,
+          "longest_spark_gap_ms": 81.7851875,
+          "peak_rpm": 7427.834839315943
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3578984375,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.3108609784,
+          "idle_min_rpm": 1375.0665226265667,
+          "longest_cut_ms": 82.02675,
+          "longest_injection_gap_ms": 98.318,
+          "longest_spark_gap_ms": 81.888875,
+          "peak_rpm": 7357.580525109229
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.33711983678267
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.28394559645662
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            41,
+            0,
+            57,
+            3
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.72729825106944
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            52,
+            0,
+            57,
+            14
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 127.38129101904474
         },
         {
           "expected_kmh": 150.38848920863305,
@@ -887,9 +770,162 @@
           "model": "xt660r",
           "nominal_rpm": 5995.2038369304555,
           "pulse_period_cycles": 12831,
-          "received_kmh": 150.62346350625583
+          "received_kmh": 150.13212406117955
         }
-      ]
+      ],
+      "supply": {
+        "run_off_adc10": 614,
+        "running_adc10": 737,
+        "running_firmware_high": 184,
+        "stopped_adc10": 614,
+        "stopped_firmware_high": 153
+      }
+    },
+    {
+      "image": "xt660-5vk-11",
+      "bin_sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
+      "checkpoints": 6,
+      "bad_key_matches": true,
+      "diagnostic_fields_match": true,
+      "unpaced_performance": [
+        {
+          "simulated_seconds": 2.000349,
+          "throttle": 0,
+          "unpaced_ratio": 1.0668526862023802,
+          "wall_seconds": 1.8750002
+        },
+        {
+          "simulated_seconds": 1.973130375,
+          "throttle": 100,
+          "unpaced_ratio": 1.0710802180646886,
+          "wall_seconds": 1.8421873
+        },
+        {
+          "simulated_seconds": 1.94981175,
+          "throttle": 0,
+          "unpaced_ratio": 1.0493021305688208,
+          "wall_seconds": 1.8581986
+        }
+      ],
+      "dynamics": [
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 61,
+          "cut_resumes": 60,
+          "first_cut_seconds": 1.097358125,
+          "flash_unchanged": true,
+          "gear": 0,
+          "idle_max_rpm": 1426.2700039017345,
+          "idle_min_rpm": 1375.072139144299,
+          "longest_cut_ms": 97.782625,
+          "longest_injection_gap_ms": 114.476625,
+          "longest_spark_gap_ms": 97.6411875,
+          "peak_rpm": 7451.586901759186
+        },
+        {
+          "coasts_during_cut": true,
+          "cut_entries": 57,
+          "cut_resumes": 57,
+          "first_cut_seconds": 2.3580225625,
+          "flash_unchanged": true,
+          "gear": 1,
+          "idle_max_rpm": 1426.2700039017345,
+          "idle_min_rpm": 1375.072139144299,
+          "longest_cut_ms": 82.0275,
+          "longest_injection_gap_ms": 98.372375,
+          "longest_spark_gap_ms": 81.9478125,
+          "peak_rpm": 7357.589692967414
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.179599538574074
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.28392269736842
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            40,
+            0,
+            57,
+            2
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.72728207236842
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            51,
+            0,
+            57,
+            13
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 126.96661502503981
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            60,
+            0,
+            57,
+            22
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 150.31612200544208
+        }
+      ],
+      "supply": {
+        "run_off_adc10": 614,
+        "running_adc10": 737,
+        "running_firmware_high": 184,
+        "stopped_adc10": 614,
+        "stopped_firmware_high": 153
+      }
     }
   ],
   "browser": {
@@ -977,10 +1013,11 @@
     "network": "Static same-origin requests only; no MCU server, API polling, COM port or remote scripts",
     "pacing_artifact_sha256": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
     "pacing_note": "Recorded browser pacing for the initial browser build; this display update replays the same execution checkpoints and records fresh unpaced results below.",
-    "date": "2026-11-04"
+    "date": "2026-11-04",
+    "scope": "Earlier browser UI/pacing checks retained for provenance; no UI changes in this supply update. Current runtime is covered by fresh native/WASM parity and supply tests."
   },
   "artifacts": {
-    "xt660.wasm": "58e0d33ab4e046aaac5e92739fb5ae6381ade5e2d2f7257a34249e8df824b598",
+    "xt660.wasm": "68a94b2683960c1283ad9c434f9c4b12a2b8f56bde49214f512c49637af06f79",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
   },
@@ -1538,7 +1575,7 @@
       }
     ]
   },
-  "report_hash_encoding": "UTF-8 with LF newlines",
+  "report_hash_encoding": "SHA-256 of exact report file bytes",
   "grip_controls": {
     "date": "2026-11-05",
     "checks": {
@@ -1857,7 +1894,26 @@
         }
       ],
       "status": "Software checks completed against the published 20-pulse model; no physical sensor measurement.",
-      "errors": []
+      "errors": [],
+      "scope": "Earlier five-gear UI checks retained for provenance; transmission UI unchanged in this supply update."
     }
+  },
+  "supply": {
+    "scope": "Candidate voltage model; external ADC inputs only. Physical board calibration remains unmeasured.",
+    "full_scale_volts": 20,
+    "adc_steps": 1024,
+    "stopped_volts": 12,
+    "running_volts": 14.4,
+    "stopped_adc10": 614,
+    "running_adc10": 737,
+    "charging_starts": "Engine has fired and starter is released",
+    "charging_ends": "Run switched off or crank stops",
+    "relay_feedback": "Existing PA2-gated ADC4 remains active",
+    "diagnostics": "Original raw K-line replies; no new voltage display",
+    "diagnostic_cases": 115,
+    "fault46_cases": 35,
+    "report": "supply-diagnostics-validation.json",
+    "stop_restart_checked": true,
+    "original_flash_unchanged": true
   }
 }

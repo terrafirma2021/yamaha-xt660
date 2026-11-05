@@ -76,6 +76,7 @@ Json check_dynamics(NativeCockpit& b) {
     require(b.plant.rpm()>0,"Run switch froze the crank");
     while(b.engine->cycles()-stop<480000000&&b.plant.rpm()>0)b.tick();
     require(b.plant.rpm()==0&&!b.rotating,"Stopped engine kept turning: "+std::to_string(b.plant.rpm()));b.engine->verify();
+    require(b.engine->adc[4]==614,"Stopped engine retained charging voltage");
     modes.push_back({{"gear",gear},{"idle_min_rpm",idle_min},{"idle_max_rpm",idle_max},{"peak_rpm",peak},
       {"first_cut_seconds",double(first_cut-begin)/16000000},{"cut_entries",entries},{"cut_resumes",resumes},
       {"longest_cut_ms",double(longest_cut)/16000},{"longest_spark_gap_ms",double(gap_sparks)/16000},
@@ -160,18 +161,28 @@ int main(int argc,char**argv){try {
     if(data[data.size()-2]!=0xf8||data.back()!=0)continue;
     NativeCockpit b(root);b.reference=reference;b.select(row);Json checkpoints=Json::array();
     auto start=Clock::now();b.power(true);double key=std::chrono::duration<double>(Clock::now()-start).count();
+    require(b.engine->adc[4]==614,"Key-on supply must be the 12 V fixture");
+    unsigned supply_address=b.engine->early?0xbce:0xbf0;
+    require(b.engine->byte(supply_address)==153,"Firmware did not sample the stopped supply");
+    Json supply={{"stopped_adc10",b.engine->adc[4]},{"stopped_firmware_high",b.engine->byte(supply_address)}};
     checkpoints.push_back(checkpoint(b));auto key_cycles=b.engine->cycles();b.start();require(b.engine->cycles()==key_cycles,"Starter command advanced CPU");
+    require(b.starting&&!b.rotating&&b.engine->adc[4]==614,"Cranking must retain battery voltage");
     until(b,[&]{return b.rotating;},100);checkpoints.push_back(checkpoint(b));
+    require(b.engine->adc[4]==737,"Running supply must be the 14.4 V fixture");
     Json performance=Json::array();
     for(int t:{0,100,0}) {
       b.control("throttle",t);b.control("gear",t?1:0);start=Clock::now();auto cycles=b.engine->cycles();
       for(int n=0;n<40;++n){b.tick();require(b.rotating&&b.meter.state()["fault"]==0,"Healthy engine stopped or reported a fault");}
+      require(b.engine->adc[4]==737&&b.engine->byte(supply_address)==184,"Firmware did not sample charging voltage");
       double wall=std::chrono::duration<double>(Clock::now()-start).count(),sim=double(b.engine->cycles()-cycles)/16000000;
       performance.push_back({{"throttle",t},{"wall_seconds",wall},{"simulated_seconds",sim},{"unpaced_ratio",sim/wall}});
       checkpoints.push_back(checkpoint(b));
     }
+    supply.update({{"running_adc10",b.engine->adc[4]},{"running_firmware_high",b.engine->byte(supply_address)}});
     b.control("run",false);b.tick();checkpoints.push_back(checkpoint(b));
-    Json r={{"image",row["id"]},{"sha256",row["sha256"]},{"key_seconds",key},{"performance",performance},{"checkpoints",checkpoints}};
+    require(b.engine->adc[4]==614,"Run-off must restore battery voltage");
+    supply["run_off_adc10"]=b.engine->adc[4];
+    Json r={{"image",row["id"]},{"sha256",row["sha256"]},{"key_seconds",key},{"performance",performance},{"checkpoints",checkpoints},{"supply",supply}};
     if(b.engine->authentication_required) {
       b.power(false);b.power(true,true);require(b.auth=="Key rejected","Bad key accepted");
       bool rejected=false;try{b.start();}catch(const std::invalid_argument&){rejected=true;}require(rejected,"Bad key permitted starter");

@@ -21,7 +21,7 @@ const state=()=>call('xt_state');
 const ticks=n=>{for(let i=0;i<n;i++)call('xt_tick');return state();};
 const images=call('xt_init').images;
 assert.equal(images.length,5);
-const samples=[0,3,4,148,151,152,153,448,451,452,511,512,515,516,615,616,736,952,956,960,1023];
+const samples=[0,3,4,148,151,152,153,448,451,452,511,512,515,516,614,615,616,736,737,952,956,960,1023];
 const results=[];
 for(const image of images) {
   action({action:'load',image:image.id});
@@ -34,7 +34,8 @@ for(const image of images) {
   assert.equal(s.bike.meter.diagnostic_id,9);
   s=ticks(3);assert.equal(s.bike.meter.diagnostic_value,0,'Run-off fixture must remove supply');
   action({action:'control',name:'run',value:true});
-  s=ticks(3);assert.equal(s.bike.meter.diagnostic_value,136,'Existing midpoint fixture');
+  s=ticks(3);assert.equal(s.adc[4],614,'Stopped 12 V fixture');
+  assert.equal(s.bike.meter.diagnostic_value,163,'Original d:09 reply for 614 ADC counts');
   const rows=[];
   for(const adc of samples) {
     action({action:'adc',channel:4,value:adc});s=ticks(3);
@@ -51,10 +52,11 @@ for(const image of images) {
   // Check fault 46 under normal execution, where diagnostic mode no longer
   // suppresses qualification. Use the same channel and untouched firmware.
   action({action:'diagnostics',enabled:false});
-  action({action:'start'});s=state();
+  s=state();assert.equal(s.adc[4],614,'Key-on 12 V fixture');
+  action({action:'start'});s=state();assert.equal(s.adc[4],614,'Cranking remains at battery voltage');
   for(let n=0;!s.bike.rotating&&n<100;n++)s=ticks(1);
   assert(s.bike.rotating,'Engine must start before the supply-fault checks');
-  s=ticks(20);assert.equal(s.faults[2]&1,0);
+  s=ticks(20);assert.equal(s.adc[4],737,'Running 14.4 V fixture');assert.equal(s.faults[2]&1,0);
   const faultRows=[];
   for(const [adc,fault46] of [[508,true],[512,false],[452,true],[616,false],[796,false],[800,true],[736,false]]) {
     action({action:'adc',channel:4,value:adc});s=ticks(20);
@@ -62,13 +64,22 @@ for(const image of images) {
     assert.equal(Boolean(s.faults[2]&1),fault46,`${image.id}: fault 46 at ADC4 ${adc}`);
     faultRows.push({adc10:adc,adc_high:adc>>2,fault46:Boolean(s.faults[2]&1),fault_bytes:s.faults});
   }
+  action({action:'control',name:'run',value:false});s=ticks(3);
+  assert.equal(s.adc[4],614,'Run-off restores battery voltage');
+  for(let n=0;s.bike.rotating&&n<600;n++)s=ticks(1);
+  assert(!s.bike.rotating,'Engine must stop');assert.equal(s.adc[4],614);
+  action({action:'control',name:'run',value:true});action({action:'start'});s=state();
+  assert.equal(s.adc[4],614,'Restart cranks at battery voltage');
+  for(let n=0;!s.bike.rotating&&n<100;n++)s=ticks(1);
+  assert(s.bike.rotating);s=ticks(20);assert.equal(s.adc[4],737);assert.equal(s.faults[2]&1,0);
   action({action:'verify'});
-  results.push({image:image.id,diagnostic:9,run_off_reply:0,default_run_on_reply:136,
+  results.push({image:image.id,diagnostic:9,run_off_reply:0,default_run_on_reply:163,
+    supply_fixture:{stopped_volts:12,running_volts:14.4,stopped_adc10:614,running_adc10:737,stop_restart_checked:true},
     rows,normal_fault46:faultRows,source_flash_unchanged:true});
   console.log(`${image.id}: ${rows.length} ADC/reply cases, ${faultRows.length} fault-46 cases; run on/off and BIN integrity passed.`);
 }
 mkdirSync(dirname(output),{recursive:true});
-writeFileSync(output,JSON.stringify({scope:'Full firmware ADC sampling and d:09 replies in released WASM; external inputs only. Volts conversion is not established.',
+writeFileSync(output,JSON.stringify({scope:'Full firmware ADC sampling and d:09 replies in WASM; external inputs only. The 12/14.4 V fixture uses the agreed candidate 0-20 V ADC scale, not measured board calibration.',
   artifacts:Object.fromEntries(['xt660.wasm','xt660.mjs','xt660.data'].map(n=>[n,hash(`${bundle}/${n}`)])),
   test_sha256:hash(fileURLToPath(import.meta.url)),adc_channel:4,
   expected:'min(254, floor((adc10 >> 2) * 256 / 240))',

@@ -124,6 +124,10 @@ public:
 
 class NativeCockpit {
 public:
+  // Agreed simulation calibration: nominal 0-20 V across 1024 ADC steps.
+  // Nearest ten-bit codes for 12.0 V stopped and 14.4 V running. The real
+  // board divider/reference remains unmeasured; this is an external fixture.
+  static constexpr unsigned battery_adc=614,charging_adc=737;
   fs::path root;
   std::unique_ptr<NativeEngine> engine;
   Json image;
@@ -149,7 +153,7 @@ public:
     if(engine)return;require(!image.is_null(),"Select a BIN first");
     engine=std::make_unique<NativeEngine>();engine->reference=reference;
     try {
-      engine->load(root,image,storage,(gear?16:0)|2);meter=NativeMeter();engine->config(41,1);
+      engine->load(root,image,storage,(gear?16:0)|2,battery_adc);meter=NativeMeter();engine->config(41,1);
       plant.transmission.trail=meter.transmission.trail=trail;
       plant.last_cycle=engine->cycles();plant.run=run;plant.travel=throttle;plant.select_gear(gear);
       engine->plant_output=[this](unsigned ch,unsigned value,uint64_t cycle){plant.output(ch,value,cycle,engine->hw->pulse_count/11);};
@@ -172,6 +176,7 @@ public:
       if(next!=pitch){pitch=next;engine->drive(pitch);pressure_input();}
     }else if(crank_running) {
       engine->drive(-1);crank_running=false;rotating=false;pressure_input();
+      engine->set_adc(4,supply_input());
     }
     double frequency=Transmission::wheel_pulses_hz(plant.wheel_omega);
     // Config 36 supports periods up to one nominal second. Below one pulse
@@ -184,9 +189,13 @@ public:
     if(fault=="pressure")ambient=dip=0;
     engine->set_adc(1,ambient);engine->config(39,dip);
   }
+  unsigned supply_input()const {
+    if(meter.mode!="normal"&&!run)return 0;
+    return rotating&&run?charging_adc:battery_adc;
+  }
   void inputs() {
     if(!engine)return;engine->config(10,(gear?16:0)|(starting?0:2));
-    std::array<unsigned,8> v={throttle_adc(throttle),512,512,512,unsigned(meter.mode!="normal"&&!run?0:512),512,unsigned(coolant),512};
+    std::array<unsigned,8> v={throttle_adc(throttle),512,512,512,supply_input(),512,unsigned(coolant),512};
     if(fault=="coolant"||fault=="combined")v[6]=1023;
     if(fault=="throttle"||fault=="combined")v[0]=0;
     if(fault=="pressure")v[1]=0;if(fault=="air")v[3]=1023;

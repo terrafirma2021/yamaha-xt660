@@ -110,7 +110,7 @@ public:
     event_signature=14695981039346656037ull;event_count=0;
   }
   std::vector<unsigned char> storage()const {std::vector<unsigned char>b(512);for(unsigned i=0;i<512;++i)b[i]=hw->eeprom->get(i);return b;}
-  void load(const fs::path &root,const Json &rec,const std::vector<unsigned char>& saved={},unsigned port_b=2) {
+  void load(const fs::path &root,const Json &rec,const std::vector<unsigned char>& saved={},unsigned port_b=2,unsigned supply_adc=512) {
     record=rec;auto bytes=read_bytes(root/rec.at("file").get<std::string>());
     if(sha256(bytes)!=rec.at("sha256"))throw std::runtime_error("BIN hash mismatch");
     unsigned base=rec.at("base_address");if(base+bytes.size()!=65536)throw std::runtime_error("Invalid BIN extent");
@@ -137,8 +137,8 @@ public:
     reset_image();config(18,2);
     const unsigned char registration[]={65,66,67,65,66,67,65,66,67,90,165};std::copy(std::begin(registration),std::end(registration),defaults.begin()+0x50);
     for(unsigned a=0;a<512;++a)hw->eeprom->set(a,defaults[a]);
-    config(9,224);config(13,16);config(10,port_b);reach(loop,1000);
-    config(25,1);adc.fill(512);transcript=Json::array();
+    config(9,224);config(13,16);config(10,port_b);set_adc(4,supply_adc);reach(loop,1000);
+    config(25,1);adc.fill(512);adc[4]=supply_adc;transcript=Json::array();
   }
   void set_adc(unsigned n,unsigned v){if(n>7||v>1023)throw std::runtime_error("ADC range");config(n+1,v);adc[n]=v;}
   void drive(int p){if(p<0){config(24,0);config(37,0);config(35,0);return;}config(35,p*32);pitch=p;}

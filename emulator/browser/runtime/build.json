@@ -4,17 +4,17 @@
   "artifacts": {
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
-    "xt660.wasm": "58e0d33ab4e046aaac5e92739fb5ae6381ade5e2d2f7257a34249e8df824b598"
+    "xt660.wasm": "68a94b2683960c1283ad9c434f9c4b12a2b8f56bde49214f512c49637af06f79"
   },
   "sources": {
     "emulator/native/browser_bridge.cc": "33242417bc66a7422889045d694d47f40290d3bc06009b7e1d4202a5b4588660",
-    "emulator/native/cockpit_native.hpp": "525b47a2246c00216e9e59c93946b10d433a8bc8820f6aceed6c283c362ca0e1",
+    "emulator/native/cockpit_native.hpp": "a7c851cb0ba08ca49568b241b152d4e1c3b00e6e40a1aa8dec4beac28b6f87d0",
     "emulator/native/dashboard_native.cc": "b6d5fafb53520f2758958d4c8a37a2bc537d950bf2877f15542e36105bf766d3",
-    "emulator/native/engine_native.hpp": "4423dc8df9e8e00c693c9279d9d4b3f7a25760126aa615dca1fd5ffb9f0f3ef9",
+    "emulator/native/engine_native.hpp": "5909e06e4c1beb9cd145c066c4fb88e6dab65489a74dffc3fd25e20f71ed91d0",
     "emulator/native/engine_plant.hpp": "7e1425e028af54f50763b0b60516cd4f746cad7acffdcbb11fb1b2c77e6c910b",
     "emulator/native/sha256_portable.hpp": "c956a85343b0dcfcda71cdc412a455bcd02689649e6a5a53750706e28d3995e7",
     "emulator/native/transmission.hpp": "bd3ea91693bbc6e1d2b9f2a328b9174666246957aec650bbc81873293bc32d64",
-    "emulator/native/validate_native.cc": "2cca4ebee5cf5dd58afd48664a96fb85cc2fe63d985c0040fb2cd6ca3de6854e",
+    "emulator/native/validate_native.cc": "79f2e5839f0430daa49db797cf9129e26a199379a6afd86489153ca254456235",
     "emulator/native/xt660_boot.cc": "bc616aa2fc767b37c4ac4afaecb4caf90c9ee87926aa3a6c8e83713294714e8a",
     "emulator/patches/hc12-bit-disassembly.patch": "184b114b3f22a4d1ad3285a51f48c93b674896275b2e82dfbdea8d123899421e",
     "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",

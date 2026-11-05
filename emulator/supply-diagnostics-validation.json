@@ -1,21 +1,28 @@
 {
-  "scope": "Full firmware ADC sampling and d:09 replies in released WASM; external inputs only. Volts conversion is not established.",
+  "scope": "Full firmware ADC sampling and d:09 replies in WASM; external inputs only. The 12/14.4 V fixture uses the agreed candidate 0-20 V ADC scale, not measured board calibration.",
   "artifacts": {
-    "xt660.wasm": "58e0d33ab4e046aaac5e92739fb5ae6381ade5e2d2f7257a34249e8df824b598",
+    "xt660.wasm": "68a94b2683960c1283ad9c434f9c4b12a2b8f56bde49214f512c49637af06f79",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
   },
-  "test_sha256": "7beb6de316218086aec3692187dc84b4645af96845dffd1f1295d99266e7a4dd",
+  "test_sha256": "3b7c4c87fdcc88fd21f440849b74ee8d7bd7767def5e3c8a1c900e5abcb672a8",
   "adc_channel": 4,
   "expected": "min(254, floor((adc10 >> 2) * 256 / 240))",
-  "cases": 105,
+  "cases": 115,
   "fault46_cases": 35,
   "images": [
     {
       "image": "xt660-2004-2006-companion",
       "diagnostic": 9,
       "run_off_reply": 0,
-      "default_run_on_reply": 136,
+      "default_run_on_reply": 163,
+      "supply_fixture": {
+        "stopped_volts": 12,
+        "running_volts": 14.4,
+        "stopped_adc10": 614,
+        "running_adc10": 737,
+        "stop_restart_checked": true
+      },
       "rows": [
         {
           "adc10": 0,
@@ -186,6 +193,18 @@
           ]
         },
         {
+          "adc10": 614,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
           "adc10": 615,
           "adc_high": 153,
           "diagnostic_reply": 163,
@@ -211,6 +230,18 @@
         },
         {
           "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 737,
           "adc_high": 184,
           "diagnostic_reply": 196,
           "frame": [
@@ -355,7 +386,14 @@
       "image": "xt660-5vk-1x-2008",
       "diagnostic": 9,
       "run_off_reply": 0,
-      "default_run_on_reply": 136,
+      "default_run_on_reply": 163,
+      "supply_fixture": {
+        "stopped_volts": 12,
+        "running_volts": 14.4,
+        "stopped_adc10": 614,
+        "running_adc10": 737,
+        "stop_restart_checked": true
+      },
       "rows": [
         {
           "adc10": 0,
@@ -526,6 +564,18 @@
           ]
         },
         {
+          "adc10": 614,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
           "adc10": 615,
           "adc_high": 153,
           "diagnostic_reply": 163,
@@ -551,6 +601,18 @@
         },
         {
           "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 737,
           "adc_high": 184,
           "diagnostic_reply": 196,
           "frame": [
@@ -695,7 +757,14 @@
       "image": "xt660-2c1-10",
       "diagnostic": 9,
       "run_off_reply": 0,
-      "default_run_on_reply": 136,
+      "default_run_on_reply": 163,
+      "supply_fixture": {
+        "stopped_volts": 12,
+        "running_volts": 14.4,
+        "stopped_adc10": 614,
+        "running_adc10": 737,
+        "stop_restart_checked": true
+      },
       "rows": [
         {
           "adc10": 0,
@@ -866,6 +935,18 @@
           ]
         },
         {
+          "adc10": 614,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
           "adc10": 615,
           "adc_high": 153,
           "diagnostic_reply": 163,
@@ -891,6 +972,18 @@
         },
         {
           "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 737,
           "adc_high": 184,
           "diagnostic_reply": 196,
           "frame": [
@@ -1035,7 +1128,14 @@
       "image": "xt660-2c1-10-immo-off",
       "diagnostic": 9,
       "run_off_reply": 0,
-      "default_run_on_reply": 136,
+      "default_run_on_reply": 163,
+      "supply_fixture": {
+        "stopped_volts": 12,
+        "running_volts": 14.4,
+        "stopped_adc10": 614,
+        "running_adc10": 737,
+        "stop_restart_checked": true
+      },
       "rows": [
         {
           "adc10": 0,
@@ -1206,6 +1306,18 @@
           ]
         },
         {
+          "adc10": 614,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
           "adc10": 615,
           "adc_high": 153,
           "diagnostic_reply": 163,
@@ -1231,6 +1343,18 @@
         },
         {
           "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 737,
           "adc_high": 184,
           "diagnostic_reply": 196,
           "frame": [
@@ -1375,7 +1499,14 @@
       "image": "xt660-5vk-11",
       "diagnostic": 9,
       "run_off_reply": 0,
-      "default_run_on_reply": 136,
+      "default_run_on_reply": 163,
+      "supply_fixture": {
+        "stopped_volts": 12,
+        "running_volts": 14.4,
+        "stopped_adc10": 614,
+        "running_adc10": 737,
+        "stop_restart_checked": true
+      },
       "rows": [
         {
           "adc10": 0,
@@ -1546,6 +1677,18 @@
           ]
         },
         {
+          "adc10": 614,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
           "adc10": 615,
           "adc_high": 153,
           "diagnostic_reply": 163,
@@ -1571,6 +1714,18 @@
         },
         {
           "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 737,
           "adc_high": 184,
           "diagnostic_reply": 196,
           "frame": [
