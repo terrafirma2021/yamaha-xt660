@@ -23,7 +23,7 @@ python3 emulator/test_wasm.py
 
 `dist/xt660-wasm` contains the runtime and a separate deterministic test executable. The latter is run in Node and compared with the recorded Windows reference. The browser runtime uses one worker and needs no SharedArrayBuffer or special cross-origin isolation headers. Sources, BIN hashes and runtime hashes are checked when packaging the website.
 
-The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.3) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
+The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.4) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
 
 ```sh
 python3 scripts/site_emulator.py --runtime dist/xt660-wasm --destination dist/browser-preview/emulator
@@ -38,7 +38,7 @@ The uCsim-derived code is GPL-2.0-or-later; see [COPYING](COPYING). [Bundled dep
 
 ## Windows download
 
-[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.1). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
+[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.2). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
 
 The Windows process owns the MCU, peripherals, serial peer and simulation clock. Its worker runs independently of HTTP requests. The browser reads snapshots and sends input controls: closing, refreshing or backgrounding the tab does not pause the MCU. **Pause simulation** is an explicit command. Close the executable to stop the process.
 

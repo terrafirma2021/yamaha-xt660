@@ -243,7 +243,7 @@
       "errors": [],
       "onlyStaticRequests": true,
       "hotLamp": "lamp hot",
-      "celsiusUnit": "\u00b0C EST.",
+      "celsiusUnit": "°C EST.",
       "storageBytes": 512,
       "traceBytes": 324443
     },
@@ -308,7 +308,7 @@
       "diagnosticCoolantHidden": true,
       "coolantRestored": true,
       "diagnosticExitSpeedZero": true,
-      "keyOffSpeed": "\u2014",
+      "keyOffSpeed": "—",
       "reloadCelsiusDefault": true,
       "rawCoolantToggle": true,
       "errors": [],
@@ -905,5 +905,38 @@
       }
     ]
   },
-  "report_hash_encoding": "UTF-8 with LF newlines"
+  "report_hash_encoding": "UTF-8 with LF newlines",
+  "grip_controls": {
+    "date": "2026-11-05",
+    "checks": {
+      "middle": {
+        "throttle": 52,
+        "reply": 59
+      },
+      "dragFull": true,
+      "release": true,
+      "keyboard": true,
+      "gears": true,
+      "mobileFull": true,
+      "mobileClosed": true,
+      "keyOffDisabled": true
+    },
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "width": 390,
+        "height": 844
+      }
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "old_wide_bar_removed": true,
+    "input_and_readout_inside_scene": true,
+    "errors": []
+  }
 }
