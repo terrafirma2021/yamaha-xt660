@@ -32,7 +32,7 @@
     "tps",
     "tps_fault_reply"
   ],
-  "reference_report_sha256": "04fd0322af26279bc744af2688095cbc286420527f7422289cd5e021a478b8fb",
+  "reference_report_sha256": "f6e2ada2f66c83509b996bcac5ef8280bb539c3b3b79ade18bc0e60d395e2cf2",
   "execution_report_sha256": "48b325ea9e60beb1d14bf702e171751a69138b452101ffe094e3e8e7bf268b8c",
   "execution": [
     {
@@ -904,5 +904,6 @@
         "horizontal_overflow": false
       }
     ]
-  }
+  },
+  "report_hash_encoding": "UTF-8 with LF newlines"
 }
