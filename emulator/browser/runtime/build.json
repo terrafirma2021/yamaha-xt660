@@ -4,15 +4,15 @@
   "artifacts": {
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
-    "xt660.wasm": "d3a6da992be39b64b94c944c85ee61585964b29497f01614455a019898e9064d"
+    "xt660.wasm": "aaceeb865f88ed15f4821da7e603ac6f26815c2525ed56cd2f96adce1edf8aea"
   },
   "sources": {
     "emulator/native/browser_bridge.cc": "33242417bc66a7422889045d694d47f40290d3bc06009b7e1d4202a5b4588660",
-    "emulator/native/cockpit_native.hpp": "39de993367a474baa291ab02ab5fc097ea2779da318c03704263d8ffb75df170",
+    "emulator/native/cockpit_native.hpp": "333081bc3ec1b4a7b61e14ef01809cae3442cae330922c2a7686a15b8786b53f",
     "emulator/native/dashboard_native.cc": "b6d5fafb53520f2758958d4c8a37a2bc537d950bf2877f15542e36105bf766d3",
     "emulator/native/engine_native.hpp": "3195c2d83ced66e8e3e0c076598bdf698d7844fc65eda37fad151c598ec393ba",
     "emulator/native/sha256_portable.hpp": "c956a85343b0dcfcda71cdc412a455bcd02689649e6a5a53750706e28d3995e7",
-    "emulator/native/validate_native.cc": "122e22b3a88d2db783e4a022cb60c8a76a84f815cf8a70f7485762e061a5ca32",
+    "emulator/native/validate_native.cc": "277a590934c18239e34b3de5e68a8220b074d0339e283979cce7c59ca7849be5",
     "emulator/native/xt660_boot.cc": "0ede0b982daead77e7adb30d690315776d3de4d20a41e70751a849f47928a8c7",
     "emulator/patches/hc12-bit-disassembly.patch": "184b114b3f22a4d1ad3285a51f48c93b674896275b2e82dfbdea8d123899421e",
     "emulator/patches/hc12-decrement.patch": "504ce985bab33ba8163c7eea0b20ee9562773aa11bc1e8769838c3266a07bd50",

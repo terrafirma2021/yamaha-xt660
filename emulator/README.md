@@ -23,7 +23,7 @@ python3 emulator/test_wasm.py
 
 `dist/xt660-wasm` contains the runtime and a separate deterministic test executable. The latter is run in Node and compared with the recorded Windows reference. The browser runtime uses one worker and needs no SharedArrayBuffer or special cross-origin isolation headers. Sources, BIN hashes and runtime hashes are checked when packaging the website.
 
-The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.2) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
+The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.3) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
 
 ```sh
 python3 scripts/site_emulator.py --runtime dist/xt660-wasm --destination dist/browser-preview/emulator
@@ -38,7 +38,7 @@ The uCsim-derived code is GPL-2.0-or-later; see [COPYING](COPYING). [Bundled dep
 
 ## Windows download
 
-[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.0). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
+[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.1). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
 
 The Windows process owns the MCU, peripherals, serial peer and simulation clock. Its worker runs independently of HTTP requests. The browser reads snapshots and sends input controls: closing, refreshing or backgrounding the tab does not pause the MCU. **Pause simulation** is an explicit command. Close the executable to stop the process.
 
@@ -98,7 +98,9 @@ The server binds only to loopback. It uses bundled HTML/CSS/JavaScript, a per-se
 
 The dash consumes real five-byte replies, validated before display, through the native meter peer (`meter.py` in the reference harness). B0 is the engine code, B1 the received road-pulse delta, B2 the fault/status byte and B3 the coolant or diagnostic data. The normal frame contains no gear field: N/1 follows the neutral-switch fixture. Fault injection changes ADC inputs; the firmware qualifies and transmits the resulting fault. Received codes in the sidebar are session observations, separate from ECU history.
 
-RPM is **nominal**, using B0 × 190 / 5.12 under the 16 MHz profile. Coolant defaults to **estimated Celsius** (reply − 30); uncheck the Celsius option to see the raw code. Its offset remains unverified. The coolant readout is hidden during diagnostics. TEMP uses received code 136 as a dashboard threshold, not a fan-relay reading. Throttle percentage is fixture control travel, not calibrated throttle angle.
+RPM is **nominal**, using B0 × 190 / 5.12 under the 16 MHz profile. Coolant defaults to **estimated Celsius** (reply − 30); uncheck the Celsius option to see the raw code. Its offset remains unverified. The coolant readout is hidden during diagnostics. TEMP uses received code 136 as a dashboard threshold, not a fan-relay reading.
+
+Throttle percentage is control travel between closed and open stops. The [Yamaha 5VK1-AE1 manual, p. 7-10](https://www.motopetersburg.ru/docs/148-yamaha-xt660x-2004-service-manual.pdf) specifies d:01 readings of 15–17 closed and 97–100 fully open. The fixture selects nominal endpoints **16 / 100**, supplied as **64 / 400** ten-bit ADC counts. All five complete BINs transmit the left-aligned ADC high byte (`ADC >> 2`) through their original diagnostic code; the dash displays that received byte unchanged. Intermediate control travel is linearly interpolated as a simulation fixture, not a measured TPS electrical or mechanical transfer curve. TPS fault injection still supplies ADC zero. No sensor divider, reference voltage or extra dash conversion is inferred from these endpoints.
 
 Speed uses the [Yamaha DataLogger calculation](https://github.com/terrafirma2021/Yamaha-DataLogger/blob/61a13fef5457e0128185a2ef9b5b2781ee9b12ce/yamaha/src/main.cpp#L406): add eight consecutive normal speed replies as km/h, then divide by 1.609344 for **estimated MPH**. The meter peer counts every accepted reply independently of browser updates. Diagnostic bytes are excluded, key cycles reset the window, and wide accumulation avoids the old logger's byte overflow. Original dashboard cadence and pulses/km remain unmeasured; this display profile does not establish physical speed calibration. The firmware and polling cadence are unchanged.
 

@@ -5,8 +5,8 @@
       "image": "xt660-2004-2006-companion",
       "source_sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
       "authentication": "Key accepted",
-      "key_on_host_seconds": 1.416,
-      "starter_command_host_seconds": 0.0191,
+      "key_on_host_seconds": 1.1361,
+      "starter_command_host_seconds": 0.2003,
       "starter_command_added_bus_cycles": 0,
       "key_on_bus_cycles": 3798342,
       "key_on_reply": [
@@ -29,8 +29,8 @@
       "image": "xt660-5vk-1x-2008",
       "source_sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
       "authentication": "Key accepted",
-      "key_on_host_seconds": 1.3546,
-      "starter_command_host_seconds": 0.019,
+      "key_on_host_seconds": 1.1289,
+      "starter_command_host_seconds": 0.1944,
       "starter_command_added_bus_cycles": 0,
       "key_on_bus_cycles": 3890954,
       "key_on_reply": [
@@ -53,8 +53,8 @@
       "image": "xt660-2c1-10",
       "source_sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
       "authentication": "Key accepted",
-      "key_on_host_seconds": 1.3332,
-      "starter_command_host_seconds": 0.0191,
+      "key_on_host_seconds": 1.1843,
+      "starter_command_host_seconds": 0.223,
       "starter_command_added_bus_cycles": 0,
       "key_on_bus_cycles": 3890954,
       "key_on_reply": [
@@ -77,8 +77,8 @@
       "image": "xt660-2c1-10-immo-off",
       "source_sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
       "authentication": "Disabled in BIN",
-      "key_on_host_seconds": 0.8766,
-      "starter_command_host_seconds": 0.0192,
+      "key_on_host_seconds": 0.628,
+      "starter_command_host_seconds": 0.2146,
       "starter_command_added_bus_cycles": 0,
       "key_on_bus_cycles": 2253900,
       "key_on_reply": [
@@ -101,8 +101,8 @@
       "image": "xt660-5vk-11",
       "source_sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
       "authentication": "Key accepted",
-      "key_on_host_seconds": 1.3534,
-      "starter_command_host_seconds": 0.0189,
+      "key_on_host_seconds": 1.0954,
+      "starter_command_host_seconds": 0.1814,
       "starter_command_added_bus_cycles": 0,
       "key_on_bus_cycles": 3890954,
       "key_on_reply": [
@@ -131,11 +131,11 @@
     }
   ],
   "source_hashes": {
-    "cockpit.py": "5c25e2abfb59dc7478bb3c05dfe74a3a8e4236b83dfbfc2684995ced03ad244a",
+    "cockpit.py": "0d9e4311556535f759acb8b9a0670621f01be1902962585d68a7df8426faf818",
     "engine.py": "f430f701e556dcbeda193dd96ef9f8b45f3d9df1c4eb7b6dd849a55ec2864428",
-    "runner.py": "eda06b164dac882f9b80017d0be39e2d03df51ef30aca1dfdd4ff1d1d6599c9c",
-    "meter.py": "c8fa025fb521392442a4f3b24070863417e464fef813a903345c0068d594bfd3",
-    "native/xt660_boot.cc": "124d0ca365e62c3c5eed3c99c38932fd0564346af7b14e68352ce85e5193b764",
-    "test_startup_sequence.py": "95587acc16e70c876bd4db906f000b6bb985c3716fa0187226f8876e1d432757"
+    "runner.py": "386a6176d03405742fde5285aeb931a6748e6aec9033cfa05d209f849e603200",
+    "meter.py": "eb47f9aee9577f349c630f2ccd92ecc5684edee0a06fd92ea282b4d617b278e3",
+    "native/xt660_boot.cc": "a6f5576ffc854409e473fb504846dfbed15d75384e8f28c603ac25385f6c3f9c",
+    "test_startup_sequence.py": "4ab57d536440d040457e5bc6c306127ca7fe943b8ab01f3f0f95c4e9de08aa84"
   }
 }

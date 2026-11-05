@@ -1,6 +1,6 @@
 {
   "scope": "WebAssembly HC12 execution in a dedicated browser worker; nominal 16 MHz, not measured motorcycle timing",
-  "date": "2026-11-04",
+  "date": "2026-11-05",
   "toolchain": {
     "emscripten": "4.0.23",
     "ucsim": "59a14ff99efe7e92474faf4c4ddf57b5e4ff0631",
@@ -28,10 +28,12 @@
     "coil_test",
     "coil_rises",
     "coil_falls",
-    "normal_after_diag"
+    "normal_after_diag",
+    "tps",
+    "tps_fault_reply"
   ],
-  "reference_report_sha256": "0ebde3ed16812dfa439b7a67dd2c1d566d51bf387b451e43da16a5c3ae8563b5",
-  "execution_report_sha256": "e1a0507ce54a0c468f0b0af315f9cf672568e206573b9d184e3654df033537e3",
+  "reference_report_sha256": "04fd0322af26279bc744af2688095cbc286420527f7422289cd5e021a478b8fb",
+  "execution_report_sha256": "48b325ea9e60beb1d14bf702e171751a69138b452101ffe094e3e8e7bf268b8c",
   "execution": [
     {
       "image": "xt660-2004-2006-companion",
@@ -41,22 +43,22 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.032928625,
+          "simulated_seconds": 2.032792,
           "throttle": 0,
-          "unpaced_ratio": 1.105785219380695,
-          "wall_seconds": 1.838448
+          "unpaced_ratio": 1.1418525372082327,
+          "wall_seconds": 1.7802579
         },
         {
-          "simulated_seconds": 2.001877,
+          "simulated_seconds": 2.000995,
           "throttle": 100,
-          "unpaced_ratio": 1.086938072920651,
-          "wall_seconds": 1.8417581
+          "unpaced_ratio": 1.1211145733212724,
+          "wall_seconds": 1.7848265
         },
         {
-          "simulated_seconds": 2.041736375,
+          "simulated_seconds": 2.0417539375,
           "throttle": 0,
-          "unpaced_ratio": 1.110695037799787,
-          "wall_seconds": 1.8382511
+          "unpaced_ratio": 1.139770981975213,
+          "wall_seconds": 1.7913721
         }
       ]
     },
@@ -68,22 +70,22 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.00230775,
+          "simulated_seconds": 2.002018375,
           "throttle": 0,
-          "unpaced_ratio": 1.078231060634821,
-          "wall_seconds": 1.8570303
+          "unpaced_ratio": 1.0769838268854226,
+          "wall_seconds": 1.8589122
         },
         {
-          "simulated_seconds": 1.96371425,
+          "simulated_seconds": 1.9634223125,
           "throttle": 100,
-          "unpaced_ratio": 1.0612229661531398,
-          "wall_seconds": 1.8504257
+          "unpaced_ratio": 1.0709232970404967,
+          "wall_seconds": 1.8333921
         },
         {
-          "simulated_seconds": 2.0013265,
+          "simulated_seconds": 2.0008464375,
           "throttle": 0,
-          "unpaced_ratio": 1.0843203544764424,
-          "wall_seconds": 1.8456967
+          "unpaced_ratio": 1.0903772125497935,
+          "wall_seconds": 1.8350039
         }
       ]
     },
@@ -95,22 +97,22 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.00230775,
+          "simulated_seconds": 2.002018375,
           "throttle": 0,
-          "unpaced_ratio": 1.0607986024192768,
-          "wall_seconds": 1.8875475
+          "unpaced_ratio": 1.1199973723379748,
+          "wall_seconds": 1.7875206
         },
         {
-          "simulated_seconds": 1.96371425,
+          "simulated_seconds": 1.9634223125,
           "throttle": 100,
-          "unpaced_ratio": 1.049100591225358,
-          "wall_seconds": 1.8718074
+          "unpaced_ratio": 1.088504616279318,
+          "wall_seconds": 1.8037795
         },
         {
-          "simulated_seconds": 2.0013265,
+          "simulated_seconds": 2.0008464375,
           "throttle": 0,
-          "unpaced_ratio": 1.0552482336702986,
-          "wall_seconds": 1.8965457
+          "unpaced_ratio": 1.1074524024594967,
+          "wall_seconds": 1.806711
         }
       ]
     },
@@ -122,22 +124,22 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.0022091875,
+          "simulated_seconds": 2.0019554375,
           "throttle": 0,
-          "unpaced_ratio": 1.0739688709764972,
-          "wall_seconds": 1.8643084
+          "unpaced_ratio": 1.0910476282320143,
+          "wall_seconds": 1.8348928
         },
         {
-          "simulated_seconds": 1.9638311875,
+          "simulated_seconds": 1.963632,
           "throttle": 100,
-          "unpaced_ratio": 1.036869741914981,
-          "wall_seconds": 1.8939999
+          "unpaced_ratio": 1.0983396190195136,
+          "wall_seconds": 1.7878186
         },
         {
-          "simulated_seconds": 2.001351125,
+          "simulated_seconds": 2.00079075,
           "throttle": 0,
-          "unpaced_ratio": 1.0591485035073838,
-          "wall_seconds": 1.889585
+          "unpaced_ratio": 1.1031142280394872,
+          "wall_seconds": 1.8137657
         }
       ]
     },
@@ -149,22 +151,22 @@
       "diagnostic_fields_match": true,
       "unpaced_performance": [
         {
-          "simulated_seconds": 2.00230775,
+          "simulated_seconds": 2.002018375,
           "throttle": 0,
-          "unpaced_ratio": 1.0822486611123017,
-          "wall_seconds": 1.8501365
+          "unpaced_ratio": 1.0967497964704156,
+          "wall_seconds": 1.8254103
         },
         {
-          "simulated_seconds": 1.96371425,
+          "simulated_seconds": 1.9634223125,
           "throttle": 100,
-          "unpaced_ratio": 1.067369832728484,
-          "wall_seconds": 1.8397693
+          "unpaced_ratio": 1.0910385667248022,
+          "wall_seconds": 1.7995902
         },
         {
-          "simulated_seconds": 2.0013265,
+          "simulated_seconds": 2.0008464375,
           "throttle": 0,
-          "unpaced_ratio": 1.080938674218428,
-          "wall_seconds": 1.8514709
+          "unpaced_ratio": 1.1087725253675424,
+          "wall_seconds": 1.8045599
         }
       ]
     }
@@ -241,7 +243,7 @@
       "errors": [],
       "onlyStaticRequests": true,
       "hotLamp": "lamp hot",
-      "celsiusUnit": "°C EST.",
+      "celsiusUnit": "\u00b0C EST.",
       "storageBytes": 512,
       "traceBytes": 324443
     },
@@ -253,10 +255,11 @@
     ],
     "network": "Static same-origin requests only; no MCU server, API polling, COM port or remote scripts",
     "pacing_artifact_sha256": "35fc9c461ace3fcbec097cda375d0f2e5cef5a5062f2b0b2d743c85d4dc18712",
-    "pacing_note": "Recorded browser pacing for the initial browser build; this display update replays the same execution checkpoints and records fresh unpaced results below."
+    "pacing_note": "Recorded browser pacing for the initial browser build; this display update replays the same execution checkpoints and records fresh unpaced results below.",
+    "date": "2026-11-04"
   },
   "artifacts": {
-    "xt660.wasm": "d3a6da992be39b64b94c944c85ee61585964b29497f01614455a019898e9064d",
+    "xt660.wasm": "aaceeb865f88ed15f4821da7e603ac6f26815c2525ed56cd2f96adce1edf8aea",
     "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
     "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
   },
@@ -305,7 +308,7 @@
       "diagnosticCoolantHidden": true,
       "coolantRestored": true,
       "diagnosticExitSpeedZero": true,
-      "keyOffSpeed": "—",
+      "keyOffSpeed": "\u2014",
       "reloadCelsiusDefault": true,
       "rawCoolantToggle": true,
       "errors": [],
@@ -369,6 +372,536 @@
         "rotating": true,
         "fault": 0,
         "error": ""
+      }
+    ],
+    "date": "2026-11-04"
+  },
+  "tps": {
+    "date": "2026-11-05",
+    "source": "Yamaha 5VK1-AE1 service manual p. 7-10, d:01: closed 15-17, fully open 97-100",
+    "fixture": "Nominal d:01 endpoints 16/100. Ten-bit ADC 64/400, linear control-travel interpolation; no measured electrical or mechanical transfer curve.",
+    "scope": "Unmodified firmware ADC handler and diagnostic reply, checksum-checked serial peer, unchanged display byte; no RAM or flash patch.",
+    "execution": [
+      {
+        "image": "xt660-2004-2006-companion",
+        "points": [
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          },
+          {
+            "adc": 148,
+            "reply": [
+              0,
+              0,
+              0,
+              37,
+              37
+            ],
+            "travel": 25
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 316,
+            "reply": [
+              0,
+              0,
+              0,
+              79,
+              79
+            ],
+            "travel": 75
+          },
+          {
+            "adc": 400,
+            "reply": [
+              0,
+              0,
+              0,
+              100,
+              100
+            ],
+            "travel": 100
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          }
+        ],
+        "fault_reply": 0,
+        "flash_unchanged": true
+      },
+      {
+        "image": "xt660-5vk-1x-2008",
+        "points": [
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          },
+          {
+            "adc": 148,
+            "reply": [
+              0,
+              0,
+              0,
+              37,
+              37
+            ],
+            "travel": 25
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 316,
+            "reply": [
+              0,
+              0,
+              0,
+              79,
+              79
+            ],
+            "travel": 75
+          },
+          {
+            "adc": 400,
+            "reply": [
+              0,
+              0,
+              0,
+              100,
+              100
+            ],
+            "travel": 100
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          }
+        ],
+        "fault_reply": 0,
+        "flash_unchanged": true
+      },
+      {
+        "image": "xt660-2c1-10",
+        "points": [
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          },
+          {
+            "adc": 148,
+            "reply": [
+              0,
+              0,
+              0,
+              37,
+              37
+            ],
+            "travel": 25
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 316,
+            "reply": [
+              0,
+              0,
+              0,
+              79,
+              79
+            ],
+            "travel": 75
+          },
+          {
+            "adc": 400,
+            "reply": [
+              0,
+              0,
+              0,
+              100,
+              100
+            ],
+            "travel": 100
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          }
+        ],
+        "fault_reply": 0,
+        "flash_unchanged": true
+      },
+      {
+        "image": "xt660-2c1-10-immo-off",
+        "points": [
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          },
+          {
+            "adc": 148,
+            "reply": [
+              0,
+              0,
+              0,
+              37,
+              37
+            ],
+            "travel": 25
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 316,
+            "reply": [
+              0,
+              0,
+              0,
+              79,
+              79
+            ],
+            "travel": 75
+          },
+          {
+            "adc": 400,
+            "reply": [
+              0,
+              0,
+              0,
+              100,
+              100
+            ],
+            "travel": 100
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          }
+        ],
+        "fault_reply": 0,
+        "flash_unchanged": true
+      },
+      {
+        "image": "xt660-5vk-11",
+        "points": [
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          },
+          {
+            "adc": 148,
+            "reply": [
+              0,
+              0,
+              0,
+              37,
+              37
+            ],
+            "travel": 25
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 316,
+            "reply": [
+              0,
+              0,
+              0,
+              79,
+              79
+            ],
+            "travel": 75
+          },
+          {
+            "adc": 400,
+            "reply": [
+              0,
+              0,
+              0,
+              100,
+              100
+            ],
+            "travel": 100
+          },
+          {
+            "adc": 232,
+            "reply": [
+              0,
+              0,
+              0,
+              58,
+              58
+            ],
+            "travel": 50
+          },
+          {
+            "adc": 64,
+            "reply": [
+              0,
+              0,
+              0,
+              16,
+              16
+            ],
+            "travel": 0
+          }
+        ],
+        "fault_reply": 0,
+        "flash_unchanged": true
+      }
+    ],
+    "native_reference_match": true,
+    "browser": {
+      "images": [
+        {
+          "image": "xt660-2004-2006-companion",
+          "closed": "16",
+          "open": "100",
+          "rawReply": [
+            0,
+            0,
+            0,
+            100,
+            100
+          ],
+          "released": "16",
+          "coolantHidden": true
+        },
+        {
+          "image": "xt660-5vk-1x-2008",
+          "closed": "16",
+          "open": "100",
+          "rawReply": [
+            0,
+            0,
+            0,
+            100,
+            100
+          ],
+          "released": "16",
+          "coolantHidden": true
+        },
+        {
+          "image": "xt660-2c1-10",
+          "closed": "16",
+          "open": "100",
+          "rawReply": [
+            0,
+            0,
+            0,
+            100,
+            100
+          ],
+          "released": "16",
+          "coolantHidden": true
+        },
+        {
+          "image": "xt660-2c1-10-immo-off",
+          "closed": "16",
+          "open": "100",
+          "rawReply": [
+            0,
+            0,
+            0,
+            100,
+            100
+          ],
+          "released": "16",
+          "coolantHidden": true
+        },
+        {
+          "image": "xt660-5vk-11",
+          "closed": "16",
+          "open": "100",
+          "rawReply": [
+            0,
+            0,
+            0,
+            100,
+            100
+          ],
+          "released": "16",
+          "coolantHidden": true
+        }
+      ],
+      "extra": {
+        "half": "58",
+        "fault": "0",
+        "restored": "58",
+        "navigation": true
+      },
+      "running": {
+        "rotating": true,
+        "fault": 0,
+        "kmh": 36,
+        "mph": 22.36936292054402,
+        "display": "22",
+        "error": ""
+      },
+      "errors": []
+    },
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 1000
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "horizontal_overflow": false
       }
     ]
   }

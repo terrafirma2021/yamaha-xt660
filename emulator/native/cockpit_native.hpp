@@ -14,6 +14,13 @@ inline bool bool_value(const Json &v) {require(v.is_boolean(),"Expected a boolea
 inline int rounded(double n) { // Match Python's round-to-even fixture exactly.
   double f=std::floor(n),d=n-f;return int(d<.5?f:d>.5?f+1:std::fmod(f,2)==0?f:f+1);
 }
+inline unsigned throttle_adc(int travel) {
+  // Yamaha 5VK1-AE1, p. 7-10: d:01 closed 15-17, open 97-100.
+  // The reviewed BINs send the left-aligned ADC high byte (10-bit >> 2).
+  // Nominal fixture endpoints 16 and 100; interpolate control travel only.
+  // This does not establish sensor volts or mechanical degrees between stops.
+  return unsigned(rounded(64.0 + travel * 336.0 / 100));
+}
 inline const std::map<int,std::string> fault_names={
  {11,"Cylinder identification"},{12,"Crank signal"},{13,"Intake pressure circuit"},{14,"Intake pressure"},
  {15,"Throttle circuit"},{16,"Throttle position"},{19,"Start interlock"},{20,"Pressure mismatch"},
@@ -146,7 +153,7 @@ public:
   }
   void inputs() {
     if(!engine)return;engine->config(10,(gear?16:0)|(starting?0:2));
-    std::array<unsigned,8> v={unsigned(120+throttle*7),512,512,512,unsigned(meter.mode!="normal"&&!run?0:512),512,unsigned(coolant),512};
+    std::array<unsigned,8> v={throttle_adc(throttle),512,512,512,unsigned(meter.mode!="normal"&&!run?0:512),512,unsigned(coolant),512};
     if(fault=="coolant"||fault=="combined")v[6]=1023;
     if(fault=="throttle"||fault=="combined")v[0]=0;
     if(fault=="pressure")v[1]=0;if(fault=="air")v[3]=1023;

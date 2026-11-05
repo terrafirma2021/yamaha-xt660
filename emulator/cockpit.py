@@ -102,7 +102,10 @@ class Cockpit:
             return
         # PB4: low neutral; PB1: low starter request. PB0 interlock stays low.
         self.engine.set_port('B', (16 if self.gear else 0) | (0 if self.starting else 2))
-        values = [round(120+self.throttle*7),512,512,512,
+        # 5VK1-AE1 p. 7-10: nominal d:01 endpoints 16 closed / 100 open.
+        # The BIN transmits ADC >> 2. Intermediate travel is a linear fixture,
+        # not a measured sensor voltage or mechanical-angle transfer curve.
+        values = [round(64+self.throttle*336/100),512,512,512,
                   0 if self.meter.mode!='normal' and not self.run else 512,512,self.coolant,512]
         values_override = FAULTS[self.fault][1]
         for channel, value in enumerate(values):

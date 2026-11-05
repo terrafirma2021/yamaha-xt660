@@ -14,7 +14,7 @@ for(let n=0;n<8;n++){
  const label=document.createElement('label');label.htmlFor='adc'+n;label.textContent=n===0?'Throttle control (%)':names[n]+' (ADC)';
  const slider=document.createElement('input');Object.assign(slider,{id:'adc'+n,type:'range',min:0,max:n===0?100:1023,value:n===0?0:512,disabled:true});slider.setAttribute('aria-label',n===0?'Throttle control percent':names[n]+' ADC');
  const value=document.createElement('input');Object.assign(value,{id:'value'+n,type:'number',min:0,max:n===0?100:1023,value:n===0?0:512,disabled:true});value.setAttribute('aria-label',n===0?'Throttle control percent value':names[n]+' raw value');
- if(n===0)row.title='Simulated control travel, not calibrated throttle angle. ADC input uses the existing 120–820 count fixture.';
+ if(n===0)row.title='Control travel: 0% closed / 100% open. Nominal Yamaha d:01 endpoints: 16 / 100. Intermediate sensor travel is simulated.';
  slider.oninput=()=>value.value=slider.value;
  const send=v=>n===0?control('throttle',v):n===6?control('coolant',v):act('adc',{channel:n,value:v});
  slider.onchange=()=>send(Number(slider.value));value.onchange=()=>value.checkValidity()?send(Number(value.value)):value.reportValidity();

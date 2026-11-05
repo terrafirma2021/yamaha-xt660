@@ -43,9 +43,9 @@ def check(executable, wsl):
                            e['cycle'] > key_cycles for e in b.engine.trace) >= 4
             # Exercise both ends of the control and let the real ADC/filter/
             # serial paths respond. The percent is fixture travel, not angle.
-            for throttle in (0, 100, 0):
+            for throttle, adc in ((0, 64), (100, 400), (0, 64)):
                 b.control('throttle', throttle)
-                assert b.engine.adc[0] == 120 + throttle * 7
+                assert b.engine.adc[0] == adc
                 for _ in range(25):
                     b.tick()
                     assert b.rotating and b.meter.state()['fault'] == 0, b.state()

@@ -66,6 +66,21 @@ int main(int argc,char**argv){try {
       r["bad_key"]=checkpoint(b);
     }
     b.power(false);
+    // End-to-end TPS: physical-input fixture -> original ADC/diagnostic code
+    // -> checked K-line reply. No forced RAM or dashboard percentage mapping.
+    b.diagnostics(true);until(b,[&]{return b.meter.mode=="diagnostic";},240);
+    require(b.meter.diag_id==1,"TPS diagnostic item missing");
+    Json tps=Json::array();
+    for(auto point:std::array<std::array<int,3>,7>{{{0,64,16},{25,148,37},{50,232,58},{75,316,79},{100,400,100},{50,232,58},{0,64,16}}}) {
+      b.control("throttle",point[0]);for(int n=0;n<3;++n)b.tick();
+      require(b.engine->adc[0]==unsigned(point[1])&&b.meter.diag_value==point[2],"TPS input / serial diagnostic mismatch");
+      tps.push_back({{"travel",point[0]},{"adc",b.engine->adc[0]},{"reply",b.meter.frame}});
+    }
+    b.control("fault","throttle");for(int n=0;n<3;++n)b.tick();
+    require(b.meter.diag_value==0,"TPS fault was hidden by nominal fixture scaling");
+    b.control("fault","none");for(int n=0;n<3;++n)b.tick();
+    require(b.meter.diag_value==16,"TPS did not restore closed input after fault");
+    b.engine->verify();r["tps"]=tps;r["tps_fault_reply"]=0;b.power(false);
     if(full&&(row["id"]=="xt660-2004-2006-companion"||row["id"]=="xt660-2c1-10"||row["id"]=="xt660-2c1-10-immo-off")) {
       b.run=true;b.power(true);b.control("fault","combined");
       until(b,[&]{auto& s=b.meter.seen;return std::find(s.begin(),s.end(),15)!=s.end()&&std::find(s.begin(),s.end(),21)!=s.end();},200);
