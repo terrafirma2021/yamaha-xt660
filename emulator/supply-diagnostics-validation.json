@@ -1,0 +1,1715 @@
+{
+  "scope": "Full firmware ADC sampling and d:09 replies in released WASM; external inputs only. Volts conversion is not established.",
+  "artifacts": {
+    "xt660.wasm": "58e0d33ab4e046aaac5e92739fb5ae6381ade5e2d2f7257a34249e8df824b598",
+    "xt660.mjs": "504f04f172e522a6b1e863bcca93efe252edbbbe401a2f48da8d22faab61df62",
+    "xt660.data": "4f23cbc298f114edaea0631b25ac0c94b402d71a19d134892957a0289a68d424"
+  },
+  "test_sha256": "7beb6de316218086aec3692187dc84b4645af96845dffd1f1295d99266e7a4dd",
+  "adc_channel": 4,
+  "expected": "min(254, floor((adc10 >> 2) * 256 / 240))",
+  "cases": 105,
+  "fault46_cases": 35,
+  "images": [
+    {
+      "image": "xt660-2004-2006-companion",
+      "diagnostic": 9,
+      "run_off_reply": 0,
+      "default_run_on_reply": 136,
+      "rows": [
+        {
+          "adc10": 0,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 3,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 4,
+          "adc_high": 1,
+          "diagnostic_reply": 1,
+          "frame": [
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "adc10": 148,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 151,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 152,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 153,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 448,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 451,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "diagnostic_reply": 120,
+          "frame": [
+            0,
+            0,
+            0,
+            120,
+            120
+          ]
+        },
+        {
+          "adc10": 511,
+          "adc_high": 127,
+          "diagnostic_reply": 135,
+          "frame": [
+            0,
+            0,
+            0,
+            135,
+            135
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 515,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 516,
+          "adc_high": 129,
+          "diagnostic_reply": 137,
+          "frame": [
+            0,
+            0,
+            0,
+            137,
+            137
+          ]
+        },
+        {
+          "adc10": 615,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "diagnostic_reply": 164,
+          "frame": [
+            0,
+            0,
+            0,
+            164,
+            164
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 952,
+          "adc_high": 238,
+          "diagnostic_reply": 253,
+          "frame": [
+            0,
+            0,
+            0,
+            253,
+            253
+          ]
+        },
+        {
+          "adc10": 956,
+          "adc_high": 239,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 960,
+          "adc_high": 240,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 1023,
+          "adc_high": 255,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        }
+      ],
+      "normal_fault46": [
+        {
+          "adc10": 508,
+          "adc_high": 127,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 796,
+          "adc_high": 199,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 800,
+          "adc_high": 200,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "source_flash_unchanged": true
+    },
+    {
+      "image": "xt660-5vk-1x-2008",
+      "diagnostic": 9,
+      "run_off_reply": 0,
+      "default_run_on_reply": 136,
+      "rows": [
+        {
+          "adc10": 0,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 3,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 4,
+          "adc_high": 1,
+          "diagnostic_reply": 1,
+          "frame": [
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "adc10": 148,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 151,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 152,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 153,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 448,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 451,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "diagnostic_reply": 120,
+          "frame": [
+            0,
+            0,
+            0,
+            120,
+            120
+          ]
+        },
+        {
+          "adc10": 511,
+          "adc_high": 127,
+          "diagnostic_reply": 135,
+          "frame": [
+            0,
+            0,
+            0,
+            135,
+            135
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 515,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 516,
+          "adc_high": 129,
+          "diagnostic_reply": 137,
+          "frame": [
+            0,
+            0,
+            0,
+            137,
+            137
+          ]
+        },
+        {
+          "adc10": 615,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "diagnostic_reply": 164,
+          "frame": [
+            0,
+            0,
+            0,
+            164,
+            164
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 952,
+          "adc_high": 238,
+          "diagnostic_reply": 253,
+          "frame": [
+            0,
+            0,
+            0,
+            253,
+            253
+          ]
+        },
+        {
+          "adc10": 956,
+          "adc_high": 239,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 960,
+          "adc_high": 240,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 1023,
+          "adc_high": 255,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        }
+      ],
+      "normal_fault46": [
+        {
+          "adc10": 508,
+          "adc_high": 127,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 796,
+          "adc_high": 199,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 800,
+          "adc_high": 200,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "source_flash_unchanged": true
+    },
+    {
+      "image": "xt660-2c1-10",
+      "diagnostic": 9,
+      "run_off_reply": 0,
+      "default_run_on_reply": 136,
+      "rows": [
+        {
+          "adc10": 0,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 3,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 4,
+          "adc_high": 1,
+          "diagnostic_reply": 1,
+          "frame": [
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "adc10": 148,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 151,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 152,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 153,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 448,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 451,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "diagnostic_reply": 120,
+          "frame": [
+            0,
+            0,
+            0,
+            120,
+            120
+          ]
+        },
+        {
+          "adc10": 511,
+          "adc_high": 127,
+          "diagnostic_reply": 135,
+          "frame": [
+            0,
+            0,
+            0,
+            135,
+            135
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 515,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 516,
+          "adc_high": 129,
+          "diagnostic_reply": 137,
+          "frame": [
+            0,
+            0,
+            0,
+            137,
+            137
+          ]
+        },
+        {
+          "adc10": 615,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "diagnostic_reply": 164,
+          "frame": [
+            0,
+            0,
+            0,
+            164,
+            164
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 952,
+          "adc_high": 238,
+          "diagnostic_reply": 253,
+          "frame": [
+            0,
+            0,
+            0,
+            253,
+            253
+          ]
+        },
+        {
+          "adc10": 956,
+          "adc_high": 239,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 960,
+          "adc_high": 240,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 1023,
+          "adc_high": 255,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        }
+      ],
+      "normal_fault46": [
+        {
+          "adc10": 508,
+          "adc_high": 127,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 796,
+          "adc_high": 199,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 800,
+          "adc_high": 200,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "source_flash_unchanged": true
+    },
+    {
+      "image": "xt660-2c1-10-immo-off",
+      "diagnostic": 9,
+      "run_off_reply": 0,
+      "default_run_on_reply": 136,
+      "rows": [
+        {
+          "adc10": 0,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 3,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 4,
+          "adc_high": 1,
+          "diagnostic_reply": 1,
+          "frame": [
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "adc10": 148,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 151,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 152,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 153,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 448,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 451,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "diagnostic_reply": 120,
+          "frame": [
+            0,
+            0,
+            0,
+            120,
+            120
+          ]
+        },
+        {
+          "adc10": 511,
+          "adc_high": 127,
+          "diagnostic_reply": 135,
+          "frame": [
+            0,
+            0,
+            0,
+            135,
+            135
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 515,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 516,
+          "adc_high": 129,
+          "diagnostic_reply": 137,
+          "frame": [
+            0,
+            0,
+            0,
+            137,
+            137
+          ]
+        },
+        {
+          "adc10": 615,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "diagnostic_reply": 164,
+          "frame": [
+            0,
+            0,
+            0,
+            164,
+            164
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 952,
+          "adc_high": 238,
+          "diagnostic_reply": 253,
+          "frame": [
+            0,
+            0,
+            0,
+            253,
+            253
+          ]
+        },
+        {
+          "adc10": 956,
+          "adc_high": 239,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 960,
+          "adc_high": 240,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 1023,
+          "adc_high": 255,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        }
+      ],
+      "normal_fault46": [
+        {
+          "adc10": 508,
+          "adc_high": 127,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 796,
+          "adc_high": 199,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 800,
+          "adc_high": 200,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "source_flash_unchanged": true
+    },
+    {
+      "image": "xt660-5vk-11",
+      "diagnostic": 9,
+      "run_off_reply": 0,
+      "default_run_on_reply": 136,
+      "rows": [
+        {
+          "adc10": 0,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 3,
+          "adc_high": 0,
+          "diagnostic_reply": 0,
+          "frame": [
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 4,
+          "adc_high": 1,
+          "diagnostic_reply": 1,
+          "frame": [
+            0,
+            0,
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "adc10": 148,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 151,
+          "adc_high": 37,
+          "diagnostic_reply": 39,
+          "frame": [
+            0,
+            0,
+            0,
+            39,
+            39
+          ]
+        },
+        {
+          "adc10": 152,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 153,
+          "adc_high": 38,
+          "diagnostic_reply": 40,
+          "frame": [
+            0,
+            0,
+            0,
+            40,
+            40
+          ]
+        },
+        {
+          "adc10": 448,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 451,
+          "adc_high": 112,
+          "diagnostic_reply": 119,
+          "frame": [
+            0,
+            0,
+            0,
+            119,
+            119
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "diagnostic_reply": 120,
+          "frame": [
+            0,
+            0,
+            0,
+            120,
+            120
+          ]
+        },
+        {
+          "adc10": 511,
+          "adc_high": 127,
+          "diagnostic_reply": 135,
+          "frame": [
+            0,
+            0,
+            0,
+            135,
+            135
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 515,
+          "adc_high": 128,
+          "diagnostic_reply": 136,
+          "frame": [
+            0,
+            0,
+            0,
+            136,
+            136
+          ]
+        },
+        {
+          "adc10": 516,
+          "adc_high": 129,
+          "diagnostic_reply": 137,
+          "frame": [
+            0,
+            0,
+            0,
+            137,
+            137
+          ]
+        },
+        {
+          "adc10": 615,
+          "adc_high": 153,
+          "diagnostic_reply": 163,
+          "frame": [
+            0,
+            0,
+            0,
+            163,
+            163
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "diagnostic_reply": 164,
+          "frame": [
+            0,
+            0,
+            0,
+            164,
+            164
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "diagnostic_reply": 196,
+          "frame": [
+            0,
+            0,
+            0,
+            196,
+            196
+          ]
+        },
+        {
+          "adc10": 952,
+          "adc_high": 238,
+          "diagnostic_reply": 253,
+          "frame": [
+            0,
+            0,
+            0,
+            253,
+            253
+          ]
+        },
+        {
+          "adc10": 956,
+          "adc_high": 239,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 960,
+          "adc_high": 240,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        },
+        {
+          "adc10": 1023,
+          "adc_high": 255,
+          "diagnostic_reply": 254,
+          "frame": [
+            0,
+            0,
+            0,
+            254,
+            254
+          ]
+        }
+      ],
+      "normal_fault46": [
+        {
+          "adc10": 508,
+          "adc_high": 127,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 512,
+          "adc_high": 128,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 452,
+          "adc_high": 113,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 616,
+          "adc_high": 154,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 796,
+          "adc_high": 199,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "adc10": 800,
+          "adc_high": 200,
+          "fault46": true,
+          "fault_bytes": [
+            0,
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "adc10": 736,
+          "adc_high": 184,
+          "fault46": false,
+          "fault_bytes": [
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "source_flash_unchanged": true
+    }
+  ]
+}

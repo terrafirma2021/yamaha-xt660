@@ -58,6 +58,8 @@ The manual's fault-43 procedure (printed 7-20 / PDF 363) specifically checks **R
 
 The handler at `0x6C5E` stores the sample high byte in `0x0BCE`. Its diagnostic byte is `min(floor(sample × 256 / 240), 254)` at `0x0AEC`, selected by diagnostic 09 at `0x6577`. The supply-state logic compares the raw byte with **38** and establishes `0x0888` bit 1 after repeated same-side samples. The fixture begins from cleared state and runs two samples for every possible high byte. No measured voltage threshold is inferred from this raw code.
 
+The [full-firmware diagnostic sweep](../../emulator/supply-diagnostics-validation.json) now covers all five runnable BINs through external ADC4 and the serial diagnostic menu. The later handler at `64BA–64CC` stores the sample at `0BF0` and the identically scaled diagnostic byte at `0B10`. Normal-mode fault 46 compares raw high-byte bounds **128 / 199**, stored at early `4E5B/4E5C` and later `45F8/45F9`; all nine registered images contain those bounds. Ten-bit ADC4 **452** produces diagnostic byte **120** but qualifies fault 46. Therefore a direct division of the wire byte by ten conflicts with the manual's approximately 12 V healthy reference. ADC4 **512** produces **136**, and **616** produces **164**. These are verified codes, not voltage readings. The separate nominal-12-V/fallback argument remains a hypothesis and is not promoted by this test.
+
 Fault 43 (`0x08B1` bit 2) compares that state with PA2 (`0x0000` bit 2):
 
 | PA2 command | Supply-present flag | Fault qualification in the tested normal branch |
