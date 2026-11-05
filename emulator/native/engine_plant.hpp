@@ -4,21 +4,33 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
+#include "transmission.hpp"
 
 struct EnginePlant {
   static constexpr double pi=3.14159265358979323846,clock_hz=16000000;
   // Fixture assumptions, NOT measured XT660 parameters. See emulator/README.md.
-  static constexpr double crank_inertia=.10,loaded_mass=260,wheel_radius=.3119;
-  static constexpr double first_ratio=(75.0/36)*(30.0/12)*(45.0/15);
+  static constexpr double crank_inertia=.10,loaded_mass=260;
+  Transmission transmission;
+  int gear=0;
+  double wheel_omega=0;
   double omega=0,angle=0,burn_angle=pi,burn_work=0;
-  double travel=0,load=0;
+  double travel=0;
   bool starter=false,run=true,coil_high=false,injector_low=false;
   uint64_t last_cycle=0,coil_on=0,last_spark=0,injector_on=0,last_fuel=0,fuel_number=0,consumed_fuel=0;
   uint64_t firings=0,sparks=0,injections=0,missed=0;
   int64_t last_power_cycle=-1;
   double last_injection_ms=0;
   double rpm()const{return omega*60/(2*pi);}
-  double inertia()const{return crank_inertia+load*loaded_mass*std::pow(wheel_radius/first_ratio,2);}
+  double inertia()const{return crank_inertia+(gear?loaded_mass*std::pow(transmission.wheel_radius()/Transmission::ratio(gear),2):0);}
+  void select_gear(int selected) {
+    if(selected==gear)return;
+    if(gear)wheel_omega=omega/Transmission::ratio(gear);
+    // Engaged-to-engaged shifts keep wheel speed. Clutch engagement from
+    // neutral is instantaneous in this fixture; clutch slip is not modeled.
+    if(gear&&selected)omega=wheel_omega*Transmission::ratio(selected);
+    gear=selected;
+    if(gear)wheel_omega=omega/Transmission::ratio(gear);
+  }
   static double drag(double rpm){return 4+.002*rpm;}
   static double envelope(double rpm) {
     // Yamaha's 2004 R/X peak torque and peak power bound a nominal envelope;
@@ -35,8 +47,9 @@ struct EnginePlant {
       // is burn_work; there is one eligible power stroke per 720 degrees.
       double end=std::min(pi,burn_angle+dtheta);
       double work=burn_work*.5*(std::cos(burn_angle)-std::cos(end));burn_angle=end;
-      double road_speed=omega*wheel_radius/first_ratio;
-      double road_torque=load*(.015*loaded_mass*9.80665+.5*1.225*.65*road_speed*road_speed)*wheel_radius/first_ratio;
+      double radius=transmission.wheel_radius(),road_speed=(gear?omega/Transmission::ratio(gear):wheel_omega)*radius;
+      double road_force=.015*loaded_mass*9.80665+.5*1.225*.65*road_speed*road_speed;
+      double road_torque=gear?road_force*radius/Transmission::ratio(gear):0;
       double starter_torque=starter?24*std::max(0.0,1-speed/900):0;
       double torque=starter_torque-drag(speed)-road_torque;
       // Energy integration preserves combustion work; torque integration lets
@@ -44,6 +57,7 @@ struct EnginePlant {
       double coasting=std::max(0.0,omega+torque/inertia()*dt);
       double next=std::sqrt(coasting*coasting+2*work/inertia());
       angle+=(omega+next)*.5*dt;omega=next;
+      wheel_omega=gear?omega/Transmission::ratio(gear):std::max(0.0,wheel_omega-road_force/(loaded_mass*radius)*dt);
     }
   }
   void output(unsigned channel,unsigned value,uint64_t cycle,int64_t revolution) {

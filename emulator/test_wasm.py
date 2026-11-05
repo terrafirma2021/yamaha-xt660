@@ -23,6 +23,11 @@ if __name__=='__main__':
     extras=['active_faults','holds','menu','history','cleared_history','coil_test','coil_rises','coil_falls','normal_after_diag']
     for result,reference in zip(actual['images'],expected['images']):
         for key in extras:assert result.get(key)==reference.get(key),(result['image'],key)
+        assert len(result['gearing'])==len(reference['gearing'])
+        for gear,baseline in zip(result['gearing'],reference['gearing']):
+            for key,value in gear.items():
+                if isinstance(value,float):assert math.isclose(value,baseline[key],rel_tol=0,abs_tol=1e-8),(result['image'],key)
+                else:assert value==baseline[key],(result['image'],key)
         assert len(result['dynamics'])==len(reference['dynamics'])==2
         for mode,baseline in zip(result['dynamics'],reference['dynamics']):
             assert mode.keys()==baseline.keys()
@@ -31,4 +36,4 @@ if __name__=='__main__':
                 # checkpoints, cut counts and bus-cycle timing remain exact.
                 if key.endswith('_rpm'):assert math.isclose(value,baseline[key],rel_tol=0,abs_tol=1e-8),(result['image'],key)
                 else:assert value==baseline[key],(result['image'],key)
-    print(f'{matched} execution checkpoints match Windows; diagnostics and limiter timing match exactly; plant RPM agrees within 1e-8 RPM.')
+    print(f'{matched} execution checkpoints match Windows; diagnostics, gearing replies and limiter timing match; floating metrics agree within 1e-8.')

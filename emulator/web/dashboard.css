@@ -24,6 +24,7 @@ select{max-width:100%;min-width:0}
 .connection{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:18px}
 .connection>label{font-size:11px;font-weight:700;color:var(--muted)}
 .connection select{width:360px;min-width:0}
+.connection #model{width:130px}
 .connection #status{font-size:12px;color:var(--muted);margin-left:auto}
 #error{background:#4c1924;color:#fff;padding:14px;border:1px solid #df6479;border-radius:6px;margin-bottom:14px}
 .riding-layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:20px;align-items:start}
@@ -220,6 +221,7 @@ footer{flex-direction:column}
 .grip-throttle input::-webkit-slider-thumb{width:7px;height:12px;margin-top:-4px}
 .grip-throttle input::-moz-range-thumb{width:5px;height:10px}
 .gear-controls button{width:30px;padding:5px}
+.engine-badge{display:none}
 .panel{padding:15px}
 aside{grid-template-columns:1fr}
 .coolant-panel{grid-column:auto}

@@ -86,29 +86,72 @@ Json check_dynamics(NativeCockpit& b) {
 }
 void check_meter_display() {
   auto reply=[](unsigned p){return std::vector<unsigned>{0,p,0,57,(p+57)&255};};
-  NativeMeter m;
-  for(int i=0;i<7;++i)m.accept(reply(5));
-  require(m.state()["speed_mph"].is_null(),"Speed needs eight replies");
-  auto before=m.state();
-  for(int i=0;i<30;++i)require(m.state()==before,"Snapshot changed speed window");
+  NativeMeter m;uint64_t stamp=1000;m.accept(reply(0),1,stamp);
+  auto sample=[&](unsigned count,unsigned interval=800000){stamp+=interval;m.accept(reply(count),1,stamp);};
+  for(int i=0;i<7;++i)sample(5);
+  require(m.state()["speed_mph"].is_null(),"Speed needs eight timed intervals");
+  auto before=m.state();for(int i=0;i<30;++i)require(m.state()==before,"Snapshot changed speed window");
   auto invalid=reply(5);invalid[4]^=1;
-  bool rejected=false;try{m.accept(invalid);}catch(const std::invalid_argument&){rejected=true;}
+  bool rejected=false;try{m.accept(invalid,1,stamp+800000);}catch(const std::invalid_argument&){rejected=true;}
   require(rejected&&m.state()==before,"Bad checksum changed speed window");
-  m.accept(reply(5));
-  require(m.state()["speed_kmh"]==40&&std::abs(m.state()["speed_mph"].get<double>()-24.85484768949336)<1e-10,"Logger km/h to MPH conversion");
-  for(int i=0;i<7;++i){m.accept(reply(0));require(m.state()["speed_kmh"]==40,"Speed did not hold completed window");}
-  m.accept(reply(0));require(m.state()["speed_mph"]==0,"Stopped speed did not become zero");
-  for(int i=0;i<8;++i)m.accept(reply(255));
-  require(m.state()["speed_kmh"]==2040,"Speed accumulator wrapped");
-  m.mode="diagnostic";m.accept(reply(255));
-  require(m.state()["speed_mph"].is_null(),"Diagnostic bytes counted as speed");
-  m.mode="normal";for(int i=0;i<8;++i)m.accept(reply(5));
-  require(m.state()["speed_kmh"]==40,"Diagnostic exit retained stale pulses");
-  m=NativeMeter();require(m.state()["speed_mph"].is_null(),"Key-cycle reset retained speed");
+  sample(5);require(std::abs(m.speed_kmh-11.7582)<1e-9,"100 pulses/sec X tyre conversion");
+  require(std::abs(m.state()["speed_mph"].get<double>()-11.7582/1.609344)<1e-9,"MPH conversion");
+  for(int i=0;i<8;++i)sample(i%2?3:2,400000);
+  require(std::abs(m.speed_kmh-11.7582)<1e-9,"Reply cadence changed speed");
+  for(int i=0;i<8;++i)sample(0);
+  require(m.state()["speed_mph"]==0,"Stopped speed did not become zero");
+  sample(255);require(m.state()["speed_mph"].is_null(),"Saturated count treated as a complete measurement");
+  m.mode="diagnostic";sample(5);require(m.state()["speed_mph"].is_null(),"Diagnostic byte counted as speed");
+  m.mode="normal";m.transmission.trail=true;sample(0);for(int i=0;i<8;++i)sample(5);
+  require(std::abs(m.speed_kmh-12.06)<1e-9,"100 pulses/sec R tyre conversion");
+  m=NativeMeter();require(m.state()["speed_mph"].is_null(),"Key cycle retained speed");
 }
+void check_gearing_math() {
+  Transmission t;
+  for(int model=0;model<2;++model) {
+    t.trail=model;std::array<double,5> expected=model?std::array<double,5>{56.3,86.7,122.5,154.9,183.1}:std::array<double,5>{54.9,84.5,119.4,151.1,178.5};
+    for(int g=1;g<=5;++g)require(std::abs(t.kmh(7300,g)-expected[g-1])<.06,"Gearing Commander stock speed mismatch");
+  }
+  require(std::abs(Transmission::shaft_pulses_hz(7300,1)-467.2)<1e-9,"First gear VSS frequency");
+  require(std::abs(Transmission::shaft_pulses_hz(7300,5)-1518.4)<1e-9,"Fifth gear VSS frequency");
+  EnginePlant p;p.omega=6000*2*EnginePlant::pi/60;p.select_gear(1);
+  auto wheel=p.wheel_omega;p.select_gear(2);
+  require(std::abs(p.rpm()-3900)<1e-9&&std::abs(p.wheel_omega-wheel)<1e-9,"Upshift did not preserve road speed");
+  p.select_gear(1);require(std::abs(p.rpm()-6000)<1e-9,"Downshift RPM ratio");
+  p.select_gear(0);p.last_cycle=1;p.advance(160001);
+  require(p.wheel_omega>0&&p.wheel_omega<wheel,"Neutral should coast independently");
+}
+Json check_gearing(NativeCockpit& b) {
+  Json results=Json::array();auto models=b.state()["models"];
+  for(auto model:models) {
+    b.power(false);b.control("model",model);b.control("gear",0);b.control("run",true);b.power(true);
+    auto& e=*b.engine;
+    // A fixed-speed external crank bench isolates the pulse/count/serial path.
+    // No ECU RAM, flash, return values or reported speed are substituted.
+    e.plant_tick=nullptr;e.config(39,160);e.crank(417);
+    double rpm=2500000.0/417;Transmission t;t.trail=model=="xt660r";
+    for(int gear=1;gear<=5;++gear) {
+      b.control("gear",gear);e.config(39,160);
+      auto period=unsigned(rounded(16000000/Transmission::shaft_pulses_hz(rpm,gear)));e.road(period);
+      for(int i=0;i<24;++i)b.tick();
+      double expected=t.kmh(rpm,gear);
+      require(b.meter.speed_ready&&std::abs(b.meter.speed_kmh-expected)<1.0,"Actual VSS/K-line speed does not match gearing");
+      require(e.hw->gpio(1)&16,"An engaged gear asserted neutral");e.verify();
+      results.push_back({{"model",model},{"gear",gear},{"nominal_rpm",rpm},{"expected_kmh",expected},
+        {"received_kmh",b.meter.speed_kmh},{"pulse_period_cycles",period},{"last_frame",b.meter.frame},{"flash_unchanged",true}});
+    }
+    b.control("gear",0);require(!(e.hw->gpio(1)&16),"Neutral input did not assert");
+    for(int i=0;i<12;++i)b.tick();require(b.meter.speed_kmh>0,"Neutral discarded actual road pulses");
+    e.road(0);for(int i=0;i<18;++i)b.tick();require(b.meter.speed_kmh==0,"Stopped road input retained speed");
+    b.power(false);
+  }
+  return results;
+}
+
 int main(int argc,char**argv){try {
   check_meter_display();
   check_plant_math();
+  check_gearing_math();
   require(argc>=3,"Usage: validate.exe ROOT report.json [reference] [full]");
   fs::path root=argv[1];bool reference=argc>3&&std::string(argv[3])=="reference",full=argc>4;
   auto registry=Json::parse(read_bytes(root/"firmware/registry.json"));Json results=Json::array();
@@ -135,7 +178,7 @@ int main(int argc,char**argv){try {
       r["bad_key"]=checkpoint(b);
     }
     b.power(false);
-    if(full)r["dynamics"]=check_dynamics(b);
+    if(full){r["dynamics"]=check_dynamics(b);r["gearing"]=check_gearing(b);}
     // End-to-end TPS: physical-input fixture -> original ADC/diagnostic code
     // -> checked K-line reply. No forced RAM or dashboard percentage mapping.
     b.diagnostics(true);until(b,[&]{return b.meter.mode=="diagnostic";},240);

@@ -24,6 +24,8 @@ function lock(){
  const b=state?.bike,powered=!!b?.powered;
  $('load').disabled=busy;$('image').disabled=busy;$('key').disabled=busy||!b?.selected;
  for(const id of ['runSwitch','neutral','inGear','throttle','releaseThrottle','faultSelect','nextFault','restore','coolantNormal','coolantHot','pause','step','verify'])$(id).disabled=!powered;
+ for(const button of document.querySelectorAll('[data-gear]'))button.disabled=!powered||(!b?.models&&Number(button.dataset.gear)>1);
+ $('model').disabled=busy||powered||!b?.selected||!b?.models||b.models.length<2;
  $('starter').disabled=!powered||!b.run||b.rotating||b.starting||b.authentication==='Key rejected'||busy;
  $('step').disabled||=!paused||busy;$('verify').disabled||=busy;
  for(let n=0;n<8;n++)for(const prefix of ['adc','value'])$(prefix+n).disabled=!powered;
@@ -67,6 +69,12 @@ function render(s){
  const b=s.bike,m=b.meter,powered=b.powered;
  if(!$('image').options.length)for(const v of s.images){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('image').append(o);}
  if(b.selected&&b.selected!==previousSelected)$('image').value=b.selected;
+ const models=b.models??['xt660x'];
+ if([...$('model').options].map(o=>o.value).join(',')!==models.join(',')){
+  $('model').replaceChildren(...models.map(id=>{const o=document.createElement('option');o.value=id;o.textContent=id.toUpperCase();return o;}));
+ }
+ $('model').value=b.model??'xt660x';
+ $('model').title=powered?'Turn the key off to change motorcycle':'Stock gearing and tyre circumference';
  if(!$('faultSelect').options.length)for(const v of b.faults){const o=document.createElement('option');o.value=v.id;o.textContent=v.label;$('faultSelect').append(o);}
  if(document.activeElement!==$('faultSelect'))$('faultSelect').value=b.fault;
  $('display').classList.toggle('off',!powered);
@@ -75,9 +83,9 @@ function render(s){
  $('key').title='Turn ignition key '+(powered?'off':'on');
  $('runSwitch').setAttribute('aria-label','Engine run switch: '+(b.run?'on, lower end pressed':'stop, upper end pressed'));$('runSwitch').title=b.run?'Run · lower end pressed. Click to stop':'Stop · upper end pressed. Click to run';
  $('starter').setAttribute('aria-pressed',String(b.starting));
- $('neutral').setAttribute('aria-pressed',String(!b.gear));$('inGear').setAttribute('aria-pressed',String(!!b.gear));
- $('gear').textContent=powered?(b.gear?'1':'N'):'—';$('gear').parentElement.classList.toggle('engaged',!!b.gear);
- $('gear').title='Neutral-switch fixture; not a field in the normal K-line reply';
+ for(const button of document.querySelectorAll('[data-gear]'))button.setAttribute('aria-pressed',String(Number(button.dataset.gear)===b.gear));
+ $('gear').textContent=powered?(b.gear||'N'):'—';$('gear').parentElement.classList.toggle('engaged',!!b.gear);
+ $('gear').title='Selected simulated gear; the ECU receives neutral and VSS inputs, not a gear-number message';
  if(document.activeElement!==$('throttle'))$('throttle').value=b.throttle;$('throttleValue').textContent=b.throttle+'%';
  $('auth').textContent=b.authentication;$('frames').textContent=m.frames;
  $('engineState').textContent=!powered?'IGNITION OFF':!b.run?'ENGINE STOP':b.starting?'STARTING':b.rotating?'ENGINE RUNNING':'ENGINE STOPPED';
@@ -87,7 +95,7 @@ function render(s){
  $('sessionLight').classList.toggle('on',powered&&!paused);text('link',!powered?'KEY OFF':m.connected?(paused?'K-LINE / PAUSED':'K-LINE / CONNECTED'):'WAITING FOR ECU');
  $('heartbeat').classList.toggle('active',m.connected&&m.frames%2===0);
  $('speed').textContent=m.connected&&Number.isFinite(m.speed_mph)?Math.round(m.speed_mph):'—';
- $('speed').title='Yamaha DataLogger profile: sum eight normal speed replies as km/h, then divide by 1.609344. Original reply cadence unverified.';
+ $('speed').title='Received VSS pulses / elapsed simulated time, stock tyre and gearing. Assumed 20 pulses per output-shaft turn; MPH remains an estimate.';
  $('speedLabel').textContent='MPH · EST.';$('rpmLabel').textContent='RPM · NOMINAL';
  $('rpm').textContent=m.connected?Math.round(m.engine_code*190/5.12).toLocaleString():'—';
  $('rpm').title='Received engine code × 190 / 5.12, nominal 16 MHz profile';
@@ -163,7 +171,8 @@ $('runSwitch').onclick=async event=>{
  try{await control('run',enabled);}finally{delete button.dataset.turning;}
 };
 $('starter').onclick=async()=>{if(await act('start'))resume();};
-$('neutral').onclick=()=>control('gear',0);$('inGear').onclick=()=>control('gear',1);
+for(const button of document.querySelectorAll('[data-gear]'))button.onclick=()=>control('gear',Number(button.dataset.gear));
+$('model').onchange=()=>control('model',$('model').value);
 $('throttle').oninput=()=>$('throttleValue').textContent=$('throttle').value+'%';$('throttle').onchange=()=>control('throttle',Number($('throttle').value));
 $('releaseThrottle').onclick=()=>control('throttle',0);
 $('faultSelect').onchange=()=>control('fault',$('faultSelect').value);

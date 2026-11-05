@@ -124,15 +124,15 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 81725732,
-          "event_count": 15695,
-          "event_signature": 6855900312110911877,
+          "cycles": 81724822,
+          "event_count": 15614,
+          "event_signature": 18409460952614417960,
           "meter": [
             169,
-            20,
+            19,
             0,
             57,
-            246
+            245
           ],
           "outputs": [
             0,
@@ -144,9 +144,9 @@
             192,
             0
           ],
-          "pc": 26489,
-          "ram": "4a4859a74e5bf26cd5108787ed561e036ea87416c9cdc79f359150c4eef70521",
-          "registers": "4155a4823c92c24e0c846339064f6086a2c9ad75c37d396e00841a17b8d56582",
+          "pc": 21403,
+          "ram": "40885b70d13ee7284c7fba478f2309055ebda0070ab56c4559675269df38b09c",
+          "registers": "ac67eeb972cf289c3b49c41dd3ff63130e16719975a2f51b66b6c4cd594dd446",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -154,29 +154,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 113505437,
-          "event_count": 26251,
-          "event_signature": 8094656723111949347,
+          "cycles": 113500239,
+          "event_count": 29288,
+          "event_signature": 14873514983379075166,
           "meter": [
             109,
-            0,
+            19,
             0,
             57,
-            166
+            185
           ],
           "outputs": [
             0,
             0,
             0,
-            687,
+            686,
             0,
             0,
             362,
             0
           ],
-          "pc": 63648,
-          "ram": "3bf4c278debf436c4b92c06dd5b4d35681ec5661d93bb4c4cfdc34e1d8aee5cc",
-          "registers": "faf7eac8ce8cd8e0f37d77200cf274636a63a78edf94ee0ae473f1b59015b699",
+          "pc": 26486,
+          "ram": "228d6b1f4f5f8b92ed7a5ea452123359fd5f9c3ceae8fb5e71b1ee2ca1891718",
+          "registers": "093f3ef52493760a17486809b9de238bcf135c2a06ada8a43c98951a07b70965",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -184,15 +184,15 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 114304211,
-          "event_count": 26472,
-          "event_signature": 306679670762005487,
+          "cycles": 114298996,
+          "event_count": 29584,
+          "event_signature": 1338818863269989855,
           "meter": [
             108,
-            0,
+            20,
             0,
             57,
-            165
+            185
           ],
           "outputs": [
             0,
@@ -204,9 +204,9 @@
             366,
             0
           ],
-          "pc": 56947,
-          "ram": "4de421f2b3051cb448bd1b1c34fa4e4b308831109d9a0afcda97f01411acded6",
-          "registers": "91e2c8610b2fb09e7af12e3a953cf781e0d18efc80260eadb8a3e125ed52a2ad",
+          "pc": 26758,
+          "ram": "c9ec306ece3d88068223ecbc5f4f8a3f0e18f4c1d57c3ee503a05a32b3cbd4d1",
+          "registers": "a8ec9e48cbd7355e864e40ba41dbc2adf8863fe655c69ebd5115661ec78269c8",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -215,9 +215,9 @@
       ],
       "cleared_history": {
         "auth": "Key accepted",
-        "cycles": 397529065,
+        "cycles": 397528950,
         "event_count": 30270,
-        "event_signature": 17387512232837561849,
+        "event_signature": 190254556809690267,
         "meter": [
           0,
           0,
@@ -235,33 +235,33 @@
           0,
           0
         ],
-        "pc": 25257,
-        "ram": "d0b681b8377d6dfd8b3d168d260787b7bd8daa883babbd312d92766ec3648d75",
-        "registers": "1e11bf55ee8e4f6097ee627f8bc96b49c3d6483fb52f17dd71ab1f4242a66f63",
+        "pc": 21385,
+        "ram": "954cbd5df68e658cedace4af61b03c808628ab2bfae02d6455455b827ebc13e3",
+        "registers": "0602daf1ff59e64f8a676f2d05dc671c4697ebb8ee2a2b64bf7ea4906b026440",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
       "coil_falls": [
-        453096508,
-        469096348,
-        485096220,
-        501096476,
-        517096380
+        453096284,
+        469096188,
+        485096124,
+        501096412,
+        517096412
       ],
       "coil_rises": [
-        453016508,
-        469016348,
-        485016220,
-        501016476,
-        517016380
+        453016284,
+        469016188,
+        485016124,
+        501016412,
+        517016412
       ],
       "coil_test": {
         "auth": "Key accepted",
-        "cycles": 532962517,
+        "cycles": 532962898,
         "event_count": 38188,
-        "event_signature": 9005764135114395832,
+        "event_signature": 10442656299902223862,
         "meter": [
           0,
           0,
@@ -279,9 +279,9 @@
           0,
           0
         ],
-        "pc": 26756,
-        "ram": "ab0f1beb240d20223be107457de06db3599d1cab00747a3f692d8d9171f4c339",
-        "registers": "0acda0d3f5575b3a03ef40c97fd159ffb1e175e0fc81b40391504bcd1888b732",
+        "pc": 21398,
+        "ram": "61033d6882155a0597a2656bcd5c7b7d5eea4c57e78abc9308694c8dac4fe3f8",
+        "registers": "010e6fb9de41422dcfdbaa4f122371abc4750bc056b9888796ec4e027e1e9ba5",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -305,16 +305,178 @@
         {
           "coasts_during_cut": true,
           "cut_entries": 112,
-          "cut_resumes": 111,
-          "first_cut_seconds": 2.401268625,
+          "cut_resumes": 110,
+          "first_cut_seconds": 2.4010416875,
           "flash_unchanged": true,
           "gear": 1,
           "idle_max_rpm": 1424.505680528322,
           "idle_min_rpm": 1375.6313102038237,
-          "longest_cut_ms": 33.259875,
-          "longest_injection_gap_ms": 49.3225,
-          "longest_spark_gap_ms": 41.074875,
-          "peak_rpm": 7328.194139962817
+          "longest_cut_ms": 33.2615625,
+          "longest_injection_gap_ms": 49.3398125,
+          "longest_spark_gap_ms": 41.11175,
+          "peak_rpm": 7328.235896395367
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 45.11539568345323,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            20,
+            0,
+            57,
+            238
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 45.34310976000697
+        },
+        {
+          "expected_kmh": 69.40830105146651,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 69.34022429761102
+        },
+        {
+          "expected_kmh": 98.07694713794183,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            42,
+            0,
+            57,
+            4
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 98.08382154918485
+        },
+        {
+          "expected_kmh": 124.0673381294964,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            53,
+            0,
+            57,
+            15
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 123.76119875401929
+        },
+        {
+          "expected_kmh": 146.62503597122296,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            62,
+            0,
+            57,
+            24
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 146.6811743951613
+        },
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            20,
+            0,
+            57,
+            238
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.50694015288768
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.11999328376699
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            42,
+            0,
+            57,
+            4
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.601358021055
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            53,
+            0,
+            57,
+            15
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 126.93780144694534
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            62,
+            0,
+            57,
+            24
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 150.44606854838707
         }
       ],
       "history": [
@@ -323,16 +485,16 @@
       ],
       "holds": [
         {
-          "cycles": 128001016,
+          "cycles": 128000995,
           "stage": "menu"
         },
         {
-          "cycles": 32769191,
+          "cycles": 32769062,
           "stage": "confirm"
         }
       ],
       "image": "xt660-2004-2006-companion",
-      "key_seconds": 0.1729828,
+      "key_seconds": 0.1760451,
       "menu": [
         1,
         3,
@@ -356,9 +518,9 @@
       ],
       "normal_after_diag": {
         "auth": "Key accepted",
-        "cycles": 3798334,
+        "cycles": 3798342,
         "event_count": 225,
-        "event_signature": 13764234280946226766,
+        "event_signature": 5314769666994205855,
         "meter": [
           0,
           0,
@@ -376,8 +538,8 @@
           0,
           0
         ],
-        "pc": 26484,
-        "ram": "5699e1fc904cbdd60ba22c2b8d8bbaa35df6a7b07408134e0f599aca3b22e578",
+        "pc": 34308,
+        "ram": "9737b07ed36e7d26b7d5f067fcf92cb691fec5cb194fafddeaa2956671f1cd7a",
         "registers": "8f194c85ae286e459be613040fc75e90cb1113cef7c7ada597d54eb44d4940c9",
         "rotating": false,
         "starting": false,
@@ -388,20 +550,20 @@
         {
           "simulated_seconds": 2.029015375,
           "throttle": 0,
-          "unpaced_ratio": 1.5839193165888805,
-          "wall_seconds": 1.2810093
+          "unpaced_ratio": 1.6021119726444415,
+          "wall_seconds": 1.2664629
         },
         {
-          "simulated_seconds": 2.006836625,
+          "simulated_seconds": 2.00677975,
           "throttle": 100,
-          "unpaced_ratio": 1.5197414161886764,
-          "wall_seconds": 1.3205119
+          "unpaced_ratio": 1.5481533949437951,
+          "wall_seconds": 1.2962409
         },
         {
-          "simulated_seconds": 1.9862315625,
+          "simulated_seconds": 1.9859635625,
           "throttle": 0,
-          "unpaced_ratio": 1.5217792187195331,
-          "wall_seconds": 1.3052035
+          "unpaced_ratio": 1.501556712289575,
+          "wall_seconds": 1.3226031
         }
       ],
       "sha256": "1abfbaa9018b5a26452df4c060265a791979b6016d57981fb95b50d7192cbe0b",
@@ -604,9 +766,9 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 80785665,
-          "event_count": 15326,
-          "event_signature": 17657902375925426320,
+          "cycles": 80785202,
+          "event_count": 15243,
+          "event_signature": 4991208122743115189,
           "meter": [
             173,
             20,
@@ -624,9 +786,9 @@
             194,
             0
           ],
-          "pc": 19405,
-          "ram": "6b6a5d118e0b7994bd9ac1c518c33253963abc405412320f644b89052d4aae23",
-          "registers": "b62db2e1262133b434e363233e3ec71c115168eb5e758861d94cf259c6211aab",
+          "pc": 24545,
+          "ram": "5ff3d4cb9b64a7a3a876a40c22758624c8da41418accd64188e483ff1fe2c2b0",
+          "registers": "a395c5b4765bb3dacc90b450ac5780642ed09ee210096227e5ffc49cfe4581b5",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -634,15 +796,15 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 111962718,
-          "event_count": 25416,
-          "event_signature": 6436203407170894904,
+          "cycles": 111954890,
+          "event_count": 28464,
+          "event_signature": 4684235943512524409,
           "meter": [
             113,
-            0,
+            20,
             0,
             57,
-            170
+            190
           ],
           "outputs": [
             0,
@@ -654,9 +816,9 @@
             364,
             0
           ],
-          "pc": 24505,
-          "ram": "7f1c556574faddd3dbfed93aa0083cd05de1f58e768fe567708e2dbf22d4c4e1",
-          "registers": "a72d70650f934a1586b893c8a2734be92f70209caa69ab40b71cc3639a10d1b3",
+          "pc": 57390,
+          "ram": "c791ffeb05a3e7277adcda4691cca95f47e1c0eb8b8c487fe2abd37110020084",
+          "registers": "cdc782d57213931a8cda39e72522ad56561256e28194f33eb203f277866add74",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -664,15 +826,15 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 112748286,
-          "event_count": 25629,
-          "event_signature": 5724401888705768870,
+          "cycles": 112739230,
+          "event_count": 28750,
+          "event_signature": 3549715382928818567,
           "meter": [
             112,
-            0,
+            19,
             0,
             57,
-            169
+            188
           ],
           "outputs": [
             0,
@@ -684,9 +846,9 @@
             368,
             0
           ],
-          "pc": 19454,
-          "ram": "af7738ca8ed5fcf66a48568cd6582d387d9964e3c79b7dbea03947e2936c52dc",
-          "registers": "27133ea66e7bc48f42b1a5b8e82566740f4700649b4e7d0d3b702fd39fa37ccd",
+          "pc": 64962,
+          "ram": "c8bc0661da6c721021988cc5717fbd6043dbebb435ac9f1f4c3244c96b90098f",
+          "registers": "5c000c9de598357f9d719352803da7f002059406b420b27172f1a9d79fee5c71",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -712,37 +874,199 @@
           "coasts_during_cut": true,
           "cut_entries": 57,
           "cut_resumes": 57,
-          "first_cut_seconds": 2.3007939375,
+          "first_cut_seconds": 2.300551625,
           "flash_unchanged": true,
           "gear": 1,
           "idle_max_rpm": 1426.2722774399133,
           "idle_min_rpm": 1375.0800339358502,
-          "longest_cut_ms": 98.531375,
-          "longest_injection_gap_ms": 114.2975,
-          "longest_spark_gap_ms": 98.0945,
-          "peak_rpm": 7373.062438521648
+          "longest_cut_ms": 98.78375,
+          "longest_injection_gap_ms": 114.306875,
+          "longest_spark_gap_ms": 98.104625,
+          "peak_rpm": 7373.095071615628
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 45.11539568345323,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 45.32610591652128
+        },
+        {
+          "expected_kmh": 69.40830105146651,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 69.5000290719993
+        },
+        {
+          "expected_kmh": 98.07694713794183,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            41,
+            0,
+            57,
+            3
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 98.20659436677632
+        },
+        {
+          "expected_kmh": 124.0673381294964,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            51,
+            0,
+            57,
+            13
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 123.78633843931276
+        },
+        {
+          "expected_kmh": 146.62503597122296,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            61,
+            0,
+            57,
+            23
+          ],
+          "model": "xt660x",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 146.85413006627343
+        },
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.48949986845321
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.28389979829494
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            41,
+            0,
+            57,
+            3
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.72728207236842
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            51,
+            0,
+            57,
+            13
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 126.96358639741726
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            61,
+            0,
+            57,
+            23
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 150.62346350625583
         }
       ],
       "image": "xt660-5vk-1x-2008",
-      "key_seconds": 0.1734622,
+      "key_seconds": 0.1792619,
       "performance": [
         {
           "simulated_seconds": 2.000285375,
           "throttle": 0,
-          "unpaced_ratio": 1.5615115578305265,
-          "wall_seconds": 1.280993
+          "unpaced_ratio": 1.5264646437281937,
+          "wall_seconds": 1.310404
         },
         {
-          "simulated_seconds": 1.9718625625,
+          "simulated_seconds": 1.971833625,
           "throttle": 100,
-          "unpaced_ratio": 1.506732447788693,
-          "wall_seconds": 1.3087012
+          "unpaced_ratio": 1.4904457352988418,
+          "wall_seconds": 1.3229825
         },
         {
-          "simulated_seconds": 1.9485658125,
+          "simulated_seconds": 1.9481055,
           "throttle": 0,
-          "unpaced_ratio": 1.5038025297294846,
-          "wall_seconds": 1.2957591
+          "unpaced_ratio": 1.4161768653866662,
+          "wall_seconds": 1.3756089
         }
       ],
       "sha256": "4e7166156f5e7a53c4c2f81a7e20f45503c032cc57b40d8f85d5c721d2550824",
@@ -949,29 +1273,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 80785404,
-          "event_count": 15327,
-          "event_signature": 7413359670683969327,
+          "cycles": 80797474,
+          "event_count": 15110,
+          "event_signature": 3892461362362625371,
           "meter": [
-            173,
+            170,
             20,
             0,
             57,
-            250
+            247
           ],
           "outputs": [
             0,
             0,
             0,
-            190,
+            188,
             0,
             0,
-            194,
+            192,
             0
           ],
-          "pc": 19462,
-          "ram": "501f73059ed5fa4c8aa702e6e6ce0a5cb3b2f48cf77617a90ba3307658f3e4a6",
-          "registers": "7af5c8010ff0b976673bb446ab2d772d61919526bd6c488a7b910b30df127bd2",
+          "pc": 19454,
+          "ram": "64f478389659bccedae346590f81f4ffe5d0db1e9ee901eacc92f9db39f2f04e",
+          "registers": "0ea05afa53651e2de1ec6b518dfcb2949465d439d4b405d91c4ff423d01f87d8",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -979,29 +1303,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 111962121,
-          "event_count": 25415,
-          "event_signature": 5699139556487603459,
+          "cycles": 111983107,
+          "event_count": 28130,
+          "event_signature": 4450783410097917799,
           "meter": [
-            113,
-            0,
+            111,
+            19,
             0,
             57,
-            170
+            187
           ],
           "outputs": [
             0,
             0,
             0,
-            361,
+            356,
             0,
             0,
-            364,
+            360,
             0
           ],
-          "pc": 19668,
-          "ram": "b71a66417c75df4ab9e676ac887c578062b20e14c1ebc07493e3eba0e82593e7",
-          "registers": "02866d431f3a1450b24f0b853c836bcdb30b309611140bf40ac5cc5bbaf5a9e6",
+          "pc": 19702,
+          "ram": "66f32e6c2bd9a5261d6bbf64b0f0d9f6a0cd2545973c0f4f87d605eec7557226",
+          "registers": "9d5f7d472e4ef4546dca5255d4fd7def8d19bd3459567d51480776f3a07aa72c",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1009,29 +1333,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 112747661,
-          "event_count": 25629,
-          "event_signature": 13466546097716305105,
+          "cycles": 112767409,
+          "event_count": 28415,
+          "event_signature": 1185101092450084785,
           "meter": [
-            112,
-            0,
+            109,
+            19,
             0,
             57,
-            169
+            185
           ],
           "outputs": [
             0,
             0,
             0,
-            364,
+            360,
             0,
             0,
-            368,
+            363,
             0
           ],
-          "pc": 23095,
-          "ram": "59fc3ea590d89f21915deb999ce6f896e034dba6ab78aea6439a7bbf0b2e3335",
-          "registers": "9081678783831f46f4dab7b16b08657611579a4af52f5ec6022a452de1795214",
+          "pc": 49676,
+          "ram": "f9949db9cc04acea810f15f771faa3db0d16dafa90db9e1a69b4eefdaf375248",
+          "registers": "ac7afef421b663bff19f9ffb376182d056de258d84549ed3203765f7b4fefb49",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1040,9 +1364,9 @@
       ],
       "cleared_history": {
         "auth": "Key accepted",
-        "cycles": 408887648,
+        "cycles": 408887842,
         "event_count": 31141,
-        "event_signature": 6398132211532533648,
+        "event_signature": 10563812394720336903,
         "meter": [
           0,
           0,
@@ -1060,33 +1384,33 @@
           0,
           0
         ],
-        "pc": 31269,
-        "ram": "0698481da7b2519d90c3bfaf0f0a38605e7db1886b8a62d5232456c0081e9bca",
-        "registers": "1288d3c30dc2ce883baaf05791e216ff8d12ce9faff266e799d541787f9ed47a",
+        "pc": 31272,
+        "ram": "40b791d8d1926db342c023c8e192a66e199c4cd259e8f520d67e0f3b2b92f9b3",
+        "registers": "56997d9afc2245a621cd633c81d0b14bcda0bd1ce392a034302f073894e7163a",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
       "coil_falls": [
-        467169212,
-        483169500,
-        499169212,
-        515169212,
-        531163836
+        467163932,
+        483163900,
+        499163836,
+        515169276,
+        531169308
       ],
       "coil_rises": [
-        467089212,
-        483089500,
-        499089212,
-        515089212,
-        531083836
+        467083932,
+        483083900,
+        499083836,
+        515089276,
+        531089308
       ],
       "coil_test": {
         "auth": "Key accepted",
-        "cycles": 547081606,
+        "cycles": 547082363,
         "event_count": 39273,
-        "event_signature": 16951471777669959399,
+        "event_signature": 13644189361845855783,
         "meter": [
           0,
           0,
@@ -1104,9 +1428,9 @@
           0,
           0
         ],
-        "pc": 24533,
-        "ram": "38550738d0ca8956ec6849328471f424f8bb8ccb64c71bc00a5b4e0776051372",
-        "registers": "4301afab6445bf746674173f3d2e0c070262bea6a9efea803a8bea78f2a8ba63",
+        "pc": 23131,
+        "ram": "f762922d5c4822445ef9568aaa2b29bfa4aa556108b7114dc371803aaf20e1e3",
+        "registers": "95eecb0372b5c4405de8e028fd7fdbfb766106047a63cadc0ff24d9342005685",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1130,16 +1454,98 @@
         {
           "coasts_during_cut": true,
           "cut_entries": 57,
-          "cut_resumes": 57,
-          "first_cut_seconds": 2.300544,
+          "cut_resumes": 56,
+          "first_cut_seconds": 2.3580545,
           "flash_unchanged": true,
           "gear": 1,
           "idle_max_rpm": 1426.292761298776,
           "idle_min_rpm": 1375.0700680492514,
-          "longest_cut_ms": 98.7795625,
-          "longest_injection_gap_ms": 114.3748125,
-          "longest_spark_gap_ms": 98.13475,
-          "peak_rpm": 7373.02990800891
+          "longest_cut_ms": 82.2774375,
+          "longest_injection_gap_ms": 98.4448125,
+          "longest_spark_gap_ms": 81.939,
+          "peak_rpm": 7360.15681336215
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.48949986845321
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.28389979829494
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            41,
+            0,
+            57,
+            3
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.72728207236842
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            51,
+            0,
+            57,
+            13
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 126.96358639741726
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            61,
+            0,
+            57,
+            23
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 150.62346350625583
         }
       ],
       "history": [
@@ -1148,16 +1554,16 @@
       ],
       "holds": [
         {
-          "cycles": 128001677,
+          "cycles": 128001673,
           "stage": "menu"
         },
         {
-          "cycles": 32768575,
+          "cycles": 32768569,
           "stage": "confirm"
         }
       ],
       "image": "xt660-2c1-10",
-      "key_seconds": 0.1760873,
+      "key_seconds": 0.176944,
       "menu": [
         1,
         3,
@@ -1182,9 +1588,9 @@
       ],
       "normal_after_diag": {
         "auth": "Key accepted",
-        "cycles": 3890934,
+        "cycles": 3890954,
         "event_count": 230,
-        "event_signature": 10046511158073253587,
+        "event_signature": 18159252932175898750,
         "meter": [
           0,
           0,
@@ -1202,9 +1608,9 @@
           0,
           0
         ],
-        "pc": 24767,
-        "ram": "bbd4caa4b1d457947258c397314e15415931f207b65b066f0fff0b6ff65c3d42",
-        "registers": "f51ba63edf565d2f4b69033c6807f665394e76951607734911ba7898da857a0c",
+        "pc": 24539,
+        "ram": "b3668b9f4b308d4b9ae979e511d95f823b220193c76d6b719f82d0d0575643e2",
+        "registers": "e0735f0d53cfd9c507e680adf06c76412c165995d0012062453e6bf885567804",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1214,20 +1620,20 @@
         {
           "simulated_seconds": 2.0002834375,
           "throttle": 0,
-          "unpaced_ratio": 1.580701170406576,
-          "wall_seconds": 1.2654406
+          "unpaced_ratio": 1.5749075286289427,
+          "wall_seconds": 1.2700958
         },
         {
-          "simulated_seconds": 1.9718481875,
+          "simulated_seconds": 1.9726025625,
           "throttle": 100,
-          "unpaced_ratio": 1.5320092508006764,
-          "wall_seconds": 1.2870994
+          "unpaced_ratio": 1.5107058964399664,
+          "wall_seconds": 1.3057489
         },
         {
-          "simulated_seconds": 1.9485448125,
+          "simulated_seconds": 1.9491020625,
           "throttle": 0,
-          "unpaced_ratio": 1.499767795334317,
-          "wall_seconds": 1.299231
+          "unpaced_ratio": 1.4339080699710496,
+          "wall_seconds": 1.3592936
         }
       ],
       "sha256": "9ce732dd5586fe65adcbf7a2619be1427573899eb7d0673d577f129a84f844d3",
@@ -1410,29 +1816,29 @@
         },
         {
           "auth": "Disabled in BIN",
-          "cycles": 79149564,
-          "event_count": 15185,
-          "event_signature": 13270551177736288452,
+          "cycles": 79161053,
+          "event_count": 14972,
+          "event_signature": 12958655480968520980,
           "meter": [
-            173,
-            21,
+            170,
+            20,
             0,
             57,
-            251
+            247
           ],
           "outputs": [
             0,
             0,
             0,
-            190,
+            188,
             0,
             0,
-            194,
+            192,
             0
           ],
-          "pc": 24786,
-          "ram": "6f0526e21d08e833fe8f096828ca8e8a799ceaa295ed12569ae6e599de9f22d5",
-          "registers": "c443c79af1caa825d3b881fa4d7931deb0858ecc7ab1254263d9b7fbf6df60b3",
+          "pc": 36905,
+          "ram": "a94d5201044f54479bb2402f7228df3a025cbc135355f2ca742f2c625c195086",
+          "registers": "3ce6a857d81c53e3c49d83b8f1cc69a47f7d773b544fa1a265b6dcfec1cfe9d5",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1440,59 +1846,59 @@
         },
         {
           "auth": "Disabled in BIN",
-          "cycles": 110327421,
-          "event_count": 25274,
-          "event_signature": 9771676873007864400,
-          "meter": [
-            113,
-            0,
-            0,
-            57,
-            170
-          ],
-          "outputs": [
-            0,
-            0,
-            0,
-            361,
-            0,
-            0,
-            364,
-            0
-          ],
-          "pc": 24770,
-          "ram": "a77157b0742318c82d49109149d922a7586b26b02972aecd9ebc809c29356cd6",
-          "registers": "f157e50650c1928fe12535c492ec30db8ba4266341db4df8100b158a71e0945a",
-          "rotating": true,
-          "starting": false,
-          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
-          "synchronized": true
-        },
-        {
-          "auth": "Disabled in BIN",
-          "cycles": 111112941,
-          "event_count": 25487,
-          "event_signature": 1852042520682920334,
+          "cycles": 110350714,
+          "event_count": 27988,
+          "event_signature": 2063641373785389959,
           "meter": [
             111,
-            0,
+            19,
             0,
             57,
-            168
+            187
           ],
           "outputs": [
             0,
             0,
             0,
-            364,
+            356,
             0,
             0,
-            368,
+            360,
             0
           ],
-          "pc": 19492,
-          "ram": "1a6a8b0cfcb837795117a8f5ea008495f6caaf0f2f2981a86d2fec54122460f7",
-          "registers": "5dac11d8359d5307e0060ce74228db67bd82aaa4606eb96a2483cf87fb7cc1a4",
+          "pc": 24542,
+          "ram": "6752ce03396466d0404904ea62bcb05cef833c4cbebab89653f3c2f85029c19f",
+          "registers": "da5219d172a98441145e7e26352fefdec62b49739b441233aca297b9d12304be",
+          "rotating": true,
+          "starting": false,
+          "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
+          "synchronized": true
+        },
+        {
+          "auth": "Disabled in BIN",
+          "cycles": 111134043,
+          "event_count": 28273,
+          "event_signature": 7821637165639683265,
+          "meter": [
+            109,
+            19,
+            0,
+            57,
+            185
+          ],
+          "outputs": [
+            0,
+            0,
+            0,
+            360,
+            0,
+            0,
+            363,
+            0
+          ],
+          "pc": 19408,
+          "ram": "b1f3096b75b1e24ee05f77375ffd37f763ca6aa155e00a65e0ba6eaa70a66571",
+          "registers": "09cfc47831f5432922819aac4e89875cfe4389292397f90ad9cc7c4ada2fab05",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1501,9 +1907,9 @@
       ],
       "cleared_history": {
         "auth": "Disabled in BIN",
-        "cycles": 407247648,
+        "cycles": 407247751,
         "event_count": 30999,
-        "event_signature": 14570999116968610482,
+        "event_signature": 7082717928755945705,
         "meter": [
           0,
           0,
@@ -1521,33 +1927,33 @@
           0,
           0
         ],
-        "pc": 24500,
-        "ram": "0a84d673805783da12b5d61080d6ac70da35104cadf1c2ee605e0a24886efede",
-        "registers": "382cc454b1bb01180230cd1c41d6c5db7c7a95206903ec1db517e79b4a86eabe",
+        "pc": 24786,
+        "ram": "70ea3626ef310fdad9004332429aa983b164f3d80b23c4f68a1ecd7e450d4919",
+        "registers": "1f10d7be3e4341131cf045e14478e5dc013309f32694df443a57e03a740d1b3c",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
         "synchronized": false
       },
       "coil_falls": [
-        465564060,
+        465563868,
         481564188,
-        497564060,
-        513564092,
-        529563836
+        497564284,
+        513564028,
+        529563996
       ],
       "coil_rises": [
-        465484060,
+        465483868,
         481484188,
-        497484060,
-        513484092,
-        529483836
+        497484284,
+        513484028,
+        529483996
       ],
       "coil_test": {
         "auth": "Disabled in BIN",
-        "cycles": 545440929,
+        "cycles": 545441584,
         "event_count": 39130,
-        "event_signature": 14179836384262657619,
+        "event_signature": 1956541663970513085,
         "meter": [
           0,
           0,
@@ -1565,9 +1971,9 @@
           0,
           0
         ],
-        "pc": 19395,
-        "ram": "ca5ea37cdc1ed4c72dac3b129f32053f02aef2920b609e0a0d4a6c568708cf1f",
-        "registers": "a332ab7b9e924a0fc8b83151156552e90c27c6a67f5fd3f24a9012c990cf23ec",
+        "pc": 24770,
+        "ram": "17c2561745bfe61dc4956d4549549e26a90163b39a102acba1cee26dbd77993b",
+        "registers": "5ed25ca7b8ae7bf05311e66d9014ec36744aa77a908ec12da8ced5530db37373",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1592,15 +1998,97 @@
           "coasts_during_cut": true,
           "cut_entries": 57,
           "cut_resumes": 57,
-          "first_cut_seconds": 2.3004583125,
+          "first_cut_seconds": 2.3579660625,
           "flash_unchanged": true,
           "gear": 1,
           "idle_max_rpm": 1426.3164104341784,
           "idle_min_rpm": 1375.0589776919887,
-          "longest_cut_ms": 98.2825625,
-          "longest_injection_gap_ms": 114.37425,
-          "longest_spark_gap_ms": 98.134,
-          "peak_rpm": 7373.020248611479
+          "longest_cut_ms": 82.0279375,
+          "longest_injection_gap_ms": 98.2495,
+          "longest_spark_gap_ms": 81.8975625,
+          "peak_rpm": 7357.577419064153
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.48949986845321
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.05436825992302
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            40,
+            0,
+            57,
+            2
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.72724971498198
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            51,
+            0,
+            57,
+            13
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 127.07138128064005
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            60,
+            0,
+            57,
+            22
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 149.79436119921155
         }
       ],
       "history": [
@@ -1609,16 +2097,16 @@
       ],
       "holds": [
         {
-          "cycles": 128000745,
+          "cycles": 128000707,
           "stage": "menu"
         },
         {
-          "cycles": 32768208,
+          "cycles": 32768154,
           "stage": "confirm"
         }
       ],
       "image": "xt660-2c1-10-immo-off",
-      "key_seconds": 0.1121102,
+      "key_seconds": 0.1165941,
       "menu": [
         1,
         3,
@@ -1643,9 +2131,9 @@
       ],
       "normal_after_diag": {
         "auth": "Disabled in BIN",
-        "cycles": 2253895,
+        "cycles": 2253900,
         "event_count": 88,
-        "event_signature": 14930576305794829537,
+        "event_signature": 17652673168087402965,
         "meter": [
           0,
           0,
@@ -1663,9 +2151,9 @@
           0,
           0
         ],
-        "pc": 19402,
-        "ram": "d28645f44b7547c5802db1a952fa41bc5ffb63acf1615b54d2b5f486c967c9b4",
-        "registers": "0c07ce6e71b7d1a7f98b0940fd1cde01d590922aeb8ef3a0ae7901f6a6cf9c2c",
+        "pc": 19718,
+        "ram": "fbccc5ea1bf5c29bc5331984fa5a2a4ad92d1477135dfb8fa482a195d77bc9bb",
+        "registers": "fb558494260623a198eb7f30f49d2cb6df168906474e0be72ea34d7a626d0772",
         "rotating": false,
         "starting": false,
         "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1675,20 +2163,20 @@
         {
           "simulated_seconds": 2.0002481875,
           "throttle": 0,
-          "unpaced_ratio": 1.5467438258168076,
-          "wall_seconds": 1.2931994
+          "unpaced_ratio": 1.5606163260003871,
+          "wall_seconds": 1.281704
         },
         {
-          "simulated_seconds": 1.972026875,
+          "simulated_seconds": 1.9727449375,
           "throttle": 100,
-          "unpaced_ratio": 1.4836326589141144,
-          "wall_seconds": 1.3291881
+          "unpaced_ratio": 1.5109822612410206,
+          "wall_seconds": 1.3056043
         },
         {
-          "simulated_seconds": 1.9486160625,
+          "simulated_seconds": 1.9493538125,
           "throttle": 0,
-          "unpaced_ratio": 1.4736741636177761,
-          "wall_seconds": 1.3222842
+          "unpaced_ratio": 1.4797782849575158,
+          "wall_seconds": 1.3173283
         }
       ],
       "sha256": "51736dd94f02d2066a1a90d4e6c346c0c85778e9c896a4d2f72b5270b50a36f7",
@@ -1891,29 +2379,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 80785665,
-          "event_count": 15326,
-          "event_signature": 17657902375925426320,
+          "cycles": 80797412,
+          "event_count": 15110,
+          "event_signature": 13005747937733216611,
           "meter": [
-            173,
+            170,
             20,
             0,
             57,
-            250
+            247
           ],
           "outputs": [
             0,
             0,
             0,
-            190,
+            188,
             0,
             0,
-            194,
+            192,
             0
           ],
-          "pc": 19405,
-          "ram": "c0f5c1e8f2efb2677ffdd6acb0e84b9c437fc8b8683958e79c0151fcd6636d3d",
-          "registers": "b62db2e1262133b434e363233e3ec71c115168eb5e758861d94cf259c6211aab",
+          "pc": 19668,
+          "ram": "ce82e733b0f95c16e4f10bc2fa04b70f2403481c3595787862c5fd5069903aa4",
+          "registers": "6edbd7639faa70f66d0796ae90f196209d9911a94a755530aeac05f30bf422af",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1921,29 +2409,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 111962718,
-          "event_count": 25416,
-          "event_signature": 6436203407170894904,
+          "cycles": 111982589,
+          "event_count": 28129,
+          "event_signature": 14602790680767208631,
           "meter": [
-            113,
-            0,
+            111,
+            19,
             0,
             57,
-            170
+            187
           ],
           "outputs": [
             0,
             0,
             0,
-            361,
+            356,
             0,
             0,
-            364,
+            360,
             0
           ],
-          "pc": 24505,
-          "ram": "612fa8daa8eb9fdf6ad37cb01d621479d8acec66061b9021d6d394609b502cd1",
-          "registers": "a72d70650f934a1586b893c8a2734be92f70209caa69ab40b71cc3639a10d1b3",
+          "pc": 23118,
+          "ram": "10ca2a2c88fd28e141cf73b3a721a317730f624040cf40190f5ac86fc8ae568e",
+          "registers": "1c2d2d8d0fd4929773f7db03ff91b75016879c478d10e8da9c026fa67f18ced4",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1951,29 +2439,29 @@
         },
         {
           "auth": "Key accepted",
-          "cycles": 112748286,
-          "event_count": 25629,
-          "event_signature": 5724401888705768870,
+          "cycles": 112767028,
+          "event_count": 28411,
+          "event_signature": 8429806528794645938,
           "meter": [
-            112,
-            0,
+            109,
+            19,
             0,
             57,
-            169
+            185
           ],
           "outputs": [
             0,
             0,
             0,
-            364,
+            359,
             0,
             0,
-            368,
+            363,
             0
           ],
-          "pc": 19454,
-          "ram": "10ef2ffecfcf5876db3fa5b2ce91615679b72b549eebe3593c79a12162905898",
-          "registers": "27133ea66e7bc48f42b1a5b8e82566740f4700649b4e7d0d3b702fd39fa37ccd",
+          "pc": 37502,
+          "ram": "3d77ab0a5e7c8825d43ee64d28e5d29fffe307434789fd01ae9d17a8bf4526af",
+          "registers": "1b559a0163ce315979b979f0a894e68d4f4d0959739b41beac550bcefdae13ca",
           "rotating": true,
           "starting": false,
           "storage": "7bc65e6946cfe9423b41cdace3c10ea17018e083092590d01b10ccae883f5765",
@@ -1998,38 +2486,120 @@
         {
           "coasts_during_cut": true,
           "cut_entries": 57,
-          "cut_resumes": 57,
-          "first_cut_seconds": 2.3007939375,
+          "cut_resumes": 56,
+          "first_cut_seconds": 2.3580635625,
           "flash_unchanged": true,
           "gear": 1,
           "idle_max_rpm": 1426.2722774399133,
           "idle_min_rpm": 1375.0800339358502,
-          "longest_cut_ms": 98.531375,
-          "longest_injection_gap_ms": 114.2975,
-          "longest_spark_gap_ms": 98.0945,
-          "peak_rpm": 7373.062438521648
+          "longest_cut_ms": 82.2779375,
+          "longest_injection_gap_ms": 98.4054375,
+          "longest_spark_gap_ms": 81.9465625,
+          "peak_rpm": 7360.160571486745
+        }
+      ],
+      "gearing": [
+        {
+          "expected_kmh": 46.273381294964025,
+          "flash_unchanged": true,
+          "gear": 1,
+          "last_frame": [
+            161,
+            19,
+            0,
+            57,
+            237
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 41700,
+          "received_kmh": 46.48949986845321
+        },
+        {
+          "expected_kmh": 71.18981737686774,
+          "flash_unchanged": true,
+          "gear": 2,
+          "last_frame": [
+            161,
+            29,
+            0,
+            57,
+            247
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 27105,
+          "received_kmh": 71.28389979829494
+        },
+        {
+          "expected_kmh": 100.59430716296528,
+          "flash_unchanged": true,
+          "gear": 3,
+          "last_frame": [
+            161,
+            41,
+            0,
+            57,
+            3
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 19182,
+          "received_kmh": 100.72728207236842
+        },
+        {
+          "expected_kmh": 127.25179856115109,
+          "flash_unchanged": true,
+          "gear": 4,
+          "last_frame": [
+            161,
+            51,
+            0,
+            57,
+            13
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 15164,
+          "received_kmh": 126.96358639741726
+        },
+        {
+          "expected_kmh": 150.38848920863305,
+          "flash_unchanged": true,
+          "gear": 5,
+          "last_frame": [
+            161,
+            61,
+            0,
+            57,
+            23
+          ],
+          "model": "xt660r",
+          "nominal_rpm": 5995.2038369304555,
+          "pulse_period_cycles": 12831,
+          "received_kmh": 150.62346350625583
         }
       ],
       "image": "xt660-5vk-11",
-      "key_seconds": 0.17387,
+      "key_seconds": 0.181918,
       "performance": [
         {
           "simulated_seconds": 2.000285375,
           "throttle": 0,
-          "unpaced_ratio": 1.593779612682349,
-          "wall_seconds": 1.2550577
+          "unpaced_ratio": 1.5574892984605166,
+          "wall_seconds": 1.2843012
         },
         {
-          "simulated_seconds": 1.9718625625,
+          "simulated_seconds": 1.97259675,
           "throttle": 100,
-          "unpaced_ratio": 1.5330197233001963,
-          "wall_seconds": 1.2862604
+          "unpaced_ratio": 1.5224804339022358,
+          "wall_seconds": 1.2956467
         },
         {
-          "simulated_seconds": 1.9485658125,
+          "simulated_seconds": 1.9490735625,
           "throttle": 0,
-          "unpaced_ratio": 1.5213424310207524,
-          "wall_seconds": 1.28082
+          "unpaced_ratio": 1.498676472182608,
+          "wall_seconds": 1.3005299
         }
       ],
       "sha256": "b23ee5e64fcbb7cffc0a6d358c84163fc6608be9c8e222c32c85acef6d675067",
@@ -2118,55 +2688,55 @@
   "headless": [
     {
       "image": "xt660-2004-2006-companion",
-      "key_on_seconds": 0.19701860001077875,
-      "start_seconds": 0.8456700000097044,
-      "no_client_wall_seconds": 8.003926999983378,
-      "no_client_simulated_seconds": 7.9983690625,
-      "realtime_ratio": 0.9993055986788248,
+      "key_on_seconds": 0.21277519996510819,
+      "start_seconds": 0.8773700000019744,
+      "no_client_wall_seconds": 8.017522600013763,
+      "no_client_simulated_seconds": 7.997626625,
+      "realtime_ratio": 0.9975184385493683,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-5vk-1x-2008",
-      "key_on_seconds": 0.19455590000143275,
-      "start_seconds": 0.8887928999611177,
-      "no_client_wall_seconds": 8.016828699968755,
-      "no_client_simulated_seconds": 7.9924270625,
-      "realtime_ratio": 0.9969561982197711,
+      "key_on_seconds": 0.20217539998702705,
+      "start_seconds": 0.8666265999781899,
+      "no_client_wall_seconds": 8.020707699994091,
+      "no_client_simulated_seconds": 7.9954149375,
+      "realtime_ratio": 0.9968465672307059,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-2c1-10",
-      "key_on_seconds": 0.178322899970226,
-      "start_seconds": 0.8344178999541327,
-      "no_client_wall_seconds": 8.017005999980029,
-      "no_client_simulated_seconds": 8.0130725625,
-      "realtime_ratio": 0.9995093632859899,
+      "key_on_seconds": 0.20575539994752035,
+      "start_seconds": 0.8595650999923237,
+      "no_client_wall_seconds": 8.013260099978652,
+      "no_client_simulated_seconds": 8.01898875,
+      "realtime_ratio": 1.0007148963031118,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-2c1-10-immo-off",
-      "key_on_seconds": 0.12845840002410114,
-      "start_seconds": 0.8821651000180282,
-      "no_client_wall_seconds": 8.003286299994215,
-      "no_client_simulated_seconds": 8.03068275,
-      "realtime_ratio": 1.003423150063469,
+      "key_on_seconds": 0.1339354999945499,
+      "start_seconds": 0.869494799990207,
+      "no_client_wall_seconds": 8.02112519997172,
+      "no_client_simulated_seconds": 8.0301600625,
+      "realtime_ratio": 1.0011263834316302,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
     },
     {
       "image": "xt660-5vk-11",
-      "key_on_seconds": 0.1930481999879703,
-      "start_seconds": 0.8779908999567851,
-      "no_client_wall_seconds": 8.022196699981578,
-      "no_client_simulated_seconds": 7.9924270625,
-      "realtime_ratio": 0.9962890915549795,
+      "key_on_seconds": 0.2166278999648057,
+      "start_seconds": 0.8945305999950506,
+      "no_client_wall_seconds": 8.025329799973406,
+      "no_client_simulated_seconds": 7.9970094375,
+      "realtime_ratio": 0.9964711278938967,
       "valid_kline_replies": true,
       "paused_reads_do_not_advance": true,
       "flash_unchanged": true
@@ -2174,16 +2744,17 @@
   ],
   "source_hashes": {
     "native/browser_bridge.cc": "33242417bc66a7422889045d694d47f40290d3bc06009b7e1d4202a5b4588660",
-    "native/cockpit_native.hpp": "2a6c675e343c9cfb7e89c2a310fb382393a43497281cceec46e74cd09757d182",
+    "native/cockpit_native.hpp": "525b47a2246c00216e9e59c93946b10d433a8bc8820f6aceed6c283c362ca0e1",
     "native/dashboard_native.cc": "b6d5fafb53520f2758958d4c8a37a2bc537d950bf2877f15542e36105bf766d3",
-    "native/engine_native.hpp": "9f90c4f36310cb331bdc956e28b19812efa3b9f6e6ba34b530f97025fbf9b0e8",
-    "native/engine_plant.hpp": "42ad08d80e62c4f00d346c5b82f2aa9625d920045aa0f8dd70424859ec04ba4e",
+    "native/engine_native.hpp": "4423dc8df9e8e00c693c9279d9d4b3f7a25760126aa615dca1fd5ffb9f0f3ef9",
+    "native/engine_plant.hpp": "7e1425e028af54f50763b0b60516cd4f746cad7acffdcbb11fb1b2c77e6c910b",
     "native/sha256_portable.hpp": "c956a85343b0dcfcda71cdc412a455bcd02689649e6a5a53750706e28d3995e7",
-    "native/validate_native.cc": "13fd7b5770db7a8176554df47a8950b8bab26644d7839e42855313938414dccc",
+    "native/transmission.hpp": "bd3ea91693bbc6e1d2b9f2a328b9174666246957aec650bbc81873293bc32d64",
+    "native/validate_native.cc": "38383d14bbf138628b3b7dec8a07146b4c8ea6b011373f4b0b90417785a0dbf2",
     "native/xt660_boot.cc": "9eded830db56dfdc1f434ac7d5fe649645755623b31ef120d39ffb21bc6cd161",
-    "web/dashboard.js": "f212f64baf502e7623562026fc2c883dc69ea9323ceb8d0a4d508c241561b5cc",
+    "web/dashboard.js": "aa26aee74d611830671b46c248ca5b051d79b09106a0380f7875a9bc01f39e0b",
     "build_windows.py": "088750dd7621e74199b8232f75c4c61a9eac40295b2bc8d95a8a57e9fc105dbe",
     "test_native.py": "95397c06f99927d46109905f3e7c7c0046d2ad4b8843e16497f2e06120d93fb7"
   },
-  "exe_sha256": "2bdb9b47a89e76b33ad6573ccebb65b5cebff9963682602b61428d09f338bf63"
+  "exe_sha256": "7927b12bfe3b7d620187c8b1673f22768d3d0e564a47a3f5eec786fd539d2a75"
 }

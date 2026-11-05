@@ -60,6 +60,8 @@ public:
   std::function<void(uint64_t)> plant_tick;
   std::function<void(unsigned,unsigned,uint64_t)> plant_output;
   uint64_t plant_deadline=0;
+  uint64_t speed_reply_cycle=0;
+  unsigned vss_period=0;
   NativeEngine() {
     app_start_at=dnow();cpus=cpus_m68hc12;
     application=new xt_app();application->set_name("XT660_Emulator");
@@ -75,7 +77,7 @@ public:
     hw->event_sink=[this](const char*k,unsigned ch,unsigned v,uint64_t c,unsigned pc) {
       auto hash=[&](uint64_t n){for(unsigned i=0;i<8;++i){event_signature^=(n>>(i*8))&255;event_signature*=1099511628211ull;}};
       for(const char* p=k;*p;++p)hash(static_cast<unsigned char>(*p));hash(ch);hash(v);hash(c);hash(pc);++event_count;
-      if(std::string(k)=="serial_tx")tx[ch].push_back(v);
+      if(std::string(k)=="serial_tx"){tx[ch].push_back(v);if(ch==1&&tx[ch].size()==2)speed_reply_cycle=c;}
       if(std::string(k)=="output") { ++outputs[ch]; if(ch==3)last_coil=c;if(ch==6)last_fuel=c;if(plant_output)plant_output(ch,v,c); }
       trace.push_back({k,ch,v,c,pc});if(trace.size()>10000)trace.pop_front();
     };
@@ -139,10 +141,11 @@ public:
     config(25,1);adc.fill(512);transcript=Json::array();
   }
   void set_adc(unsigned n,unsigned v){if(n>7||v>1023)throw std::runtime_error("ADC range");config(n+1,v);adc[n]=v;}
-  void drive(int p,bool road=false){if(p<0){config(24,0);config(37,0);config(35,0);config(36,0);return;}config(35,p*32);config(36,road?p*32*3:0);pitch=p;}
+  void drive(int p){if(p<0){config(24,0);config(37,0);config(35,0);return;}config(35,p*32);pitch=p;}
+  void road(unsigned period){if(period!=vss_period){config(36,period);vss_period=period;}}
   void crank(unsigned p=2800){config(24,0);config(19,p*32);config(20,p*16);config(21,11);config(22,2);config(23,4092);config(24,1);config(37,1);pitch=p;}
   std::vector<unsigned> exchange(unsigned request,unsigned channel=1,unsigned count=5) {
-    step(10000);tx[channel].clear();config(26+channel,request);
+    step(10000);tx[channel].clear();if(channel==1)speed_reply_cycle=0;config(26+channel,request);
     unsigned budget=500000;while(tx[channel].size()<count&&budget){step(25000);budget-=25000;}
     std::vector<unsigned> frame(tx[channel].begin(),tx[channel].end());tx[channel].clear();
     std::string reply;for(auto b:frame){if(!reply.empty())reply+=' ';reply+=hexbyte(b);}
