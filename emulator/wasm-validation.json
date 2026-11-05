@@ -34,7 +34,7 @@
     "gearing",
     "supply"
   ],
-  "reference_report_sha256": "b914b1626ac54207b6b919c2940b658cfe25f43c0f284c6d3f9b69206a611e49",
+  "reference_report_sha256": "e310caa6748a2b83f8896b8080b17330a478c958879b8d1a7ef0d26a92e85c8c",
   "execution_report_sha256": "6c676265cf9b9a6bc020e1f33aed90b673a593224f7dd886aed7abecf3f04a39",
   "execution": [
     {
@@ -1909,11 +1909,16 @@
     "charging_starts": "Engine has fired and starter is released",
     "charging_ends": "Run switched off or crank stops",
     "relay_feedback": "Existing PA2-gated ADC4 remains active",
-    "diagnostics": "Original raw K-line replies; no new voltage display",
+    "diagnostics": "Received K-line byte decoded to estimated volts in both d:09 readouts; raw communication bytes retained.",
     "diagnostic_cases": 115,
     "fault46_cases": 35,
     "report": "supply-diagnostics-validation.json",
     "stop_restart_checked": true,
     "original_flash_unchanged": true
+  },
+  "voltage_display": {
+    "report": "diagnostic-voltage-display-validation.json",
+    "report_sha256": "79c392f89c110af8c1642a8c82d8c786c3cf24d06fe5418fa086f3a02187cd5e",
+    "core_unchanged": true
   }
 }

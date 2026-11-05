@@ -2787,9 +2787,15 @@
     "native/transmission.hpp": "bd3ea91693bbc6e1d2b9f2a328b9174666246957aec650bbc81873293bc32d64",
     "native/validate_native.cc": "a0f1127ae635823b66068ebba87cb771730b9b71520881980af39aacb03c71c8",
     "native/xt660_boot.cc": "9eded830db56dfdc1f434ac7d5fe649645755623b31ef120d39ffb21bc6cd161",
-    "web/dashboard.js": "aa26aee74d611830671b46c248ca5b051d79b09106a0380f7875a9bc01f39e0b",
+    "web/dashboard.js": "25bd5bcd12da54e077156fb76890b8868cd9583da49408f1e34d64499fc1946e",
     "build_windows.py": "088750dd7621e74199b8232f75c4c61a9eac40295b2bc8d95a8a57e9fc105dbe",
     "test_native.py": "554a38df48083dd04479e70d2d575e29c346e738243f02b8e37bfe0efcedafe0"
   },
-  "exe_sha256": "c02c4c3b8c95734d95ad74bb5cc076340010312be7655b6e20911f2a6ae31213"
+  "exe_sha256": "c02c4c3b8c95734d95ad74bb5cc076340010312be7655b6e20911f2a6ae31213",
+  "display_update": {
+    "scope": "Only web renderer files changed; execution/headless evidence above applies to the unchanged executable.",
+    "previous_dashboard_js_sha256": "aa26aee74d611830671b46c248ca5b051d79b09106a0380f7875a9bc01f39e0b",
+    "report": "diagnostic-voltage-display-validation.json",
+    "report_sha256": "79c392f89c110af8c1642a8c82d8c786c3cf24d06fe5418fa086f3a02187cd5e"
+  }
 }

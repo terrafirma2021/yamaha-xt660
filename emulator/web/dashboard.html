@@ -6,7 +6,7 @@
 <div class="connection"><label for="image">ECU</label><select id="image" aria-label="Firmware"></select><button id="load">Select ECU</button><label for="model">Bike</label><select id="model" aria-label="Motorcycle" disabled></select><button id="diagnostics" disabled>Enter diagnostics</button><span id="status" role="status">Choose an ECU, then turn the key.</span></div><div id="error" role="alert" hidden></div>
 <div class="riding-layout"><section class="riding" aria-label="Motorcycle cockpit"><div id="diagControls" class="diagnostic-toolbar" hidden>
 <p id="diagState" class="small" role="status">Holding SELECT + RESET…</p>
-<div class="diagnostic-reading"><strong id="diagNumber">d:—</strong><span id="diagName">Waiting for ECU</span><b id="diagValue">—</b><small>ECU reply value</small></div>
+<div class="diagnostic-reading"><strong id="diagNumber">d:—</strong><span id="diagName">Waiting for ECU</span><b id="diagValue">—</b><small id="diagUnit">ECU REPLY</small></div>
 <div class="actions diagnostic-nav"><button id="diagPrev" disabled>← Previous</button><button id="diagNext" disabled>Next →</button></div>
 <div class="actions"><button id="runTest" disabled>Run test</button><button id="stopTest" disabled>Stop test</button><button id="history" disabled>d:61 History</button><button id="count" disabled>d:62 Count</button><button id="clearHistory" disabled>Clear history</button></div>
 <p id="diagHelp" class="small"></p></div><div class="cockpit">

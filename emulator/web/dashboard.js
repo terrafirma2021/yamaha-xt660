@@ -20,6 +20,20 @@ for(let n=0;n<8;n++){
  slider.onchange=()=>send(Number(slider.value));value.onchange=()=>value.checkValidity()?send(Number(value.value)):value.reportValidity();
  row.append(label,slider,value);$('sensors').append(row);
 }
+function diagnosticReading(m){
+ const raw=m.mode==='diagnostic'?m.diagnostic_value:null;
+ const valid=Number.isInteger(raw)&&raw>=0&&raw<=255;
+ if(m.diagnostic_id!==9||m.mode!=='diagnostic')return {value:valid?String(raw):'—',unit:'ECU REPLY',title:'Diagnostic data byte returned by the ECU'};
+ const reading={value:'—',unit:'V · EST.',title:'Estimated supply voltage from the received K-line byte; agreed 0–20 V ADC scale, not measured board calibration.'};
+ if(!valid)return reading;
+ reading.title+=' Raw reply: '+raw+'.';
+ // ECU: min(254, floor(adc_high * 16 / 15)). Invert the integer mapping
+ // before applying the candidate 20/256 V scale; reply/10 is not volts.
+ if(raw===254){reading.value='≥18.7';reading.title+=' Saturated reply: only a lower bound is available.';return reading;}
+ const high=Math.ceil(raw*15/16);
+ if(raw===255||Math.floor(high*16/15)!==raw)return reading;
+ reading.value=(high*20/256).toFixed(1);return reading;
+}
 function lock(){
  const b=state?.bike,powered=!!b?.powered;
  $('load').disabled=busy;$('image').disabled=busy;$('key').disabled=busy||!b?.selected;
@@ -110,10 +124,12 @@ function render(s){
  $('sessionTitle').textContent=diag?'Diagnostics':'Engine';
  text('diagnostics',diag?'Exit diagnostics':'Enter diagnostics');$('diagControls').hidden=!diag;
  const entryText=m.mode==='hold-confirm'?'Confirm dIAG · holding SELECT + RESET':m.mode==='menu-ready'?'dIAG selected · releasing buttons':'Key on · holding SELECT + RESET';
- $('diagState').textContent=m.mode==='diagnostic'?'d:'+String(m.diagnostic_id??'—')+' · '+String(m.diagnostic_value??'—'):entryText+' · '+m.entry_seconds+' s simulated';
- $('diagNumber').textContent=m.diagnostic_id==null?'d:—':'d:'+String(m.diagnostic_id).padStart(2,'0');$('diagName').textContent=m.diagnostic_name;$('diagValue').textContent=m.diagnostic_value??'—';
+ const diagnostic=diagnosticReading(m);
+ $('diagState').textContent=m.mode==='diagnostic'?'d:'+String(m.diagnostic_id??'—')+' · '+diagnostic.value+(m.diagnostic_id===9?' V':''):entryText+' · '+m.entry_seconds+' s simulated';
+ $('diagNumber').textContent=m.diagnostic_id==null?'d:—':'d:'+String(m.diagnostic_id).padStart(2,'0');$('diagName').textContent=m.diagnostic_name;$('diagValue').textContent=diagnostic.value;
+ $('diagUnit').textContent=diagnostic.unit;$('diagValue').title=$('diagUnit').title=diagnostic.title;
  $('diagHelp').textContent=m.mode!=='diagnostic'?'Entry and confirmation are automatic. The ECU advances its own hold counters.':m.diagnostic_kind==='actuator'?'Run test cycles the simulated run switch. The ECU controls the output pulses and warning lamp.':m.diagnostic_kind==='erase'?'Clear history performs the run-switch sequence. Active faults may remain.':m.diagnostic_kind==='history'?(m.diagnostic_id===63?'The ECU cycles active oxygen-sensor fault codes.':'The ECU cycles stored fault codes automatically.'):'Previous and Next send the dashboard button commands. Values come from the ECU.';
- if(diag){$('speed').textContent=m.mode==='diagnostic'?$('diagNumber').textContent:'dIAG';$('speed').title='Diagnostic number returned by the ECU';$('rpm').textContent=m.diagnostic_value??'—';$('speedLabel').textContent='DIAGNOSTIC';$('rpmLabel').textContent='ECU REPLY';$('rpm').title='Diagnostic data byte returned by the ECU';$('temperature').textContent='—';$('hotLamp').classList.remove('hot');$('faultText').textContent=m.mode==='diagnostic'?m.diagnostic_name:$('diagState').textContent;$('sessionHint').textContent=m.mode==='diagnostic'?'Use the dash buttons to select a diagnostic item.':'Waiting for the ECU’s diagnostic hold sequence.';}
+ if(diag){$('speed').textContent=m.mode==='diagnostic'?$('diagNumber').textContent:'dIAG';$('speed').title='Diagnostic number returned by the ECU';$('rpm').textContent=diagnostic.value;$('speedLabel').textContent='DIAGNOSTIC';$('rpmLabel').textContent=diagnostic.unit;$('rpm').title=diagnostic.title;$('temperature').textContent='—';$('hotLamp').classList.remove('hot');$('faultText').textContent=m.mode==='diagnostic'?m.diagnostic_name:$('diagState').textContent;$('sessionHint').textContent=m.mode==='diagnostic'?'Use the dash buttons to select a diagnostic item.':'Waiting for the ECU’s diagnostic hold sequence.';}
  $('faultHistory').textContent=m.seen.length?'Codes received this key cycle: '+m.seen.join(', '):'No fault codes received.';
  if(bench.open)renderBench(s);
  if(s.adc)for(let n=0;n<8;n++)for(const prefix of ['adc','value'])if(document.activeElement!==$(prefix+n))$(prefix+n).value=n===0?b.throttle:s.adc[n];

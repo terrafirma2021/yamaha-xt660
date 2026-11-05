@@ -9,7 +9,7 @@ Firmware analysis, TunerPro definitions, flashing tools and ECU emulation for th
 - **Explore the ECU:** select a motorcycle and firmware on the [website](https://terrafirma2021.github.io/yamaha-xt660/) to browse its maps, connector diagrams, MCU pins and research.
 - **Edit a BIN:** download its matching [BIN and XDF](https://terrafirma2021.github.io/yamaha-xt660/xdf/) and use TunerPro. Definitions include map tables and supported feature patches. [XDF instructions](definitions/README.md).
 - **Read or write an ECU:** the [Windows Flash Tool bundle](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/v0.2.2) includes the tool, nine BINs and nine XDFs. It uses a USB KKL interface, saves backups and checks compatibility, checksums and readback. [Flashing instructions](flasher/README.md).
-- **Run the firmware:** use the [browser emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/) with no installation, or the [Windows emulator](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.5). Key, starter, throttle, neutral, five gears, sensor faults and diagnostic controls act on the emulated ECU. The dash reads its K-line replies. [Emulator instructions and source](emulator/README.md).
+- **Run the firmware:** use the [browser emulator](https://terrafirma2021.github.io/yamaha-xt660/emulator/) with no installation, or the [Windows emulator](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.6). Key, starter, throttle, neutral, five gears, sensor faults and diagnostic controls act on the emulated ECU. The dash reads its K-line replies. [Emulator instructions and source](emulator/README.md).
 
 ## Current coverage
 

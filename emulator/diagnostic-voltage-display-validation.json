@@ -1,0 +1,61 @@
+{
+  "date": "2026-11-05",
+  "scope": "Renderer-only d:09 voltage decoding from received K-line bytes. MCU execution and source BINs unchanged.",
+  "conversion": "Valid reply <254: ceil(reply*15/16)*20/256 V, displayed to one decimal; 254 is saturated; invalid or missing is unknown.",
+  "calibration": "Agreed candidate 0-20 V input span, not measured board calibration or recovered Yamaha dash firmware.",
+  "captured_replies": 115,
+  "adc_high_values": 256,
+  "missing_invalid_codes_checked": true,
+  "other_diagnostic_items_unchanged": true,
+  "browser": {
+    "engine": "Chrome on Windows",
+    "desktop": [
+      1440,
+      1000
+    ],
+    "mobile": [
+      390,
+      844
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "run_off_on_cycle": true,
+    "supply_614_737_zero_saturation": true,
+    "exit_to_normal": true,
+    "evidence": {
+      "stopped": "12.0",
+      "unit": "V \u00b7 EST.",
+      "main": "12.0",
+      "title": "Estimated supply voltage from the received K-line byte; agreed 0\u201320 V ADC scale, not measured board calibration. Raw reply: 163.",
+      "charging": {
+        "value": "14.4",
+        "title": "Estimated supply voltage from the received K-line byte; agreed 0\u201320 V ADC scale, not measured board calibration. Raw reply: 196.",
+        "main": "14.4"
+      },
+      "saturated": "\u226518.7",
+      "otherDiagnostic": {
+        "id": "d:08",
+        "value": "128",
+        "unit": "ECU REPLY"
+      },
+      "mobile": {
+        "image": "xt660-2c1-10",
+        "value": "14.4",
+        "unit": "V \u00b7 EST.",
+        "overflow": false
+      },
+      "normalLabel": "RPM \u00b7 NOMINAL",
+      "errors": []
+    }
+  },
+  "source_hashes": {
+    "web/dashboard.js": "25bd5bcd12da54e077156fb76890b8868cd9583da49408f1e34d64499fc1946e",
+    "web/dashboard.html": "cc913a3f4a579ef5bf84bf5037104d5f26e905ac312f3d4c2ca0511b3bddf1f3",
+    "test_diagnostic_voltage.mjs": "be8f379ef62f288defea95c71ca9adb3b8ec7c4fdf8d08ded7ed4cff3dc295b6"
+  },
+  "firmware_reply_report_sha256": "b362ef589291adee176bc32f8c5e16035e27da58ef1a848665ccda6af58b0352",
+  "unchanged_wasm_sha256": "68a94b2683960c1283ad9c434f9c4b12a2b8f56bde49214f512c49637af06f79",
+  "unchanged_native_exe_sha256": "c02c4c3b8c95734d95ad74bb5cc076340010312be7655b6e20911f2a6ae31213"
+}

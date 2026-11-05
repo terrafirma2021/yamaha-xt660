@@ -23,7 +23,7 @@ python3 emulator/test_wasm.py
 
 `dist/xt660-wasm` contains the runtime and a separate deterministic test executable. The latter is run in Node and compared with the recorded Windows reference. The browser runtime uses one worker and needs no SharedArrayBuffer or special cross-origin isolation headers. Sources, BIN hashes and runtime hashes are checked when packaging the website.
 
-The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.7) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
+The [browser release](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-browser-v0.1.8) contains a static package and complete corresponding sources. To rebuild its source archive, extract it and run the commands from `source/`, using `--directory ucsim`. To serve a new build locally:
 
 ```sh
 python3 scripts/site_emulator.py --runtime dist/xt660-wasm --destination dist/browser-preview/emulator
@@ -38,7 +38,7 @@ The uCsim-derived code is GPL-2.0-or-later; see [COPYING](COPYING). [Bundled dep
 
 ## Windows download
 
-[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.5). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
+[Download the native Windows x64 package](https://github.com/terrafirma2021/yamaha-xt660/releases/tag/emulator-v0.1.6). Extract it and run **XT660.Emulator.exe**. Keep the extracted files together. Python, WSL and a compiler are not needed to run it.
 
 The Windows process owns the MCU, peripherals, serial peer and simulation clock. Its worker runs independently of HTTP requests. The browser reads snapshots and sends input controls: closing, refreshing or backgrounding the tab does not pause the MCU. **Pause simulation** is an explicit command. Close the executable to stop the process.
 
@@ -104,7 +104,9 @@ Throttle percentage is control travel between closed and open stops. The [Yamaha
 
 **Supply input:** the Windows/browser fixture uses **12.0 V while stopped or cranking** and **14.4 V after the engine starts**. The agreed candidate 0–20 V ADC scale gives nearest ten-bit inputs **614 / 737** (`round(volts × 1024 / 20)`). Run-off or a stalled engine restores the battery input. Normal-mode ADC4 still follows the ECU's PA2 fuel-relay command; an unpowered relay feed reads zero. This is a simulation calibration, not a measured board divider or charging curve. Firmware voltage compensation and faults remain untouched.
 
-**d:09 supply monitor:** [The diagnostic sweep](supply-diagnostics-validation.json) checks all five runnable BINs through actual ADC sampling and serial replies. With Run on, **Supply monitor (ADC)** in Bench controls allows raw-input experiments; Run off supplies zero in diagnostics. The stopped fixture returns **163 raw**, not 16.3 V. Normal-mode fault 46 accepts ADC high bytes **128–199** (ten-bit inputs **512–799**) after qualification. Input 452 returns diagnostic byte 120 but triggers fault 46, contradicting a direct `reply / 10` interpretation of a healthy 12 V battery. The original meter conversion remains unconfirmed. Reproduce with `node emulator/test_supply_diagnostics.mjs`; it checks both voltage-fault boundaries, recovery, stop/restart supply changes and unchanged BINs.
+**d:09 supply monitor:** the simulated dash converts the received K-line byte into **estimated volts** in both diagnostic readouts. For valid unsaturated replies it first recovers `adc_high = ceil(reply × 15 / 16)`, then applies the candidate `adc_high × 20 / 256 V` scale and displays one decimal place. Replies **163 / 196** display **12.0 / 14.4 V**; zero displays **0.0 V**. Saturated reply 254 displays a lower bound, **≥18.7 V**, and missing or impossible codes display a dash. Raw bytes remain in the communication panel. This is our display conversion, not recovered Yamaha meter firmware. [Display checks](diagnostic-voltage-display-validation.json) cover captured replies, quantization, saturation, both firmware families, desktop themes and mobile layout; reproduce with `node emulator/test_diagnostic_voltage.mjs`.
+
+With Run on, **Supply monitor (ADC)** in Bench controls allows raw-input experiments; Run off supplies zero in diagnostics. Normal-mode fault 46 accepts ADC high bytes **128–199** (ten-bit inputs **512–799**) after qualification. Input 452 returns diagnostic byte 120 but triggers fault 46, contradicting a direct `reply / 10` interpretation of a healthy 12 V battery. The [full-firmware sweep](supply-diagnostics-validation.json), reproduced with `node emulator/test_supply_diagnostics.mjs`, checks both voltage-fault boundaries, recovery, stop/restart supply changes and unchanged BINs.
 
 Speed uses the ECU's received B1 pulse deltas and elapsed simulated time over eight normal reply intervals. Distance per pulse comes from the selected tyre circumference, final drive and the assumed 20 pulses per output-shaft revolution described below. The resulting km/h is divided by 1.609344 for **estimated MPH**. The previous un-timed eight-reply sum from Yamaha DataLogger is no longer used by the Windows/browser builds: its scale changes with request cadence. Diagnostic bytes are excluded, key cycles reset the window, and a saturated 255-pulse reply invalidates the speed window. This is a simulated meter calibration, not a recovered OEM dashboard conversion. Firmware and polling cadence are unchanged.
 
